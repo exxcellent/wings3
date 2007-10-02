@@ -14,6 +14,7 @@ package org.wings;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wings.template.StringTemplateSource;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,12 +36,9 @@ public class SRootLayout extends STemplateLayout {
      * Use the default template.
      */
     public SRootLayout() {
-        try {
-            setTemplate(Thread.currentThread().getContextClassLoader().getResource("org/wings/template/default.thtml"));
-        }
-        catch (IOException e) {
-            log.error("Unable to get template/default.thtml", e);
-        }
+        setTemplate(new StringTemplateSource(
+                "<object name=\"frame\"></object>\n"
+                +"<object name=\"dialog\"></object>"));
     }
 
     /**
