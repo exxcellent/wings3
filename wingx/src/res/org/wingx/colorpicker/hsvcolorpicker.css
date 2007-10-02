@@ -1,0 +1,85 @@
+input.hsvcolorpicker { 
+	font-size: .85em
+}
+
+.hsvcolorpicker.dragPanel { 
+    position: relative;
+    width: 360px; 
+	height: 240px;
+	margin: 0;
+	background-color: #eeeeee;
+	color: #333;        	 
+	font: normal 11px verdana, sans-serif; 	 
+	line-height: 19px; 	
+}
+
+.hsvcolorpicker.dragPanel h4 { 
+    background-color: #bbbbbb;
+    height: 10px;
+    margin: 0px;
+    cursor: move;
+}
+
+.hsvcolorpicker.hueThumb { 
+    cursor:default;
+    width:18px; 
+    height:18px; 
+    z-index: 9;
+    position:absolute; 
+	background:url(../../wingx/colorpicker/images/hline.png) no-repeat;
+	left: 0px;		
+}
+
+.hsvcolorpicker.hueBg {
+    position:absolute; 
+    left:216px; 
+    height:198px; 
+    width:18px; 
+    background:url(../../wingx/colorpicker/images/hue.png) no-repeat;
+    top:18px;
+}
+
+.hsvcolorpicker.pickerDiv {
+    position:absolute; 
+    left:10px; 
+    height:187px; 
+    width:188px;     
+    top:20px;
+}
+
+.hsvcolorpicker.pickerbg { 
+    position:absolute; 
+    z-index: 1;
+    top:0px;
+    left:0px;
+	height:192px; 
+    width:192px;   
+	background:url(../../wingx/colorpicker/images/pickerbg.png) no-repeat;	
+}
+
+.hsvcolorpicker.selector { 
+    cursor:default;
+    width:11px; 
+    height:11px; 
+    z-index: 9;
+    position:absolute; 
+    top:0px;
+    left:0px;
+	background:url(../../wingx/colorpicker/images/select.gif) no-repeat;
+}
+
+.hsvcolorpicker.pickerSwatch{
+    position:absolute; 
+    left:260px; 
+    top:30px;
+    height:60px; 
+    width:60px; 
+    border:2px solid #aaaaaa;
+}
+
+.hsvcolorpicker.pickervaldiv { 
+	text-align:right; 
+	position:absolute; 
+	top: 86px; 
+	left:246px; 
+}
