@@ -1,0 +1,10 @@
+.editable{
+    color: #000;
+    background-color: #ffffd3;
+}
+ 
+.InplaceEditorTextArea {
+   border-style: dashed; 
+   border-width: thin; 
+   background-color: #F1F1FF;
+}

@@ -1,0 +1,19 @@
+div.suggestDiv {		
+    background-color: #F1F1FF;	
+    border: 1px solid ActiveBorder;
+    padding: 0px;
+    text-align: left; 
+}
+
+div.suggestDiv span.selected {
+    background-color: Highlight;	
+    color: HighlightText;
+	cursor: pointer;
+}
+
+.XSuggest.activityIndicator {
+	background: url('../../wings/icons/AjaxActivityIndicatorSmall.gif') no-repeat right;			
+	background-color: #f8f8f8;
+}
+
+
