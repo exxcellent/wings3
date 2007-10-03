@@ -161,7 +161,7 @@ public class SDialog extends SForm {
 
     public void setVisible(boolean visible) {
         if (visible) {
-            if (owner != null) show(owner);
+            show(owner);
         } else {
             if (isVisible()) hide();
         }
