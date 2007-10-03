@@ -1203,20 +1203,25 @@ public final class Utils {
      * Lookup keys for yui resources
      */    
     public static final String JS_YUI_ANIMATION = "JS.yuiAnimation";
+    // [CSS???]: public static final String CSS_YUI_ASSETS = "CSS.yuiAssets";
     public static final String JS_YUI_AUTOCOMPLETE = "JS.yuiAutocomplete";
+    // CSS: public static final String CSS_YUI_BASE = "CSS.yuiBase";
     // Beta: public static final String JS_YUI_BUTTON = "JS.yuiButton";
     public static final String JS_YUI_CALENDAR = "JS.yuiCalendar";
+    // Beta: public static final String JS_YUI_COLORPICKER = "JS.yuiColorpicker";
     public static final String JS_YUI_CONNECTION = "JS.yuiConnection";
     public static final String JS_YUI_CONTAINER = "JS.yuiContainer";
     // Beta: public static final String JS_YUI_DATASOURCE = "JS.yuiDatasource";
     // Beta: public static final String JS_YUI_DATATABLE = "JS.yuiDatatable";
     public static final String JS_YUI_DOM = "JS.yuiDom";
     public static final String JS_YUI_DRAGDROP = "JS.yuiDragdrop";
+    // Beta: public static final String JS_YUI_EDITOR = "JS.yuiEditor";
     // Beta: public static final String JS_YUI_ELEMENT = "JS.yuiElement";
     public static final String JS_YUI_EVENT = "JS.yuiEvent";
     // CSS: public static final String CSS_YUI_FONTS = "CSS.yuiFonts";
     // CSS: public static final String CSS_YUI_GRIDS = "CSS.yuiGrids";
-    // Experimental: public static final String JS_YUI_HISTORY = "JS.yuiHistory";
+    // Beta: public static final String JS_YUI_HISTORY = "JS.yuiHistory";
+    // Experimental: public static final String JS_YUI_IMAGELOADER = "JS.yuiImageloader";
     public static final String JS_YUI_LOGGER = "JS.yuiLogger";
     public static final String JS_YUI_MENU = "JS.yuiMenu";
     // CSS: public static final String CSS_YUI_RESET = "CSS.yuiReset";
@@ -1227,6 +1232,8 @@ public final class Utils {
     public static final String JS_YUI_UTILITIES = "JS.yuiUtilities";
     public static final String JS_YUI_YAHOO = "JS.yuiYahoo";
     public static final String JS_YUI_YAHOO_DOM_EVENT = "JS.yuiYahooDomEvent";
+    // Beta: public static final String JS_YUI_LOADER = "JS.yuiLoader";
+    // Beta: public static final String JS_YUI_TEST = "JS.yuiTest";
 
     public static final String CSS_EXT_CORE         = "CSS.extCoreCSS";
     public static final String JS_EXT_EXT           = "JS.extExt";
