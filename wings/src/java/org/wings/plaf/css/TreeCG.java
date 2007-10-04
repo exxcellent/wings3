@@ -202,8 +202,6 @@ public final class TreeCG extends AbstractComponentCG implements org.wings.plaf.
     }
 
     public void writeInternal(final Device device, final SComponent _c) throws IOException {
-        RenderHelper.getInstance(_c).forbidCaching();
-
         final STree tree = (STree) _c;
 
         Rectangle currentViewport = tree.getViewportSize();
@@ -232,8 +230,6 @@ public final class TreeCG extends AbstractComponentCG implements org.wings.plaf.
         }
 
         device.print("</table>");
-
-        RenderHelper.getInstance(_c).allowCaching();
     }
 
     //--- setters and getters for the properties.

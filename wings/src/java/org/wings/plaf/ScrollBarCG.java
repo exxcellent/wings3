@@ -12,9 +12,11 @@
  */
 package org.wings.plaf;
 
+import org.wings.SScrollBar;
 
 
 public interface ScrollBarCG extends ComponentCG {
+    Update getAdjustmentUpdate(SScrollBar adjustable, int value, int extent, int size);
 }
 
 

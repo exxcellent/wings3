@@ -313,8 +313,6 @@ public final class FrameCG implements org.wings.plaf.FrameCG {
         if (strokes != null)
             component.getSession().getScriptManager().addScriptListener(new JavaScriptListener(null, null, strokes));
 
-        RenderHelper.getInstance(frame).reset();
-
         if (!frame.isVisible())
             return;
         else
@@ -419,7 +417,6 @@ public final class FrameCG implements org.wings.plaf.FrameCG {
         device.print("</body>\n</html>\n");
 
         component.fireRenderEvent(SComponent.DONE_RENDERING);
-        RenderHelper.getInstance(frame).reset();
     }
 
     protected void handleScripts(Device device, SComponent component) throws IOException {

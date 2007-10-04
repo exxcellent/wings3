@@ -13,6 +13,7 @@
 package org.wings;
 
 import org.wings.plaf.ScrollBarCG;
+import org.wings.plaf.Update;
 
 /**
  * Represents a scroll bar as used in a {@link SScrollPane}.
@@ -73,6 +74,15 @@ public class SScrollBar extends SAbstractAdjustable {
      */
     public SScrollBar() {
         this(SConstants.VERTICAL);
+    }
+
+    protected void adjust() {
+        ScrollBarCG cg = (ScrollBarCG)getCG();
+        if (cg != null) {
+            Update update = cg.getAdjustmentUpdate(this, getValue(), getExtent(), getMaximum() - getMinimum());
+            if (update != null)
+                update(update);
+        }
     }
 
     public boolean isMarginVisisble() {

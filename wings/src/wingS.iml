@@ -2,17 +2,16 @@
 <module relativePaths="false" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://C:/Projekte/wings3/wings">
+    <content url="file:///home/hengels/jdevel/wings3/wings">
       <sourceFolder url="file://$MODULE_DIR$/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/res" isTestSource="false" />
-      <excludeFolder url="file://C:/Projekte/wings3/wings/dist" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://C:/Projekte/wings3/wings/lib/servlet.jar!/" />
+          <root url="jar:///home/hengels/jdevel/wings3/wings/lib/commons-httpclient-2.0-beta1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -21,7 +20,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://C:/Projekte/wings3/wings/lib/commons-logging.jar!/" />
+          <root url="jar:///home/hengels/jdevel/wings3/wings/lib/servlet.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -30,7 +29,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://C:/Projekte/wings3/wings/lib/log4j-1.2.9.jar!/" />
+          <root url="jar:///home/hengels/jdevel/wings3/wings/lib/bsh-core.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -39,7 +38,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://C:/Projekte/wings3/wings/lib/commons-httpclient-2.0-beta1.jar!/" />
+          <root url="jar:///home/hengels/jdevel/wings3/wings/lib/commons-logging.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -48,25 +47,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://C:/Projekte/wings3/wings/lib/bsh-core.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" exported="">
-      <library>
-        <CLASSES>
-          <root url="jar://C:/Projekte/wings3/wings/lib/kdeclassic-lfgr.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" exported="">
-      <library>
-        <CLASSES>
-          <root url="jar://C:/Projekte/wings3/wings/lib/dwr.jar!/" />
+          <root url="jar:///home/hengels/jdevel/wings3/wings/lib/dwr.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

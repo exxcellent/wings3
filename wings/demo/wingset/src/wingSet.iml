@@ -58,8 +58,8 @@
             <url>jar://$MODULE_DIR$/../../../lib/dwr.jar!/</url>
           </containerElement>
           <containerElement type="library" level="module">
-            <attribute name="method" value="1" />
-            <attribute name="URI" value="/WEB-INF/lib/kdeclassic-lfgr.jar" />
+            <attribute name="method" value="0" />
+            <attribute name="URI" value="&lt;N/A&gt;" />
             <url>jar://$MODULE_DIR$/../../../lib/kdeclassic-lfgr.jar!/</url>
           </containerElement>
           <containerElement type="library" level="module">

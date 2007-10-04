@@ -58,7 +58,7 @@ public class SliderCG extends AbstractComponentCG implements org.wings.plaf.Slid
     /**
      * the maximum number of pixels the slider thumb can be moved
      */
-    private final Integer defaultMaxPixelConstraint = new Integer(200); // slider bar width - slider thumb width
+    private final Integer defaultMaxPixelConstraint = 200; // slider bar width - slider thumb width
 
     public SliderCG() {
         setHorizontalThumbIcon((SIcon) ResourceManager.getObject("SliderCG.horizontalThumbIcon", SIcon.class));

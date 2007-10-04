@@ -254,8 +254,6 @@ public class XTableCG
     }
 
     public final void writeInternal(final Device device, final SComponent _c) throws IOException {
-        RenderHelper.getInstance(_c).forbidCaching();
-
         final XTable table = (XTable)_c;
 
         device.print("<table");
@@ -301,7 +299,6 @@ public class XTableCG
         writeFooter(device, table, startX, endX);
 
         device.print("</tbody></table>");
-        RenderHelper.getInstance(_c).allowCaching();
     }
     
     private boolean isModelFiltered(TableModel model) {

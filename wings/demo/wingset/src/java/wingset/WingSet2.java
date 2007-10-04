@@ -42,7 +42,7 @@ public class WingSet2
     /**
      * The root frame of the WingSet application.
      */
-    private final SFrame frame;
+    private final SFrame frame = new SFrame("WingSet Demo");
 
     private final SPanel panel;
     private final STree tree;
@@ -104,7 +104,6 @@ public class WingSet2
         panel.add(scrollPane, SBorderLayout.WEST);
         panel.add(content, SBorderLayout.CENTER);
 
-        frame = new SFrame("WingSet Demo");
         frame.getContentPane().add(panel, SBorderLayout.CENTER);
         frame.getContentPane().setPreferredSize(SDimension.FULLAREA);
         if (!Utils.isMSIE(frame)) {

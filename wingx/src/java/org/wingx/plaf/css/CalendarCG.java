@@ -93,7 +93,6 @@ public class CalendarCG extends AbstractComponentCG implements org.wingx.plaf.Ca
         device.print("><tr><td class=\"tf\"");
 
         int oversizePadding = Utils.calculateHorizontalOversize(fTextField, true);
-        //oversizePadding += RenderHelper.getInstance(component).getHorizontalLayoutPadding();
 
         if (oversizePadding != 0)
             Utils.optAttribute(device, "oversize", oversizePadding);

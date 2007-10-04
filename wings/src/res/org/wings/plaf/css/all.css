@@ -612,34 +612,23 @@ table.XPageScroller table.pages td:hover {
     background-color: #ECECEC;
 }
 
-table.SScrollBar {
-    height: 100%;
-    width: 100%;
-    font-size: 1px;
-    border-width: 0px;
+.SScrollBar * {
+    box-sizing: border-box;
 }
-
-table.SScrollBar_vertical {
-    height: 100%;
+.SScrollBar_vertical * {
+    width: 17px;
 }
-
-table.SScrollBar_horizontal {
-    height: auto;
+.SScrollBar_vertical .outer {
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
-
-table.SScrollBar table.buttons td {
-    border: 1px solid #cccccc;
-    background-color: transparent;
-    width: 20px;
+.SScrollBar_horizontal * {
+    height: 17px;
 }
-
-table.SScrollBar table.buttons td:hover {
-    border: 1px outset #cccccc;
+.SScrollBar_horizontal .outer {
+    overflow-x: scroll;
+    overflow-y: hidden;
 }
-
-
-
-
 
 
 

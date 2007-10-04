@@ -14,19 +14,14 @@ package org.wings.plaf.css;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wings.SComponent;
-import org.wings.SConstants;
-import org.wings.SIcon;
-import org.wings.SResourceIcon;
+import org.wings.*;
 import org.wings.border.SDefaultBorder;
 import org.wings.border.SEmptyBorder;
 import org.wings.dnd.DragSource;
 import org.wings.dnd.DropTarget;
 import org.wings.io.Device;
 import org.wings.io.StringBuilderDevice;
-import org.wings.plaf.CGManager;
-import org.wings.plaf.ComponentCG;
-import org.wings.plaf.Update;
+import org.wings.plaf.*;
 import org.wings.plaf.css.dwr.CallableManager;
 import org.wings.plaf.css.script.OnPageRenderedScript;
 import org.wings.script.ScriptListener;
@@ -35,7 +30,7 @@ import org.wings.session.ScriptManager;
 import org.wings.util.SStringBuilder;
 import org.wings.util.SessionLocal;
 
-import javax.swing.InputMap;
+import javax.swing.*;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -46,8 +41,10 @@ import java.util.Map;
  *
  * @author <a href="mailto:engels@mercatis.de">Holger Engels</a>
  */
-public abstract class AbstractComponentCG<COMPONENT_TYPE extends SComponent> implements ComponentCG<COMPONENT_TYPE>, SConstants, Serializable {
-
+public abstract class AbstractComponentCG<COMPONENT_TYPE
+    extends SComponent>
+    implements ComponentCG<COMPONENT_TYPE>, SConstants, Serializable
+{
     private static final Log log = LogFactory.getLog(AbstractComponentCG.class);
 
     /**
@@ -135,6 +132,34 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE extends SComponent> imp
     }
 
     /**
+     * Write JS code for context menus. Common implementaton for MSIE and gecko.
+     */
+    protected static void writeContextMenu(Device device, SComponent component) throws IOException {
+        final SPopupMenu menu = component.getComponentPopupMenu();
+        if (menu != null && menu.isEnabled()) {
+            final String componentId = menu.getName();
+            final String popupId = componentId + "_pop";
+            device.print(" onContextMenu=\"return wpm_menuPopup(event, '");
+            device.print(popupId);
+            device.print("');\" onMouseDown=\"return wpm_menuPopup(event, '");
+            device.print(popupId);
+            device.print("');\"");
+        }
+    }
+
+    /**
+     * Write Tooltip code.
+     */
+    protected static void writeTooltipMouseOver(Device device, SComponent component) throws IOException {
+        final String toolTipText = component != null ? component.getToolTipText() : null;
+        if (toolTipText != null && toolTipText.length() > 0) {
+            device.print(" onmouseover=\"Tip('");
+            Utils.quote(device, toolTipText, true, false, true);
+            device.print("')\"");
+        }
+    }
+
+    /**
      * Install the appropriate CG for <code>component</code>.
      *
      * @param component the component
@@ -178,8 +203,6 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE extends SComponent> imp
     }
 
     public void componentChanged(COMPONENT_TYPE component) {
-        component.putClientProperty("render-cache", null);
-
         InputMap inputMap = component.getInputMap();
         if (inputMap != null && inputMap.size() > 0) {
             if (!(inputMap instanceof VersionedInputMap)) {
@@ -249,31 +272,27 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE extends SComponent> imp
     }
 
     /**
-     * This method renders the component (and all of its subcomponents) to the given device. Depending on
-     * the settings for server side caching the rendered code is newly generated or taken from the cache.
+     * This method renders the component (and all of its subcomponents) to the given device.
      */
 	public final void write(final Device device, final COMPONENT_TYPE component) throws IOException {
-        // Render component and return if caching for this one is disabled.
-        if (!RenderHelper.getInstance(component).isCachingAllowed(component)) {
-            // log.debug("-> writing (not caching) = " + component);
-            writeCode(device, component);
-            return;
+        Utils.printDebug(device, "<!-- ").print(component.getName()).print(" -->");
+        component.fireRenderEvent(SComponent.START_RENDERING);
+
+        try {
+            BorderCG.writeComponentBorderPrefix(device, component);
+            writeInternal(device, component);
+            ScriptManager.getInstance().addScriptListeners(component.getScriptListeners());
+            BorderCG.writeComponentBorderSufix(device, component);
+        } catch (RuntimeException e) {
+            log.fatal("Runtime exception during rendering of " + component.getName(), e);
+            device.print("<blink>" + e.getClass().getName() + " during code generation of "
+                    + component.getName() + "(" + component.getClass().getName() + ")</blink>\n");
         }
-        // Look if there is already some code in the cache for this component.
-        String cachedCode = (String) component.getClientProperty("render-cache");
-        if (cachedCode == null) {
-            // If not, we render the complete component to the cache.
-            StringBuilderDevice cacheDevice = new StringBuilderDevice();
-            writeCode(cacheDevice, component);
-            cachedCode = cacheDevice.toString();
-            component.putClientProperty("render-cache", cachedCode);
-            // log.debug("--> writing (and caching) = " + component);
-        } else {
-            // Otherwise we'll reuse the code previously cached.
-            // log.debug("---> reusing (from cache) = " + component);
-        }
-        // Reuse the cached code.
-        device.print(cachedCode);
+
+        component.fireRenderEvent(SComponent.DONE_RENDERING);
+        Utils.printDebug(device, "<!-- /").print(component.getName()).print(" -->");
+
+        updateDragAndDrop(component);
     }
 
     protected void updateDragAndDrop(final SComponent component) {
@@ -320,27 +339,6 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE extends SComponent> imp
 
     protected String getDragHandle(SComponent component) {
         return null;
-    }
-
-    private void writeCode(Device device, COMPONENT_TYPE component) throws IOException {
-        Utils.printDebug(device, "<!-- ").print(component.getName()).print(" -->");
-        component.fireRenderEvent(SComponent.START_RENDERING);
-
-        try {
-            BorderCG.writeComponentBorderPrefix(device, component);
-            writeInternal(device, component);
-            ScriptManager.getInstance().addScriptListeners(component.getScriptListeners());
-            BorderCG.writeComponentBorderSufix(device, component);
-        } catch (RuntimeException e) {
-            log.fatal("Runtime exception during rendering of " + component.getName(), e);
-            device.print("<blink>" + e.getClass().getName() + " during code generation of "
-                    + component.getName() + "(" + component.getClass().getName() + ")</blink>\n");
-        }
-
-        component.fireRenderEvent(SComponent.DONE_RENDERING);
-        Utils.printDebug(device, "<!-- /").print(component.getName()).print(" -->");
-
-        updateDragAndDrop(component);
     }
 
     public abstract void writeInternal(Device device, COMPONENT_TYPE component) throws IOException;

@@ -12,6 +12,8 @@
  */
 package org.wings;
 
+import org.wings.plaf.ScrollBarCG;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -31,6 +33,8 @@ public abstract class SAbstractAdjustable extends SComponent implements Adjustab
     public static final int BLOCK = 1;
 
     public static final int MARGIN = 2;
+
+    protected boolean changeFromEvent;
 
     /**
      * All changes from the model are treated as though the user moved
@@ -425,12 +429,20 @@ public abstract class SAbstractAdjustable extends SComponent implements Adjustab
     }
 
     public void fireIntermediateEvents() {
+        changeFromEvent = true;
         getModel().fireDelayedIntermediateEvents();
+        changeFromEvent = false;
     }
 
     public void fireFinalEvents() {
         super.fireFinalEvents();
+        changeFromEvent = true;
         getModel().fireDelayedFinalEvents();
+        changeFromEvent = false;
+    }
+
+    public boolean isChangeFromEvent() {
+        return changeFromEvent;
     }
 
     /**
@@ -498,9 +510,11 @@ public abstract class SAbstractAdjustable extends SComponent implements Adjustab
             int id = AdjustmentEvent.ADJUSTMENT_VALUE_CHANGED;
             int type = AdjustmentEvent.TRACK;
             fireAdjustmentValueChanged(id, type, getValue());
-            reload();
+            adjust();
         }
     }
+
+    protected abstract void adjust();
 
     /** @see LowLevelEventListener#isEpochCheckEnabled() */
     private boolean epochCheckEnabled = true;

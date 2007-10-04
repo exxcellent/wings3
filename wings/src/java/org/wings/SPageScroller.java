@@ -228,6 +228,10 @@ public class SPageScroller extends SAbstractAdjustable {
         setValue(getValue());
     }
 
+    protected void adjust() {
+        reload();
+    }
+
     /**
      * Set the current value of the scroller. The value will be
      * adjusted to a multiple of the extent.

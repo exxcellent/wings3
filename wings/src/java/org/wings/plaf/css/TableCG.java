@@ -243,8 +243,6 @@ public final class TableCG
     }
 
     public final void writeInternal(final Device device, final SComponent _c) throws IOException {
-        RenderHelper.getInstance(_c).forbidCaching();
-
         final STable table = (STable)_c;
 
         device.print("<table");
@@ -279,7 +277,6 @@ public final class TableCG
         writeBody(device, table, startX, endX, startY, endY, emptyIndex);
 
         device.print("</tbody></table>");
-        RenderHelper.getInstance(_c).allowCaching();
     }
 
     private void writeTableAttributes(Device device, STable table) throws IOException {

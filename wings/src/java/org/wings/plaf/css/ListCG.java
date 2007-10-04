@@ -220,16 +220,12 @@ public final class ListCG extends AbstractComponentCG implements  org.wings.plaf
     }
 
     public void writeInternal(final Device device, final SComponent _c) throws IOException {
-        RenderHelper.getInstance(_c).forbidCaching();
-
         SList list = (SList) _c;
         if (list.getShowAsFormComponent()) {
             writeFormList(device, list);
         } else {
             writeAnchorList(device, list);
         }
-
-        RenderHelper.getInstance(_c).allowCaching();
     }
 
     public Update getSelectionUpdate(SList list, List deselectedIndices, List selectedIndices) {
