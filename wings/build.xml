@@ -42,7 +42,7 @@
         <file name="component.js"/>
     </filelist>
 
-    <target name="prepare" depends="splash">
+    <target name="-prepare" depends="-splash">
         <mkdir dir="build/class"/>
         <mkdir dir="build/doc"/>
         <tstamp>
@@ -53,7 +53,7 @@
     <target name="generate" depends="generate-version.java, generate-wings.js"
             description="generates all artefacts necessary to compile wingS"/>
 
-    <target name="generate-version.java" depends="prepare">
+    <target name="generate-version.java" depends="-prepare">
         <!-- Generate wingS version information class -->
         <filter token="WINGS_VERSION" value="${wings.version}"/>
         <filter token="COMPILE_TIME" value="${wings.buildtime}"/>
@@ -62,7 +62,7 @@
             filtering="yes"/>
     </target>
 
-    <target name="-concat-wings.js" depends="prepare">
+    <target name="-concat-wings.js" depends="-prepare">
         <!-- Generate concatenated JS-file -->
         <concat destfile="src/res/org/wings/js/wings/wings.js" force="no">
             <filelist refid="wings.js.modules" />
@@ -92,7 +92,7 @@
         </java>
     </target>
 
-    <target name="compile" depends="prepare, generate">
+    <target name="compile" depends="-prepare, generate">
         <javac debug="${build.debug}" deprecation="${build.deprecation}"
             destdir="build/class" srcdir="src/java" source="1.5" target="1.5">
             <classpath refid="build.classpath"/>
@@ -137,7 +137,7 @@
         </copy>
     </target>
 
-    <target depends="prepare" description="build javadoc" name="javadoc">
+    <target depends="-prepare" description="build javadoc" name="javadoc">
         <!-- Make API JavaDoc -->
         <mkdir dir="build/doc/api"/>
         <javadoc classpathref="build.classpath" destdir="build/doc/api"
@@ -301,7 +301,7 @@
 
     <!-- ### Utility tasks ################################################### -->
 
-    <target name="splash" unless="nosplash">
+    <target name="-splash" unless="nosplash">
         <splash imageurl="file:${basedir}/demo/wingset/src/web/icons/wings-logo.png"/>
     </target>
 
