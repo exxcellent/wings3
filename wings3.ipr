@@ -2,7 +2,7 @@
 <project relativePaths="false" version="4">
   <component name="AntConfiguration">
     <defaultAnt bundledAnt="true" />
-    <buildFile url="file://$PROJECT_DIR$/wings/build.xml">
+    <buildFile url="file://$PROJECT_DIR$/wingx/build.xml">
       <additionalClassPath />
       <antReference projectDefault="true" />
       <customJdkName value="" />
@@ -10,6 +10,13 @@
       <properties />
     </buildFile>
     <buildFile url="file://$PROJECT_DIR$/wings/demo/wingset/build.xml">
+      <additionalClassPath />
+      <antReference projectDefault="true" />
+      <customJdkName value="" />
+      <maximumHeapSize value="128" />
+      <properties />
+    </buildFile>
+    <buildFile url="file://$PROJECT_DIR$/wings/build.xml">
       <additionalClassPath />
       <antReference projectDefault="true" />
       <customJdkName value="" />
@@ -219,6 +226,7 @@
       <facet-type id="web">
         <modules>
           <module name="wingS" />
+          <module name="wingSet" />
         </modules>
       </facet-type>
     </autodetection-disabled>

@@ -5,6 +5,7 @@
     <content url="file://C:/Projekte/wings3/wings">
       <sourceFolder url="file://$MODULE_DIR$/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/res" isTestSource="false" />
+      <excludeFolder url="file://C:/Projekte/wings3/wings/dist" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

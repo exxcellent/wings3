@@ -1,26 +1,14 @@
 package dwr.domain;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 
-/**
- * TODO: document me!!!
- * <p/>
- * <code>AutoCompletionDummy</code>.
- * <p/>
- * User: rro
- * Date: May 2, 2006
- * Time: 6:32:02 PM
- *
- * @author Roman R&auml;dle
- */
 public class AutoCompletionDummy {
 
-    List completion;
+    private List<String> completion;
 
     public AutoCompletionDummy() {
-        completion = new ArrayList();
+        completion = new ArrayList<String>();
 
         initCompletion();
     }
@@ -283,19 +271,11 @@ public class AutoCompletionDummy {
     }
 
     public List getData(String part) {
-
-        List returning = new ArrayList();
-
-        for (Iterator iter = completion.iterator(); iter.hasNext();) {
-
-            Object o = iter.next();
-
-            if (o instanceof String) {
-
-                if (((String) o).toLowerCase().startsWith(part.toLowerCase())) {
+        List<String> returning = new ArrayList<String>();
+        for (String o : completion) {
+                if (o.toLowerCase().startsWith(part.toLowerCase())) {
                     returning.add(o);
                 }
-            }
         }
 
         return returning;
