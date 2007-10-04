@@ -13,9 +13,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+import org.wings.LowLevelEventListener;
 import org.wings.SContainer;
 import org.wings.SDimension;
 import org.wings.SFormattedTextField;
@@ -32,26 +35,23 @@ import org.wingx.plaf.css.CalendarCG;
 /**
  * @author <a href="mailto:e.habich@@thiesen.com">Erik Habicht</a>
  */
-public class XCalendar extends SContainer {
+public class XCalendar extends SContainer implements LowLevelEventListener, SDocumentListener {
     
     /**
      * The <code>XCalendar</code> default <code>SIcon</code> for editing.
      */
-    public static final SIcon DEFAULT_EDIT_ICON = new SResourceIcon("org/wingx/calendar/images/calendar_edit.png");
+    public static final SIcon DEFAULT_EDIT_ICON = new SResourceIcon("org/wingx/calendar/calendar_edit.png");
+    
     /**
      * The <code>XCalendar</code> default <code>SIcon</code> for reseting the datechooser.
+     * @deprecated 
      */
-    public static final SIcon DEFAULT_CLEAR_ICON = new SResourceIcon("org/wingx/calendar/images/calendar_delete.png");
+    public static final SIcon DEFAULT_CLEAR_ICON = new SResourceIcon("org/wingx/calendar/calendar_delete.png");
     
     /**
      * The current <code>XCalendar</code>'s icon to choos a new date.
      */
     private SIcon editIcon = DEFAULT_EDIT_ICON;
-
-    /**
-     * The <code>XCalendar</code> default <code>SIcon</code> for reseting the datechooser.
-     */
-    private SIcon clearIcon = DEFAULT_CLEAR_ICON;
 
     /**
      * The current <code>SFormattedTextField</code>.
@@ -63,13 +63,7 @@ public class XCalendar extends SContainer {
      */
     private TimeZone timeZone = TimeZone.getDefault();
 
-    /**
-     * Defines if the selected date may be empty / <code>null</code>.
-     */
-    private boolean nullable;
-
     private ActionListener actionListener = null;
-
 
     private ActionListener getActionListener() {
         if ( actionListener == null ) {
@@ -81,6 +75,11 @@ public class XCalendar extends SContainer {
         }
         return actionListener;
     }
+    
+    /**
+     * @see LowLevelEventListener#isEpochCheckEnabled()
+     */
+    protected boolean epochCheckEnabled = true;
 
     /**
      * Set the look and feel delegate for this component
@@ -156,40 +155,40 @@ public class XCalendar extends SContainer {
     public SIcon getEditIcon() {
         return this.editIcon;
     }
-
-
+    
     /**
      * The current icon to use for clearing the input/ date.
      * @return The current icon to use for clearing the input/ date.
+     * @deprecated 
      */
     public SIcon getClearIcon() {
-        return clearIcon;
+        return DEFAULT_CLEAR_ICON;
     }
 
     /**
      * The icon to use for clearing the input/ date.
      * @param clearIcon The new icon to use for clearing the input/ date.
+     * @deprecated 
      */
     public void setClearIcon(SIcon clearIcon) {
-        this.clearIcon = clearIcon;
     }
-
 
     /**
      * Defines if the user should be able to select also null values.
      * <p><b>NOTE:</b> He can always do this manually. Default is <code>false</code>
      * @return <code>true</code> if the user has an clear icon to define a null date
+     * @deprecated 
      */
     public boolean isNullable() {
-        return nullable;
+        return false;
     }
 
     /**
      * Defines if the user has an clear icon to reset the picked date to <code>null</code>.
      * @param nullable <code>true</code> if the user should be able to clear the date.
+     * @deprecated 
      */
     public void setNullable(boolean nullable) {
-        this.nullable = nullable;
     }
 
     /**
@@ -239,15 +238,15 @@ public class XCalendar extends SContainer {
      * @param date the current <code>Date</code>
      */
     public void setDate( Date date ) {
-        if ( isNullable() || date != null ) {
-            getFormattedTextField().setValue( date );
-            if (isUpdatePossible() && date != null )
-                update(((CalendarCG)getCG()).getHiddenUpdate(this, date));
-            else
-                reload();
-        }
+        getFormattedTextField().removeDocumentListener(this);
+        getFormattedTextField().setValue( date );
+        getFormattedTextField().addDocumentListener(this);
+        if (isUpdatePossible() && date != null )
+            update(((CalendarCG)getCG()).getHiddenUpdate(this, date));
+        else
+            reload();
     }
-    
+
     /**
      * Set the preferred size of the component
      * @param dimension <code>SDimension</code>
@@ -327,7 +326,7 @@ public class XCalendar extends SContainer {
     public SFormattedTextField getFormattedTextField() {
         if (fTextField == null) {
             fTextField = new SFormattedTextField();
-            fTextField.getDocument().addDocumentListener( new MyDocumentListener( this, fTextField ) );
+            fTextField.getDocument().addDocumentListener( this );
         }
         return fTextField;
     }
@@ -337,23 +336,76 @@ public class XCalendar extends SContainer {
         getFormattedTextField().setFocusTraversalIndex(index);
     }
     
-    private class MyDocumentListener implements SDocumentListener {
-        
-        private XCalendar           cal     = null;
-        private SFormattedTextField evtSrc  = null;
-        
-        public MyDocumentListener ( XCalendar cal, SFormattedTextField evtSrc ) {
-            this.cal = cal;
-            this.evtSrc = evtSrc;
-        }
-        
-        public void insertUpdate(SDocumentEvent e) {}
-
-        public void removeUpdate(SDocumentEvent e){}
-
-        public void changedUpdate(SDocumentEvent e){
-            cal.setDate( (Date)evtSrc.getValue() );
-        }
+    
+/**
+ * #####################
+ * # SDocumentListener #
+ * #####################    
+ */
+    /**
+     * @see SDocumentListener#insertUpdate()
+     */
+    public void insertUpdate(SDocumentEvent e) {}
+    
+    /**
+     * @see SDocumentListener#removeUpdate()
+     */
+    public void removeUpdate(SDocumentEvent e){}
+    
+    /**
+     * @see SDocumentListener#changedUpdate()
+     */
+    public void changedUpdate(SDocumentEvent e){
+        System.out.println( "XCalendar#SDocumentListener#changedUpdate( " + (Date)getFormattedTextField().getValue() + " )" );
+        setDate( (Date)getFormattedTextField().getValue() );
     }
-   
+
+/**
+ * #########################
+ * # LowLevelEventListener #  
+ * #########################
+ */      
+    
+    /**
+     * @see LowLevelEventListener#isEpochCheckEnabled()
+     */
+    public boolean isEpochCheckEnabled() {
+        return epochCheckEnabled;
+    }
+
+    /**
+     * @see LowLevelEventListener#setEpochCheckEnabled()
+     */
+    public void setEpochCheckEnabled(boolean epochCheckEnabled) {
+        this.epochCheckEnabled = epochCheckEnabled;
+    }
+    
+    /**
+     * @see LowLevelEventListener#fireIntermediateEvents()
+     */    
+    public void fireIntermediateEvents() {     
+    }
+    
+    /**
+     * @see LowLevelEventListener#processLowLevelEvent(String action, String[] values)
+     */
+    public void processLowLevelEvent(String action, String[] values) {    
+        System.out.println( "XCalendar#LowLevelEventListener#processLowLevelEvent( " + action + ", " + Arrays.toString( values ) + ")" );   
+        processKeyEvents(values);
+        if (action.endsWith("_keystroke"))
+            return;
+
+        SimpleDateFormat dateFormat  = new SimpleDateFormat("MM/dd/yyyy");
+        dateFormat.setTimeZone( getTimeZone() );
+        
+        try {
+            setDate( dateFormat.parse( values[0] ) );
+        } catch ( Exception e ) {
+            getFormattedTextField().processLowLevelEvent(action, values );
+        }
+        
+        fireActionEvents();
+        
+    }
+    
 }
