@@ -20,7 +20,7 @@ wingS.XCalendar = function (calendarId, calendarDivId, buttonId, hiddenId, month
     this.button = document.getElementById(buttonId);
     this.hiddenField = document.getElementById(hiddenId);
     
-    this.Calendar = new YAHOO.widget.Calendar("Calendar",calendarDivId, { title:"Choose a date:", close:true } ); 
+    this.Calendar = new YAHOO.widget.Calendar("Calendar",calendarDivId, { title:"<div style=\"white-space:nowrap;\">Choose a date:</div>", close:true } ); 
     this.Calendar.render(); 
     this.Calendar.cfg.setProperty("MONTHS_LONG", months_long );
     this.Calendar.cfg.setProperty("WEEKDAYS_SHORT", weekdays_short );
