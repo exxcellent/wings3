@@ -65,31 +65,113 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
     protected AbstractComponentCG() {
     }
 
-    protected void writeTablePrefix(Device device, COMPONENT_TYPE component) throws IOException {
-        writeTablePrefix(device, component, null);
+    /**
+     * Renders the default HTML TABLE prefix code for a component. This prefix will handle
+     * <ul>
+     * <li>All CSS Attrbiutes declared on the SComponent</li>
+     * <li>Components CSS class</li>
+     * <li>Components id</li>
+     * <li>Borders and insets (only if TABLE is used)</li>
+     * <li>Components ToolTip hooks</li>
+     * <li>Components Popup menu hooks</li>
+     * <li>components event id <code>eid</code> </li>
+     * </ul>
+     *
+     * @param device The output device to use
+     * @param component The component to render
+     * @throws IOException on error on the output device
+     */
+    protected final void writeTablePrefix(Device device, COMPONENT_TYPE component) throws IOException {
+        writePrefix(device, component, true, null);
     }
 
-    protected void writeTablePrefix(Device device, COMPONENT_TYPE component, Map optionalAttributes) throws IOException {
+
+    /**
+     * Renders the default HTML TABLE prefix code for a component. This prefix will handle
+     * <ul>
+     * <li>All CSS Attrbiutes declared on the SComponent</li>
+     * <li>Components CSS class</li>
+     * <li>Components id</li>
+     * <li>Borders and insets (only if TABLE is used)</li>
+     * <li>Components ToolTip hooks</li>
+     * <li>Components Popup menu hooks</li>
+     * <li>components event id <code>eid</code> </li>
+     * </ul>
+     *
+     * @param device The output device to use
+     * @param component The component to render
+     * @throws IOException on error on the output device
+     */
+    protected final void writeTablePrefix(Device device, COMPONENT_TYPE component, Map optionalAttributes) throws IOException {
         writePrefix(device, component, true, optionalAttributes);
     }
 
-    protected void writeTableSuffix(Device device, COMPONENT_TYPE component) throws IOException {
+
+    /**
+     * Renders the closing suffix for a TABLE based component prefix.
+     * @param device The output device to use
+     * @param component The component to render
+     * @throws IOException on error on the output device
+     */
+    protected final void writeTableSuffix(Device device, COMPONENT_TYPE component) throws IOException {
         writeSuffix(device, component, true);
     }
 
-    protected void writeDivPrefix(Device device, COMPONENT_TYPE component) throws IOException {
-        writeDivPrefix(device, component, null);
-    }
-
-    protected void writeDivPrefix(Device device, COMPONENT_TYPE component, Map optionalAttributes) throws IOException {
+    /**
+     * Renders a DIV prefix code for a component. <b>Discouraged</b>
+     * This prefix will handle
+     * <ul>
+     * <li>All CSS Attrbiutes declared on the SComponent</li>
+     * <li>Components CSS class</li>
+     * <li>Components id</li>
+     * <li>Borders and insets (only if TABLE is used)</li>
+     * <li>Components ToolTip hooks</li>
+     * <li>Components Popup menu hooks</li>
+     * <li>components event id <code>eid</code> </li>
+     * </ul>
+     *
+     * @param device The output device to use
+     * @param component The component to render
+     * @param optionalAttributes A map of additional CSS attributes
+     * @throws IOException on error on the output device
+     */
+    protected final void writeDivPrefix(Device device, COMPONENT_TYPE component, Map optionalAttributes) throws IOException {
         writePrefix(device, component, false, optionalAttributes);
     }
 
-    protected void writeDivSuffix(Device device, COMPONENT_TYPE component) throws IOException {
+
+    /**
+     * Renders the closing suffix for a DIV prefix.
+     * @param device The output device to use
+     * @param component The component to render
+     * @throws IOException on error on the output device
+     */
+    protected final void writeDivSuffix(Device device, COMPONENT_TYPE component) throws IOException {
         writeSuffix(device, component, false);
     }
 
-    private void writePrefix(final Device device, final COMPONENT_TYPE component, final boolean useTable, Map optionalAttributes) throws IOException {
+
+    /**
+     * Renders the HTML prefix code for a component. This prefix will handle
+     * <ul>
+     * <li>All CSS Attrbiutes declared on the SComponent</li>
+     * <li>Components CSS class</li>
+     * <li>Components id</li>
+     * <li>Borders and insets (only if TABLE is used)</li>
+     * <li>Components ToolTip hooks</li>
+     * <li>Components Popup menu hooks</li>
+     * <li>components event id <code>eid</code> </li>
+     * </ul>
+     *
+     * @param device The output device to use
+     * @param component The component to render
+     * @param useTable <code>true</code> if it should be wrapped into a <code>TABLE</code> element <b>(recommended!)</b> or a <code>DIV</code>
+     * @param optionalAttributes A map of additional CSS attributes
+     * @throws IOException on error on the output device
+     */
+    protected final void writePrefix(final Device device, final COMPONENT_TYPE component,
+                               final boolean useTable, Map optionalAttributes)
+            throws IOException {
         // This is the containing element of a component
         // it is responsible for styles, sizing...
         if (useTable) {
@@ -122,7 +204,7 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
         }
     }
 
-    private void writeSuffix(Device device, COMPONENT_TYPE component, boolean useTable) throws IOException {
+    protected final void writeSuffix(Device device, COMPONENT_TYPE component, boolean useTable) throws IOException {
         if (useTable) {
             device.print("</td></tr></table>");
         }
@@ -198,6 +280,10 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
     public void uninstallCG(COMPONENT_TYPE component) {
     }
 
+    /**
+     * Retrieve a empty blind icon.
+     * @return A empty blind icon.
+     */
     protected final SIcon getBlindIcon() {
         return BLIND_ICON;
     }

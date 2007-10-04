@@ -27,7 +27,7 @@ import java.util.Properties;
  * Utility class to discover all properties that can be found in retrievable files either via Classpath loader or as file in the
  * <code>WEB-INF</code> directory.
  */
-public class PropertyDiscovery {
+public final class PropertyDiscovery {
     private final static Log log = LogFactory.getLog(PropertyDiscovery.class);
     private static final String WEB_INF = "WEB-INF/";
 

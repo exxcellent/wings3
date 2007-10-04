@@ -1,10 +1,6 @@
 package wingset;
 
 import org.wings.*;
-import org.wings.text.SDocument;
-import org.wings.event.SDocumentListener;
-import org.wings.event.SDocumentEvent;
-import org.wings.util.PropertyAccessor;
 import org.wings.border.SLineBorder;
 
 import java.awt.event.*;
@@ -42,7 +38,7 @@ public class SplitPaneExample
     }
 
     class SplitPaneControls
-        extends ComponentControls {
+        extends XComponentControls {
         private final String[] ORIENTATIONS = new String[] { "horizontal", "vertical" };
         public STextField dividerLocationTextField;
 

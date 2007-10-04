@@ -31,7 +31,7 @@ import java.text.ParseException;
 public class TextComponentExample extends WingSetPane {
     private final SLabel actionEvent = new SLabel("(no form or button event)");
     private final STextArea eventLog = new STextArea("(no document events fired)");
-    private ComponentControls controls;
+    private XComponentControls controls;
     private SDateFormatter dateFormatter = new SDateFormatter(DateFormat.getDateInstance(DateFormat.SHORT));
     private STextField textField;
     private SFormattedTextField numberTextFieldCoR;
@@ -242,7 +242,7 @@ public class TextComponentExample extends WingSetPane {
     }
 
     class TextComponentControls
-        extends ComponentControls
+        extends XComponentControls
     {
         public TextComponentControls() {
             widthTextField.setText("100%");

@@ -21,6 +21,10 @@
           <setting name="BUILD_ONLY_WEB_RESOURCES" value="false" />
         </building>
         <packaging>
+          <containerElement type="module" name="demo-mycomponent">
+            <attribute name="method" value="5" />
+            <attribute name="URI" value="/WEB-INF/lib/demo-mycomponent.jar" />
+          </containerElement>
           <containerElement type="module" name="wingS">
             <attribute name="method" value="5" />
             <attribute name="URI" value="/WEB-INF/lib/wingS.jar" />
@@ -56,11 +60,6 @@
             <attribute name="method" value="1" />
             <attribute name="URI" value="/WEB-INF/lib/dwr.jar" />
             <url>jar://$MODULE_DIR$/../../../lib/dwr.jar!/</url>
-          </containerElement>
-          <containerElement type="library" level="module">
-            <attribute name="method" value="0" />
-            <attribute name="URI" value="&lt;N/A&gt;" />
-            <url>jar://$MODULE_DIR$/../../../lib/kdeclassic-lfgr.jar!/</url>
           </containerElement>
           <containerElement type="library" level="module">
             <attribute name="method" value="1" />
@@ -99,15 +98,6 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../../lib/commons-httpclient-2.0-beta1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" exported="">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../lib/kdeclassic-lfgr.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -161,6 +151,7 @@
     <orderEntry type="module" module-name="wingS" />
     <orderEntry type="module" module-name="wingX" />
     <orderEntry type="module" module-name="wingXet" />
+    <orderEntry type="module" module-name="demo-mycomponent" />
     <orderEntryProperties />
   </component>
 </module>

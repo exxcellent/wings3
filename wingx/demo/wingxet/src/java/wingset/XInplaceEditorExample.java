@@ -34,16 +34,16 @@ import org.wingx.XInplaceEditor;
  * Example demonstrating the use of component XInplaceEditor.
  * @author Christian Schyma
  */
-public class XInplaceEditorExample extends WingSetPane {
+public class XInplaceEditorExample extends WingXetPane {
 
-    private static final String someText =
+    private final String someText =
             "\"There is a theory which states that if anybody ever discovers " +
             "exactly what the Universe is for and why it is here, it will " +
             "instantly disappear and be replaced by something even more " +
             "bizarre and inexplicable. There is another theory which states " +
             "that this has already happened.\" \n-- Douglas Adams";
 
-    private static final SIcon HZ_PICTURE = new SURLIcon("../icons/Hohenzollern.jpg");
+    private final SIcon HZ_PICTURE = new SURLIcon("../icons/Hohenzollern.jpg");
 
     protected SComponent createControls() {
         return null;

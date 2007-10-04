@@ -33,7 +33,7 @@ import org.wingx.XColorPicker;
  * Example demonstrating the component XColorPicker.
  * @author Christian Schyma
  */
-public class XColorPickerExample extends WingSetPane {
+public class XColorPickerExample extends WingXetPane {
 
     protected SComponent createControls() {
         return null;

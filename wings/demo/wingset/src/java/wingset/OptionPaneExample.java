@@ -13,10 +13,7 @@
 package wingset;
 
 import org.wings.*;
-import org.wings.resource.ResourceManager;
-import org.wings.border.SLineBorder;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -26,7 +23,7 @@ import java.awt.event.ActionListener;
 public class OptionPaneExample
         extends WingSetPane {
 
-    private ComponentControls controls;
+    private XComponentControls controls;
 
     protected SComponent createControls() {
         controls = new OptionPaneControls();
@@ -74,7 +71,7 @@ public class OptionPaneExample
     }
 
     class OptionPaneControls
-        extends ComponentControls
+        extends XComponentControls
     {
         public OptionPaneControls() {
             globalControls.setVisible(false);

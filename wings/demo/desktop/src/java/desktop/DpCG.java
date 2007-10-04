@@ -25,7 +25,7 @@ public class DpCG
     {
         DesktopPane desktop = (DesktopPane)component;
 
-        writeDivPrefix(device, desktop);
+        writeDivPrefix(device, desktop, null);
         // is one window maximized? if yes, skip rendering of other windows
         boolean maximized = false;
 

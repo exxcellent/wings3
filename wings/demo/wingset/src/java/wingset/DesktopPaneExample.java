@@ -3,7 +3,6 @@ package wingset;
 import org.wings.*;
 import org.wings.style.CSSProperty;
 import org.wings.style.CSSStyleSheet;
-import org.wings.session.SessionManager;
 import org.wings.util.SStringBuilder;
 
 import java.awt.event.ActionEvent;
@@ -14,7 +13,7 @@ public class DesktopPaneExample extends WingSetPane {
     private SIcon windowIcon;
 
     private static final int FRAME_COUNT = 5;
-    private ComponentControls controls;
+    private XComponentControls controls;
     private SDesktopPane desktopPane = new SDesktopPane();
 
 
@@ -58,7 +57,7 @@ public class DesktopPaneExample extends WingSetPane {
         frame.getContentPane().add(new SLabel("This is a label"));
     }
 
-    private class DesktopPaneControls extends ComponentControls {
+    private class DesktopPaneControls extends XComponentControls {
 
         public DesktopPaneControls() {
             final SComboBox titleColor = new SComboBox(COLORS);

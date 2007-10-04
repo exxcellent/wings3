@@ -10,7 +10,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="wingX" />
-    <orderEntry type="module" module-name="wingSet" />
     <orderEntry type="module" module-name="wingS" />
     <orderEntryProperties />
   </component>

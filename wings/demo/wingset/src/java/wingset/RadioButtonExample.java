@@ -17,7 +17,6 @@ import org.wings.plaf.css.RadioButtonCG;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Iterator;
 
 /**
  * @author <a href="mailto:haaf@mercatis.de">Armin Haaf</a>
@@ -95,7 +94,7 @@ public class RadioButtonExample
         return panel;
     }
 
-    class ButtonControls extends ComponentControls {
+    class ButtonControls extends XComponentControls {
         public ButtonControls() {
             formComponentCheckBox.setSelected(true);
             final SCheckBox customIcons = new SCheckBox("custom icons");

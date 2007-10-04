@@ -23,8 +23,6 @@ import org.wings.SGridLayout;
 import org.wings.SLabel;
 import org.wings.SPanel;
 import org.wings.STextField;
-import org.wings.event.SDocumentAdapter;
-import org.wings.event.SDocumentEvent;
 import org.wingx.XSuggest;
 import org.wingx.XSuggestDataSource;
 
@@ -32,7 +30,7 @@ import org.wingx.XSuggestDataSource;
  * Example demonstrating the use of component XSuggest.
  * @author Christian Schyma
  */
-public class XSuggestExample extends WingSetPane {
+public class XSuggestExample extends WingXetPane {
     
     XSuggest birthCountryField = null;
     XSuggest currentCountryField = null;

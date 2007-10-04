@@ -137,7 +137,7 @@ public class ButtonExample extends WingSetPane {
     /**
      * The additional control toolbar for the button example
      */
-    private class ButtonControls extends ComponentControls
+    private class ButtonControls extends XComponentControls
     {
         private STextField iconTextGap = new STextField("4");
 

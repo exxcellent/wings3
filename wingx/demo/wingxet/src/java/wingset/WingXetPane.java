@@ -40,16 +40,16 @@ import java.awt.Insets;
  *
  * @author <a href="mailto:haaf@mercatis.de">Armin Haaf</a>
  */
-abstract public class WingSetPane
+abstract public class WingXetPane
         extends SPanel
         implements SConstants, WingSetExample {
-    protected final static Log log = LogFactory.getLog(WingSetPane.class);
-    private static final SResourceIcon SOURCE_LABEL_ICON = new SResourceIcon("org/wings/icons/source_java.png");
+    protected final Log log = LogFactory.getLog(WingXetPane.class);
+    private final SResourceIcon SOURCE_LABEL_ICON = new SResourceIcon("org/wings/icons/source_java.png");
     private boolean initialized = false;
     private SComponent controlsComponent;
     private SComponent exampleComponent;
 
-    public WingSetPane() {
+    public WingXetPane() {
         setLayout(new SBorderLayout());
         setPreferredSize(SDimension.FULLAREA);
 
@@ -90,9 +90,7 @@ abstract public class WingSetPane
         });
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public final void activateExample() {
         if (!initialized) {
             controlsComponent = createControls();
@@ -124,9 +122,7 @@ abstract public class WingSetPane
         }
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public final void passivateExample() {
         // Dumb: Always dropp all components to test header deregistration etc.
         // Maybe make this configurable per example
@@ -139,16 +135,12 @@ abstract public class WingSetPane
 
     protected abstract SComponent createExample();
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public SComponent getExample() {
         return this;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public String getExampleName() {
         String name = getClass().getName();
         name = name.substring(name.lastIndexOf('.') + 1);
@@ -162,10 +154,8 @@ abstract public class WingSetPane
         return name;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public String getExampleGroup() {
-        return "wingS";
+        return "wingX";
     }
 }

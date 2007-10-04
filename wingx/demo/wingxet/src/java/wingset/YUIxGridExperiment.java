@@ -3,14 +3,13 @@ package wingset;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
 import org.wings.*;
 import org.wingx.YUIxGrid;
 
 public class YUIxGridExperiment
-    extends WingSetPane implements ActionListener {
+    extends WingXetPane implements ActionListener {
 
     private YUIxGrid  table                 = null;
     private SButton buttonSelectionModel    = null;

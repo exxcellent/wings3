@@ -13,12 +13,10 @@
 package wingset;
 
 import org.wings.*;
-import org.wings.border.SLineBorder;
 
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.*;
 
 
 /**
@@ -62,7 +60,7 @@ public class ScrollPaneExample extends WingSetPane
         scrollPane.setViewportView(comp);
     }
 
-    class ScrollPaneControls extends ComponentControls {
+    class ScrollPaneControls extends XComponentControls {
         public ScrollPaneControls () {
             String[] scrollables = {"table", "tree", "list"};
             final SComboBox scrollable = new SComboBox(scrollables);

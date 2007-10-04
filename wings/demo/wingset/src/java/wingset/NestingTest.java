@@ -2,7 +2,6 @@ package wingset;
 
 import org.wings.*;
 import org.wings.border.SEmptyBorder;
-import org.wings.script.JavaScriptListener;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

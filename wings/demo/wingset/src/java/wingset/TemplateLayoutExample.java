@@ -38,7 +38,7 @@ public class TemplateLayoutExample
     protected StringTemplateSource templateSource;
     protected STextArea templateInput;
 
-    private ComponentControls controls;
+    private XComponentControls controls;
 
     protected SComponent createControls() {
         controls = new Controls();
@@ -103,7 +103,7 @@ public class TemplateLayoutExample
         return panel;
     }
 
-    class Controls extends ComponentControls {
+    class Controls extends XComponentControls {
         public Controls() {
             globalControls.setVisible(false);
             

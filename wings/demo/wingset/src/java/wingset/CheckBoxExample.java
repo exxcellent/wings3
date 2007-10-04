@@ -94,7 +94,7 @@ public class CheckBoxExample
         return panel;
     }
 
-    class ButtonControls extends ComponentControls {
+    class ButtonControls extends XComponentControls {
         public ButtonControls() {
             formComponentCheckBox.setSelected(true);
             final SCheckBox customIcons = new SCheckBox("custom icons");

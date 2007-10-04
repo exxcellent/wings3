@@ -85,7 +85,7 @@ public class TreeExample
         return panel;
     }
 
-    class TreeControls extends ComponentControls {
+    class TreeControls extends XComponentControls {
         private final String[] SELECTION_MODES = new String[]{"single", "contiguous", "discontiguous"};
         private final Integer[] WIDTHS = new Integer[]{ new Integer(15), new Integer(20), new Integer(25), new Integer(30)};
 

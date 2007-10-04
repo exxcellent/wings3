@@ -13,7 +13,6 @@
 package wingset;
 
 import org.wings.*;
-import org.wings.plaf.css.Utils;
 import org.wings.border.*;
 
 import javax.swing.*;
@@ -33,7 +32,7 @@ public class MenuExample extends WingSetPane {
     private SMenuBar menuBar;
     private int shortcutKey = java.awt.event.KeyEvent.VK_A;
 
-    private ComponentControls controls;
+    private XComponentControls controls;
 
 
     protected SComponent createControls() {
@@ -238,7 +237,7 @@ public class MenuExample extends WingSetPane {
         return menuBar;
     }
 
-    class MenuControls extends ComponentControls {
+    class MenuControls extends XComponentControls {
         public MenuControls() {
             widthTextField.setText("100%");
             removeGlobalControl(fontComboBox);

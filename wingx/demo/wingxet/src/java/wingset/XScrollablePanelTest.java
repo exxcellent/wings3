@@ -1,9 +1,7 @@
 package wingset;
 
 import org.wings.*;
-import org.wings.event.SViewportChangeListener;
 import org.wings.border.SEmptyBorder;
-import org.wings.script.JavaScriptListener;
 import org.wingx.XScrollablePanel;
 
 import java.awt.*;
@@ -13,7 +11,7 @@ import java.awt.event.ActionEvent;
  * @author <a href="mailto:B.Schmid@eXXcellent.de">Benjamin Schmid</a>
  */
 public class XScrollablePanelTest
-    extends WingSetPane
+    extends WingXetPane
 {
     private final SComboBox selectComboBox = new SComboBox();
     private final SPanel mainPanel = new SPanel(new SGridLayout(1, 2, 10, 0));

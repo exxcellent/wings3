@@ -16,7 +16,6 @@ import org.wings.SButton;
 import org.wings.SButtonGroup;
 import org.wings.SComponent;
 import org.wings.SConstants;
-import org.wings.SForm;
 import org.wings.SGridLayout;
 import org.wings.SIcon;
 import org.wings.SLabel;

@@ -29,7 +29,7 @@ public class ListExample
 {
     private final static SResourceIcon javaCup = new SResourceIcon("org/wings/icons/JavaCup.gif");
     private final ListModel listModel = createListModel();
-    private ComponentControls controls;
+    private XComponentControls controls;
     private SList singleSelectionList;
     private SList multiSelectionList;
     private SComboBox comboBox;
@@ -180,7 +180,7 @@ public class ListExample
     }
 
     class ListControls
-        extends ComponentControls
+        extends XComponentControls
     {
         public ListControls() {
             formComponentCheckBox.setVisible(false);

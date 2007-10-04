@@ -4,6 +4,7 @@ package foo.bar.plaf;
 
 import foo.bar.MyComponent;
 import org.wings.header.Header;
+import org.wings.header.SessionHeaders;
 import org.wings.io.Device;
 import org.wings.plaf.css.AbstractComponentCG;
 import org.wings.plaf.css.Utils;
@@ -21,7 +22,9 @@ import java.util.List;
  */
 public class MyComponentCG extends AbstractComponentCG<MyComponent> {
 
-    /** A static immutable list of all external resources we need to run our custom component. */
+    /**
+     * A static immutable list of all external resources we need to run our custom component.
+     */
     protected final static List<Header> headers;
 
     static {
@@ -36,7 +39,23 @@ public class MyComponentCG extends AbstractComponentCG<MyComponent> {
     }
 
     @Override
-    public void writeInternal(final Device device, final MyComponent component) throws IOException {
+    public void installCG(final MyComponent component) {
+        super.installCG(component);
+        // on any component that is created in our session we register our resources. This makes
+        // sure that it can be used i.e. within cell renderers.
+        // if you want to be resource saving use onParentFrameAdded and onParentFrameRemoved
+        SessionHeaders.getInstance().registerHeaders(headers);
+    }
 
+    @Override
+    public void writeInternal(final Device device, final MyComponent myComponent) throws IOException {
+        // check javadoc of this method to see what it does
+        writeTablePrefix(device, myComponent);
+
+        // Here we render our component HTML code as desired.
+        // Many useful helper methods can be found in the Util class. 
+        device.print("<!-- my component code --><div onclick=\"foobar()\">").print(myComponent.getPayload()).print("</div>");
+
+        writeTableSuffix(device, myComponent);
     }
 }

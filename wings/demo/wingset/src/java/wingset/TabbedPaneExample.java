@@ -19,13 +19,10 @@ import org.wings.SComboBox;
 import org.wings.SComponent;
 import org.wings.SConstants;
 import org.wings.SDimension;
-import org.wings.SIcon;
 import org.wings.SLabel;
 import org.wings.SPanel;
-import org.wings.SResourceIcon;
 import org.wings.STabbedPane;
 import org.wings.STextArea;
-import org.wings.SURLIcon;
 import org.wings.style.CSSProperty;
 import org.wings.style.CSSStyleSheet;
 import org.wings.text.DefaultDocument;
@@ -96,7 +93,7 @@ public class TabbedPaneExample extends WingSetPane {
     /**
      * Extended component control for this wingset demo.
      */
-    private class TabbedPaneControls extends ComponentControls {
+    private class TabbedPaneControls extends XComponentControls {
         private int tabCount = INITIAL_TAB_COUNT;
 
         public TabbedPaneControls() {

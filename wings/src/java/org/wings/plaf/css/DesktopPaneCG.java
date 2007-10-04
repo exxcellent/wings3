@@ -33,7 +33,7 @@ public final class DesktopPaneCG extends AbstractComponentCG implements org.wing
             throws IOException {
         SDesktopPane desktop = (SDesktopPane) _c;
 
-        writeDivPrefix(device, desktop);
+        writeDivPrefix(device, desktop, null);
         // is one window maximized? if yes, skip rendering of other windows
         boolean maximized = false;
 

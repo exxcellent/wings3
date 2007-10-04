@@ -2,34 +2,47 @@ package wingset;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wings.*;
-import org.wings.style.CSSProperty;
-import org.wings.resource.ReloadResource;
-import org.wings.plaf.css.Utils;
+import org.wings.Resource;
+import org.wings.SBorderLayout;
+import org.wings.SCardLayout;
+import org.wings.SComponent;
+import org.wings.SConstants;
+import org.wings.SDimension;
+import org.wings.SFrame;
+import org.wings.SPanel;
+import org.wings.SScrollPane;
+import org.wings.STemplateLayout;
+import org.wings.STree;
 import org.wings.border.SLineBorder;
 import org.wings.header.StyleSheetHeader;
-import org.wings.session.SessionManager;
+import org.wings.plaf.WingSetExample;
+import org.wings.plaf.css.Utils;
+import org.wings.resource.ReloadResource;
 import org.wings.session.ResourceMapper;
+import org.wings.session.SessionManager;
+import org.wings.style.CSSProperty;
+import org.wings.tree.SDefaultTreeCellRenderer;
 
-import javax.swing.tree.*;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
-import java.io.*;
-import java.util.*;
-import java.awt.*;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeSelectionModel;
+import java.awt.Color;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The root of the WingSet demo application.
  *
  * @author holger engels
  */
-public class WingSet2
-{
+public class WingSet2 {
     /**
-     * If true then use {@link wingset.StatisticsTimerTask} to log statistics on a regular basis to a logging file.
-     * (Typically a file named wings-statisticsxxxlog placed in jakarta-tomcat/temp directory)
+     * If true then use {@link wingset.StatisticsTimerTask} to log statistics on a regular basis to a logging file. (Typically a file named
+     * wings-statisticsxxxlog placed in jakarta-tomcat/temp directory)
      */
-    private static final boolean LOG_STATISTICS_TO_FILE = true;
+    private static final boolean LOG_STATISTICS_TO_FILE = false;
 
     private final static Log log = LogFactory.getLog(WingSet2.class);
 
@@ -50,39 +63,50 @@ public class WingSet2
     private final SPanel content;
     private final WingsImage wingsImage;
     private final SCardLayout cards = new SCardLayout();
-    private final Map<String, WingSetPane> panesByName = new HashMap<String, WingSetPane>();
+    private final Map<String, WingSetExample> exampleByName = new HashMap<String, WingSetExample>();
 
     /**
      * Constructor of the wingS application.
      * <p/>
-     * <p>This class is referenced in the <code>web.xml</code> as root entry point for the wingS application.
-     * For every new client an new {@link org.wings.session.Session} is created which constructs a new instance of this class.
+     * <p>This class is referenced in the <code>web.xml</code> as root entry point for the wingS application. For every new client an new
+     * {@link org.wings.session.Session} is created which constructs a new instance of this class.
      */
     public WingSet2() {
         wingsImage = new WingsImage();
 
-        PanesTreeModel treeModel = new PanesTreeModel();
+        WingSetTreeModel treeModel = new WingSetTreeModel();
         tree = new STree(treeModel);
         tree.setName("examples");
         tree.addTreeSelectionListener(new TreeSelectionListener() {
             public void valueChanged(TreeSelectionEvent e) {
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-                if (node == null)
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+                if (node == null) {
                     show(wingsImage);
-                else {
+                } else {
                     Object userObject = node.getUserObject();
-                    if (userObject instanceof WingSetPane) {
-                        WingSetPane wingSetPane = (WingSetPane)userObject;
-                        wingSetPane.initializePanel();
-                        show(wingSetPane);
-                    }
-                    else
+                    if (userObject instanceof WingSetExample) {
+                        WingSetExample wingSetPane = (WingSetExample) userObject;
+                        wingSetPane.activateExample();
+                        show(wingSetPane.getExample());
+                    } else {
                         show(wingsImage);
+                    }
                 }
             }
         });
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.setVerticalAlignment(SConstants.TOP_ALIGN);
+        tree.setCellRenderer(new SDefaultTreeCellRenderer() {
+            public SComponent getTreeCellRendererComponent(STree tree, Object value, boolean selected, boolean expanded,
+                                                           boolean leaf, int row, boolean hasFocus) {
+                if (value instanceof DefaultMutableTreeNode ) {
+                    Object example = ((DefaultMutableTreeNode)value).getUserObject();
+                    if (example instanceof WingSetExample)
+                        value = ((WingSetExample)example).getExampleName();
+                }
+                return super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
+            }
+        });
 
         SScrollPane scrollPane = new SScrollPane(tree);
         scrollPane.setMode(SScrollPane.MODE_COMPLETE);
@@ -119,22 +143,23 @@ public class WingSet2
 
         frame.show();
 
-        Enumeration enumeration = ((DefaultMutableTreeNode)treeModel.getRoot()).breadthFirstEnumeration();
+        Enumeration enumeration = ((DefaultMutableTreeNode) treeModel.getRoot()).breadthFirstEnumeration();
         while (enumeration.hasMoreElements()) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode)enumeration.nextElement();
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) enumeration.nextElement();
             Object userObject = node.getUserObject();
-            if (userObject instanceof WingSetPane) {
-                WingSetPane wingSetPane = (WingSetPane)userObject;
-                panesByName.put(wingSetPane.getExampleName(), wingSetPane);
+            if (userObject instanceof WingSetExample) {
+                WingSetExample wingSetPane = (WingSetExample) userObject;
+                exampleByName.put(wingSetPane.getExampleName(), wingSetPane);
             }
         }
 
         SessionManager.getSession().setResourceMapper(new ResourceMapper() {
             public Resource mapResource(String url) {
                 String name = url.substring(1);
-                WingSetPane pane = panesByName.get(name);
-                if (pane != null)
-                    show(pane);
+                WingSetExample pane = exampleByName.get(name);
+                if (pane != null) {
+                    show(pane.getExample());
+                }
                 return frame.getDynamicResource(ReloadResource.class);
             }
         });
@@ -162,86 +187,4 @@ public class WingSet2
         return header;
     }
 
-    static class PanesTreeModel
-        extends DefaultTreeModel
-    {
-        public PanesTreeModel() {
-            super(buildNodes());
-        }
-
-        private static TreeNode buildNodes() {
-            DefaultMutableTreeNode root = new DefaultMutableTreeNode("Demo");
-            DefaultMutableTreeNode wings = new DefaultMutableTreeNode("wingS");
-            root.add(wings);
-            DefaultMutableTreeNode wingx = new DefaultMutableTreeNode("wingX");
-            root.add(wingx);
-
-            String dirName = SessionManager.getSession().getServletContext().getRealPath("/WEB-INF/classes/wingset");
-            String includeTests = (String)SessionManager.getSession().getProperty("wingset.include.tests");
-            String includeExperiments = (String)SessionManager.getSession().getProperty("wingset.include.experiments");
-
-            File dir = new File(dirName);
-
-            String[] wingsClassFileNames = dir.list(new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    return name.endsWith("Example.class") && !name.startsWith("X");
-                }
-            });
-            Arrays.sort(wingsClassFileNames);
-            buildNodes(wings, wingsClassFileNames);
-
-            String[] wingxClassFileNames = dir.list(new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    return name.endsWith("Example.class") && name.startsWith("X");
-                }
-            });
-            Arrays.sort(wingxClassFileNames);
-            buildNodes(wingx, wingxClassFileNames);
-
-            if ("TRUE".equalsIgnoreCase(includeTests)) {
-                DefaultMutableTreeNode tests = new DefaultMutableTreeNode("Tests");
-                root.add(tests);
-
-                String[] testClassFileNames = dir.list(new FilenameFilter() {
-                    public boolean accept(File dir, String name) {
-                        return name.endsWith("Test.class");
-                    }
-                });
-                Arrays.sort(testClassFileNames);
-                buildNodes(tests, testClassFileNames);
-            }
-
-            if ("TRUE".equalsIgnoreCase(includeExperiments)) {
-                DefaultMutableTreeNode experiments = new DefaultMutableTreeNode("Experiments");
-                root.add(experiments);
-
-                String[] experimentClassFileNames = dir.list(new FilenameFilter() {
-                    public boolean accept(File dir, String name) {
-                        return name.endsWith("Experiment.class");
-                    }
-                });
-                Arrays.sort(experimentClassFileNames);
-                buildNodes(experiments, experimentClassFileNames);
-            }
-
-            return root;
-        }
-
-        private static void buildNodes(DefaultMutableTreeNode node, String[] classFileNames) {
-            for (int i = 0; i < classFileNames.length; i++) {
-                String classFileName = classFileNames[i];
-                String className = "wingset." + classFileName.substring(0, classFileName.length() - ".class".length());
-                try {
-                    Class clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
-                    WingSetPane example = (WingSetPane)clazz.newInstance();
-                    DefaultMutableTreeNode child = new DefaultMutableTreeNode(example);
-                    node.add(child);
-                }
-                catch (Throwable e) {
-                    System.err.println("Could not load plugin: " + className);
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 }

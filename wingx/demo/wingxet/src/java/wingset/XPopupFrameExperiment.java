@@ -29,7 +29,7 @@ import org.wingx.XPopupFrame;
  * Example demonstrating the use of component XPopupFrame.
  * @author Christian Schyma
  */
-public class XPopupFrameExperiment extends WingSetPane {
+public class XPopupFrameExperiment extends WingXetPane {
 
     protected SComponent createControls() {
         return null;

@@ -4,7 +4,6 @@ import org.wingx.XTable;
 import org.wingx.XScrollPane;
 import org.wingx.table.*;
 import org.wings.*;
-import org.wings.border.SEmptyBorder;
 import org.wings.table.STableColumnModel;
 import org.wings.style.CSSProperty;
 import org.wings.style.CSSStyleSheet;
@@ -21,7 +20,7 @@ import java.util.*;
  * @author Holger Engels
  */
 public class XScrollPaneExample
-        extends TableExample
+        extends XTableExample
 {
     private XTable table;
     private SLabel clicks = new SLabel();
@@ -83,7 +82,7 @@ public class XScrollPaneExample
     }
 
 
-    static class MyTableModel extends XTableModel {
+    class MyTableModel extends XTableModel {
         int cols, rows;
 
         Object[][] origData;
@@ -255,7 +254,7 @@ public class XScrollPaneExample
         }
     }
 
-    class TableControls extends ComponentControls {
+    class TableControls extends XComponentControls {
         private final String[] SELECTION_MODES = new String[]{"no", "single", "multiple"};
 
         public TableControls() {

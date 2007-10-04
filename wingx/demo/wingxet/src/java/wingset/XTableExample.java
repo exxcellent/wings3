@@ -33,14 +33,28 @@ import java.util.List;
 /**
  * @author Holger Engels
  */
-public class XTableExample
-        extends TableExample
-{
+public class XTableExample extends WingXetPane{
     private XTable table;
     private SLabel clicks = new SLabel();
     private TableControls controls;
     private boolean consume = false;
-
+    protected final MyCellRenderer cellRenderer = new MyCellRenderer();
+    protected final Color[] colors = {
+            Color.black,
+            Color.cyan,
+            Color.yellow,
+            Color.magenta,
+            Color.orange,
+            Color.pink,
+            Color.red,
+            Color.darkGray,
+            Color.gray,
+            Color.green,
+            Color.lightGray,
+            Color.white,
+            Color.blue
+    };
+    protected final SIcon image = new SResourceIcon("org/wings/icons/JavaCup.gif");
 
     protected SComponent createControls() {
         controls = new TableControls();
@@ -97,7 +111,7 @@ public class XTableExample
     }
 
 
-    static class MyTableModel extends XTableModel {
+    class MyTableModel extends XTableModel {
         int cols, rows;
 
         Object[][] origData;
@@ -264,7 +278,7 @@ public class XTableExample
         }
     }
 
-    class TableControls extends ComponentControls {
+    class TableControls extends XComponentControls {
         private final String[] SELECTION_MODES = new String[]{"no", "single", "multiple"};
 
         public TableControls() {
@@ -436,4 +450,70 @@ public class XTableExample
         public void actionPerformed(ActionEvent e) {
         }
     }
+
+    private static class MyCellRenderer extends SDefaultTableCellRenderer {
+        private final SFont MONOSPACE = new SFont("monospace", SFont.BOLD, SFont.DEFAULT_SIZE);
+
+        public MyCellRenderer() {
+            setEditIcon(getSession().getCGManager().getIcon("TableCG.editIcon"));
+        }
+
+        public SComponent getTableCellRendererComponent(STable table,
+                                                        Object value,
+                                                        boolean selected,
+                                                        int row,
+                                                        int col) {
+            setHorizontalAlignment(SConstants.LEFT);
+            setIcon(null);
+            setFont(null);
+            setForeground(null);
+            setComponentPopupMenu(null);
+
+            if (value instanceof Color) {
+                Color c = (Color) value;
+                setFont(MONOSPACE);
+                setText(colorToHex(c));
+                setForeground(c);
+                return this;
+            }
+            else if (value instanceof Boolean && row != -1) {
+                setText("" + value);
+                return this;
+            }
+            else if (value instanceof Integer && row != -1) {
+                setHorizontalAlignment(SConstants.RIGHT);
+                return super.getTableCellRendererComponent(table, value, selected, row, col);
+            }
+            else
+                return super.getTableCellRendererComponent(table, value, selected, row, col);
+        }
+    }
+
+    private static String colorToHex(Color color) {
+        String colorstr = "#";
+
+        // Red
+        String str = Integer.toHexString(color.getRed());
+        if (str.length() < 2)
+            colorstr += "0" + str;
+        else
+            colorstr += str;
+
+        // Green
+        str = Integer.toHexString(color.getGreen());
+        if (str.length() < 2)
+            colorstr += "0" + str;
+        else
+            colorstr += str;
+
+        // Blue
+        str = Integer.toHexString(color.getBlue());
+        if (str.length() < 2)
+            colorstr += "0" + str;
+        else
+            colorstr += str;
+
+        return colorstr;
+    }
+    
 }

@@ -20,12 +20,10 @@ import org.wings.SGridLayout;
 import org.wings.SLabel;
 import org.wings.SPanel;
 import org.wings.SSpinner;
-import org.wings.event.SRenderListener;
-import org.wings.event.SRenderEvent;
 import org.wings.text.SDateFormatter;
 import org.wingx.XCalendar;
 
-public class XCalendarExample extends WingSetPane {
+public class XCalendarExample extends WingXetPane {
 
     protected SComponent createControls() {
         return null;

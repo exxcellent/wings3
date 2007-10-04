@@ -20,18 +20,13 @@ import org.wings.SConstants;
 import org.wings.SDimension;
 import org.wings.SFlowDownLayout;
 import org.wings.SFlowLayout;
-import org.wings.SForm;
 import org.wings.SGridBagLayout;
 import org.wings.SGridLayout;
 import org.wings.SLabel;
 import org.wings.SLayoutManager;
 import org.wings.SPanel;
-import org.wings.SToolBar;
-import org.wings.SButton;
 import org.wings.border.SBorder;
 import org.wings.border.SLineBorder;
-import org.wings.script.JavaScriptEvent;
-import org.wings.script.JavaScriptListener;
 
 import java.awt.*;
 import java.awt.event.ItemEvent;
@@ -55,7 +50,7 @@ public class DynamicLayoutExample extends WingSetPane {
                                                       "SBoxLayout"};
     private final SComboBox selectLayoutManager = new SComboBox(demoManagerNames);
     protected SPanel panel;
-    private ComponentControls controls;
+    private XComponentControls controls;
 
     protected SComponent createControls() {
         controls = new LayoutControls();
@@ -594,7 +589,7 @@ public class DynamicLayoutExample extends WingSetPane {
     }
 
     class LayoutControls
-        extends ComponentControls {
+        extends XComponentControls {
         public LayoutControls() {
             globalControls.setVisible(false);
 

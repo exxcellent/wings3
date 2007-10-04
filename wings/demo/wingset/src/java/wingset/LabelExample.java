@@ -39,7 +39,7 @@ public class LabelExample extends WingSetPane {
     private static final String directions[] = {"nw", "n", "ne", "w", "e", "sw", "s", "se"};
     private static final SIcon onIcons[];
     private static final SIcon offIcons[];
-    private ComponentControls controls;
+    private XComponentControls controls;
 
     static {
         onIcons = new SIcon[directions.length];
@@ -52,7 +52,7 @@ public class LabelExample extends WingSetPane {
     }
 
     protected SComponent createControls() {
-        controls = new ComponentControls();
+        controls = new XComponentControls();
         controls.fontComboBox.setSelectedIndex(1);
         controls.foregroundComboBox.setSelectedIndex(3);
         return controls;
