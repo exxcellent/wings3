@@ -423,11 +423,11 @@ public class XTableExample
         }
 
         public LowLevelEventListener getLowLevelEventListener(STable table, int row, int column) {
-            return getFormattedTextField();
+            return this;
         }
 
         public void setNameRaw(String uncheckedName) {
-            super.setNameRaw(uncheckedName + "_panel");
+            super.setNameRaw(uncheckedName);
             getFormattedTextField().setNameRaw(uncheckedName);
         }
     }
