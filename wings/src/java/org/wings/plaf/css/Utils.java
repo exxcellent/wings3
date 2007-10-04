@@ -1208,6 +1208,7 @@ public final class Utils {
     // CSS: public static final String CSS_YUI_BASE = "CSS.yuiBase";
     // Beta: public static final String JS_YUI_BUTTON = "JS.yuiButton";
     public static final String JS_YUI_CALENDAR = "JS.yuiCalendar";
+    public static final String CSS_YUI_CALENDAR = "CSS.yuiCalendar";
     // Beta: public static final String JS_YUI_COLORPICKER = "JS.yuiColorpicker";
     public static final String JS_YUI_CONNECTION = "JS.yuiConnection";
     public static final String JS_YUI_CONTAINER = "JS.yuiContainer";
