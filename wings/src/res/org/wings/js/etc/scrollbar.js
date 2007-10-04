@@ -24,13 +24,14 @@ wingS.scrollbar.layout_vertical = function(id) {
 
     table.callbackObject = {
         _tOutId : 0,
-        _adjust : function (e) {
-            wingS.scrollbar.scroll_vertical(e);
+        _adjust : function (target) {
+            wingS.scrollbar.scroll_vertical(target);
         },
-        adjust : function (e) {
+        adjust : function (event) {
+            var target = wingS.event.getTarget(event);
             clearTimeout(table.callbackObject._tOutId);
             var cb = table.callbackObject;
-            table.callbackObject._tOutId = setTimeout(function() { cb._adjust(e); }, wingS.global.autoAdjustLayout.delay);
+            table.callbackObject._tOutId = setTimeout(function() { cb._adjust(target); }, wingS.global.autoAdjustLayout.delay);
         }
     };
 
@@ -52,9 +53,7 @@ wingS.scrollbar.set_vertical = function(id, position, extent, size) {
     outer.scrollTop = innerHeight * position / size;
 }
 
-wingS.scrollbar.scroll_vertical = function(event) {
-    event = wingS.event.getEvent(event);
-    var outer = wingS.event.getTarget(event);
+wingS.scrollbar.scroll_vertical = function(outer) {
     var inner = outer.getElementsByTagName("DIV")[0];
     var table = wingS.util.getParentByTagName(outer, "TABLE");
 
@@ -89,13 +88,14 @@ wingS.scrollbar.layout_horizontal = function(id) {
 
     table.callbackObject = {
         _tOutId : 0,
-        _adjust : function (e) {
-            wingS.scrollbar.scroll_horizontal(e);
+        _adjust : function (target) {
+            wingS.scrollbar.scroll_horizontal(target);
         },
-        adjust : function (e) {
+        adjust : function (event) {
+            var target = wingS.event.getTarget(event);
             clearTimeout(table.callbackObject._tOutId);
             var cb = table.callbackObject;
-            table.callbackObject._tOutId = setTimeout(function() { cb._adjust(e); }, wingS.global.autoAdjustLayout.delay);
+            table.callbackObject._tOutId = setTimeout(function() { cb._adjust(target); }, wingS.global.autoAdjustLayout.delay);
         }
     };
 
@@ -117,9 +117,7 @@ wingS.scrollbar.set_horizontal = function(id, position, extent, size) {
     outer.scrollLeft = innerWidth * position / size;
 }
 
-wingS.scrollbar.scroll_horizontal = function(event) {
-    event = wingS.event.getEvent(event);
-    var outer = wingS.event.getTarget(event);
+wingS.scrollbar.scroll_horizontal = function(outer) {
     var inner = outer.getElementsByTagName("DIV")[0];
     var table = wingS.util.getParentByTagName(outer, "TABLE");
 
