@@ -232,7 +232,7 @@ public class FileChooserExample
         return form;
     }
 
-    class FileChooserControls extends XComponentControls {
+    class FileChooserControls extends ComponentControls {
         public FileChooserControls() {
             //showAsFormComponentCheckBox.setVisible(false);
             globalControls.setVisible(false);

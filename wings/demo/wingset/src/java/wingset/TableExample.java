@@ -301,7 +301,7 @@ public class TableExample
         }
     }
 
-    class TableControls extends XComponentControls {
+    class TableControls extends ComponentControls {
         private final String[] SELECTION_MODES = new String[]{"no", "single", "multiple"};
 
         public TableControls() {

@@ -93,7 +93,7 @@ public class DragAndDropExample extends WingSetPane {
     private int piecesRight;
     private final SLabel statusLabel = new SLabel();
 
-    private XComponentControls controls;
+    private ComponentControls controls;
 
     protected SComponent createControls() {
         controls = new Controls();
@@ -245,7 +245,7 @@ public class DragAndDropExample extends WingSetPane {
         }        
     }
 
-    class Controls extends XComponentControls {
+    class Controls extends ComponentControls {
         public Controls() {
             globalControls.setVisible(false);
 

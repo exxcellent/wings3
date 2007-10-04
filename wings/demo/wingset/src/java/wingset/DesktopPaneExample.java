@@ -13,7 +13,7 @@ public class DesktopPaneExample extends WingSetPane {
     private SIcon windowIcon;
 
     private static final int FRAME_COUNT = 5;
-    private XComponentControls controls;
+    private ComponentControls controls;
     private SDesktopPane desktopPane = new SDesktopPane();
 
 
@@ -57,7 +57,7 @@ public class DesktopPaneExample extends WingSetPane {
         frame.getContentPane().add(new SLabel("This is a label"));
     }
 
-    private class DesktopPaneControls extends XComponentControls {
+    private class DesktopPaneControls extends ComponentControls {
 
         public DesktopPaneControls() {
             final SComboBox titleColor = new SComboBox(COLORS);

@@ -92,7 +92,7 @@ public class ToggleButtonExample
         return panel;
     }
 
-    class ButtonControls extends XComponentControls {
+    class ButtonControls extends ComponentControls {
         public ButtonControls() {
             formComponentCheckBox.setSelected(true);
             formComponentCheckBox.addActionListener(new ActionListener() {

@@ -32,7 +32,7 @@ public class MenuExample extends WingSetPane {
     private SMenuBar menuBar;
     private int shortcutKey = java.awt.event.KeyEvent.VK_A;
 
-    private XComponentControls controls;
+    private ComponentControls controls;
 
 
     protected SComponent createControls() {
@@ -237,7 +237,7 @@ public class MenuExample extends WingSetPane {
         return menuBar;
     }
 
-    class MenuControls extends XComponentControls {
+    class MenuControls extends ComponentControls {
         public MenuControls() {
             widthTextField.setText("100%");
             removeGlobalControl(fontComboBox);

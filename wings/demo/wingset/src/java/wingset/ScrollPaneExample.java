@@ -60,7 +60,7 @@ public class ScrollPaneExample extends WingSetPane
         scrollPane.setViewportView(comp);
     }
 
-    class ScrollPaneControls extends XComponentControls {
+    class ScrollPaneControls extends ComponentControls {
         public ScrollPaneControls () {
             String[] scrollables = {"table", "tree", "list"};
             final SComboBox scrollable = new SComboBox(scrollables);

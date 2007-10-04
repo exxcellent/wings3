@@ -23,7 +23,7 @@ import java.awt.event.ActionListener;
 public class OptionPaneExample
         extends WingSetPane {
 
-    private XComponentControls controls;
+    private ComponentControls controls;
 
     protected SComponent createControls() {
         controls = new OptionPaneControls();
@@ -71,7 +71,7 @@ public class OptionPaneExample
     }
 
     class OptionPaneControls
-        extends XComponentControls
+        extends ComponentControls
     {
         public OptionPaneControls() {
             globalControls.setVisible(false);

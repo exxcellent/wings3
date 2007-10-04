@@ -50,7 +50,7 @@ public class DynamicLayoutExample extends WingSetPane {
                                                       "SBoxLayout"};
     private final SComboBox selectLayoutManager = new SComboBox(demoManagerNames);
     protected SPanel panel;
-    private XComponentControls controls;
+    private ComponentControls controls;
 
     protected SComponent createControls() {
         controls = new LayoutControls();
@@ -589,7 +589,7 @@ public class DynamicLayoutExample extends WingSetPane {
     }
 
     class LayoutControls
-        extends XComponentControls {
+        extends ComponentControls {
         public LayoutControls() {
             globalControls.setVisible(false);
 

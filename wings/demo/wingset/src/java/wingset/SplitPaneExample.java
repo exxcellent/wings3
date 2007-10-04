@@ -38,7 +38,7 @@ public class SplitPaneExample
     }
 
     class SplitPaneControls
-        extends XComponentControls {
+        extends ComponentControls {
         private final String[] ORIENTATIONS = new String[] { "horizontal", "vertical" };
         public STextField dividerLocationTextField;
 

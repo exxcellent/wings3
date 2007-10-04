@@ -93,7 +93,7 @@ public class TabbedPaneExample extends WingSetPane {
     /**
      * Extended component control for this wingset demo.
      */
-    private class TabbedPaneControls extends XComponentControls {
+    private class TabbedPaneControls extends ComponentControls {
         private int tabCount = INITIAL_TAB_COUNT;
 
         public TabbedPaneControls() {
