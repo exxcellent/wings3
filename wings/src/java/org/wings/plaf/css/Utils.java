@@ -17,6 +17,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wings.*;
 import org.wings.border.SAbstractBorder;
 import org.wings.border.SDefaultBorder;
+import org.wings.border.SBorder;
 import org.wings.externalizer.ExternalizeManager;
 import org.wings.header.JavaScriptHeader;
 import org.wings.header.Link;
@@ -33,6 +34,8 @@ import org.wings.session.BrowserType;
 import org.wings.session.Session;
 import org.wings.session.SessionManager;
 import org.wings.style.Style;
+import org.wings.style.CSSStyle;
+import org.wings.style.CSSAttributeSet;
 import org.wings.util.SStringBuilder;
 
 import java.awt.*;
@@ -94,7 +97,7 @@ public final class Utils {
             '6', '7', '8', '9', 'a', 'b',
             'c', 'd', 'e', 'f'};
 
-    protected Utils() {
+    private Utils() {
     }
 
     /**
@@ -133,19 +136,18 @@ public final class Utils {
         if (!c.isEnabled())
             return;
 
-        Set types = new HashSet();
+        Set<String> types = new HashSet<String>();
         // Create set of strings (in lower case) defining the event types to be suppressed
         if (suppressScriptListenerTypes != null && suppressScriptListenerTypes.length > 0) {
-            for (int i = 0; i < suppressScriptListenerTypes.length; i++) {
-                types.add(suppressScriptListenerTypes[i].toLowerCase());
+            for (String suppressScriptListenerType : suppressScriptListenerTypes) {
+                types.add(suppressScriptListenerType.toLowerCase());
             }
         }
         ScriptListener[] listeners = c.getScriptListeners();
         if (listeners.length > 0) {
-            Map eventScripts = new HashMap();
+            Map<String, String> eventScripts = new HashMap<String, String>();
             // Fill map with script codes grouped by event type (key)
-            for (int i = 0; i < listeners.length; i++) {
-                final ScriptListener script = listeners[i];
+            for (final ScriptListener script : listeners) {
                 if (types.contains(script.getEvent().toLowerCase())) {
                     continue;
                 }
@@ -164,7 +166,7 @@ public final class Utils {
                 }
 
                 if (eventScripts.containsKey(event)) {
-                    String savedEventScriptCode = (String) eventScripts.get(event);
+                    String savedEventScriptCode = eventScripts.get(event);
                     eventScriptCode = savedEventScriptCode
                             + (savedEventScriptCode.trim().endsWith(";") ? "" : ";")
                             + eventScriptCode;
@@ -173,10 +175,8 @@ public final class Utils {
             }
 
             // Print map of script codes grouped by event type (key)
-            Iterator it = eventScripts.keySet().iterator();
-            while (it.hasNext()) {
-                final String event = (String) it.next();
-                final String code = (String) eventScripts.get(event);
+            for (final String event : eventScripts.keySet()) {
+                final String code = eventScripts.get(event);
                 Utils.optAttribute(device, event, code);
             }
         }
@@ -388,13 +388,14 @@ public final class Utils {
      * @param preferredSize trigger dimension
      */
     public static void printCSSInlineFullSize(Device device, SDimension preferredSize) throws IOException {
-        if (preferredSize != null && (preferredSize.getWidth() != SDimension.AUTO || preferredSize.getHeight() != SDimension.AUTO))
+        if ((preferredSize != null) &&
+                (!SDimension.AUTO.equals(preferredSize.getWidth()) ||
+                  !SDimension.AUTO.equals(preferredSize.getHeight())))
         {
             // opera doesn't show height 100% when parent has no defined height
-            if (preferredSize.getHeight() != SDimension.AUTO) {
+            if (!SDimension.AUTO.equals(preferredSize.getHeight())) {
                 device.print(" style=\"width:100%;height:100%\"");
-            }
-            else {
+            } else {
                 device.print(" style=\"width:100%\"");
             }
         }
@@ -413,7 +414,8 @@ public final class Utils {
      */
     public static void appendCSSInlineFullSize(SStringBuilder pSStringBuilder, SComponent pComponent) {
         SDimension preferredSize = pComponent.getPreferredSize();
-        if (preferredSize != null && (preferredSize.getWidth() != SDimension.AUTO || preferredSize.getHeight() != SDimension.AUTO))
+        if (preferredSize != null &&
+            (!SDimension.AUTO.equals(preferredSize.getWidth()) || !SDimension.AUTO.equals(preferredSize.getHeight())))
         {
             pSStringBuilder.append("width:100%;height:100%;");
         }
@@ -681,7 +683,8 @@ public final class Utils {
      */
     public static void optAttributes(Device d, Map attributes) throws IOException {
         if (attributes != null) {
-            for (Iterator iter = attributes.entrySet().iterator(); iter.hasNext();) {
+            Iterator iter = attributes.entrySet().iterator();
+            while (iter.hasNext()) {
                 Map.Entry entries = (Map.Entry) iter.next();
 
                 Object key = entries.getKey();
@@ -1037,17 +1040,17 @@ public final class Utils {
      * @return The attached listeners to event type
      */
     private static JavaScriptListener[] getEventTypeListeners(final SComponent button, final String javaScriptEvent) {
-        ArrayList result = new ArrayList();
+        ArrayList<JavaScriptListener> result = new ArrayList<JavaScriptListener>();
         ScriptListener[] listeners = button.getScriptListeners();
-        for (int i = 0; i < listeners.length; i++) {
-            if (listeners[i] instanceof JavaScriptListener) {
-                JavaScriptListener jsListener = (JavaScriptListener) listeners[i];
+        for (ScriptListener listener : listeners) {
+            if (listener instanceof JavaScriptListener) {
+                JavaScriptListener jsListener = (JavaScriptListener) listener;
                 if (javaScriptEvent.equals(jsListener.getEvent().toLowerCase())) {
                     result.add(jsListener);
                 }
             }
         }
-        return (JavaScriptListener[]) result.toArray(new JavaScriptListener[result.size()]);
+        return result.toArray(new JavaScriptListener[result.size()]);
     }
 
     public static SStringBuilder inlineStyles(Style tabAreaStyle) {
@@ -1364,7 +1367,93 @@ public final class Utils {
         }
         return sb.toString();
     }
-    
+
+    public static void writeAllAttributes(Device device, SComponent component) throws IOException {
+        optAttribute(device, "class", component.getStyle());
+        optAttribute(device, "id", component.getName());
+
+        optAttribute(device, "style", getInlineStyles(component));
+
+        if (component instanceof LowLevelEventListener) {
+            optAttribute(device, "eid", component.getLowLevelEventId());
+        }
+
+        // Tooltip handling
+        writeTooltipMouseOver(device, component);
+
+        // Component popup menu
+        writeContextMenu(device, component);
+    }
+
+    public static String getInlineStyles(SComponent component) {
+        // write inline styles
+        final SStringBuilder builder = new SStringBuilder();
+
+        appendCSSInlineSize(builder, component);
+
+        // Determine Style String
+        Style allStyle = component.getDynamicStyle(SComponent.SELECTOR_ALL);
+        if (component instanceof SAbstractIconTextCompound && ((SAbstractIconTextCompound)component).isSelected()) {
+            // present, SComponent.getDynamicStyle() always is instance of CSSStyle
+            CSSStyle selectedStyle = (CSSStyle)component.getDynamicStyle(SAbstractIconTextCompound.SELECTOR_SELECTED);
+            if (selectedStyle != null) {
+              if (allStyle != null) {
+                  // make a copy to modify
+                  allStyle = new CSSStyle(SComponent.SELECTOR_ALL, (CSSAttributeSet) allStyle);
+                  allStyle.putAll(selectedStyle);
+              } else {
+                  allStyle = selectedStyle;
+              }
+            }
+        }
+        // Render Style string
+        if (allStyle != null)
+            builder.append(allStyle.toString());
+
+        final SBorder border = component.getBorder();
+        if (border != null) {
+            if (border.getAttributes() != null)
+                builder.append(border.getAttributes().toString());
+        }
+        else
+            builder.append("border:none;padding:0px");
+
+        return builder.toString();
+    }
+
+    /**
+     * Write JS code for context menus. Common implementaton for MSIE and gecko.
+     */
+    public static void writeContextMenu(Device device, SComponent component) throws IOException {
+        final SPopupMenu menu = component.getComponentPopupMenu();
+        if (menu != null && menu.isEnabled()) {
+            final String componentId = menu.getName();
+            final String popupId = componentId + "_pop";
+            device.print(" onContextMenu=\"return wpm_menuPopup(event, '");
+            device.print(popupId);
+            device.print("');\" onMouseDown=\"return wpm_menuPopup(event, '");
+            device.print(popupId);
+            device.print("');\"");
+        }
+    }
+
+    /**
+     * Write Tooltip code.
+     */
+    public static void writeTooltipMouseOver(Device device, SComponent component) throws IOException {
+        final String toolTipText = component != null ? component.getToolTipText() : null;
+        if (toolTipText != null && toolTipText.length() > 0) {
+            device.print(" onmouseover=\"Tip('");
+            quote(device, toolTipText, true, false, true);
+            device.print("')\"");
+        }
+    }
+
+    public static final boolean hasDimension(final SComponent component) {
+        SDimension dim = component.getPreferredSize();
+        return dim != null && (dim.getHeightInt() != SDimension.AUTO_INT || dim.getWidthInt() != SDimension.AUTO_INT);
+    }
+
     private static class JSArray {
 
         private List list;
@@ -1373,9 +1462,10 @@ public final class Utils {
             this.list = list;
         }
 
+        @Override
         public String toString() {
-            Iterator i = list.iterator();
-            StringBuffer sb = new StringBuffer("[");
+            final Iterator i = list.iterator();
+            final StringBuffer sb = new StringBuffer("[");
             if (i.hasNext())
                 sb.append(encodeJS(i.next()));
             while (i.hasNext())
@@ -1383,9 +1473,16 @@ public final class Utils {
             return sb.append("]").toString();
         }
 
+        @Override
         public boolean equals(Object object) {
             return list.equals(object);
         }
+
+        @Override
+        public int hashCode() {
+            return list.hashCode();
+        }
+
     }
 
     private static class JSObject {
@@ -1396,9 +1493,10 @@ public final class Utils {
             this.map = map;
         }
 
+        @Override
         public String toString() {
-            Iterator i = map.entrySet().iterator();
-            StringBuffer sb = new StringBuffer("{");
+            final Iterator i = map.entrySet().iterator();
+            final StringBuffer sb = new StringBuffer("{");
             if (i.hasNext())
                 sb.append(toString((Map.Entry) i.next()));
             while (i.hasNext()) {
@@ -1408,7 +1506,7 @@ public final class Utils {
         }
 
         private String toString(Map.Entry entry) {
-            StringBuffer sb = new StringBuffer();
+            final StringBuffer sb = new StringBuffer();
             sb.append("\"");
             sb.append(escapeJS(entry.getKey().toString()));
             sb.append("\":");
@@ -1418,6 +1516,12 @@ public final class Utils {
 
         public boolean equals(Object object) {
             return map.equals(object);
+        }
+
+
+        @Override
+        public int hashCode() {
+            return map.hashCode();
         }
     }
 

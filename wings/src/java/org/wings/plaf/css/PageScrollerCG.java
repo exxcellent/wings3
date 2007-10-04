@@ -97,7 +97,7 @@ public final class PageScrollerCG extends AbstractComponentCG implements org.win
         boolean lastPage = (value == (maximum - extent));
 
         d.print("<table");
-        writeAllAttributes(d, sb);
+        Utils.writeAllAttributes(d, sb);
         Utils.writeEvents(d, sb, null);
         d.print("><tbody><tr height=\"1%\">")
             .print("<td height=\"1%\"><table class=\"buttons\"><tbody>");
@@ -178,7 +178,7 @@ public final class PageScrollerCG extends AbstractComponentCG implements org.win
         boolean lastPage = (value >= (maximum - extent));
 
         d.print("<table");
-        writeAllAttributes(d, sb);
+        Utils.writeAllAttributes(d, sb);
         Utils.writeEvents(d, sb, null);
         d.print("><tbody><tr>")
             .print("<td><table class=\"buttons\"><tbody><tr>");

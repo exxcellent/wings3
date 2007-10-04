@@ -16,13 +16,14 @@ import org.wings.SButton;
 import org.wings.SComponent;
 import org.wings.util.SStringBuilder;
 
-public class JavaScriptListener
-        implements ScriptListener {
-    private String event;
-    private String code;
-    private String script;
-    private SComponent[] components;
-    private int priority = DEFAULT_PRIORITY;
+import java.util.Arrays;
+
+public class JavaScriptListener        implements ScriptListener {
+    private final String event;
+    private final String code;
+    private final String script;
+    private final SComponent[] components;
+    private final int priority;
 
     /**
      * Use this java script implementation to submit forms on button click
@@ -43,6 +44,9 @@ public class JavaScriptListener
     public JavaScriptListener(String event, String code) {
         this.event = event;
         this.code = code;
+        this.script = null;
+        this.priority = DEFAULT_PRIORITY;
+        this.components = null;
     }
 
     /**
@@ -55,6 +59,8 @@ public class JavaScriptListener
         this.event = event;
         this.code = code;
         this.script = script;
+        this.priority = DEFAULT_PRIORITY;
+        this.components = null;
     }
 
     /**
@@ -70,6 +76,8 @@ public class JavaScriptListener
         this.event = event;
         this.code = substituteIds(code, components);
         this.components = components;
+        this.script = null;
+        this.priority = DEFAULT_PRIORITY;
     }
 
     /**
@@ -88,30 +96,19 @@ public class JavaScriptListener
         this.code = substituteIds(code, components);
         this.script = substituteIds(script, components);
         this.components = components;
+        this.priority = DEFAULT_PRIORITY;        
     }
 
-    public void setEvent(String event) {
-        this.event = event;
-    }
-
+    /** @inheritDoc */
     public String getEvent() { return event; }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
+    /** @inheritDoc */
     public String getCode() { return code; }
 
-    public void setScript(String script) {
-        this.script = script;
-    }
-
+    /** @inheritDoc */
     public String getScript() { return script; }
 
-    public void setComponents(SComponent[] components) {
-        this.components = components;
-    }
-
+    /** @inheritDoc */
     public SComponent[] getComponents() { return components; }
 
     private String substituteIds(String code, SComponent[] components) {
@@ -148,6 +145,7 @@ public class JavaScriptListener
     /* (non-Javadoc)
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object obj) {
         /* only checking for instanceof, not exact class, so we don't
          * need to implement this in inherited classes
@@ -182,7 +180,7 @@ public class JavaScriptListener
                 return false;
             }
         } else {
-            if (!testObj.getComponents().equals(getComponents())) {
+            if (!Arrays.equals(testObj.getComponents(), getComponents())) {
                 return false;
             }
         }
@@ -200,21 +198,14 @@ public class JavaScriptListener
         return true;
     }
 
+    @Override
     public int hashCode() {
         return code != null ? code.hashCode() : super.hashCode();
     }
 
+    /** @inheritDoc */
     public int getPriority() {
         return priority;
-    }
-
-    /**
-     * Modifies the scripting priority of this script.
-     *
-     * @param priority New priority as describe inn {@link org.wings.script.ScriptListener#getPriority()}
-     */
-    public void setPriority(int priority) {
-        this.priority = priority;
     }
 
 }

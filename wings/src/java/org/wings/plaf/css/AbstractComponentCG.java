@@ -14,16 +14,14 @@ package org.wings.plaf.css;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wings.LowLevelEventListener;
 import org.wings.SComponent;
 import org.wings.SConstants;
-import org.wings.SDimension;
 import org.wings.SIcon;
-import org.wings.SPopupMenu;
 import org.wings.SResourceIcon;
-import org.wings.SAbstractIconTextCompound;
-import org.wings.border.*;
-import org.wings.dnd.*;
+import org.wings.border.SDefaultBorder;
+import org.wings.border.SEmptyBorder;
+import org.wings.dnd.DragSource;
+import org.wings.dnd.DropTarget;
 import org.wings.io.Device;
 import org.wings.io.StringBuilderDevice;
 import org.wings.plaf.CGManager;
@@ -34,13 +32,10 @@ import org.wings.plaf.css.script.OnPageRenderedScript;
 import org.wings.script.ScriptListener;
 import org.wings.session.BrowserType;
 import org.wings.session.ScriptManager;
-import org.wings.style.Style;
-import org.wings.style.CSSStyle;
-import org.wings.style.CSSAttributeSet;
 import org.wings.util.SStringBuilder;
 import org.wings.util.SessionLocal;
 
-import javax.swing.*;
+import javax.swing.InputMap;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -51,20 +46,20 @@ import java.util.Map;
  *
  * @author <a href="mailto:engels@mercatis.de">Holger Engels</a>
  */
-public abstract class AbstractComponentCG implements ComponentCG, SConstants, Serializable {
+public abstract class AbstractComponentCG<COMPONENT_TYPE extends SComponent> implements ComponentCG<COMPONENT_TYPE>, SConstants, Serializable {
 
     private static final Log log = LogFactory.getLog(AbstractComponentCG.class);
 
     /**
      * An invisible icon / graphic (spacer graphic)
      */
-    private static SIcon BLIND_ICON;
+    private static final SIcon BLIND_ICON = new SResourceIcon("org/wings/icons/blind.gif");
 
     /**
      * Be careful with this shared StringBuilder. Don't use it in situations where unknown code is called, that might
      * use the StringBuilder, too.
      */
-    public static SessionLocal<StringBuilder> STRING_BUILDER = new SessionLocal<StringBuilder>() {
+    public static final SessionLocal<StringBuilder> STRING_BUILDER = new SessionLocal<StringBuilder>() {
         protected StringBuilder initialValue() {
             return new StringBuilder();
         }
@@ -73,31 +68,31 @@ public abstract class AbstractComponentCG implements ComponentCG, SConstants, Se
     protected AbstractComponentCG() {
     }
 
-    protected void writeTablePrefix(Device device, SComponent component) throws IOException {
+    protected void writeTablePrefix(Device device, COMPONENT_TYPE component) throws IOException {
         writeTablePrefix(device, component, null);
     }
 
-    protected void writeTablePrefix(Device device, SComponent component, Map optionalAttributes) throws IOException {
+    protected void writeTablePrefix(Device device, COMPONENT_TYPE component, Map optionalAttributes) throws IOException {
         writePrefix(device, component, true, optionalAttributes);
     }
 
-    protected void writeTableSuffix(Device device, SComponent component) throws IOException {
+    protected void writeTableSuffix(Device device, COMPONENT_TYPE component) throws IOException {
         writeSuffix(device, component, true);
     }
 
-    protected void writeDivPrefix(Device device, SComponent component) throws IOException {
+    protected void writeDivPrefix(Device device, COMPONENT_TYPE component) throws IOException {
         writeDivPrefix(device, component, null);
     }
 
-    protected void writeDivPrefix(Device device, SComponent component, Map optionalAttributes) throws IOException {
+    protected void writeDivPrefix(Device device, COMPONENT_TYPE component, Map optionalAttributes) throws IOException {
         writePrefix(device, component, false, optionalAttributes);
     }
 
-    protected void writeDivSuffix(Device device, SComponent component) throws IOException {
+    protected void writeDivSuffix(Device device, COMPONENT_TYPE component) throws IOException {
         writeSuffix(device, component, false);
     }
 
-    private void writePrefix(final Device device, final SComponent component, final boolean useTable, Map optionalAttributes) throws IOException {
+    private void writePrefix(final Device device, final COMPONENT_TYPE component, final boolean useTable, Map optionalAttributes) throws IOException {
         // This is the containing element of a component
         // it is responsible for styles, sizing...
         if (useTable) {
@@ -110,7 +105,7 @@ public abstract class AbstractComponentCG implements ComponentCG, SConstants, Se
         // We cant render this here.
         // Utils.writeEvents(device, component, null);
 
-        writeAllAttributes(device, component);
+        Utils.writeAllAttributes(device, component);
 
         // Render the optional attributes.
         Utils.optAttributes(device, optionalAttributes);
@@ -130,7 +125,7 @@ public abstract class AbstractComponentCG implements ComponentCG, SConstants, Se
         }
     }
 
-    private void writeSuffix(Device device, SComponent component, boolean useTable) throws IOException {
+    private void writeSuffix(Device device, COMPONENT_TYPE component, boolean useTable) throws IOException {
         if (useTable) {
             device.print("</td></tr></table>");
         }
@@ -139,93 +134,12 @@ public abstract class AbstractComponentCG implements ComponentCG, SConstants, Se
         }
     }
 
-    public static void writeAllAttributes(Device device, SComponent component) throws IOException {
-        Utils.optAttribute(device, "class", component.getStyle());
-        Utils.optAttribute(device, "id", component.getName());
-
-        Utils.optAttribute(device, "style", getInlineStyles(component));
-
-        if (component instanceof LowLevelEventListener) {
-            Utils.optAttribute(device, "eid", component.getLowLevelEventId());
-        }
-
-        // Tooltip handling
-        writeTooltipMouseOver(device, component);
-
-        // Component popup menu
-        writeContextMenu(device, component);
-    }
-
-    private static String getInlineStyles(SComponent component) {
-        // write inline styles
-        final SStringBuilder builder = new SStringBuilder();
-
-        Utils.appendCSSInlineSize(builder, component);  
-
-        // Determine Style String
-        Style allStyle = component.getDynamicStyle(SComponent.SELECTOR_ALL);
-        if (component instanceof SAbstractIconTextCompound && ((SAbstractIconTextCompound)component).isSelected()) {
-            // present, SComponent.getDynamicStyle() always is instance of CSSStyle
-            CSSStyle selectedStyle = (CSSStyle)component.getDynamicStyle(SAbstractIconTextCompound.SELECTOR_SELECTED);
-            if (selectedStyle != null) {
-              if (allStyle != null) {
-                  // make a copy to modify
-                  allStyle = new CSSStyle(SComponent.SELECTOR_ALL, (CSSAttributeSet) allStyle);
-                  allStyle.putAll(selectedStyle);
-              } else {
-                  allStyle = selectedStyle;
-              }
-            }
-        }
-        // Render Style string
-        if (allStyle != null)
-            builder.append(allStyle.toString());
-
-        final SBorder border = component.getBorder();
-        if (border != null) {
-            if (border.getAttributes() != null)
-                builder.append(border.getAttributes().toString());
-        }
-        else
-            builder.append("border:none;padding:0px");
-
-        return builder.toString();
-    }
-
-    /**
-     * Write JS code for context menus. Common implementaton for MSIE and gecko.
-     */
-    protected static void writeContextMenu(Device device, SComponent component) throws IOException {
-        final SPopupMenu menu = component.getComponentPopupMenu();
-        if (menu != null && menu.isEnabled()) {
-            final String componentId = menu.getName();
-            final String popupId = componentId + "_pop";
-            device.print(" onContextMenu=\"return wpm_menuPopup(event, '");
-            device.print(popupId);
-            device.print("');\" onMouseDown=\"return wpm_menuPopup(event, '");
-            device.print(popupId);
-            device.print("');\"");
-        }
-    }
-
-    /**
-     * Write Tooltip code.
-     */
-    protected static void writeTooltipMouseOver(Device device, SComponent component) throws IOException {
-        final String toolTipText = component != null ? component.getToolTipText() : null;
-        if (toolTipText != null && toolTipText.length() > 0) {
-            device.print(" onmouseover=\"Tip('");
-            Utils.quote(device, toolTipText, true, false, true);
-            device.print("')\"");
-        }
-    }
-
     /**
      * Install the appropriate CG for <code>component</code>.
      *
      * @param component the component
      */
-    public void installCG(SComponent component) {
+    public void installCG(COMPONENT_TYPE component) {
         Class clazz = component.getClass();
         while (clazz.getPackage() == null || !("org.wings".equals(clazz.getPackage().getName()) || "org.wingx".equals(clazz.getPackage().getName())))
             clazz = clazz.getSuperclass();
@@ -256,18 +170,15 @@ public abstract class AbstractComponentCG implements ComponentCG, SConstants, Se
      *
      * @param component the component
      */
-    public void uninstallCG(SComponent component) {
+    public void uninstallCG(COMPONENT_TYPE component) {
     }
 
     protected final SIcon getBlindIcon() {
-        if (BLIND_ICON == null)
-            BLIND_ICON = new SResourceIcon("org/wings/icons/blind.gif");
         return BLIND_ICON;
     }
 
-    public void componentChanged(SComponent component) {
+    public void componentChanged(COMPONENT_TYPE component) {
         component.putClientProperty("render-cache", null);
-        // log.debug("*** clearing cache  = " + component);
 
         InputMap inputMap = component.getInputMap();
         if (inputMap != null && inputMap.size() > 0) {
@@ -286,7 +197,7 @@ public abstract class AbstractComponentCG implements ComponentCG, SConstants, Se
 
         // Add script listener support.
         List scriptListenerList = component.getScriptListenerList();
-        if (scriptListenerList != null && scriptListenerList.size() > 0) {
+        if (scriptListenerList != null && !scriptListenerList.isEmpty()) {
             // BSC START ----------------: Bad code : behaviour injection !!!
             /*
 
@@ -325,9 +236,9 @@ public abstract class AbstractComponentCG implements ComponentCG, SConstants, Se
 
             // Add DWR script listener support.
             ScriptListener[] scriptListeners = component.getScriptListeners();
-            for (int i = 0; i < scriptListeners.length; i++) {
-                if (scriptListeners[i] instanceof DWRScriptListener) {
-                    DWRScriptListener scriptListener = (DWRScriptListener) scriptListeners[i];
+            for (ScriptListener scriptListener1 : scriptListeners) {
+                if (scriptListener1 instanceof DWRScriptListener) {
+                    DWRScriptListener scriptListener = (DWRScriptListener) scriptListener1;
                     CallableManager.getInstance().registerCallable(scriptListener.getCallableName(), scriptListener.getCallable());
                 }
             }
@@ -337,16 +248,11 @@ public abstract class AbstractComponentCG implements ComponentCG, SConstants, Se
         }
     }
 
-    protected final boolean hasDimension(final SComponent component) {
-        SDimension dim = component.getPreferredSize();
-        return dim != null && (dim.getHeightInt() != SDimension.AUTO_INT || dim.getWidthInt() != SDimension.AUTO_INT);
-    }
-
     /**
      * This method renders the component (and all of its subcomponents) to the given device. Depending on
      * the settings for server side caching the rendered code is newly generated or taken from the cache.
      */
-	public final void write(final Device device, final SComponent component) throws IOException {
+	public final void write(final Device device, final COMPONENT_TYPE component) throws IOException {
         // Render component and return if caching for this one is disabled.
         if (!RenderHelper.getInstance(component).isCachingAllowed(component)) {
             // log.debug("-> writing (not caching) = " + component);
@@ -416,7 +322,7 @@ public abstract class AbstractComponentCG implements ComponentCG, SConstants, Se
         return null;
     }
 
-    private void writeCode(Device device, SComponent component) throws IOException {
+    private void writeCode(Device device, COMPONENT_TYPE component) throws IOException {
         Utils.printDebug(device, "<!-- ").print(component.getName()).print(" -->");
         component.fireRenderEvent(SComponent.START_RENDERING);
 
@@ -437,7 +343,7 @@ public abstract class AbstractComponentCG implements ComponentCG, SConstants, Se
         updateDragAndDrop(component);
     }
 
-    public abstract void writeInternal(Device device, SComponent component) throws IOException;
+    public abstract void writeInternal(Device device, COMPONENT_TYPE component) throws IOException;
 
     /**
      * @return true if current browser is Microsoft Internet Explorer
@@ -446,26 +352,29 @@ public abstract class AbstractComponentCG implements ComponentCG, SConstants, Se
         return component.getSession().getUserAgent().getBrowserType() == BrowserType.IE;
     }
 
-	public Update getComponentUpdate(SComponent component) {
+	public Update getComponentUpdate(COMPONENT_TYPE component) {
         updateDragAndDrop(component);
         return new ComponentUpdate(component);
 	}
 
-	protected class ComponentUpdate extends AbstractUpdate {
+	protected class ComponentUpdate extends AbstractUpdate<COMPONENT_TYPE> {
 
-		public ComponentUpdate(SComponent component) {
+		public ComponentUpdate(COMPONENT_TYPE component) {
 			super(component);
 		}
 
+        @Override
         public int getProperty() {
             return FULL_REPLACE_UPDATE;
         }
 
+        @Override
         public int getPriority() {
             return 4;
         }
 
-		public Handler getHandler() {
+		@Override
+        public Handler getHandler() {
             String htmlCode = "";
             String exception = null;
 

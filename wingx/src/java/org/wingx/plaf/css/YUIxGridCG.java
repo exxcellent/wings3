@@ -236,7 +236,7 @@ public class YUIxGridCG
         table.setAttribute( CSSProperty.OVERFLOW, "hidden" );
 
         device.print( "<div " );
-        writeAllAttributes( device, table);
+        Utils.writeAllAttributes( device, table);
         device.print( "></div>\n" );
 
         Arrays.toString( table.getSelectedRows() );

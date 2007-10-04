@@ -388,7 +388,7 @@ public final class FrameCG implements org.wings.plaf.FrameCG {
         device.print("</head>\n");
         device.print("<body");
         Utils.writeEvents(device, frame, null);
-        AbstractComponentCG.writeAllAttributes(device, frame);
+        Utils.writeAllAttributes(device, frame);
         device.print(">\n");
 
         // Write contents of the frame

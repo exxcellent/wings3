@@ -91,7 +91,7 @@ public class TabbedPaneCG extends AbstractComponentCG {
                 preferredSize.setHeight(null);
             }
 
-            writeAllAttributes(device, component);
+            Utils.writeAllAttributes(device, component);
             Utils.writeEvents(device, tabbedPane, null);
 
             if (clientLayout) {

@@ -136,7 +136,7 @@ public class CheckBoxCG extends ButtonCG implements org.wings.plaf.CheckBoxCG {
             className.append("_selected");
 
         button.setStyle(className.toString());
-        writeAllAttributes(device, button);
+        Utils.writeAllAttributes(device, button);
         button.setStyle(style);
     }
 

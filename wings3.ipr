@@ -30,6 +30,13 @@
       <maximumHeapSize value="128" />
       <properties />
     </buildFile>
+    <buildFile url="file://$PROJECT_DIR$/demo-mycomponent/build.xml">
+      <additionalClassPath />
+      <antReference projectDefault="true" />
+      <customJdkName value="" />
+      <maximumHeapSize value="128" />
+      <properties />
+    </buildFile>
   </component>
   <component name="BSFConsole">
     <sendcommandbycontrolenter>false</sendcommandbycontrolenter>
@@ -645,6 +652,7 @@
       <module fileurl="file://$PROJECT_DIR$/wings/demo/frameset/src/demo-frameset.iml" filepath="$PROJECT_DIR$/wings/demo/frameset/src/demo-frameset.iml" />
       <module fileurl="file://$PROJECT_DIR$/wings/demo/jsp/src/demo-jsp.iml" filepath="$PROJECT_DIR$/wings/demo/jsp/src/demo-jsp.iml" />
       <module fileurl="file://$PROJECT_DIR$/wings/demo/logconfig/src/demo-logconfig.iml" filepath="$PROJECT_DIR$/wings/demo/logconfig/src/demo-logconfig.iml" />
+      <module fileurl="file://$PROJECT_DIR$/demo-mycomponent/demo-mycomponent.iml" filepath="$PROJECT_DIR$/demo-mycomponent/demo-mycomponent.iml" />
       <module fileurl="file://$PROJECT_DIR$/wings/doc/tutorial/hellowings/doc-hellowings.iml" filepath="$PROJECT_DIR$/wings/doc/tutorial/hellowings/doc-hellowings.iml" />
       <module fileurl="file://$PROJECT_DIR$/wings/src/wingS.iml" filepath="$PROJECT_DIR$/wings/src/wingS.iml" />
       <module fileurl="file://$PROJECT_DIR$/wings/demo/wingset/src/wingSet.iml" filepath="$PROJECT_DIR$/wings/demo/wingset/src/wingSet.iml" />

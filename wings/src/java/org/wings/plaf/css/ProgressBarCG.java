@@ -53,7 +53,7 @@ public final class ProgressBarCG extends AbstractComponentCG implements  org.win
         int height = size != null ? size.getHeightInt() : 10;
 
         device.print("<table");
-        writeAllAttributes(device, component);
+        Utils.writeAllAttributes(device, component);
         device.print("><tr class=\"bar\"");
         Utils.optAttribute(device, "height", height);
         device.print(">");

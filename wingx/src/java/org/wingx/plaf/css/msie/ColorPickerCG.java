@@ -14,18 +14,15 @@
 
 package org.wingx.plaf.css.msie;
 
-import java.io.IOException;
 import org.wings.SComponent;
 import org.wings.SIcon;
 import org.wings.SResourceIcon;
 import org.wings.io.Device;
 import org.wings.plaf.css.Utils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
 
 public class ColorPickerCG extends org.wingx.plaf.css.ColorPickerCG {
-
-    private final transient static Log log = LogFactory.getLog(ColorPickerCG.class);
 
     private final SIcon icon = new SResourceIcon("org/wings/icons/pickerbg.png");
 
@@ -36,6 +33,7 @@ public class ColorPickerCG extends org.wingx.plaf.css.ColorPickerCG {
         headers.set(0, Utils.createExternalizedCSSHeader("org/wingx/colorpicker/hsvcolorpicker_lt_ie7.css"));
     }
 
+    @Override
     protected void printPicker(Device device, SComponent component) throws IOException {
         device.print("<div");
         Utils.optAttribute(device, "id", (String)component.getClientProperty("pickerId"));
@@ -52,6 +50,7 @@ public class ColorPickerCG extends org.wingx.plaf.css.ColorPickerCG {
         device.print("</div>");
     }
 
+    @Override
     public void installCG(final SComponent comp) {
         super.installCG(comp);
         comp.addParentFrameListener(this);

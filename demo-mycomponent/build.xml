@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." default="build" name="demo-mycomponent">
+    
+    <!-- read properties from file -->
+    <property file="etc/custom-build.properties"/>
+    <property file="etc/build.properties"/>
+
+    <path id="build.classpath">
+        <fileset dir="${wings.home}/build/web/WEB-INF/lib">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="prepare">
+        <available file="${wings.home}/src/java/org/wings/SComponent.java" property="wings.present"/>
+        <fail unless="wings.present" message="Adapt etc/custom-build.properties to point to wingS!" />
+        <mkdir dir="build/class"/>
+        <mkdir dir="build/doc"/>
+    </target>
+
+    <target name="compile-wings" depends="prepare" unless="skip.wings">
+        <echo message="--- Starting wingS build ---"/>
+        <echo message="--> wings.home = ${wings.home}"/>
+        <ant antfile="${wings.home}/build.xml" target="build" inheritall="no" />
+        <echo message="--- Finished wingS build ---"/>
+    </target>
+
+    <target name="compile" depends="compile-wings">
+        <javac debug="${build.debug}" deprecation="${build.deprecation}"
+            destdir="build/class" srcdir="src/java" source="1.5" target="1.5">
+            <classpath refid="build.classpath"/>
+        </javac>
+    </target>
+
+    <target name="build" depends="compile" description="builds custom component">
+        <mkdir dir="build/web/WEB-INF/lib"/>
+        <jar jarfile="build/${ant.project.name}.jar">
+            <fileset dir="build/class" />
+            <fileset dir="src/res">
+                <exclude name="**/*.java.in"/>
+            </fileset>
+        </jar>
+    </target>
+
+    <target name="dist" depends="build, javadoc"
+            description="creates a redistributable wingX version in the dist directory">
+        <mkdir dir="dist"/>
+        <copy todir="dist" file="build/${ant.project.name}.jar"/>
+        <mkdir dir="dist/doc"/>
+        <jar file="dist/doc/${ant.project.name}-api.zip">
+            <fileset dir="build/doc/api" />
+        </jar>
+        <jar file="dist/doc/${ant.project.name}-src.zip">
+            <fileset dir="src" />
+        </jar>
+    </target>
+
+    <target name="clean.all" description="clean also all dependent builds (wings)" unless="skip.wings">
+        <ant antfile="${wings.home}/build.xml" target="clean" inheritall="no" />
+    </target>
+
+    <target description="cleanup build results" name="clean" depends="clean.all">
+        <delete dir="build"/>
+        <delete dir="dist"/>
+    </target>
+
+    <target depends="clean,build" description="re-build everything" name="all"/>
+
+    <!-- ### Utility tasks ################################################### -->
+
+    <target depends="prepare" description="create API documentation" name="javadoc">
+        <!-- Make API JavaDoc -->
+        <mkdir dir="build/doc/api"/>
+        <javadoc classpathref="build.classpath" destdir="build/doc/api"
+                 link="http://java.sun.com/j2se/1.5/docs/api/" maxmemory="128m" packagenames="org.wingx.*"
+                 sourcepath="src/java" use="true" version="true"
+                 doctitle="wingX API"
+                 windowtitle="wingS API"
+                 bottom="wingX: wingS extension pack" >
+            <excludepackage name="org.wings.plaf.css.*" />
+        </javadoc>
+    </target>
+
+</project>

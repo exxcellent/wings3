@@ -11,9 +11,6 @@ import org.wingx.XDivision;
 import java.io.IOException;
 import java.awt.*;
 
-import org.wings.style.CSSStyle;
-import org.wings.style.CSSStyleSheet;
-import org.wings.style.Selector;
 import org.wings.style.Style;
 
 public class DivisionCG
@@ -42,7 +39,7 @@ public class DivisionCG
         XDivision division = (XDivision)component;
 
         device.print("<table");
-        writeAllAttributes(device, component);
+        Utils.writeAllAttributes(device, component);
         Utils.writeEvents(device, component, null);
         device.print("><colgroup><col width=\"0*\"/><col width=\"1*\"></colgroup><tr ");
         if (division.isTitleClickabel() && division.isEnabled()) {

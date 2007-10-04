@@ -21,7 +21,7 @@
         </fileset>
     </path>
 
-    <target name="prepare" depends="splash">
+    <target name="prepare">
         <available file="${wings.home}/demo/wingset/src/web/icons/wings-logo.png" property="wings.present"/>
         <fail unless="wings.present" message="Adapt etc/custom-build.properties to point to wingS!" />
         <mkdir dir="build/class"/>
@@ -75,30 +75,9 @@
     <target description="cleanup build results" name="clean" depends="clean-wings">
         <delete dir="build"/>
         <delete dir="dist"/>
-        <delete>
-            <fileset dir="src">
-                <include name="**/*.class"/>
-                <include name="**/*.u"/>
-                <include name="**/*.bak"/>
-                <include name="**/*~"/>
-                <include name="**/.#*"/>
-            </fileset>
-        </delete>
-        <delete>
-            <fileset dir=".">
-                <include name="wingS*.tar.gz"/>
-            </fileset>
-        </delete>
-        <delete file="src/java/org/wings/Version.java"/>
     </target>
 
     <target depends="clean,build" description="re-build everything" name="all"/>
-
-    <!-- ### Utility tasks ################################################### -->
-
-    <target name="splash" unless="nosplash">
-        <splash imageurl="file:${wings.home}/demo/wingset/src/web/icons/wings-logo.png"/>
-    </target>
 
     <target depends="prepare" description="create API documentation" name="javadoc">
         <!-- Make API JavaDoc -->

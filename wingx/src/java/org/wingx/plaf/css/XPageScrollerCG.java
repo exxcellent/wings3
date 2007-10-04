@@ -3,8 +3,6 @@ package org.wingx.plaf.css;
 import org.wings.plaf.css.AbstractComponentCG;
 import org.wings.plaf.css.Utils;
 import org.wings.*;
-import org.wings.session.BrowserType;
-import org.wings.session.SessionManager;
 import org.wings.io.Device;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -98,7 +96,7 @@ public final class XPageScrollerCG extends AbstractComponentCG implements org.wi
         boolean msie = isMSIE(sb);
 
         d.print("<table");
-        writeAllAttributes(d, sb);
+        Utils.writeAllAttributes(d, sb);
         Utils.writeEvents(d, sb, null);
         d.print("><tbody><tr height=\"1%\">")
             .print("<td height=\"1%\"><table class=\"buttons\"><tbody>");
@@ -169,7 +167,7 @@ public final class XPageScrollerCG extends AbstractComponentCG implements org.wi
         boolean msie = isMSIE(sb);
 
         d.print("<table");
-        writeAllAttributes(d, sb);
+        Utils.writeAllAttributes(d, sb);
         Utils.writeEvents(d, sb, null);
         d.print("><tbody><tr>")
             .print("<td><table class=\"buttons\"><tbody><tr>");

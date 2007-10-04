@@ -43,7 +43,7 @@ public class SpinnerCG extends AbstractComponentCG implements org.wings.plaf.Spi
         final SSpinner spinner = (SSpinner) component;
 
         device.print( "\n<table" );
-        writeAllAttributes(device, component);
+        Utils.writeAllAttributes(device, component);
         device.print( "><tr><td>\n" );
         spinner.getEditor().write( device );
         device.print( "\n</td><td style=\"width:0px; font-size: 0px; line-height: 0\">\n" );

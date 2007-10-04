@@ -113,7 +113,7 @@ public final class ScrollBarCG extends org.wings.plaf.css.AbstractComponentCG im
             preferredSize.setHeight(null);
         }
 
-        writeAllAttributes(device, sb);
+        Utils.writeAllAttributes(device, sb);
 
         if (clientLayout) {
             preferredSize.setHeight(height);
@@ -201,7 +201,7 @@ public final class ScrollBarCG extends org.wings.plaf.css.AbstractComponentCG im
         final int last = maximum - extent;
 
         d.print("<table");
-        writeAllAttributes(d, sb);
+        Utils.writeAllAttributes(d, sb);
         d.print("><tbody><tr>")
                 .print("<td width=\"1%\"><table class=\"buttons\"><tbody><tr>");
 

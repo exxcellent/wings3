@@ -16,7 +16,6 @@ package org.wings.script;
 import org.wings.SComponent;
 import org.wings.SPopup;
 import org.wings.plaf.css.PopupCG;
-import org.wings.util.SStringBuilder;
 
 /**
  * A JavaScript listener to handle SPopup.
@@ -31,7 +30,7 @@ public class PopupListener extends JavaScriptDOMListener {
      * This one is needed because SPopup is not nested in the component 
      * hierarchy and would otherwise be collected by the GC.
      */
-    private SPopup popup;
+    private final SPopup popup;
     
     /**
      * @param event one of JavaScriptEvent (e.g. JavaScriptEvent.ON_CLICK) to act on
@@ -40,20 +39,19 @@ public class PopupListener extends JavaScriptDOMListener {
      * @param component the component this listener is associated with
      */
     public PopupListener(String event, SPopup popup, int action, SComponent component) {        
-        super(event, "", component);
+        super(event, selectFunction(((PopupCG)popup.getCG()), action), component);
         this.popup = popup;        
-        
+    }
+
+    private static String selectFunction(PopupCG popupCG, int action) {
         switch (action) {
-            case SHOW: 
-                setCode(((PopupCG)popup.getCG()).getJsShowFunction());
-                break;
+            case SHOW:
+                return popupCG.getJsShowFunction();
             case HIDE:
-                setCode(((PopupCG)popup.getCG()).getJsHideFunction());
-                break;
+                return popupCG.getJsHideFunction();
             default:
-                setCode(((PopupCG)popup.getCG()).getJsHideFunction());
-        }       
-        
+                return popupCG.getJsHideFunction();
+        }
     }
     
 }

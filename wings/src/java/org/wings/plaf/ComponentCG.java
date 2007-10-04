@@ -18,7 +18,7 @@ import org.wings.io.Device;
 import java.io.IOException;
 import java.io.Serializable;
 
-public interface ComponentCG  extends Serializable {
+public interface ComponentCG<COMPONENT_TYPE extends SComponent> extends Serializable {
     /**
      * Installs the CG.
      * <p/>
@@ -26,18 +26,18 @@ public interface ComponentCG  extends Serializable {
      * the SComponent constructor! Don't call any methods which rely on
      * something that will be constructed in a subconstructor later!
      */
-    public void installCG(SComponent c);
+    public void installCG(COMPONENT_TYPE c);
 
     /**
      * Uninstalls the CG.
      */
-    public void uninstallCG(SComponent c);
+    public void uninstallCG(COMPONENT_TYPE c);
 
     /**
      * Notify the CG that the state of the according component has changed.
      * @param c The 'dirty' component.
      */
-    public void componentChanged(SComponent c);
+    public void componentChanged(COMPONENT_TYPE c);
 
     /**
      * Writes the given component to the Device.
@@ -52,12 +52,12 @@ public interface ComponentCG  extends Serializable {
      * @param device    the output device.
      * @param component the component to be rendered.
      */
-    public void write(Device device, SComponent component) throws IOException;
+    public void write(Device device, COMPONENT_TYPE component) throws IOException;
 
     /**
      * Returns an update for the complete component.
      *
      * @param component the component to be updated.
      */
-    public Update getComponentUpdate(SComponent component);
+    public Update getComponentUpdate(COMPONENT_TYPE component);
 }

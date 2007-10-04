@@ -259,7 +259,7 @@ public class XTableCG
         final XTable table = (XTable)_c;
 
         device.print("<table");
-        writeAllAttributes(device, table);
+        Utils.writeAllAttributes(device, table);
         writeTableAttributes(device, table);
         device.print("><thead>");
         Utils.printNewline(device, table);

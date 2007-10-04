@@ -71,7 +71,7 @@ public class LabelCG extends AbstractLabelCG implements org.wings.plaf.LabelCG {
                 }
 
                 protected void tableAttributes(Device d) throws IOException {
-                    writeAllAttributes(d, label);
+                    Utils.writeAllAttributes(d, label);
                 }
             }.writeCompound(device, component, horizontalTextPosition, verticalTextPosition, true);
         } else {

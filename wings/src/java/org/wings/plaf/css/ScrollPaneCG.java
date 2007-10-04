@@ -61,7 +61,7 @@ public class ScrollPaneCG extends org.wings.plaf.css.AbstractComponentCG impleme
             preferredSize.setHeight(null);
         }
 
-        writeAllAttributes(device, scrollPane);
+        Utils.writeAllAttributes(device, scrollPane);
 
         if (clientLayout) {
             preferredSize.setHeight(height);

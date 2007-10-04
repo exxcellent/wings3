@@ -50,7 +50,7 @@ public final class LabelCG extends org.wings.plaf.css.LabelCG implements org.win
                 }
 
                 protected void tableAttributes(Device d) throws IOException {
-                    writeAllAttributes(d, label);
+                    Utils.writeAllAttributes(d, label);
                 }
 
                 // msie doesn't respect padding attributes on the table tag .. thus we have to apply it on the td tag

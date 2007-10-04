@@ -87,7 +87,7 @@ public class ButtonCG extends AbstractLabelCG implements org.wings.plaf.ButtonCG
             className.append("_selected");
 
         button.setStyle(className.toString());
-        writeAllAttributes(device, button);
+        Utils.writeAllAttributes(device, button);
         button.setStyle(style);
 
         if (button.isFocusOwner())

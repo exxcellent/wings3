@@ -4,7 +4,6 @@ import org.wings.io.Device;
 import org.wings.*;
 import org.wings.header.Header;
 import org.wings.header.SessionHeaders;
-import org.wings.plaf.css.script.OnHeadersLoadedScript;
 import org.wings.plaf.css.script.OnPageRenderedScript;
 
 import java.io.IOException;
@@ -37,7 +36,7 @@ public class SplitPaneCG
         String name = splitPane.getName();
 
         device.print("<table");
-        writeAllAttributes(device, component);
+        Utils.writeAllAttributes(device, component);
         Utils.writeEvents(device, component, null);
         device.print(">");
 

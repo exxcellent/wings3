@@ -12,9 +12,10 @@
  */
 package org.wings.plaf;
 
+import org.wings.SMenuBar;
 
 
-public interface MenuBarCG extends ComponentCG {
+public interface MenuBarCG extends ComponentCG<SMenuBar> {
 }
 
 

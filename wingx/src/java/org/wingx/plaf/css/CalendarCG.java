@@ -9,20 +9,31 @@
 
 package org.wingx.plaf.css;
 
-import java.text.*;
-
-import org.wings.*;
-import java.util.*;
-import org.wings.event.SParentFrameEvent;
-import org.wings.event.SParentFrameListener;
-
-import org.wings.plaf.css.*;
-import org.wings.header.*;
+import org.wings.SComponent;
+import org.wings.SFormattedTextField;
+import org.wings.SIcon;
+import org.wings.SResourceIcon;
+import org.wings.header.Header;
+import org.wings.header.SessionHeaders;
 import org.wings.plaf.Update;
+import org.wings.plaf.css.AbstractComponentCG;
+import org.wings.plaf.css.AbstractUpdate;
+import org.wings.plaf.css.UpdateHandler;
+import org.wings.plaf.css.Utils;
 import org.wings.plaf.css.script.OnHeadersLoadedScript;
 import org.wings.session.ScriptManager;
 import org.wings.util.SStringBuilder;
 import org.wingx.XCalendar;
+
+import java.text.DateFormat;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Collections;
 
 /**
  *
@@ -30,7 +41,7 @@ import org.wingx.XCalendar;
  */
 public class CalendarCG extends AbstractComponentCG implements org.wingx.plaf.CalendarCG {
 
-    protected final List<Header> headers = new ArrayList<Header>();
+    protected final static List<Header> headers;
 
     static {
         String[] images = new String [] {
@@ -43,15 +54,18 @@ public class CalendarCG extends AbstractComponentCG implements org.wingx.plaf.Ca
             SIcon icon = new SResourceIcon(images[x]);
             icon.getURL(); // hack to externalize
         }
+
+        List<Header> headerList = new ArrayList<Header>();
+        headerList.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_CALENDAR));
+        headerList.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_YAHOO));
+        headerList.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_EVENT));
+        headerList.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DOM));
+        headerList.add(Utils.createExternalizedJSHeader("org/wingx/calendar/yuicalendar.js"));
+        headerList.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CALENDAR));
+        headers = Collections.unmodifiableList(headerList);
     }
 
     public CalendarCG() {
-        headers.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_CALENDAR));
-        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_YAHOO));
-        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_EVENT));
-        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DOM));
-        headers.add(Utils.createExternalizedJSHeader("org/wingx/calendar/yuicalendar.js"));
-        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CALENDAR));
     }
        
     public void installCG(final SComponent comp) {
@@ -75,7 +89,7 @@ public class CalendarCG extends AbstractComponentCG implements org.wingx.plaf.Ca
         dateFormat.setTimeZone( component.getTimeZone() );
 
         device.print("<table");
-        writeAllAttributes(device, component);
+        Utils.writeAllAttributes(device, component);
         device.print("><tr><td class=\"tf\"");
 
         int oversizePadding = Utils.calculateHorizontalOversize(fTextField, true);

@@ -72,7 +72,7 @@ public final class ListCG extends AbstractComponentCG implements  org.wings.plaf
             device.print("\"");
         }
         device.print("><select wrapping=\"1\"");
-        writeAllAttributes(device, list);
+        Utils.writeAllAttributes(device, list);
 
         Utils.optAttribute(device, "name", Utils.event(list));
         Utils.optAttribute(device, "tabindex", list.getFocusTraversalIndex());
@@ -172,7 +172,7 @@ public final class ListCG extends AbstractComponentCG implements  org.wings.plaf
         device.print(list.getType());
         Utils.optAttribute(device, "type", list.getOrderType());
         Utils.optAttribute(device, "start", list.getStart());
-        writeAllAttributes(device, list);
+        Utils.writeAllAttributes(device, list);
         device.print(">");
 
         javax.swing.ListModel model = list.getModel();

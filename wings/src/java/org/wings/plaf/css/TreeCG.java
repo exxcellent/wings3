@@ -220,7 +220,7 @@ public final class TreeCG extends AbstractComponentCG implements org.wings.plaf.
         final int depth = tree.getMaximumExpandedDepth();
 
         device.print("<table");
-        writeAllAttributes(device, tree);
+        Utils.writeAllAttributes(device, tree);
         device.print(">");
 
         for (int i = start; i < end; ++i) {

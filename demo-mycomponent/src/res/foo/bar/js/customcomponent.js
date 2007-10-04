@@ -1,0 +1,1 @@
+/* This is a custom JavaScript file for my custom component included via the CG. */

@@ -55,7 +55,7 @@ public final class PasswordFieldCG extends AbstractComponentCG implements
         }
 
         device.print("<input type=\"password\"");
-        writeAllAttributes(device, component);
+        Utils.writeAllAttributes(device, component);
         if (tableWrapping)
             device.print(" wrapping=\"4\"");
 

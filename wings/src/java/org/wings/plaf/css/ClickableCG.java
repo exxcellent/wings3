@@ -65,7 +65,7 @@ public final class ClickableCG extends AbstractLabelCG implements org.wings.plaf
 
     protected void tableAttributes(Device device, SClickable button) throws IOException {
         Utils.printClickability(device, button, button.getEvent(), true, button.getShowAsFormComponent());
-        writeAllAttributes(device, button);
+        Utils.writeAllAttributes(device, button);
 
         if (button.isFocusOwner())
             Utils.optAttribute(device, "foc", button.getName());

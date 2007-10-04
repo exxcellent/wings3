@@ -58,7 +58,7 @@ public final class ComboBoxCG extends AbstractComponentCG implements org.wings.p
 
         device.print("<span><select size=\"1\" wrapping=\"1\"");
 
-        writeAllAttributes(device, component);
+        Utils.writeAllAttributes(device, component);
 
         Utils.optAttribute(device, "name", Utils.event(component));
         Utils.optAttribute(device, "tabindex", component.getFocusTraversalIndex());

@@ -13,8 +13,6 @@
 package org.wings.plaf.css;
 
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wings.*;
 import org.wings.io.Device;
 import org.wings.plaf.Update;
@@ -79,7 +77,7 @@ public final class TextAreaCG extends AbstractComponentCG implements
             device.print("<td style=\"padding-right: " + Utils.calculateHorizontalOversize(component, true) + "px\">");
         }
         device.print("<textarea");
-        writeAllAttributes(device, component);
+        Utils.writeAllAttributes(device, component);
         if (tableWrapping)
             device.print(" wrapping=\"4\"");
 
