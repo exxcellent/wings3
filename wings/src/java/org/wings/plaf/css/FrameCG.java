@@ -100,7 +100,12 @@ public final class FrameCG implements org.wings.plaf.FrameCG {
 
         // Externalize JavaScript headers
         // JS_YUI_UTILITIES = aggregate: yahoo, dom, event, connection, animation, dragdrop
-        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_UTILITIES));
+        // headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_UTILITIES));
+        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_YAHOO_DOM_EVENT));
+        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONNECTION));
+        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_ANIMATION));
+        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DRAGDROP));
+        
         headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONTAINER));
 
         headers.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_EXT_CORE));
