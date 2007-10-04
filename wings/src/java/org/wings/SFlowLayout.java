@@ -47,22 +47,21 @@ public class SFlowLayout
     protected int vgap = 0;
     
     /**
-     * Creates a new <code>SFlowLayout</code> with horizontal orientation and
-     * left alignment.
+     * Creates a new <code>SFlowLayout</code> with horizontal orientation,
+     * center alignment and a default 5-unit horizontal and vertical gap.
      */
     public SFlowLayout() {
-        components = new ArrayList(2);
-        setAlignment(SConstants.CENTER_ALIGN);
+        this( SConstants.CENTER_ALIGN );
     }
 
     /**
-     * Creates a new <code>SFlowLayout</code> with horizonal orientation and the given alignment.
+     * Creates a new <code>SFlowLayout</code> with horizonal orientation and the 
+     * given alignment and a default 5-unit horizontal and vertical gap.
      *
      * @param alignment the alignment
      */
     public SFlowLayout(int alignment) {
-        this();
-        setAlignment(alignment);
+        this( alignment, 5, 5 );
     }
     
     /**
@@ -73,7 +72,8 @@ public class SFlowLayout
      * @param vgap the vertical gap
      */
     public SFlowLayout(int alignment, int hgap, int vgap) {
-        this(alignment);
+        components = new ArrayList(2);
+        setAlignment( alignment );
         setHgap(hgap);
         setVgap(vgap);
     }    
