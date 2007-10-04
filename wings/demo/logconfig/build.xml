@@ -6,6 +6,8 @@
 	<property file="../../etc/custom-build.properties"/>
 	<property file="../../etc/build.properties"/>
 
+	<property name="deploy.logconfig" value="${tomcat.home}/webapps/logconfig"/>
+
 	<property name="log4j.version" value="log4j-1.2.9.jar" />
 
 	<path id="build.classpath">

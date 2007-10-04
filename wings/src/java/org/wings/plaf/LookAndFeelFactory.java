@@ -31,7 +31,7 @@ public abstract class LookAndFeelFactory {
 
     static {
         final String className = (String) SessionManager.getSession()
-                .getProperty("wings.lookandfeel.factory", DEFAULT_LOOKANDFEEL);
+                .getProperty("wings.lookandfeel.factory", DEFAULT_LOOKANDFEEL_FACTORY);
 
         try {
             Class factoryClass = null;
