@@ -17,9 +17,8 @@ import org.apache.commons.logging.LogFactory;
 import org.wings.SComponent;
 import org.wings.SIcon;
 import org.wings.SLayoutManager;
-import org.wings.session.PropertyService;
-import org.wings.session.SessionManager;
 import org.wings.session.Session;
+import org.wings.session.SessionManager;
 import org.wings.style.Style;
 import org.wings.style.StyleSheet;
 
@@ -35,17 +34,6 @@ public class CGManager implements Serializable {
 
     private LookAndFeel lookAndFeel;
     private ResourceDefaults defaults = null;
-
-    /**
-     * Get an Object from the defaults table.
-     * If the there's no value associated to the <code>key</code>, the request
-     * is delegated to the laf's defaults table.
-     *
-     * @param key the lookup key
-     */
-    public Object get(String key) {
-        return getDefaults().get(key);
-    }
 
     /**
      * Get an Object from the defaults table.
@@ -180,15 +168,14 @@ public class CGManager implements Serializable {
 
         if (newLookAndFeel != null) {
             setDefaults(newLookAndFeel.createDefaults());
+            // have the session fire a propertyChangeEvent regarding the new lookAndFeel
+            Session session = SessionManager.getSession();
+            if (session != null) {
+                session.setProperty("lookAndFeel", "" + newLookAndFeel.hashCode());
+            }
         } else {
             log.warn("lookandfeel == null");
             setDefaults(null);
-        }
-
-        // have the session fire a propertyChangeEvent regarding the new lookAndFeel
-        Session session = SessionManager.getSession();
-        if (session != null) {
-            ((PropertyService) session).setProperty("lookAndFeel", "" + newLookAndFeel.hashCode());
         }
     }
 }

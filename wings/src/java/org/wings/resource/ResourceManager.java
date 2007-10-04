@@ -12,13 +12,13 @@
  */
 package org.wings.resource;
 
-import java.io.IOException;
-import java.util.Properties;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.plaf.ResourceDefaults;
-import org.wings.util.PropertyUtils;
+import org.wings.util.PropertyDiscovery;
+
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * For accessing static resources
@@ -30,21 +30,23 @@ public class ResourceManager {
 
     private static final String PROPERTIES_FILENAME = "org/wings/resource/resource.properties";
 
+    public static final ResourceDefaults RESOURCES;
+
+    private ResourceManager() {
+    }
+
+    static {
+        Properties properties;
+        try {
+            properties = PropertyDiscovery.loadRequiredProperties(PROPERTIES_FILENAME);
+        } catch (IOException e) {
+            log.fatal("Cannot open resource properties file at location " + PROPERTIES_FILENAME, e);
+            properties = new Properties();
+        }
+        RESOURCES = new ResourceDefaults(null, properties);
+    }
+
     public static Object getObject(String key, Class clazz) {
         return RESOURCES.get(key, clazz);
     }
-    
-    private static Properties properties;
-    
-    static {
-        try {
-            properties = PropertyUtils.loadProperties(PROPERTIES_FILENAME);
-        } catch (IOException e) {
-            log.fatal("Cannot open resource properties file at location " + PROPERTIES_FILENAME);
-            properties = null;
-            e.printStackTrace();
-        }
-    }
-    
-    public static final ResourceDefaults RESOURCES = new ResourceDefaults(null, properties);
 }

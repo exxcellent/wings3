@@ -13,6 +13,7 @@ import org.wings.event.SRequestListener;
 import org.wings.externalizer.ExternalizedResource;
 import org.wings.io.StringBuilderDevice;
 import org.wings.plaf.css.Utils;
+import org.wings.resource.ResourceNotFoundException;
 import org.wings.session.Session;
 import org.wings.session.SessionManager;
 
@@ -23,7 +24,6 @@ import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -133,14 +133,14 @@ public class WingsSession
         return component;
     }
 
-    public static void writeHeaders(HttpServletRequest request, HttpServletResponse response, JspWriter out) throws IOException, ServletException {
+    public static void writeHeaders(HttpServletRequest request, HttpServletResponse response, JspWriter out)
+            throws IOException, ServletException, ResourceNotFoundException {
         synchronized (request.getSession()) {
             WingsSession wingsSession = getSession(request, response);
             SFrame frame = getFrame(wingsSession);
 
             StringBuilderDevice headerdev = new StringBuilderDevice();
-            for (Iterator iterator = frame.getHeaders().iterator(); iterator.hasNext();) {
-                Object next = iterator.next();
+            for (Object next : frame.getHeaders()) {
                 if (next instanceof Renderable) {
                     ((Renderable) next).write(headerdev);
                 } else {

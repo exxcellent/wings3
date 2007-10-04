@@ -46,7 +46,7 @@
 			<fileset dir="src/web"/>
         </copy>
         <copy todir="build/web/WEB-INF/classes">
-            <fileset dir="../../${wings.home}/demo/wingset/build/class"/>            
+            <fileset dir="../../${wings.home}/demo/wingset/build/class"/>
             <fileset dir="build/class"/>            
         </copy>
     </target>

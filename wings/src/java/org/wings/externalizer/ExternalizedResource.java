@@ -121,6 +121,7 @@ public class ExternalizedResource {
      *
      * @return the has code of the externalized object.
      */
+    @Override
     public final int hashCode() {
         return extObject.hashCode();
     }
@@ -142,6 +143,7 @@ public class ExternalizedResource {
      * @return true, if the other object is an ExternalizedResource
      *         and {@link #equals(ExternalizedResource)} returns true.
      */
+    @Override
     public final boolean equals(Object o) {
         if (o instanceof ExternalizedResource) {
             return equals((ExternalizedResource) o);

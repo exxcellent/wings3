@@ -30,7 +30,7 @@ public class StreamTemplateSource implements TemplateSource {
     /**
      * <p>the <code>InputStream</code> from which we are reading data.</p>
      */
-    private InputStream iStream;
+    private transient InputStream iStream;
 
     /**
      * <p>the last time the <code>InputStream</code> was updated.</p>

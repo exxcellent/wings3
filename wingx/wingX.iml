@@ -6,9 +6,7 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/res" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/build/doc" />
-      <excludeFolder url="file://$MODULE_DIR$/build/exploded" />
-      <excludeFolder url="file://$MODULE_DIR$/build/web" />
+      <excludeFolder url="file://$MODULE_DIR$/build" />
     </content>
     <orderEntry type="jdk" jdkName="1.5" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />

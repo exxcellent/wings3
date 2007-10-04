@@ -28,6 +28,7 @@ import org.wings.plaf.css.script.OnPageRenderedScript;
 import org.wings.resource.ClassPathResource;
 import org.wings.resource.ReloadResource;
 import org.wings.resource.UpdateResource;
+import org.wings.resource.ResourceNotFoundException;
 import org.wings.script.*;
 import org.wings.session.*;
 
@@ -360,10 +361,13 @@ public final class FrameCG implements org.wings.plaf.FrameCG {
         device.print("\" />\n");
 
         // Render all headers
-        for (Iterator iterator = frame.getHeaders().iterator(); iterator.hasNext();) {
-            Object next = iterator.next();
+        for (Object next : frame.getHeaders()) {
             if (next instanceof Renderable) {
-                ((Renderable) next).write(device);
+                try {
+                    ((Renderable) next).write(device);
+                } catch (ResourceNotFoundException e) {
+                    log.error("Unable to deliver inlined renderable", e);
+                }
             } else {
                 Utils.write(device, next.toString());
             }

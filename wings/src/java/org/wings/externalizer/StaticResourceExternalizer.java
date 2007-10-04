@@ -14,10 +14,10 @@ package org.wings.externalizer;
 
 import org.wings.Renderable;
 import org.wings.StaticResource;
-import org.wings.resource.ClassPathResource;
-import org.wings.resource.NamedResource;
-import org.wings.resource.HttpHeader;
 import org.wings.io.Device;
+import org.wings.resource.HttpHeader;
+import org.wings.resource.NamedResource;
+import org.wings.resource.ResourceNotFoundException;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -63,8 +63,7 @@ public class StaticResourceExternalizer implements Externalizer<StaticResource> 
         return true;
     }
 
-    public void write(Object obj, Device out)
-            throws IOException {
+    public void write(Object obj, Device out) throws IOException, ResourceNotFoundException {
         ((Renderable) obj).write(out);
     }
 

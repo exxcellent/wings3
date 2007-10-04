@@ -42,7 +42,7 @@
         <file name="component.js"/>
     </filelist>
 
-    <target name="-prepare" depends="-splash">
+    <target name="prepare" depends="-splash">
         <mkdir dir="build/class"/>
         <mkdir dir="build/doc"/>
         <tstamp>
@@ -53,7 +53,7 @@
     <target name="generate" depends="generate-version.java, generate-wings.js"
             description="generates all artefacts necessary to compile wingS"/>
 
-    <target name="generate-version.java" depends="-prepare">
+    <target name="generate-version.java" depends="prepare">
         <!-- Generate wingS version information class -->
         <filter token="WINGS_VERSION" value="${wings.version}"/>
         <filter token="COMPILE_TIME" value="${wings.buildtime}"/>
@@ -62,7 +62,7 @@
             filtering="yes"/>
     </target>
 
-    <target name="-concat-wings.js" depends="-prepare">
+    <target name="-concat-wings.js" depends="prepare">
         <!-- Generate concatenated JS-file -->
         <concat destfile="src/res/org/wings/js/wings/wings.js" force="no">
             <filelist refid="wings.js.modules" />
@@ -92,7 +92,7 @@
         </java>
     </target>
 
-    <target name="compile" depends="-prepare, generate">
+    <target name="compile" depends="prepare, generate">
         <javac debug="${build.debug}" deprecation="${build.deprecation}"
             destdir="build/class" srcdir="src/java" source="1.5" target="1.5">
             <classpath refid="build.classpath"/>
@@ -102,28 +102,15 @@
     <target name="build" depends="compile" description="build">
         <mkdir dir="build/web/WEB-INF/lib"/>
         <jar jarfile="build/web/WEB-INF/lib/wings.jar">
-            <fileset dir="build/class">
-                <exclude name="org/wings/plaf/xhtml/**"/>
-                <exclude name="org/wings/plaf/css/**"/>
-            </fileset>
+            <fileset dir="build/class"/>
             <fileset dir="src/res">
-                <exclude name="**/*.js"/>
-                <exclude name="**/*.css"/>
-                <exclude name="**/*.htc"/>
                 <exclude name="**/*.java.in"/>
             </fileset>
-        </jar>
-        <jar jarfile="build/web/WEB-INF/lib/css.jar">
-            <fileset dir="build/class">
-                <include name="org/wings/plaf/xhtml/**"/>
-                <include name="org/wings/plaf/css/**"/>
-            </fileset>
-            <fileset dir="src/res">
-                <include name="**/*.js"/>
-                <include name="**/*.css"/>
-                <include name="**/*.htc"/>
-                <include name="**/*.properties"/>
-            </fileset>
+            <manifest>
+                <attribute name="framework" value="wingS framework"/>
+                <attribute name="version" value="${wings.version}"/>
+                <attribute name="builton" value="${wings.buildtime}"/>
+            </manifest>
         </jar>
         <copy todir="build/web/WEB-INF/lib">
             <fileset dir="${lib}">
@@ -137,11 +124,11 @@
         </copy>
     </target>
 
-    <target depends="-prepare" description="build javadoc" name="javadoc">
+    <target depends="prepare" description="build javadoc" name="javadoc">
         <!-- Make API JavaDoc -->
         <mkdir dir="build/doc/api"/>
         <javadoc classpathref="build.classpath" destdir="build/doc/api"
-                 link="http://java.sun.com/j2se/1.4/docs/api/" maxmemory="128m" packagenames="org.wings.*"
+                 link="http://java.sun.com/j2se/1.5/docs/api/" maxmemory="128m" packagenames="org.wings.*"
                  sourcepath="src/java" use="true" version="true"
                  doctitle="wingS ${wings.version}"
                  windowtitle="wingS ${wings.version}"
@@ -150,36 +137,40 @@
         </javadoc>
     </target>
 
-    <target depends="javadoc, check-full-dist" name="doc">
+    <target depends="javadoc, -check-full-dist" name="doc">
         <!-- Start DocBook document generation -->
         <ant dir="doc/docbook" target="all.doc" />
     </target>
 
-    <target depends="check-full-dist,clean,build,doc" name="dist">
+    <target depends="-check-full-dist,clean,build,doc" name="dist">
         <!-- lib -->
         <mkdir dir="dist/lib"/>
         <copy todir="dist/lib">
             <fileset dir="${lib}">
                 <include name="*.jar"/>
+                <exclude name="wings*.jar"/>
+            </fileset>
+            <fileset dir="build/web/WEB-INF/lib">
+                <include name="wings*.jar"/>
             </fileset>
         </copy>
 
         <!-- web -->
+        <!--  if - then better provide a full starter kit i.e. with log4j xml and more! 
         <mkdir dir="dist/web"/>
         <copy todir="dist/web">
             <fileset dir="build/web" />
-        </copy>
+        </copy>-->
 
         <!-- bin -->
-        <mkdir dir="dist/bin"/>
+        <!--<mkdir dir="dist/bin"/>
         <copy todir="dist/bin">
             <fileset dir="bin">
-                <!-- excluded as these dev script probably
-                     only confuse beginners -->
+                <!- - excluded as these dev script probably
+                     only confuse beginners - ->
                 <exclude name="cs.sh"/>
-                <exclude name="kde2jlfgr.sh"/>
             </fileset>
-        </copy>
+        </copy>-->
 
         <!-- manual -->
         <mkdir dir="dist/doc"/>
@@ -252,6 +243,18 @@
                 <include name="build.*"/>
             </fileset>
         </copy>
+
+        <!-- convenience helper: src-zip file to easy redist wings src -->
+        <mkdir dir="dist/lib/src"/>
+        <jar file="dist/lib/src/wings-src.zip">
+            <fileset dir="src/java"/>
+        </jar>
+        <!-- convenience helper: src-zip file to easy redist wings src -->
+        <mkdir dir="dist/lib/api"/>
+        <jar file="dist/lib/api/wings-api.zip">
+            <fileset dir="dist/doc/api"/>
+        </jar>
+
     </target>
 
     <target depends="dist" description="create distribution tar.gz" name="tarball">
@@ -267,7 +270,6 @@
         <move todir="${distname}/dist/lib">
             <fileset dir="${distname}/lib">
                 <include name="wings.jar"/>
-                <include name="css.jar"/>
             </fileset>
         </move>
 
@@ -305,13 +307,13 @@
         <splash imageurl="file:${basedir}/demo/wingset/src/web/icons/wings-logo.png"/>
     </target>
 
-    <target name="check-full-dist">
+    <target name="-check-full-dist">
         <available file="doc/docbook/build.xml" property="full-distribution"/>
         <fail unless="full-distribution">
   Full source checkout required!
   This task requires that you have the complete wingS sources which
   are available via svn checkout from the wingS website.
-  Please consult http://wingsframework.org/ how to access the wingS CVS.
+  Please consult http://wingsframework.org/ how to access the wingS VCS.
         </fail>
     </target>
 

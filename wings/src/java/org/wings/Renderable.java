@@ -13,6 +13,7 @@
 package org.wings;
 
 import org.wings.io.Device;
+import org.wings.resource.ResourceNotFoundException;
 
 import java.io.IOException;
 
@@ -25,7 +26,7 @@ public interface Renderable {
     /**
      * Write this Renderable component to some output device.
      */
-    void write(Device d) throws IOException;
+    void write(Device d) throws IOException, ResourceNotFoundException;
 }
 
 

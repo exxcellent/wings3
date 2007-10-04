@@ -16,6 +16,7 @@ import org.wings.Renderable;
 import org.wings.io.Device;
 import org.wings.resource.StringResource;
 import org.wings.resource.HttpHeader;
+import org.wings.resource.ResourceNotFoundException;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -58,8 +59,7 @@ public class StringResourceExternalizer implements Externalizer<StringResource> 
         return true;
     }
 
-    public void write(Object obj, Device out)
-            throws IOException {
+    public void write(Object obj, Device out) throws IOException, ResourceNotFoundException {
         ((Renderable) obj).write(out);
     }
 

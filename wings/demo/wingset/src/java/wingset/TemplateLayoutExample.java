@@ -13,6 +13,7 @@
 package wingset;
 
 import org.wings.*;
+import org.wings.style.CSSProperty;
 import org.wings.border.SLineBorder;
 import org.wings.template.StringTemplateSource;
 import org.wings.template.propertymanagers.DefaultPropertyManager;
@@ -68,7 +69,7 @@ public class TemplateLayoutExample
 
         templateSource = new StringTemplateSource(templateString);
         templateInput = new STextArea(templateString);
-        templateInput.setAttribute("font", "12px monospace");
+        templateInput.setAttribute(CSSProperty.FONT, "12px monospace");
 
         SButton applyButton = new SButton("Apply");
         applyButton.addActionListener(new java.awt.event.ActionListener() {

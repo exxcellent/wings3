@@ -15,18 +15,18 @@ package org.wings.plaf;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
  * A Property table that stores default. This table overrides the
  * mappings of its <code>parent</code> table.
  */
-public class ResourceDefaults
-        extends HashMap
-{
+public class ResourceDefaults {
     private PropertyChangeSupport changeSupport;
-    private ResourceDefaults parent;
-    private ResourceFactory factory;
+    private final ResourceDefaults parent;
+    private final ResourceFactory factory;
+    private final Map<Object, Object> storage;
 
     /**
      * @param parent the parent defaults table that backs this defaults table
@@ -34,6 +34,7 @@ public class ResourceDefaults
     public ResourceDefaults(ResourceDefaults parent, Properties properties) {
         this.parent = parent;
         this.factory = new ResourceFactory(properties);
+        this.storage = new HashMap<Object, Object>();
     }
 
     /**
@@ -49,7 +50,7 @@ public class ResourceDefaults
      * @see java.util.Map#put
      */
     public Object put(Object key, Object value) {
-        Object oldValue = (value == null) ? super.remove(key) : super.put(key, value);
+        Object oldValue = (value == null) ? storage.remove(key) : storage.put(key, value);
         if (key instanceof String) {
             firePropertyChange((String) key, oldValue, value);
         }
@@ -66,10 +67,10 @@ public class ResourceDefaults
      * @return the associated value or <code>null</code>
      */
     public Object get(Object key, Class type) {
-        Object value = super.get(key);
+        Object value = storage.get(key);
         if (value == null) {
             // cached with a null value
-            if (super.containsKey(key))
+            if (storage.containsKey(key))
                 return null;
 
             // ask the parent
@@ -81,7 +82,7 @@ public class ResourceDefaults
                 value = factory.get(key, type);
         }
 
-        super.put(key, value);
+        storage.put(key, value);
         return value;
     }
 

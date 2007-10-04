@@ -13,34 +13,6 @@
 package org.wings;
 
 
-import java.awt.Color;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.beans.BeanInfo;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.lang.reflect.Array;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EventListener;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.Action;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
-import javax.swing.event.EventListenerList;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.border.SBorder;
@@ -65,6 +37,32 @@ import org.wings.style.Selector;
 import org.wings.style.Style;
 import org.wings.util.ComponentVisitor;
 import org.wings.util.SStringBuilder;
+
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.event.EventListenerList;
+import java.awt.Color;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EventListener;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Object having a graphical representation that can be displayed on the
@@ -854,19 +852,6 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
         if (dynamicStyles == null || dynamicStyles.size() == 0)
             return null;
         return Collections.unmodifiableCollection(dynamicStyles.values());
-    }
-
-    /**
-     * Defines a free text css property / value pair to this component.
-     * The CSS property will appear as an inline style in the generated HTML code.
-     *
-     * @deprecated Use {@link #setAttribute(org.wings.style.CSSProperty, String)}
-     */
-    public void setAttribute(String cssPropertyName, String value) {
-        CSSProperty property = new CSSProperty(cssPropertyName);
-        if (CSSProperty.BORDER_PROPERTIES.contains(property))
-            throw new IllegalArgumentException("Border properties have to be applied to the border!");
-        setAttribute(SELECTOR_ALL, property, value);
     }
 
     /**

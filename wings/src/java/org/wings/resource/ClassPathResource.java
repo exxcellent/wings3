@@ -78,10 +78,11 @@ public class ClassPathResource
         externalizerFlags = ExternalizeManager.GLOBAL | ExternalizeManager.FINAL;
     }
 
-    protected InputStream getResourceStream() {
+    @Override
+    protected InputStream getResourceStream() throws ResourceNotFoundException {
         InputStream stream = getClassLoader().getResourceAsStream(resourceFileName);
         if (stream == null)
-            throw new IllegalArgumentException("Resource not found: " + resourceFileName);
+            throw new ResourceNotFoundException("Classpath resource not found: " + resourceFileName);
         return stream;
     }
 
@@ -98,6 +99,7 @@ public class ClassPathResource
      * @return a hashcode, comprised from the hashcodes of the classloader
      *         and from the file name of the resource.
      */
+    @Override
     public int hashCode() {
         return (classLoader != null ? classLoader.hashCode() : 0) ^ resourceFileName.hashCode();
     }
@@ -108,6 +110,7 @@ public class ClassPathResource
      *
      * @return true if classloader and resource name are equal.
      */
+    @Override
     public boolean equals(Object o) {
         if (o instanceof ClassPathResource) {
             ClassPathResource other = (ClassPathResource) o;

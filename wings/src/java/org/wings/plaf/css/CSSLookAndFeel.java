@@ -12,98 +12,41 @@
  */
 package org.wings.plaf.css;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wings.session.Browser;
-import org.wings.session.BrowserType;
-import org.wings.util.SStringBuilder;
 import org.wings.session.SessionManager;
-import org.wings.util.PropertyUtils;
+import org.wings.util.PropertyDiscovery;
+import org.wings.util.SStringBuilder;
 
 import java.io.IOException;
 import java.util.Properties;
 
-public class CSSLookAndFeel
-        extends org.wings.plaf.LookAndFeel
-{
+public class CSSLookAndFeel  extends org.wings.plaf.LookAndFeel {
     private static final long serialVersionUID = 1L;
-    private final transient static Log log = LogFactory.getLog(CSSLookAndFeel.class);
-    private static final String PROPERTIES_FILENAME_DEFAULT = "default";
-    private static final String PROPERTIES_FILENAME_XCOMPONENT = "xcomponents";
-    private static final String PROPERTIES_FILENAME_END = ".properties";
-    private static final String PROPERTIES_CLASSPATH = CSSLookAndFeel.class.getPackage().getName().replace('.','/').concat("/");
-    private static final String PROPERTIES_CLASSPATH_XCOMPONENT = "org/wingx/plaf/css/";
+    private static final String PROPERTIES_DEFAULTFILE_PREFIX = "org/wings/plaf/css/default";
 
     public CSSLookAndFeel() throws IOException {
         super(loadProperties());
     }
 
     private static Properties loadProperties() throws IOException {
-        
-        // default properties
-        SStringBuilder propertiesFilename = new SStringBuilder(PROPERTIES_CLASSPATH);
-        propertiesFilename.append(PROPERTIES_FILENAME_DEFAULT);
-        propertiesFilename.append(PROPERTIES_FILENAME_END);                        
-        
-        Properties properties = PropertyUtils.loadProperties(propertiesFilename.toString());
-                
-        SStringBuilder xcomponentsPropertiesFilename = new SStringBuilder(PROPERTIES_CLASSPATH_XCOMPONENT);
-        xcomponentsPropertiesFilename
-                .append(PROPERTIES_FILENAME_XCOMPONENT)
-                .append(PROPERTIES_FILENAME_END);                        
-        
-        try {
-            properties.putAll(PropertyUtils.loadProperties(xcomponentsPropertiesFilename.toString()));
-            log.debug(xcomponentsPropertiesFilename.toString()+" attached");
-        } catch (IOException e) {
-            log.info("Unable to open xcomponents specific properties file '"+ xcomponentsPropertiesFilename.toString()+"'. This is OK if you are not using wingX.");
-        }
-                
-        // browser dependent properties
-        Browser userAgent = SessionManager.getSession().getUserAgent();
-        String browserType = userAgent.getBrowserType().getShortName();
+        final SStringBuilder propertyFile = new SStringBuilder();
 
-        SStringBuilder browserPropertiesFilename = new SStringBuilder(PROPERTIES_CLASSPATH);
-        browserPropertiesFilename.append(browserType);
-        browserPropertiesFilename.append(PROPERTIES_FILENAME_END);
-                            
-        try {
-            properties.putAll(PropertyUtils.loadProperties(browserPropertiesFilename.toString()));
-        } catch (IOException e) {
-            log.info("Unable to open browser specific properties file '"+browserPropertiesFilename.toString()+"'. This is OK.");
-        }
-        
-        SStringBuilder browserXcomponentsPropertiesFilename = new SStringBuilder(PROPERTIES_CLASSPATH_XCOMPONENT);
-            browserXcomponentsPropertiesFilename
-                .append(PROPERTIES_FILENAME_XCOMPONENT)
-                .append("_").append(browserType)
-                .append(PROPERTIES_FILENAME_END);        
-        
-        try {
-            properties.putAll(PropertyUtils.loadProperties(browserXcomponentsPropertiesFilename.toString()));                                
-        } catch (IOException e) {
-            log.info("Unable to open xcomponents specific properties file '"+ browserXcomponentsPropertiesFilename.toString()+"'. This is OK if you are not using wingX.");                
-        }
-                                        
-        // special properties for IE 7    
-        if ((userAgent.getBrowserType().getId() == BrowserType.IE.getId()) &&
-            (userAgent.getMajorVersion() == 7)) {                                 
+        // check for default PLAF properties under org/wings/plaf/css/default.properties
+        propertyFile.append(PROPERTIES_DEFAULTFILE_PREFIX).append(".properties");
+        Properties properties = PropertyDiscovery.loadRequiredProperties(propertyFile.toString());
 
-            log.info("xcomponents cgs for ie 7 will be loaded");
-            SStringBuilder ie7Properties = new SStringBuilder(PROPERTIES_CLASSPATH_XCOMPONENT);
-            ie7Properties
-                    .append(PROPERTIES_FILENAME_XCOMPONENT)
-                    .append("_").append(browserType).append("7")
-                    .append(PROPERTIES_FILENAME_END);
-            
-            try {
-                properties.putAll(PropertyUtils.loadProperties(ie7Properties.toString()));                                
-            } catch (IOException e) {
-                log.info("Unable to open xcomponents specific properties file '"+ ie7Properties.toString()+"'.");                
-            }
-            
-        }        
-                
+        // check for browser dependent properties under org/wings/plaf/css/default_msie.properties
+        final Browser userAgent = SessionManager.getSession().getUserAgent();
+        final String browserType = userAgent.getBrowserType().getShortName();
+        propertyFile.setLength(0);
+        propertyFile.append(PROPERTIES_DEFAULTFILE_PREFIX).append("_").append(browserType).append(".properties");
+        properties.putAll(PropertyDiscovery.loadOptionalProperties(propertyFile.toString()));
+
+        // check for browser dependent and VERSION dependen properties under org/wings/plaf/css/default_msie7.properties
+        propertyFile.setLength(0);
+        propertyFile.append(PROPERTIES_DEFAULTFILE_PREFIX).append("_").append(browserType).append(userAgent.getMajorVersion()).append(".properties");
+        properties.putAll(PropertyDiscovery.loadOptionalProperties(propertyFile.toString()));
+
         return properties;
     }
 }

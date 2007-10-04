@@ -298,8 +298,7 @@
         attach the <filename>src/java directory</filename>of the wingS
         distribution as Java source and the <filename> dist/doc/api</filename>
         directory as JavaDoc source at the two main wingS libraries
-        <filename>wings.jar</filename> and
-        <filename>css.jar</filename>.</para>
+        <filename>wings.jar</filename>.</para>
       </tip>
 
       <para>We don't have any special layout desires, so we won't use a

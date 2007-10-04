@@ -36,7 +36,7 @@ public class LocaleCharSet {
 
     protected LocaleCharSet() {
         try {
-            charsetMap = PropertyUtils.loadProperties(CHARSET_PROPERTIES);
+            charsetMap = PropertyDiscovery.loadRequiredProperties(CHARSET_PROPERTIES);
         } catch (Exception e) {
             log.warn("Unexpected error on loading " + CHARSET_PROPERTIES + " via class path.", e);
             charsetMap = new Properties();

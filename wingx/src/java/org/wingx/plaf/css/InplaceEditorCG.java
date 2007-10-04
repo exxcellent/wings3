@@ -13,10 +13,6 @@
 
 package org.wingx.plaf.css;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.wings.SComponent;
 import org.wings.SIcon;
 import org.wings.event.SParentFrameEvent;
@@ -27,11 +23,15 @@ import org.wings.plaf.css.LabelCG;
 import org.wings.plaf.css.Utils;
 import org.wings.plaf.css.dwr.CallableManager;
 import org.wings.plaf.css.script.OnHeadersLoadedScript;
+import org.wings.resource.ResourceManager;
 import org.wings.session.ScriptManager;
 import org.wings.util.SStringBuilder;
 import org.wingx.XInplaceEditor;
 import org.wingx.XInplaceEditorInterface;
-import org.wingx.resource.XResourceManager;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -43,8 +43,8 @@ public class InplaceEditorCG extends LabelCG implements SParentFrameListener {
    
     // these graphics are needed for inplaceeditor.js
     static {
-        ((SIcon) XResourceManager.getObject("InplaceEditorCG.okButton", SIcon.class)).getURL();
-        ((SIcon) XResourceManager.getObject("InplaceEditorCG.cancelButton", SIcon.class)).getURL();
+        ((SIcon) ResourceManager.getObject("InplaceEditorCG.okButton", SIcon.class)).getURL();
+        ((SIcon) ResourceManager.getObject("InplaceEditorCG.cancelButton", SIcon.class)).getURL();
     }
 
     public InplaceEditorCG() {

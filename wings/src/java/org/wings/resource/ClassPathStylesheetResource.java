@@ -97,10 +97,14 @@ public class ClassPathStylesheetResource
     /* (non-Javadoc)
      * @see org.wings.StaticResource#getResourceStream()
      */
-    protected final InputStream getResourceStream() {
+    @Override
+    protected final InputStream getResourceStream() throws ResourceNotFoundException {
         InputStream in = getClassLoader().getResourceAsStream(resourceFileName);
-        CssUrlFilterInputStream stream = new CssUrlFilterInputStream(in, getExtManager());
-        return stream;
+        if (in != null) {
+            return new CssUrlFilterInputStream(in, getExtManager());
+        } else {
+            throw new ResourceNotFoundException("Unable to find classpath resource "+resourceFileName);
+        }
     }
 
     /*
@@ -134,7 +138,8 @@ public class ClassPathStylesheetResource
     /* (non-Javadoc)
      * @see org.wings.StaticResource#bufferResource()
      */
-    protected LimitedBuffer bufferResource() throws IOException {
+    @Override
+    protected LimitedBuffer bufferResource() throws IOException, ResourceNotFoundException {
         try {
             return super.bufferResource();
         } catch (IOException e) {

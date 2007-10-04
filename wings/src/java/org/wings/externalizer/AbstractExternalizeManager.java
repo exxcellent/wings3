@@ -16,6 +16,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.io.Device;
 import org.wings.util.StringUtil;
+import org.wings.resource.ResourceNotFoundException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -25,7 +26,7 @@ import java.util.*;
  * @author <a href="mailto:haaf@mercatis.de">Armin Haaf</a>
  */
 public abstract class AbstractExternalizeManager {
-    protected final static Log log = LogFactory.getLog(AbstractExternalizeManager.class);
+    protected final static Log LOG = LogFactory.getLog(AbstractExternalizeManager.class);
 
     /**
      * The identifier generated, if the {@link ExternalizeManager} did not find
@@ -126,8 +127,8 @@ public abstract class AbstractExternalizeManager {
 
 
     public AbstractExternalizeManager() {
-        if (log.isDebugEnabled()) {
-            log.debug("Externalizer scope using prefix" + prefix + "expires in " + FINAL_EXPIRES + " seconds ");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Externalizer scope using prefix" + prefix + "expires in " + FINAL_EXPIRES + " seconds ");
         }
 
         reverseExternalized = Collections.synchronizedMap(new HashMap<ExternalizedResource, String>());
@@ -156,8 +157,8 @@ public abstract class AbstractExternalizeManager {
      * String prefixed to every created externlizer identifier via {@link #createIdentifier()}
      */
     public void setPrefix(final String prefix) {
-        if (log.isDebugEnabled())
-            log.debug("Externalizer prefix changed from "+this.prefix + " to "+prefix);
+        if (LOG.isDebugEnabled())
+            LOG.debug("Externalizer prefix changed from "+this.prefix + " to "+prefix);
         this.prefix = prefix;
     }
 
@@ -376,7 +377,7 @@ public abstract class AbstractExternalizeManager {
         ExternalizedResource extInfo = getExternalizedResource(identifier);
 
         if (extInfo == null) {
-            log.warn("identifier " + identifier + " not found");
+            LOG.warn("identifier " + identifier + " not found");
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
@@ -403,10 +404,11 @@ public abstract class AbstractExternalizeManager {
             int resourceLen = extInfo
                     .getExternalizer().getLength(extInfo.getObject());
             if (resourceLen > 0) {
-                log.debug(extInfo.getMimeType() + ": " + resourceLen);
+                LOG.debug(extInfo.getMimeType() + ": " + resourceLen);
                 response.setContentLength(resourceLen);
             }
         }
+
 
         Collection headers = extInfo.getHeaders();
         if (headers != null) {
@@ -445,7 +447,13 @@ public abstract class AbstractExternalizeManager {
                     + (1000 * FINAL_EXPIRES));
         }
 
-        extInfo.getExternalizer().write(extInfo.getObject(), out);
+        try {
+            extInfo.getExternalizer().write(extInfo.getObject(), out);
+        } catch (ResourceNotFoundException e) {
+            LOG.debug("Unable to deliver resource due to:  " + e.getMessage()+". Sending 404!");
+            response.reset();
+            response.sendError(404, e.getMessage());
+        }
         out.flush();
     }
 

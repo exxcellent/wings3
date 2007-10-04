@@ -16,9 +16,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.externalizer.ExternalizeManager;
 import org.wings.io.Device;
-import org.wings.session.PropertyService;
-import org.wings.session.SessionManager;
+import org.wings.resource.ResourceNotFoundException;
 import org.wings.session.Session;
+import org.wings.session.SessionManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -186,7 +186,7 @@ public abstract class StaticResource extends Resource {
      *         null, if the Resource returned an invalid stream.
      * @throws IOException 
      */
-    protected LimitedBuffer bufferResource() throws IOException {
+    protected LimitedBuffer bufferResource() throws ResourceNotFoundException, IOException {
         if (buffer == null) {
             if (maxBufferSize != -1) {
                 buffer = new LimitedBuffer(maxBufferSize);
@@ -222,7 +222,7 @@ public abstract class StaticResource extends Resource {
      * @param out the sink, the content of the resource should
      *            be written to.
      */
-    public void write(Device out) throws IOException {
+    public void write(Device out) throws IOException, ResourceNotFoundException {
         /*
          * if the buffer is null, then we are called the first time.
          */
@@ -255,10 +255,12 @@ public abstract class StaticResource extends Resource {
     /**
      * Return the size in bytes of the resource, if known
      */
+    @Override
     public final int getLength() {
         return size;
     }
 
+    @Override
     public SimpleURL getURL() {
         String name = getId();
         RequestURL requestURL = (RequestURL)SessionManager.getSession().getProperty("request.url");
@@ -303,7 +305,7 @@ public abstract class StaticResource extends Resource {
         return fileName;
     }
 
-    protected abstract InputStream getResourceStream() throws IOException;
+    protected abstract InputStream getResourceStream() throws ResourceNotFoundException;
 
     public int getMaxBufferSize() {
         return maxBufferSize;

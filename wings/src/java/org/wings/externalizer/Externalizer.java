@@ -14,6 +14,7 @@ package org.wings.externalizer;
 
 import org.wings.io.Device;
 import org.wings.resource.HttpHeader;
+import org.wings.resource.ResourceNotFoundException;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -69,8 +70,9 @@ public interface Externalizer<SUPPORTED_TYPE> {
 
     /**
      * Writes the given object into the given Device.
+     * @throws ResourceNotFoundException if the underlying resource is not available.
      */
-    void write(Object obj, Device out) throws IOException;
+    void write(Object obj, Device out) throws IOException, ResourceNotFoundException ;
 
     /**
      * Returns the supported classes. The {@link ExternalizeManager}

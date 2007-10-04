@@ -61,9 +61,9 @@ public class ExternalizeManager extends AbstractExternalizeManager {
 
     protected final void storeExternalizedResource(String identifier,
                                                    ExternalizedResource extInfo) {
-        if (log.isDebugEnabled()) {
-            log.debug("store identifier " + identifier + " " + extInfo.getObject().getClass());
-            log.debug("flags " + extInfo.getFlags());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("store identifier " + identifier + " " + extInfo.getObject().getClass());
+            LOG.debug("flags " + extInfo.getFlags());
         }
         externalized.put(identifier, extInfo);
     }
@@ -136,7 +136,7 @@ public class ExternalizeManager extends AbstractExternalizeManager {
 
         Externalizer externalizer = getExternalizer(obj.getClass());
         if (externalizer == null) {
-            log.warn("could not find externalizer for " +
+            LOG.warn("could not find externalizer for " +
                     obj.getClass().getName());
             return NOT_FOUND_IDENTIFIER;
         }

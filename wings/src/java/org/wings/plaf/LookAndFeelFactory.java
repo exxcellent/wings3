@@ -24,9 +24,31 @@ import java.util.HashMap;
 public abstract class LookAndFeelFactory {
     private final transient static Log log = LogFactory.getLog(LookAndFeelFactory.class);
 
-    private static String DEFAULT_LOOKANDFEEL_FACTORY = "org.wings.plaf.LookAndFeelFactory$Default";
+    private static final String DEFAULT_LOOKANDFEEL_FACTORY = "org.wings.plaf.LookAndFeelFactory$Default";
+    private static final String DEFAULT_LOOKANDFEEL = "org.wings.plaf.css.CSSLookAndFeel";
 
     private static LookAndFeelFactory factory;
+
+    static {
+        final String className = (String) SessionManager.getSession()
+                .getProperty("wings.lookandfeel.factory", DEFAULT_LOOKANDFEEL);
+
+        try {
+            Class factoryClass = null;
+            try {
+                factoryClass = Class.forName(className, true,
+                                             Thread.currentThread().getContextClassLoader());
+            } catch (ClassNotFoundException e) {
+                // fallback, in case the servlet container fails to set the
+                // context class loader.
+                factoryClass = Class.forName(className);
+            }
+            factory = (LookAndFeelFactory) factoryClass.newInstance();
+        } catch (Exception e) {
+            log.fatal("could not load wings.lookandfeel.factory: " + className, e);
+            throw new RuntimeException("could not load wings.lookandfeel.factory: " + className + e.getMessage());
+        }
+    }
 
     public static void setLookAndFeelFactory(LookAndFeelFactory factory) {
         LookAndFeelFactory.factory = factory;
@@ -36,56 +58,24 @@ public abstract class LookAndFeelFactory {
      * Get the lool and feel factory.
      */
     public static LookAndFeelFactory getLookAndFeelFactory() {
-        if (factory == null) {
-            synchronized (LookAndFeelFactory.class) {
-                if (factory == null) {
-                    String className = (String) SessionManager.getSession().getProperty("wings.lookandfeel.factory");
-                    if (className == null)
-                        className = DEFAULT_LOOKANDFEEL_FACTORY;
-
-                    try {
-                        Class factoryClass = null;
-                        try {
-                            factoryClass = Class.forName(className, true,
-                                    Thread.currentThread()
-                                    .getContextClassLoader());
-                        } catch (ClassNotFoundException e) {
-                            // fallback, in case the servlet container fails to set the
-                            // context class loader.
-                            factoryClass = Class.forName(className);
-                        }
-                        factory = (LookAndFeelFactory) factoryClass.newInstance();
-                    } catch (Exception e) {
-                        log.fatal("could not load wings.lookandfeel.factory: " +
-                                className, e);
-                        throw new RuntimeException("could not load" +
-                                " wings.lookandfeel.factory: " +
-                                className +
-                                "(" + e.getMessage() + ")");
-                    }
-                }
-            }
-        }
         return factory;
     }
 
     public abstract LookAndFeel create() throws IOException;
 
     static class Default extends LookAndFeelFactory {
-        private static String DEFAULT_LOOKANDFEEL = "org.wings.plaf.css.CSSLookAndFeel";
-        private static HashMap lafs = new HashMap();
+        private final HashMap<String, LookAndFeel> lafs = new HashMap<String, LookAndFeel>();
         
-
-        public LookAndFeel create()
-                throws IOException {
+        @Override
+        public LookAndFeel create() throws IOException {
             Session session = SessionManager.getSession();
             Browser userAgent = session.getUserAgent();
             final String lookupKey = userAgent.getBrowserType().getShortName() + Integer.toString(userAgent.getMajorVersion());
             
-            LookAndFeel laf = (LookAndFeel)lafs.get(lookupKey );            
+            LookAndFeel laf = lafs.get(lookupKey );
             if (laf == null) {
                 synchronized (Default.class) {
-                    laf = (LookAndFeel)lafs.get(lookupKey);
+                    laf = lafs.get(lookupKey);
                     if (laf == null) {
                         String lafName = (String) session.getProperty("wings.lookandfeel.default");
                         if (lafName == null)

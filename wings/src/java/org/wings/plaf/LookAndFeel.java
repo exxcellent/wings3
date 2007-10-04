@@ -12,9 +12,8 @@
  */
 package org.wings.plaf;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wings.resource.ResourceManager;
+
 import java.io.Serializable;
 import java.util.Properties;
 
@@ -26,8 +25,6 @@ import java.util.Properties;
  * @see org.wings.plaf.ComponentCG
  */
 public class LookAndFeel implements Serializable {
-    private final transient static Log log = LogFactory.getLog(LookAndFeel.class);
-
     protected Properties properties;
 
     /**

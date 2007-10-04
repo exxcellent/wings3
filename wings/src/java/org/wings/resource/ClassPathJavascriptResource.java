@@ -27,7 +27,8 @@ public class ClassPathJavascriptResource extends ClassPathResource {
         this.callbackCode = callbackCode;
     }
 
-    protected InputStream getResourceStream() {
+    @Override
+    protected InputStream getResourceStream() throws ResourceNotFoundException {
         if (callbackCode == null) {
             return super.getResourceStream();
         }

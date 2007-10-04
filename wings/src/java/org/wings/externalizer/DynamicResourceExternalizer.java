@@ -15,6 +15,7 @@ package org.wings.externalizer;
 import org.wings.io.Device;
 import org.wings.resource.DynamicResource;
 import org.wings.resource.HttpHeader;
+import org.wings.resource.ResourceNotFoundException;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -58,8 +59,7 @@ public class DynamicResourceExternalizer implements Externalizer<DynamicResource
         return obj.getFrame().getEventEpoch();
     }
 
-    public void write(Object obj, Device out)
-            throws IOException {
+    public void write(Object obj, Device out) throws IOException, ResourceNotFoundException {
         ((DynamicResource)obj).write(out);
     }
 

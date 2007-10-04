@@ -45,29 +45,26 @@
         </javac>
     </target>
 
-    <target name="build" depends="compile" description="build">
+    <target name="build" depends="compile" description="builds all wingX artefacts">
         <mkdir dir="build/web/WEB-INF/lib"/>
         <jar jarfile="build/web/WEB-INF/lib/wingx.jar">
-            <fileset dir="build/class">
-                <exclude name="org/wingx/plaf/css/**"/>
-            </fileset>
+            <fileset dir="build/class" />
             <fileset dir="src/res">
-                <exclude name="**/*.js"/>
-                <exclude name="**/*.css"/>
-                <exclude name="**/*.htc"/>
                 <exclude name="**/*.java.in"/>
             </fileset>
         </jar>
-        <jar jarfile="build/web/WEB-INF/lib/cxx.jar">
-            <fileset dir="build/class">
-                <include name="org/wingx/plaf/css/**"/>
-            </fileset>
-            <fileset dir="src/res">
-                <include name="**/*.js"/>
-                <include name="**/*.css"/>
-                <include name="**/*.htc"/>
-                <include name="**/*.properties"/>
-            </fileset>
+    </target>
+
+    <target name="dist" depends="build, javadoc"
+            description="creates a redistributable wingX version in the dist directory">
+        <mkdir dir="dist/lib"/>
+        <copy todir="dist/lib" file="build/web/WEB-INF/lib/wingx.jar"/>
+        <mkdir dir="dist/doc"/>
+        <jar file="dist/doc/wingx-api.zip">
+            <fileset dir="build/doc/api" />
+        </jar>
+        <jar file="dist/doc/wingx-src.zip">
+            <fileset dir="src" />
         </jar>
     </target>
 
@@ -101,6 +98,19 @@
 
     <target name="splash" unless="nosplash">
         <splash imageurl="file:${wings.home}/demo/wingset/src/web/icons/wings-logo.png"/>
+    </target>
+
+    <target depends="prepare" description="create API documentation" name="javadoc">
+        <!-- Make API JavaDoc -->
+        <mkdir dir="build/doc/api"/>
+        <javadoc classpathref="build.classpath" destdir="build/doc/api"
+                 link="http://java.sun.com/j2se/1.5/docs/api/" maxmemory="128m" packagenames="org.wingx.*"
+                 sourcepath="src/java" use="true" version="true"
+                 doctitle="wingX API"
+                 windowtitle="wingS API"
+                 bottom="wingX: wingS extension pack" >
+            <excludepackage name="org.wings.plaf.css.*" />
+        </javadoc>
     </target>
 
 </project>

@@ -16,7 +16,7 @@ import org.wings.StaticResource;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 /**
@@ -28,8 +28,7 @@ public class FileResource extends StaticResource {
 
     private final File file;
 
-    public FileResource(String name)
-            throws IOException {
+    public FileResource(String name) {
         this(new File(name));
     }
 
@@ -52,6 +51,7 @@ public class FileResource extends StaticResource {
         }
     }
 
+    @Override
     public String toString() {
         return getId() + (file != null ? " " + file.getName() : "");
     }
@@ -60,7 +60,12 @@ public class FileResource extends StaticResource {
         return file;
     }
 
-    protected final InputStream getResourceStream() throws IOException {
-        return new FileInputStream(file);
+    @Override
+    protected final InputStream getResourceStream() throws ResourceNotFoundException {
+        try {
+            return new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            throw new ResourceNotFoundException("Unable to open resource file: "+file);
+        }
     }
 }

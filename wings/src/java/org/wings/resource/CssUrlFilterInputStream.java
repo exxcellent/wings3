@@ -111,9 +111,14 @@ public class CssUrlFilterInputStream extends BufferedInputStream {
      */
     private String externalizeImage(String classPath, String mimeType) {
         ClassPathResource res = new ClassPathResource(classPath, mimeType);
-        if (res.getResourceStream() == null) {
-            // no resource found at classPath, return old string
-            log.debug("Could not find resource at classpath: " + classPath);
+        try {
+            if (res.getResourceStream() == null) {
+                // no resource found at classPath, return old string
+                log.debug("Could not find resource at classpath: " + classPath);
+                return "";
+            }
+        } catch (ResourceNotFoundException e) {
+            log.debug("Could not find resource: " + e.getMessage());
             return "";
         }
         SStringBuilder imageUrl = new SStringBuilder("'");

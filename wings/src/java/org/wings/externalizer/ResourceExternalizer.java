@@ -14,14 +14,14 @@ package org.wings.externalizer;
 
 import org.wings.Resource;
 import org.wings.resource.HttpHeader;
+import org.wings.resource.ResourceNotFoundException;
 import org.wings.io.Device;
 
 import java.io.IOException;
 import java.util.Collection;
 
 /**
- * @author armin
- *         created at 24.02.2004 10:49:32
+ * Externalizer for Resources.
  */
 public class ResourceExternalizer implements Externalizer<Resource> {
 
@@ -49,8 +49,7 @@ public class ResourceExternalizer implements Externalizer<Resource> {
         return false;
     }
 
-    public void write(Object obj, Device out)
-            throws IOException {
+    public void write(Object obj, Device out) throws IOException, ResourceNotFoundException {
         ((Resource) obj).write(out);
     }
 
