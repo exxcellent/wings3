@@ -1,80 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project basedir="." default="build" name="wingS">
+<project basedir="." name="wingS">
     <!-- read properties from file -->
     <property file="etc/custom-build.properties"/>
     <property file="etc/build.properties"/>
 
-    <property name="xalan.version" value="xalan.jar"/>
-
     <path id="build.classpath">
-        <fileset dir="${lib}">
-            <include name="${servlet.version}"/>
-            <include name="${commons-logging.version}"/>
-            <include name="${regexp.version}"/>
-            <include name="${beanshell.version}"/>
-            <include name="${httpclient.version}"/>
-            <include name="${lfgr.version}"/>
-            <include name="${dwr.version}"/>
-            <include name="${xalan.version}"/>
-        </fileset>
+        <fileset dir="thirdparty/lib" includes="*.jar"/>
     </path>
 
     <target name="prepare" depends="-splash">
-        <mkdir dir="build/class"/>
+        <mkdir dir="build/src/java"/>
         <mkdir dir="build/doc"/>
+        <mkdir dir="dist"/>
         <tstamp>
             <format property="wings.buildtime" pattern="yyyy-MM-dd HH:mm"/>
         </tstamp>
     </target>
 
-    <target depends="prepare" description="build javadoc" name="javadoc">
-        <!-- Make API JavaDoc -->
+    <target name="build" depends="prepare" description="build wings and wingx">
+        <ant dir="wings" target="build"/>
+        <ant dir="wingx" target="build"/>
+    </target>
+
+    <target name="javadoc" depends="prepare" description="build javadoc">
+        <copy todir="build/src/java">
+            <fileset dir="wings/src/java"/>
+            <fileset dir="wingx/src/java"/>
+        </copy>
         <mkdir dir="build/doc/api"/>
-        <javadoc classpathref="build.classpath" destdir="build/doc/api"
-                 link="http://java.sun.com/j2se/1.5/docs/api/" maxmemory="128m" packagenames="org.wings.*"
-                 sourcepath="src/java" use="true" version="true"
+
+        <javadoc destdir="build/doc/api"
+                 link="http://java.sun.com/j2se/1.5/docs/api/" maxmemory="128m"
+                 use="true" version="true"
                  doctitle="wingS ${wings.version}"
                  windowtitle="wingS ${wings.version}"
-                 bottom="wingS Swings ;-)" >
-            <excludepackage name="org.wings.plaf.css.*" />
+                 bottom="wingS Swings ;-)"
+                 classpathref="build.classpath">
+            <fileset dir="build/src/java" defaultexcludes="yes">
+                <include name="org/**/*.java"/>
+                <exclude name="com/keypoint/**"/>
+                <exclude name="org/wings/plaf/css/**"/>
+                <exclude name="org/wingx/plaf/css/**"/>
+            </fileset>
+            <group title="wingS" packages="org.wings*"/>
+            <group title="wingX" packages="org.wingx*"/>
         </javadoc>
     </target>
 
-    <target depends="javadoc, -check-full-dist" name="doc">
-        <!-- Start DocBook document generation -->
-        <ant dir="doc/docbook" target="all.doc" />
+    <target name="doc" depends="javadoc,-check-full-dist">
+        <ant dir="doc/docbook" target="all.doc"/>
     </target>
 
-    <target depends="-check-full-dist,clean,build,doc" name="dist">
-        <!-- lib -->
-        <mkdir dir="dist/lib"/>
-        <copy todir="dist/lib">
-            <fileset dir="${lib}">
-                <include name="*.jar"/>
-                <exclude name="wings*.jar"/>
-            </fileset>
-            <fileset dir="build/web/WEB-INF/lib">
-                <include name="wings*.jar"/>
-            </fileset>
+    <target name="dist" depends="-check-full-dist,clean,build,doc">
+        <mkdir dir="dist/doc/web"/>
+        <copy todir="dist/doc/web">
+            <fileset dir="wings/build/web"/>
+            <fileset dir="wingx/build/web"/>
         </copy>
-
-        <!-- web -->
-        <!--  if - then better provide a full starter kit i.e. with log4j xml and more! 
-        <mkdir dir="dist/web"/>
-        <copy todir="dist/web">
-            <fileset dir="build/web" />
-        </copy>-->
-
-        <!-- bin -->
-        <!--<mkdir dir="dist/bin"/>
-        <copy todir="dist/bin">
-            <fileset dir="bin">
-                <!- - excluded as these dev script probably
-                     only confuse beginners - ->
-                <exclude name="cs.sh"/>
-            </fileset>
-        </copy>-->
 
         <!-- manual -->
         <mkdir dir="dist/doc"/>
@@ -100,30 +83,13 @@
             <fileset dir="build/doc/api"/>
         </copy>
 
-        <!-- src -->
-        <copy todir="dist/src">
-            <fileset dir="src">
-                <exclude name="**/.*"/>
-                <exclude name="**/.*/**"/>
-                <exclude name="**/*.class"/>
-                <exclude name="**/*.u"/>
-                <exclude name="src/java/org/wings/Version.java"/>
-            </fileset>
-        </copy>
-
-        <!-- demo -->
-        <mkdir dir="dist/demo"/>
-        <copy todir="dist/demo">
-            <fileset dir="demo">
-                <exclude name="**/.*"/>
-                <exclude name="**/.*/**"/>
-                <exclude name="**/*.class"/>
-                <exclude name="**/*.u"/>
-                <include name="**/src/**"/>
-                <include name="**/build.xml"/>
-                <include name="**/*.txt"/>
-                <include name="**/lib/*.jar"/>
-            </fileset>
+        <copy todir="dist">
+            <fileset dir="." excludes="*/build/**" includes="wings/**"/>
+            <fileset dir="." excludes="*/build/**" includes="wingx/**"/>
+            <fileset dir="." excludes="*/build/**" includes="demo-wingset/**"/>
+            <fileset dir="." excludes="*/build/**" includes="demo-mycomponent/**"/>
+            <fileset dir="." excludes="*/build/**" includes="demo-desktop/**"/>
+            <fileset dir="." excludes="*/build/**" includes="demo-logconfig/**"/>
         </copy>
 
         <!-- etc -->
@@ -148,34 +114,21 @@
             </fileset>
         </copy>
 
-        <!-- convenience helper: src-zip file to easy redist wings src -->
-        <mkdir dir="dist/lib/src"/>
-        <jar file="dist/lib/src/wings-src.zip">
-            <fileset dir="src/java"/>
+        <jar file="dist/doc/wings-src.zip">
+            <fileset dir="build/src/java"/>
         </jar>
-        <!-- convenience helper: src-zip file to easy redist wings src -->
-        <mkdir dir="dist/lib/api"/>
-        <jar file="dist/lib/api/wings-api.zip">
-            <fileset dir="dist/doc/api"/>
+        <jar file="dist/doc/wings-api.zip">
+            <fileset dir="build/doc/api"/>
         </jar>
-
     </target>
 
-    <target depends="dist" description="create distribution tar.gz" name="tarball">
+    <target name="tarball" depends="dist" description="create distribution tar.gz">
         <property name="distname" value="${ant.project.name}-${wings.version}"/>
         <delete dir="${distname}"/>
         <mkdir dir="${distname}"/>
         <copy todir="${distname}">
             <fileset dir="dist"/>
         </copy>
-
-        <!-- dist -->
-        <mkdir dir="${distname}/dist/lib"/>
-        <move todir="${distname}/dist/lib">
-            <fileset dir="${distname}/lib">
-                <include name="wings.jar"/>
-            </fileset>
-        </move>
 
         <tar basedir="." includes="${distname}/" tarfile="${distname}.tar"/>
         <gzip src="${distname}.tar" zipfile="${distname}.tar.gz"/>
@@ -187,15 +140,6 @@
         <delete dir="build"/>
         <delete dir="dist"/>
         <delete>
-            <fileset dir="src">
-                <include name="**/*.class"/>
-                <include name="**/*.u"/>
-                <include name="**/*.bak"/>
-                <include name="**/*~"/>
-                <include name="**/.#*"/>
-            </fileset>
-        </delete>
-        <delete>
             <fileset dir=".">
                 <include name="wingS*.tar.gz"/>
             </fileset>
@@ -203,7 +147,7 @@
         <delete file="src/java/org/wings/Version.java"/>
     </target>
 
-    <target depends="clean,build" description="re-build everything" name="all"/>
+    <target depends="clean,dist" description="re-build everything" name="all"/>
 
     <!-- ### Utility tasks ################################################### -->
 
