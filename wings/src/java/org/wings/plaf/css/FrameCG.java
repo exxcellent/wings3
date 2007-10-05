@@ -74,7 +74,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
 
     private String documentType = STRICT_DOCTYPE;
 
-    protected final List headers = new ArrayList();
+    protected final List<Header> headers = new ArrayList<Header>();
 
     /**
      * Should the returned HTML page start with the &lt;?xml version="1.0" encoding="..."&gt;.
@@ -152,7 +152,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         component.addScriptListener(handleClicks);
         component.addScriptListener(Utils.isMSIE(component) ? storeFocusIE : storeFocusFF);
 
-        SessionHeaders.getInstance().registerHeaders(headers);
+        SessionHeaders.getInstance().registerHeaders(0, headers);
         SessionHeaders.getInstance().registerHeaders(getBrowserStylesheets());
 
         new InputMapRequestListener(component);
@@ -272,7 +272,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
      *
      * @return a list of externalized browser specific stylesheet headers
      */
-    private List getBrowserStylesheets() {
+    private List<Header> getBrowserStylesheets() {
         Session session = SessionManager.getSession();
         final CGManager cgManager = session.getCGManager();
         final String browserName = session.getUserAgent().getBrowserType().getShortName();
@@ -282,7 +282,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
             cssClassPaths = (String) cgManager.getObject(PROPERTY_STYLESHEET + BROWSER_DEFAULT, String.class);
         }
 
-        ArrayList browserStylesheets = new ArrayList();
+        List<Header> browserStylesheets = new ArrayList<Header>();
         StringTokenizer tokenizer = new StringTokenizer(cssClassPaths, ",");
         while (tokenizer.hasMoreTokens()) {
             browserStylesheets.add(Utils.createExternalizedCSSHeader(tokenizer.nextToken()));
@@ -460,7 +460,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
     
     private String getTooltipInitScript(SToolTipManager tooltipManager) throws IOException {
         SStringBuilder script = new SStringBuilder();
-        script.append("wingS.component.initTooltips(");
+        script.append("wingS.tooltip.init(");
         script.append(tooltipManager.getInitialDelay()).append(",");
         script.append(tooltipManager.getDismissDelay()).append(",");
         script.append(tooltipManager.isFollowMouse()).append(");");

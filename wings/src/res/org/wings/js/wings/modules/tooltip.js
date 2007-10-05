@@ -1,12 +1,12 @@
 /***************************************************************************************************
- * WINGS.COMPONENT  --  contains: functions used for special components
+ * WINGS.TOOLTIP  --  contains: tooltip related functions 
  **************************************************************************************************/
 
 // Create module namespace
-wingS.namespace("component");
+wingS.namespace("tooltip");
 
 
-wingS.component.initTooltips = function(delay, duration, followMouse) {
+wingS.tooltip.init = function(delay, duration, followMouse) {
     if (config && config.Delay && config.Duration && config.FollowMouse) {
     	config.Delay = delay;
 		config.Duration = duration;
@@ -14,6 +14,3 @@ wingS.component.initTooltips = function(delay, duration, followMouse) {
     }
 };
 
-wingS.component.splitPaneResized = function(sb, size) {
-    wingS.request.sendEvent(null, true, true, sb.el.id, size);
-}

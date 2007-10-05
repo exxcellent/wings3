@@ -1,7 +1,8 @@
 /***************************************************************************************************
- * WINGS.SCROLLBAR  --  contains: functions for scrollbars
+ * WINGS.SCROLLBAR  --  contains: scrollbar related functions
  **************************************************************************************************/
 
+// Create module namespace
 wingS.namespace("scrollbar");
 
 
@@ -36,7 +37,7 @@ wingS.scrollbar.layout_vertical = function(id) {
     };
 
     YAHOO.util.Event.addListener(outer, 'scroll', table.callbackObject.adjust);
-}
+};
 
 wingS.scrollbar.set_vertical = function(id, position, extent, size) {
     var table = document.getElementById(id);
@@ -51,7 +52,7 @@ wingS.scrollbar.set_vertical = function(id, position, extent, size) {
     inner.style.height = innerHeight + "px";
 
     outer.scrollTop = innerHeight * position / size;
-}
+};
 
 wingS.scrollbar.scroll_vertical = function(outer) {
     var inner = outer.getElementsByTagName("DIV")[0];
@@ -67,7 +68,7 @@ wingS.scrollbar.scroll_vertical = function(outer) {
         outer.setAttribute("position", position);
         wingS.request.sendEvent(null, false, true, table.id, position);
     }
-}
+};
 
 wingS.scrollbar.layout_horizontal = function(id) {
     var table = document.getElementById(id);
@@ -100,7 +101,7 @@ wingS.scrollbar.layout_horizontal = function(id) {
     };
 
     YAHOO.util.Event.addListener(outer, 'scroll', table.callbackObject.adjust);
-}
+};
 
 wingS.scrollbar.set_horizontal = function(id, position, extent, size) {
     var table = document.getElementById(id);
@@ -115,7 +116,7 @@ wingS.scrollbar.set_horizontal = function(id, position, extent, size) {
     inner.style.width = innerWidth + "px";
 
     outer.scrollLeft = innerWidth * position / size;
-}
+};
 
 wingS.scrollbar.scroll_horizontal = function(outer) {
     var inner = outer.getElementsByTagName("DIV")[0];
@@ -131,4 +132,5 @@ wingS.scrollbar.scroll_horizontal = function(outer) {
         outer.setAttribute("position", position);
         wingS.request.sendEvent(null, false, true, table.id, position);
     }
-}
+};
+

@@ -93,7 +93,7 @@ public class SplitPaneCG
             scriptBuilder.append(");\n");
         }
         scriptBuilder.append(splitBarName);
-        scriptBuilder.append(".on('moved', wingS.component.splitPaneResized);");
+        scriptBuilder.append(".on('moved', wingS.splitpane.resized);");
     }
 
     protected void writeVertical(Device device, String paneName, SComponent paneComponent) throws IOException {

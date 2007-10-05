@@ -1256,7 +1256,6 @@ public final class Utils {
     public static final String JS_ETC_MENU = "JS.etcMenu";
     public static final String JS_ETC_POPUP = "JS.etcPopup";
     public static final String JS_ETC_WZ_TOOLTIP = "JS.etcWzTooltip";
-    public static final String JS_ETC_SCROLLBAR = "JS.etcScrollbar";
 
     /**
      * Load a Javascript library that comes with wingS by a property. Check <code>JS_XXX</code> constants.

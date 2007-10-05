@@ -13,16 +13,12 @@
 package org.wings.plaf.css;
 
 import org.wings.*;
-import org.wings.header.Header;
-import org.wings.header.SessionHeaders;
 import org.wings.io.Device;
 import org.wings.plaf.css.script.LayoutFillScript;
 import org.wings.plaf.css.script.OnPageRenderedScript;
 import org.wings.plaf.Update;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * CG for a scrollbar.
@@ -31,21 +27,6 @@ import java.util.ArrayList;
  */
 public final class ScrollBarCG extends org.wings.plaf.css.AbstractComponentCG implements org.wings.plaf.ScrollBarCG {
     private static final long serialVersionUID = 1L;
-
-    protected final List<Header> headers = new ArrayList<Header>();
-
-    public ScrollBarCG() {
-        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_ETC_SCROLLBAR));
-    }
-
-    public void installCG(final SComponent component) {
-        super.installCG(component);
-        SessionHeaders.getInstance().registerHeaders(headers);
-    }
-
-    public void uninstallCG(SComponent component) {
-        SessionHeaders.getInstance().deregisterHeaders(headers);
-    }
 
     public void writeInternal(Device d, SComponent c)
             throws IOException {
