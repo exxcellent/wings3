@@ -744,7 +744,7 @@ public class Session implements PropertyService, Serializable {
      *
      * @return a <code>String</code> value
      */
-    public final String createUniqueId() {
+    public String createUniqueId() {
         return StringUtil.toIdentifierString(getUniqueId());
     }
 
