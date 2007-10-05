@@ -2,8 +2,8 @@
 
 <project basedir="." default="build" name="wingS">
     <!-- read properties from file -->
-    <property file="../etc/custom-build.properties"/>
-    <property file="../etc/build.properties"/>
+    <property file="etc/custom-build.properties"/>
+    <property file="etc/build.properties"/>
 
     <property name="servlet.version" value="servlet.jar"/>
     <property name="commons-logging.version" value="commons-logging.jar"/>
@@ -137,6 +137,148 @@
         </javadoc>
     </target>
 
+    <target depends="javadoc, -check-full-dist" name="doc">
+        <!-- Start DocBook document generation -->
+        <ant dir="doc/docbook" target="all.doc" />
+    </target>
+
+    <target depends="-check-full-dist,clean,build,doc" name="dist">
+        <!-- lib -->
+        <mkdir dir="dist/lib"/>
+        <copy todir="dist/lib">
+            <fileset dir="${lib}">
+                <include name="*.jar"/>
+                <exclude name="wings*.jar"/>
+            </fileset>
+            <fileset dir="build/web/WEB-INF/lib">
+                <include name="wings*.jar"/>
+            </fileset>
+        </copy>
+
+        <!-- web -->
+        <!--  if - then better provide a full starter kit i.e. with log4j xml and more! 
+        <mkdir dir="dist/web"/>
+        <copy todir="dist/web">
+            <fileset dir="build/web" />
+        </copy>-->
+
+        <!-- bin -->
+        <!--<mkdir dir="dist/bin"/>
+        <copy todir="dist/bin">
+            <fileset dir="bin">
+                <!- - excluded as these dev script probably
+                     only confuse beginners - ->
+                <exclude name="cs.sh"/>
+            </fileset>
+        </copy>-->
+
+        <!-- manual -->
+        <mkdir dir="dist/doc"/>
+        <copy todir="dist/doc">
+            <fileset dir="doc/docbook/build" />
+        </copy>
+
+        <!-- tutorial -->
+        <mkdir dir="dist/doc/tutorial/hellowings"/>
+        <copy todir="dist/doc/tutorial/hellowings">
+            <fileset dir="doc/tutorial/hellowings">
+                <exclude name="build/**"/>
+                <exclude name="**/.*"/>
+                <exclude name="**/.*/**"/>
+                <exclude name="**/*.class"/>
+                <exclude name="**/*.u"/>
+            </fileset>
+        </copy>
+
+        <!-- api -->
+        <mkdir dir="dist/doc/api"/>
+        <copy todir="dist/doc/api">
+            <fileset dir="build/doc/api"/>
+        </copy>
+
+        <!-- src -->
+        <copy todir="dist/src">
+            <fileset dir="src">
+                <exclude name="**/.*"/>
+                <exclude name="**/.*/**"/>
+                <exclude name="**/*.class"/>
+                <exclude name="**/*.u"/>
+                <exclude name="src/java/org/wings/Version.java"/>
+            </fileset>
+        </copy>
+
+        <!-- demo -->
+        <mkdir dir="dist/demo"/>
+        <copy todir="dist/demo">
+            <fileset dir="demo">
+                <exclude name="**/.*"/>
+                <exclude name="**/.*/**"/>
+                <exclude name="**/*.class"/>
+                <exclude name="**/*.u"/>
+                <include name="**/src/**"/>
+                <include name="**/build.xml"/>
+                <include name="**/*.txt"/>
+                <include name="**/lib/*.jar"/>
+            </fileset>
+        </copy>
+
+        <!-- etc -->
+        <mkdir dir="dist/etc"/>
+        <copy todir="dist/etc">
+            <fileset dir="etc">
+                <exclude name="custom-build.properties"/>
+            </fileset>
+        </copy>
+
+        <!-- main -->
+        <property name="distname" value="${ant.project.name}-${wings.version}"/>
+        <filter token="VERSION" value="${wings.version}"/>
+        <copy file="VERSION" filtering="true" todir="dist"/>
+        <copy todir="dist">
+            <fileset dir=".">
+                <include name="COPYING"/>
+                <include name="CREDITS"/>
+                <include name="INSTALL"/>
+                <include name="README"/>
+                <include name="build.*"/>
+            </fileset>
+        </copy>
+
+        <!-- convenience helper: src-zip file to easy redist wings src -->
+        <mkdir dir="dist/lib/src"/>
+        <jar file="dist/lib/src/wings-src.zip">
+            <fileset dir="src/java"/>
+        </jar>
+        <!-- convenience helper: src-zip file to easy redist wings src -->
+        <mkdir dir="dist/lib/api"/>
+        <jar file="dist/lib/api/wings-api.zip">
+            <fileset dir="dist/doc/api"/>
+        </jar>
+
+    </target>
+
+    <target depends="dist" description="create distribution tar.gz" name="tarball">
+        <property name="distname" value="${ant.project.name}-${wings.version}"/>
+        <delete dir="${distname}"/>
+        <mkdir dir="${distname}"/>
+        <copy todir="${distname}">
+            <fileset dir="dist"/>
+        </copy>
+
+        <!-- dist -->
+        <mkdir dir="${distname}/dist/lib"/>
+        <move todir="${distname}/dist/lib">
+            <fileset dir="${distname}/lib">
+                <include name="wings.jar"/>
+            </fileset>
+        </move>
+
+        <tar basedir="." includes="${distname}/" tarfile="${distname}.tar"/>
+        <gzip src="${distname}.tar" zipfile="${distname}.tar.gz"/>
+        <delete file="${distname}.tar"/>
+        <delete dir="${distname}"/>
+    </target>
+
     <target description="cleanup build results" name="clean">
         <delete dir="build"/>
         <delete dir="dist"/>
@@ -163,6 +305,16 @@
 
     <target name="-splash" unless="nosplash">
         <splash imageurl="file:${basedir}/demo/wingset/src/web/icons/wings-logo.png"/>
+    </target>
+
+    <target name="-check-full-dist">
+        <available file="doc/docbook/build.xml" property="full-distribution"/>
+        <fail unless="full-distribution">
+  Full source checkout required!
+  This task requires that you have the complete wingS sources which
+  are available via svn checkout from the wingS website.
+  Please consult http://wingsframework.org/ how to access the wingS VCS.
+        </fail>
     </target>
 
 </project>

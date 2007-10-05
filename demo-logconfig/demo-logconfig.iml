@@ -10,7 +10,7 @@
           <root url="file://$MODULE_DIR$/web" relative="/" />
         </webroots>
         <building>
-          <setting name="EXPLODED_URL" value="file://$MODULE_DIR$/../out/exploded/demo-mycomponentWeb" />
+          <setting name="EXPLODED_URL" value="file://$MODULE_DIR$/../out/exploded/demo-logconfigWeb" />
           <setting name="EXPLODED_ENABLED" value="true" />
           <setting name="JAR_URL" value="file://" />
           <setting name="JAR_ENABLED" value="false" />
@@ -25,7 +25,7 @@
             <attribute name="method" value="4" />
             <attribute name="URI" value="&lt;N/A&gt;" />
           </containerElement>
-          <containerElement type="module" name="demo-mycomponent">
+          <containerElement type="module" name="demo-logconfig">
             <attribute name="method" value="1" />
             <attribute name="URI" value="/WEB-INF/classes" />
           </containerElement>
@@ -87,7 +87,6 @@
     <output-test url="file://$MODULE_DIR$/build/class" />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/res" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

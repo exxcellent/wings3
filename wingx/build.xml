@@ -3,8 +3,8 @@
 <project basedir="." default="build" name="wingX">
     
     <!-- read properties from file -->
-    <property file="etc/custom-build.properties"/>
-    <property file="etc/build.properties"/>
+    <property file="../etc/custom-build.properties"/>
+    <property file="../etc/build.properties"/>
 
     <property name="servlet.version" value="servlet.jar"/>
     <property name="commons-logging.version" value="commons-logging.jar"/>
@@ -16,14 +16,12 @@
     <property name="xalan.version" value="xalan.jar"/>
 
     <path id="build.classpath">
-        <fileset dir="${wings.home}/build/web/WEB-INF/lib">
+        <fileset dir="../wings/build/web/WEB-INF/lib">
             <include name="*.jar"/>
         </fileset>
     </path>
 
     <target name="prepare">
-        <available file="${wings.home}/demo/wingset/src/web/icons/wings-logo.png" property="wings.present"/>
-        <fail unless="wings.present" message="Adapt etc/custom-build.properties to point to wingS!" />
         <mkdir dir="build/class"/>
         <mkdir dir="build/doc"/>
         <tstamp>
@@ -33,8 +31,8 @@
 
     <target name="compile-wings" depends="prepare" unless="skip.wings">
         <echo message="--- Starting wingS build ---"/>
-        <echo message="--> wings.home = ${wings.home}"/>
-        <ant antfile="${wings.home}/build.xml" target="build" inheritall="no" />
+        <echo message="--> wings.home = ../wings"/>
+        <ant antfile="../wings/build.xml" target="build" inheritall="no" />
         <echo message="--- Finished wingS build ---"/>
     </target>
 
@@ -69,7 +67,7 @@
     </target>
 
     <target name="clean-wings" description="clean also wings build" unless="skip.wings">
-        <ant antfile="${wings.home}/build.xml" target="clean" inheritall="no" />
+        <ant antfile="../wings/build.xml" target="clean" inheritall="no" />
     </target>
 
     <target description="cleanup build results" name="clean" depends="clean-wings">
