@@ -40,12 +40,20 @@ public final class SessionHeaders {
     }
 
     public void registerHeaders(List<? extends Header> headers) {
-        for (Header header : headers) {
-            registerHeader(header);
-        }
+        registerHeaders(headerList.size(), headers);
     }
 
     public void registerHeader(Header header) {
+        registerHeader(headerList.size(), header);
+    }
+    
+    public void registerHeaders(int index, List<? extends Header> headers) {
+        for (Header header : headers) {
+            registerHeader(index++, header);
+        }
+    }
+    
+    public void registerHeader(int index, Header header) {
         if (header == null)
             throw new IllegalArgumentException("Header must not be null!");
 
@@ -54,7 +62,7 @@ public final class SessionHeaders {
             for (SFrame frame : frames) {
                 (frame).addHeader(header);
             }
-            headerList.add(header);
+            headerList.add(index, header);
         }
         incrementLinkCount(header);
     }
