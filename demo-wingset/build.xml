@@ -62,7 +62,7 @@
             </fileset>
         </copy>
         <copy todir="build/web/WEB-INF/lib">
-            <fileset dir="../thirparty/lib">
+            <fileset dir="../thirdparty/lib">
                 <include name="${log4j.version}"/>
             </fileset>
         </copy>
