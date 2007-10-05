@@ -10,6 +10,7 @@
 
     <path id="build.classpath">
         <fileset dir="../wings/build/web/WEB-INF/lib" includes="*.jar"/>
+        <fileset dir="../wingx/build/web/WEB-INF/lib" includes="*.jar"/>
         <fileset dir="../thirdparty/lib" includes="servlet.jar"/>
     </path>
 
@@ -38,6 +39,7 @@
                 <exclude name="WEB-INF/web.xml"/>
             </fileset>
             <fileset dir="../wings/build/web"/>
+            <fileset dir="../wingx/build/web"/>
             <fileset dir="src/java/wingset" includes="*Example.java,*Test.java,*Experiment.java"/>
         </copy>
         <copy todir="build/web">
