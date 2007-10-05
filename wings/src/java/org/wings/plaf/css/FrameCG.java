@@ -216,7 +216,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         }
     }
 
-    private String strokes(List<SComponent> components) {
+    protected String strokes(List<SComponent> components) {
         if (components == null)
             return null;
 
