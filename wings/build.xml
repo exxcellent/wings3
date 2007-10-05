@@ -15,7 +15,7 @@
     <property name="xalan.version" value="xalan.jar"/>
 
     <path id="build.classpath">
-        <fileset dir="${lib}">
+        <fileset dir="../thirdparty/lib">
             <include name="${servlet.version}"/>
             <include name="${commons-logging.version}"/>
             <include name="${regexp.version}"/>
@@ -44,7 +44,6 @@
 
     <target name="prepare" depends="-splash">
         <mkdir dir="build/class"/>
-        <mkdir dir="build/doc"/>
         <tstamp>
             <format property="wings.buildtime" pattern="yyyy-MM-dd HH:mm"/>
         </tstamp>
@@ -113,7 +112,7 @@
             </manifest>
         </jar>
         <copy todir="build/web/WEB-INF/lib">
-            <fileset dir="${lib}">
+            <fileset dir="../thirdparty/lib">
                 <include name="${regexp.version}"/>
                 <include name="${beanshell.version}"/>
                 <include name="${lfgr.version}"/>
@@ -122,19 +121,6 @@
                 <include name="${xalan.version}"/>
             </fileset>
         </copy>
-    </target>
-
-    <target depends="prepare" description="build javadoc" name="javadoc">
-        <!-- Make API JavaDoc -->
-        <mkdir dir="build/doc/api"/>
-        <javadoc classpathref="build.classpath" destdir="build/doc/api"
-                 link="http://java.sun.com/j2se/1.5/docs/api/" maxmemory="128m" packagenames="org.wings.*"
-                 sourcepath="src/java" use="true" version="true"
-                 doctitle="wingS ${wings.version}"
-                 windowtitle="wingS ${wings.version}"
-                 bottom="wingS Swings ;-)" >
-            <excludepackage name="org.wings.plaf.css.*" />
-        </javadoc>
     </target>
 
     <target description="cleanup build results" name="clean">

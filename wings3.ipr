@@ -683,6 +683,20 @@
   <component name="com.intellij.profile.ui.ErrorOptionsConfigurable" proportions="" version="1">
     <option name="myLastEditedConfigurable" />
   </component>
+  <component name="libraryTable">
+    <library name="thirdparty">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/thirdparty/lib/servlet.jar!/" />
+        <root url="jar://$PROJECT_DIR$/thirdparty/lib/dwr.jar!/" />
+        <root url="jar://$PROJECT_DIR$/thirdparty/lib/commons-logging.jar!/" />
+        <root url="jar://$PROJECT_DIR$/thirdparty/lib/bsh-core.jar!/" />
+        <root url="jar://$PROJECT_DIR$/thirdparty/lib/commons-httpclient-2.0-beta1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/thirdparty/lib/log4j-1.2.9.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+  </component>
   <component name="uidesigner-configuration">
     <option name="INSTRUMENT_CLASSES" value="true" />
     <option name="COPY_FORMS_RUNTIME_TO_OUTPUT" value="true" />
