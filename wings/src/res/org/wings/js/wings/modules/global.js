@@ -39,31 +39,32 @@ wingS.global.init =  function(configObject) {
     if (wingS.global.updateCursor.enabled) {
         wingS.ajax.activityCursor = new wingS.ajax.ActivityCursor();
     }
+
     wingS.ajax.callbackObject = {
         success : function(request) { wingS.ajax.processRequestSuccess(request); },
         failure : function(request) { wingS.ajax.processRequestFailure(request); },
         upload  : function(request) { wingS.ajax.processRequestSuccess(request); }
     };
     wingS.ajax.setActivityIndicatorsVisible(false);
-    
+
     // Initialize -wingS.layout-
     if (wingS.global.autoAdjustLayout.enabled) {
-	    wingS.layout.callbackObject = {
-	    	_tOutId : 0,
-	    	_adjust : function () {
-	    		wingS.request.reloadFrame();
-	    	},
-	    	adjust : function () {
-		        clearTimeout(this._tOutId);
-		        var layout = this;
-		        this._tOutId = setTimeout(
-		        	function() { layout._adjust(); },
-		        	wingS.global.autoAdjustLayout.delay);
-		    }
-		};
-		var layout = wingS.layout.callbackObject;
-	    YAHOO.util.Event.addListener(window, 'resize', layout.adjust, layout, true);
-	}
+        wingS.layout.callbackObject = {
+            _tOutId : 0,
+            _adjust : function () {
+                wingS.request.reloadFrame();
+            },
+            adjust : function () {
+                clearTimeout(this._tOutId);
+                var layout = this;
+                this._tOutId = setTimeout(
+                    function() { layout._adjust(); },
+                    wingS.global.autoAdjustLayout.delay);
+            }
+        };
+        var layout = wingS.layout.callbackObject;
+        YAHOO.util.Event.addListener(window, 'resize', layout.adjust, layout, true);
+    }
 };
 
 /**
