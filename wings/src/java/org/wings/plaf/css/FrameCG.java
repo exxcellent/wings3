@@ -43,7 +43,7 @@ import java.awt.event.InputEvent;
  * PLAF renderer for SFrames.
  * Does quite many abritriray things i.e. registering diverse service scripts, etc.
  */
-public final class FrameCG implements org.wings.plaf.FrameCG {
+public class FrameCG implements org.wings.plaf.FrameCG {
 
     private static final long serialVersionUID = 1L;
 
