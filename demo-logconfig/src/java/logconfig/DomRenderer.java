@@ -9,6 +9,8 @@ import org.wings.tree.SDefaultTreeCellRenderer;
 
 public class DomRenderer extends SDefaultTreeCellRenderer {
 
+    private static final long serialVersionUID = 3989712479939412419L;
+    
     private static final SURLIcon LEAF_ICON = new SURLIcon("../images/leaf_node.png");
 
     public SComponent getTreeCellRendererComponent(STree tree, Object value, boolean selected,

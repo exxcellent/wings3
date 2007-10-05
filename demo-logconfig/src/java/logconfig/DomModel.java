@@ -11,12 +11,12 @@ public class DomModel implements TreeModel {
 
 	private static final String xpath = "(./* | ./@*)";
 
-	private Vector listeners;
+	private List<TreeModelListener> listeners;
 	private Node root;
 
 	public DomModel(Node root) {
 		this.root = root;
-		listeners = new Vector();
+		listeners = new ArrayList<TreeModelListener>();
 	}
 
 	public Object getRoot() {

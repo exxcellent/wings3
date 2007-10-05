@@ -13,7 +13,7 @@ body {
 	border: 1px solid #000000;
 }
 
-.fo_form {
+.pa_main, .pa_error {
 	padding: 5px;
 	background-color: #FFFFFF;
 	border-bottom: 1px solid #000000;

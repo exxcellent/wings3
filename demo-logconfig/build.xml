@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="logconfig" default="deploy" basedir=".">
+<project name="logConfig" default="deploy" basedir=".">
 
     <!-- read custom properties from file -->
     <property file="../etc/custom-build.properties"/>
@@ -10,8 +10,9 @@
 
     <path id="build.classpath">
         <fileset dir="../wings/build/web/WEB-INF/lib" includes="*.jar"/>
-        <fileset dir="../thirdparty/lib" includes="servlet.jar"/>
-        <fileset dir="src/web/WEB-INF/lib" includes="*.jar"/>
+        <fileset dir="../wingx/build/web/WEB-INF/lib" includes="*.jar"/>
+        <fileset dir="../thirdparty/lib" includes="servlet.jar, ${log4j.version}"/>
+    	<fileset dir="src/web/WEB-INF/lib" includes="*.jar"/>
     </path>
 
     <target name="prepare">
@@ -34,7 +35,7 @@
 
     <target name="build" depends="compile, includelog4j">
         <copy todir="build/web">
-            <fileset dir="src/web"/>
+            <fileset dir="src/web" />
             <fileset dir="../wings/build/web"/>
         </copy>
         <copy todir="build/web/WEB-INF/classes">
@@ -42,14 +43,9 @@
         </copy>
     </target>
 
-    <target name="includelog4j" if="log4j">
-        <copy todir="build/web/WEB-INF/classes">
-            <fileset dir="../etc">
-                <include name="log4j.xml" />
-            </fileset>
-        </copy>
+    <target name="includelog4j">
         <copy todir="build/web/WEB-INF/lib">
-            <fileset dir="../thirparty/lib">
+            <fileset dir="../thirdparty/lib">
                 <include name="${log4j.version}"/>
             </fileset>
         </copy>

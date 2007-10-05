@@ -19,7 +19,13 @@
     </init-param>
     <init-param>
        <param-name>log4j.xml.path</param-name>
-       <param-value>C:/Development/JBoss/eproc/server_2/server/eproc/conf/log4j.xml</param-value>
+       <param-value>./resources/log4j.xml</param-value>
+       <description>Path to 'log4j.xml' (relative to 'logconfig' context).</description>
+    </init-param>
+    <init-param>
+       <param-name>log4j.dtd.path</param-name>
+       <param-value>./resources/log4j.dtd</param-value>
+       <description>Path to 'log4j.dtd' (relative to 'logconfig' context).</description>
     </init-param>
   </servlet>
 
