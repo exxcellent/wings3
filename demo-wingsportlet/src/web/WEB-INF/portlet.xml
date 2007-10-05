@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<portlet-app
+    xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+    version="1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd
+                        http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+   
+  <portlet>   
+    <description>a wings-portlet test</description>
+    <portlet-name>TestPortlet</portlet-name>
+    <display-name>Test Portlet</display-name>
+    <portlet-class>testportlet.TestPortlet</portlet-class>
+    
+    
+    <init-param>
+    	<name>WingSServletURL</name>
+        <value>/WingS/</value>       
+	</init-param>
+    
+	<init-param>
+    	<name>ViewClass</name>
+        <value>testportlet.TestPortletWingS</value>       
+	</init-param>
+    
+    <init-param>
+    	<name>EditClass</name>
+        <value>testportlet.TestPortletWingSEdit</value>       
+	</init-param>
+    
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+      <portlet-mode>EDIT</portlet-mode>
+      <portlet-mode>HELP</portlet-mode>
+    </supports>
+    
+    <supported-locale>en</supported-locale>        
+    <supported-locale>de</supported-locale>
+    
+    <portlet-info>
+      <title>Test Portlet</title>
+      <short-title>TP</short-title>
+    </portlet-info>
+    
+  </portlet>
+  
+  <portlet>   
+    <description>a huge wings-portlet test</description>
+    <portlet-name>HugeTestPortlet</portlet-name>
+    <display-name>Huge Test Portlet</display-name>
+    <portlet-class>hugetestportlet.HugeTestPortlet</portlet-class>
+    
+    
+    <init-param>
+    	<name>WingSServletURL</name>
+        <value>/WingS/</value>       
+	</init-param>
+    
+	<init-param>
+    	<name>ViewClass</name>
+        <value>hugetestportlet.HugeTestPortletWingS</value>       
+	</init-param>
+    
+    <init-param>
+    	<name>EditClass</name>
+        <value>hugetestportlet.HugeTestPortletWingSEdit</value>       
+	</init-param>
+    
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+      <portlet-mode>EDIT</portlet-mode>
+      <portlet-mode>HELP</portlet-mode>
+    </supports>
+    
+    <supported-locale>en</supported-locale>        
+    <supported-locale>de</supported-locale>
+    
+    <portlet-info>
+      <title>Huge Test Portlet</title>
+      <short-title>HTP</short-title>
+    </portlet-info>
+    
+  </portlet>
+  
+</portlet-app>
+
+

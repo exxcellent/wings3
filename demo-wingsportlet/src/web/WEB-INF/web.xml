@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="test-portlet" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+    <display-name>wings-portlet test application</display-name>
+    
+    <filter>
+    	<filter-name>URLFilter</filter-name>
+    	<filter-class>org.wings.portlet.filter.WingS2PortletResponseFilter</filter-class>
+ 	</filter>	
+ 	<filter-mapping>
+		<filter-name>URLFilter</filter-name>
+		<servlet-name>WingS</servlet-name>
+		<dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+    
+	<servlet>
+        <servlet-name>WingS</servlet-name>
+        <servlet-class>org.wings.session.PortletWingServlet</servlet-class>
+    </servlet>    
+    <servlet-mapping>
+        <servlet-name>WingS</servlet-name>
+        <url-pattern>/WingS/*</url-pattern>
+    </servlet-mapping>    
+
+</web-app>
