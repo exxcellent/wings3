@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="lib" path="src/web/WEB-INF/lib/jdom.jar"/>
+	<classpathentry kind="lib" path="src/web/WEB-INF/lib/rome-0.9.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wings"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wingx"/>
+	<classpathentry kind="output" path="build_eclipse/class"/>
+</classpath>
