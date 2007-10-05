@@ -2,7 +2,7 @@
 <module relativePaths="false" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$/..">
+    <content url="file:///home/hengels/jdevel/wings3/wings">
       <sourceFolder url="file://$MODULE_DIR$/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/res" isTestSource="false" />
     </content>
@@ -11,7 +11,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../lib/dwr.jar!/" />
+          <root url="jar:///home/hengels/jdevel/wings3/wings/lib/dwr.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -20,7 +20,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../lib/commons-httpclient-2.0-beta1.jar!/" />
+          <root url="jar:///home/hengels/jdevel/wings3/wings/lib/commons-httpclient-2.0-beta1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -29,7 +29,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../lib/commons-logging.jar!/" />
+          <root url="jar:///home/hengels/jdevel/wings3/wings/lib/commons-logging.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -38,7 +38,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../lib/bsh-core.jar!/" />
+          <root url="jar:///home/hengels/jdevel/wings3/wings/lib/bsh-core.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -47,7 +47,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../lib/servlet.jar!/" />
+          <root url="jar:///home/hengels/jdevel/wings3/wings/lib/servlet.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
