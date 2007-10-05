@@ -217,6 +217,12 @@
               <file url="file://$PROJECT_DIR$/demo-mycomponent/web/WEB-INF/web.xml" />
             </files>
           </module>
+          <module name="demo-jsp">
+            <files>
+              <file url="file://$PROJECT_DIR$/demo-jsp/src/web/WEB-INF/web.xml" />
+              <file url="file://$PROJECT_DIR$/demo-jsp/web/WEB-INF/web.xml" />
+            </files>
+          </module>
         </modules>
       </facet-type>
     </autodetection-disabled>
@@ -454,6 +460,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/demo-desktop/demo-desktop.iml" filepath="$PROJECT_DIR$/demo-desktop/demo-desktop.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo-dwr/demo-dwr.iml" filepath="$PROJECT_DIR$/demo-dwr/demo-dwr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/demo-jsp/demo-jsp.iml" filepath="$PROJECT_DIR$/demo-jsp/demo-jsp.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo-logconfig/demo-logconfig.iml" filepath="$PROJECT_DIR$/demo-logconfig/demo-logconfig.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo-mycomponent/demo-mycomponent.iml" filepath="$PROJECT_DIR$/demo-mycomponent/demo-mycomponent.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo-wingset/demo-wingset.iml" filepath="$PROJECT_DIR$/demo-wingset/demo-wingset.iml" />

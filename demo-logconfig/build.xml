@@ -21,7 +21,6 @@
         <mkdir dir="build/web"/>
     </target>
 
-    <!-- ==================== Build LogConfig ================ -->
     <target name="compile" depends="prepare">
         <javac srcdir="src/java"
             destdir="build/class"
@@ -72,7 +71,6 @@
         <touch file="${deploy.logconfig}/WEB-INF/web.xml"/>
     </target>
 
-    <!-- ==================== Admin ==================== -->
     <target name="clean">
         <delete dir="build"/>
         <delete dir="${deploy.logconfig}"/>

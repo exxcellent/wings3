@@ -27,7 +27,6 @@
         <mkdir dir="${deploy.dwr}"/>
     </target>
 
-    <!-- ==================== Build wingS Demos ================ -->
     <target name="compile" depends="prepare">
         <javac srcdir="src/java"
             destdir="build/class"
@@ -63,7 +62,6 @@
         </copy>
     </target>
 
-    <!-- ==================== Admin ==================== -->
     <target name="clean">
         <delete dir="build"/>
         <delete dir="${deploy.dwr}"/>

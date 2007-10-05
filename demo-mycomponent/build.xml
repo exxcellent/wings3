@@ -1,39 +1,39 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
+<project name="mycomponent" default="build" basedir=".">
 
-<project basedir="." default="build" name="demo-mycomponent">
-    
-    <!-- read properties from file -->
+    <!-- read custom properties from file -->
     <property file="../etc/custom-build.properties"/>
     <property file="../etc/build.properties"/>
 
+    <property name="servlet.version" value="servlet.jar"/>
+    <property name="log4j.version" value="log4j-1.2.9.jar" />
+
     <path id="build.classpath">
-        <fileset dir="../wings/build/web/WEB-INF/lib">
-            <include name="*.jar"/>
-        </fileset>
+        <fileset dir="../wings/build/web/WEB-INF/lib" includes="*.jar"/>
+        <fileset dir="../thirdparty/lib" includes="servlet.jar"/>
     </path>
 
     <target name="prepare">
+        <tstamp/>
+        <mkdir dir="build"/>
         <mkdir dir="build/class"/>
-        <mkdir dir="build/doc"/>
+        <mkdir dir="build/web"/>
     </target>
 
-    <target name="compile-wings" depends="prepare" unless="skip.wings">
-        <echo message="--- Starting wingS build ---"/>
-        <echo message="--> wings.home = ../wings"/>
-        <ant antfile="../wings/build.xml" target="build" inheritall="no" />
-        <echo message="--- Finished wingS build ---"/>
-    </target>
-
-    <target name="compile" depends="compile-wings">
-        <javac debug="${build.debug}" deprecation="${build.deprecation}"
-            destdir="build/class" srcdir="src/java" source="1.5" target="1.5">
+    <target name="compile" depends="prepare">
+        <javac srcdir="src/java"
+            destdir="build/class"
+            debug="${build.debug}"
+            deprecation="${build.deprecation}"
+            source="1.5"
+            target="1.5">
             <classpath refid="build.classpath"/>
         </javac>
     </target>
 
-    <target name="build" depends="compile" description="builds custom component">
+    <target name="build" depends="compile">
         <mkdir dir="build/web/WEB-INF/lib"/>
-        <jar jarfile="build/${ant.project.name}.jar">
+        <jar jarfile="build/web/WEB-INF/lib/${ant.project.name}.jar">
             <fileset dir="build/class" />
             <fileset dir="src/res">
                 <exclude name="**/*.java.in"/>
@@ -41,43 +41,17 @@
         </jar>
     </target>
 
-    <target name="dist" depends="build, javadoc"
-            description="creates a redistributable wingX version in the dist directory">
-        <mkdir dir="dist"/>
-        <copy todir="dist" file="build/${ant.project.name}.jar"/>
-        <mkdir dir="dist/doc"/>
-        <jar file="dist/doc/${ant.project.name}-api.zip">
-            <fileset dir="build/doc/api" />
-        </jar>
-        <jar file="dist/doc/${ant.project.name}-src.zip">
-            <fileset dir="src" />
-        </jar>
-    </target>
-
-    <target name="clean.all" description="clean also all dependent builds (wings)" unless="skip.wings">
-        <ant antfile="../wings/build.xml" target="clean" inheritall="no" />
-    </target>
-
-    <target description="cleanup build results" name="clean" depends="clean.all">
+    <target name="clean">
         <delete dir="build"/>
-        <delete dir="dist"/>
+        <delete dir="${deploy.desktop}"/>
+        <delete>
+            <fileset dir="src">
+                <include name="**/*.class"/>
+                <include name="**/*.u"/>
+                <include name="**/*.bak"/>
+                <include name="**/*~"/>
+                <include name="**/.#*"/>
+            </fileset>
+        </delete>
     </target>
-
-    <target depends="clean,build" description="re-build everything" name="all"/>
-
-    <!-- ### Utility tasks ################################################### -->
-
-    <target depends="prepare" description="create API documentation" name="javadoc">
-        <!-- Make API JavaDoc -->
-        <mkdir dir="build/doc/api"/>
-        <javadoc classpathref="build.classpath" destdir="build/doc/api"
-                 link="http://java.sun.com/j2se/1.5/docs/api/" maxmemory="128m" packagenames="org.wingx.*"
-                 sourcepath="src/java" use="true" version="true"
-                 doctitle="wingX API"
-                 windowtitle="wingS API"
-                 bottom="wingX: wingS extension pack" >
-            <excludepackage name="org.wings.plaf.css.*" />
-        </javadoc>
-    </target>
-
 </project>
