@@ -55,7 +55,7 @@ wingS.ajax.sendRequest = function(method, uri, postData) {
  * @return {boolean} true if successfully aborted, false otherwise
  */
 wingS.ajax.abortRequest = function() {
-    if (wingS.ajax.connectionObject != null) {
+    if (YAHOO.util.Connect.isCallInProgress(wingS.ajax.connectionObject)) {
         return YAHOO.util.Connect.abort(wingS.ajax.connectionObject, wingS.ajax.callbackObject);
     }
     return false;
@@ -66,6 +66,9 @@ wingS.ajax.abortRequest = function() {
  * @param {Object} request - the request to process
  */
 wingS.ajax.processRequestFailure = function(request) {
+    if (wingS.global.debugMode)
+        wingS.ajax.updateDebugView(request);
+
     // Reset activity indicators and active flag
     wingS.ajax.setActivityIndicatorsVisible(false);
     wingS.ajax.requestIsActive = false;
@@ -74,22 +77,13 @@ wingS.ajax.processRequestFailure = function(request) {
     wingS.ajax.requestQueue = new Array();
 
     if (request.status == -1) {
-        alert("Transaction has been aborted!");
-        return;
+        // Transaction has been aborted --> OK!
     } else if (request.status == 0) {
         // Happens in case of a communication
         // failure, i.e if the server has mean-
         // while been shut down --> do reload!
         wingS.request.reloadFrame();
-        return;
     }
-
-    // Write error message (maybe it is a wingS
-    // error template) received from the server
-    document.close();
-    document.open("text/html");
-    document.write(request.responseText);
-    document.close();
 };
 
 /**
@@ -234,14 +228,14 @@ wingS.ajax.ActivityCursor.prototype.followMouse = function(event) {
         posX += wingS.util.absLeft(target);
         posY += wingS.util.absTop(target.parentNode) + 18;
     }
-    
+
     var newX = posX + this.dx;
     if (newX > 0 && newX < (YAHOO.util.Dom.getDocumentWidth() - wingS.global.updateCursor.width - 2)) {
         this.div.style.left = newX + "px";
     }
     var newY = posY + this.dy;
     if (newY > 0 && newY < (YAHOO.util.Dom.getDocumentHeight() - wingS.global.updateCursor.height - 2)) {
-	    this.div.style.top = newY + "px";
+        this.div.style.top = newY + "px";
     }
 };
 
@@ -265,7 +259,7 @@ wingS.ajax.updateDebugView = function(request) {
             '<div align="center" style="margin-top:50px; padding-bottom:3px;">\n' +
             '  <strong>AJAX DEBUG VIEW:</strong> &nbsp;XML RESPONSE\n' +
             '  &nbsp;<span style="font:11px monospace"></span></div>\n' +
-            '<textarea readonly="readonly" style="width:100%; height:200px;\n' +
+            '<textarea readonly="readonly" style="width:100%; height:190px;\n' +
             '  border-top:1px dashed #000000; border-bottom:1px dashed #000000;\n' +
             '  font:11px monospace; padding:10px;"></textarea>\n';
         debugArea = document.createElement("div");
@@ -275,15 +269,23 @@ wingS.ajax.updateDebugView = function(request) {
         document.body.appendChild(debugArea);
     }
 
-    var output;
+    var output = "";
     if (request != null) {
-        output = request.responseText;
-        if (output == null)
-            output = (new XMLSerializer()).serializeToString(request.responseXML);
-        debugArea.getElementsByTagName("SPAN")[0].innerHTML = "| " + output.length + " chars";
+        output += "Status: " + request.statusText + " (";
+        output += request.status + ") | TID: " + request.tId + "\n";
+        var response = "";
+        if (request.status > 0) {
+            output += "\n" + request.getAllResponseHeaders + "\n";
+            response = request.responseText;
+            if (response == null) {
+                response = (new XMLSerializer()).serializeToString(request.responseXML);
+            }
+            output += response;
+        }
+        debugArea.getElementsByTagName("SPAN")[0].innerHTML = "| " + response.length + " chars";
     } else {
-        output = "Currently there is no XML response available..." +
-                 "\nProbably no asynchronous request has been sent.";
+        output += "Currently there is no XML response available..." +
+                  "\nProbably no asynchronous request has been sent.";
     }
     debugArea.getElementsByTagName("TEXTAREA")[0].value = output;
 };
@@ -301,14 +303,20 @@ wingS.ajax.isDebugViewVisible = function() {
 };
 
 /**
- * Makes the enabled debug view either visible or invisible.
+ * Makes the debug view either visible or invisible. Furthermore
+ * the wingS.global.debugMode flag ist set accordingly.
  * @param {boolean} visible - true to set debug view visible
  */
 wingS.ajax.setDebugViewVisible = function(visible) {
     var debugArea = document.getElementById("ajaxDebugView");
     if (debugArea != null) {
-        if (visible) debugArea.style.display = "block";
-        else debugArea.style.display = "none";
+        if (visible) {
+            wingS.global.debugMode = true;
+            debugArea.style.display = "block";
+        } else {
+            wingS.global.debugMode = false;
+            debugArea.style.display = "none";
+        }
     } else {
         wingS.ajax.updateDebugView();
         wingS.ajax.setDebugViewVisible(true);
@@ -316,7 +324,7 @@ wingS.ajax.setDebugViewVisible = function(visible) {
 };
 
 /**
- * Toggles the visibility of the previously enabled debug view.
+ * Toggles the visibility of the debug view.
  */
 wingS.ajax.toggleDebugView = function() {
     if (wingS.ajax.isDebugViewVisible())
