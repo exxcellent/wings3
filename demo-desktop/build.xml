@@ -11,7 +11,7 @@
     <path id="build.classpath">
         <fileset dir="../wings/build/web/WEB-INF/lib" includes="*.jar"/>
         <fileset dir="../thirdparty/lib" includes="servlet.jar"/>
-        <fileset dir="lib" includes="*.jar"/>
+        <fileset dir="src/web/WEB-INF/lib" includes="*.jar"/>
     </path>
 
     <target name="prepare">
@@ -37,9 +37,6 @@
         <copy todir="build/web">
             <fileset dir="src/web"/>
             <fileset dir="../wings/build/web"/>
-        </copy>
-        <copy todir="build/web/WEB-INF/lib">
-            <fileset dir="lib"/>
         </copy>
         <copy todir="build/web/WEB-INF/classes">
             <fileset dir="build/class"/>
