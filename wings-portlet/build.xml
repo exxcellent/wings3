@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." default="build" name="portlet-wings">
+    
+    <!-- read properties from file -->
+    <property file="../etc/custom-build.properties"/>
+    <property file="../etc/build.properties"/>
+
+    <path id="build.classpath">
+        <fileset dir="../wings/build/web/WEB-INF/lib">
+            <include name="*.jar"/>
+        </fileset>
+        <fileset dir="lib">
+            <include name="*.jar"/>
+        </fileset>
+        <fileset dir="../thirdparty/lib">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="prepare">
+        <mkdir dir="build/class"/>
+        <tstamp>
+            <format property="wings.buildtime" pattern="yyyy-MM-dd HH:mm"/>
+        </tstamp>
+    </target>
+
+    <target name="compile" depends="prepare">
+        <javac debug="${build.debug}" deprecation="${build.deprecation}"
+            destdir="build/class" srcdir="src/java" source="1.5" target="1.5">
+            <classpath refid="build.classpath"/>
+        </javac>
+    </target>
+
+    <target name="build" depends="compile" description="builds all wings-portlet artefacts">
+        <mkdir dir="build/web/WEB-INF/lib"/>
+        <jar jarfile="build/web/WEB-INF/lib/wings-portlet.jar">
+            <fileset dir="build/class" />
+            <fileset dir="src/res" />
+        </jar>
+    </target>
+
+    <target description="cleanup build results" name="clean">
+        <delete dir="build"/>
+        <delete dir="dist"/>
+    </target>
+
+    <target depends="clean,build" description="re-build everything" name="all"/>
+
+</project>
