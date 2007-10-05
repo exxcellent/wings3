@@ -1,7 +1,4 @@
 <?xml version="1.0"?>
-<!-- ant build file for wingS Demos-->
-<!-- $Id$ -->
-
 <project name="wingSet" default="deploy" basedir=".">
 
     <!-- read custom properties from file -->
@@ -73,7 +70,7 @@
     <target name="war" depends="build" description="Create a deployable WAR file">
         <war destfile="build/wingset.war" webxml="src/web/WEB-INF/web.xml">
             <fileset dir="build/web">
-                <exclude name="**/web.xml"/> 
+                <exclude name="**/web.xml"/>
             </fileset>
         </war>
     </target>
@@ -90,7 +87,6 @@
     <target name="clean">
         <delete dir="build"/>
         <delete dir="${deploy.wingset}"/>
-    	<delete file="${deploy.wingset}.war"/>
         <delete>
             <fileset dir="src">
                 <include name="**/*.class"/>

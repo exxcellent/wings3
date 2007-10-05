@@ -1,31 +1,24 @@
 <?xml version="1.0"?>
-<!-- ant build file for wingS Demos-->
-<!-- $Id$ -->
-
 <project name="desktop" default="deploy" basedir=".">
-    <property environment="env"/>
+
     <!-- read custom properties from file -->
     <property file="../etc/custom-build.properties"/>
     <property file="../etc/build.properties"/>
 
-    <property name="deploy.desktop" value="dist/deploy/desktop.war"/>
+    <property name="servlet.version" value="servlet.jar"/>
+    <property name="log4j.version" value="log4j-1.2.9.jar" />
 
     <path id="build.classpath">
-        <fileset dir="../../lib" includes="*.jar"/>
-        <fileset dir="../../build/web/WEB-INF/lib" includes="*.jar"/>
-    	<fileset dir="lib" includes="*.jar"/>
+        <fileset dir="../wings/build/web/WEB-INF/lib" includes="*.jar"/>
+        <fileset dir="../thirdparty/lib" includes="servlet.jar"/>
+        <fileset dir="lib" includes="*.jar"/>
     </path>
 
-    <target name="dependencies" if="build.deps">
-        <ant dir="../.." taskname="build"/>
-    </target>
-
-    <target name="prepare" depends="dependencies">
+    <target name="prepare">
         <tstamp/>
         <mkdir dir="build"/>
         <mkdir dir="build/class"/>
         <mkdir dir="build/web"/>
-        <mkdir dir="${deploy.desktop}"/>
     </target>
 
     <!-- ==================== Build wingS Demos ================ -->
@@ -40,17 +33,29 @@
         </javac>
     </target>
 
-    <target name="build" depends="compile">
+    <target name="build" depends="compile, includelog4j">
         <copy todir="build/web">
             <fileset dir="src/web"/>
-            <fileset dir="../../build/web"/>
-            <fileset dir="src/java/desktop" includes="*Example.java"/>
+            <fileset dir="../wings/build/web"/>
+        </copy>
+        <copy todir="build/web/WEB-INF/lib">
+            <fileset dir="lib"/>
         </copy>
         <copy todir="build/web/WEB-INF/classes">
             <fileset dir="build/class"/>
         </copy>
+    </target>
+
+    <target name="includelog4j" if="log4j">
+        <copy todir="build/web/WEB-INF/classes">
+            <fileset dir="../etc">
+                <include name="log4j.xml" />
+            </fileset>
+        </copy>
         <copy todir="build/web/WEB-INF/lib">
-            <fileset dir="lib"/>
+            <fileset dir="../thirparty/lib">
+                <include name="${log4j.version}"/>
+            </fileset>
         </copy>
     </target>
 
@@ -62,7 +67,7 @@
         </war>
     </target>
 
-    <target name="deploy" depends="build">
+    <target name="deploy" depends="build" description="deploy">
         <mkdir dir="${deploy.desktop}"/>
         <copy todir="${deploy.desktop}">
             <fileset dir="build/web"/>
