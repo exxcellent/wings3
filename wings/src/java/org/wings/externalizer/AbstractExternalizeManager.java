@@ -124,6 +124,7 @@ public abstract class AbstractExternalizeManager {
      * String prefixed to every created externlizer identifier via {@link #createIdentifier()}
      */
     private String prefix;
+    private static final String FOO = "http://foo/foo";
 
 
     public AbstractExternalizeManager() {
@@ -137,10 +138,9 @@ public abstract class AbstractExternalizeManager {
 
     public void setResponse(HttpServletResponse response) {
         if (response != null) {
-            sessionEncoding = response.encodeURL("foo").substring(3);
+            sessionEncoding = response.encodeURL(FOO).substring(FOO.length());
         }
     }
-
 
     protected final synchronized long getNextIdentifier() {
         return ++counter;
