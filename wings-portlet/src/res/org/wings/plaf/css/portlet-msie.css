@@ -1,0 +1,145 @@
+/*
+   $Id: msie.css 3383 2007-06-26 09:37:25Z stephanschuster $
+   wings Default Style Sheet for IE Browser.
+
+   >> This file contains CORE CSS declarations needed for correct operation.  <<
+   >> Porting changes in this file to other browsers is REQUIRED              <<
+
+   CURRENTLY NOT IN A WORKING STATE -- WE DEVEL ON GECKO!
+
+   Includes CSS definitions that are required for wings to work correctly.
+   - Please use msie-advanced.css for visual only styling
+   - Please avoid generic/global css selectors and use the wings css classes in your selection path
+*/
+
+.wingsbody  {
+    height: 100%;
+}
+
+.wingsbody a {
+    cursor: pointer;
+}
+
+/* please comment on these...are they needed? */
+.wingsbody td, .wingsbody th {
+    padding: inherit;
+    margin: inherit;
+}
+
+/* ---------- Menus */
+
+/* Avoid right-align of text for right-aligned menues. */
+.wingsbody li.SMenuItem, .wingsbody li.SMenu {
+   text-align: left;
+}
+
+/* Avoid double line spacing in IE */
+.wingsbody ul.SPopupMenu li,
+.wingsbody ul.SMenu li
+{float:left;height:1%;}
+.wingsbody ul.SPopupMenu li a,
+.wingsbody ul.SMenu li a
+{height:1%;}
+
+/** Quickfix workaround for MSIE7: Revert upper declarations by using child selectors. */
+.wingsbody ul.SPopupMenu > li,
+.wingsbody ul.SMenu > li
+{float:none;height:auto;}
+.wingsbody ul.SPopupMenu > li a,
+.wingsbody ul.SMenu > li a
+{height:auto;}
+
+
+/* IE renders the bullet on a separate line with this missing */
+.wingsbody .SList li table {
+    display: inline;
+}
+
+.wingsbody TABLE {
+    border-collapse: collapse;
+}
+
+.wingsbody table.STable {
+    table-layout: fixed;
+}
+
+.wingsbody TABLE.SButton_form,
+.wingsbody TABLE.SButton_form_disabled,
+.wingsbody TABLE.SToggleButton_form,
+.wingsbody TABLE.SToggleButton_form_selected {
+    behavior:url('-org/wings/plaf/css/formbutton.htc')
+}
+
+.wingsbody TABLE.formbutton_active {
+    border: 2px inset #ddd;
+}
+.wingsbody TABLE.formbutton_hover {
+    background-color: #eeeeee !important;
+}
+
+/* Style of the Legend label for STitledBorder */
+.wingsbody .STitledBorderLegend {
+    position: relative;
+    top:-1.7em;
+	margin-bottom:-1em;
+    margin-left: 1.0em;
+    margin-right: 1.0em;
+    padding-left: 0.4em;
+    padding-right: 0.4em;
+    /*background-color: inherit;*/     /* IE doesnt understand inherit */
+    border-left:  #333333 2px groove;  /* IE doesnt understand inherit, so need to guess :-( */
+    border-right: #333333 2px groove;  /* IE doesnt understand inherit, so need to guess :-( */
+    background: #ccc;                  /* IE doesnt understand inherit, so need to guess :-( */
+}
+
+/* Style of the surrounding border for a STitledBorder */
+.wingsbody .STitledBorder {
+    margin-top: 1em;
+    padding-top: 1em;
+}
+
+.wingsbody .SButton,
+.wingsbody .SButton_disabled,
+.wingsbody .SButton_form,
+.wingsbody .SButton_form_disabled,
+.wingsbody .SToggleButton,
+.wingsbody .SToggleButton_selected,
+.wingsbody .SToggleButton_disabled,
+.wingsbody .SToggleButton_form,
+.wingsbody .SToggleButton_form_selected,
+.wingsbody .SToggleButton_form_disabled,
+.wingsbody .SCheckBox,
+.wingsbody .SCheckBox_selected,
+.wingsbody .SCheckBox_disabled,
+.wingsbody .SCheckBox_form,
+.wingsbody .SCheckBox_form_selected,
+.wingsbody .SCheckBox_form_disabled,
+.wingsbody .SRadioBox,
+.wingsbody .SRadioBox_selected,
+.wingsbody .SRadioBox_selected,
+.wingsbody .SRadioBox_disabled,
+.wingsbody .SRadioBox_form,
+.wingsbody .SRadioBox_form_selected,
+.wingsbody .SRadioBox_form_disabled,
+.wingsbody .STree td.slash,
+.wingsbody .STree td.plus,
+.wingsbody .STree td.minus,
+.wingsbody .STree td.selected,
+.wingsbody .STree td.norm,
+.wingsbody .clickable
+{
+  -moz-user-select: none;
+}
+
+.wingsbody .STree td.slash, .wingsbody .STree td.plus, .wingsbody .STree td.minus {
+    padding-right: 2px;
+    padding-bottom: 0px;
+}
+
+.wingsbody .DivisionControl {
+    width: 0%;
+}
+
+.wingsbody .DivisionTitle {
+    width: 100%;
+}

@@ -1,0 +1,81 @@
+/*
+   $Id: gecko.css 3383 2007-06-26 09:37:25Z stephanschuster $
+   wings core CSS Style Sheet for gecko Browser (Mozilla, FireFox).
+
+   >> This file contains CORE CSS declarations needed for correct operation.  <<
+   >> Porting changes in this file to other browsers is REQUIRED              <<
+
+   Includes CSS definitions that are required for wings to work correctly.
+   - Please use gecko-optional.css for purely optional visual stylings
+   - Please avoid generic/global css selectors and use the wings css
+     classes in your selection path
+*/
+
+/* tables inherit certain properties from their parents. These need to be
+   defined here. This works with konq, moz, opera. */
+/* please comment on these...are they needed? */
+.wingsbody tr {
+    text-align: inherit;
+    vertical-align: inherit;
+}
+
+.wingsbody td.STabbedPane_pane {
+    height: 100%;
+}
+
+/* Apply this class to all invisible (spacer gifs)! Also ensure an alt="" tag!
+   Refer to  http://developer.mozilla.org/en/docs/Images,_Tables,_and_Mysterious_Gaps */
+.wingsbody img.spacer, .wingsbody img.nopad {
+  display: block;
+}
+
+/* this stays in here!
+   it switches the gecko-compatible browsers into border-box mode */
+/* is it still needed? (OL 6.5.2006) */
+.wingsbody div, .wingsbody input, .wingsbody select, .wingsbody textarea, .wingsbody table {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+/*pre.label {
+    font-family: inherit;
+    margin: 0px;
+    padding: 0px;
+}*/
+
+.wingsbody .STree img {
+    margin-left: 0px;
+}
+
+.wingsbody .SButton,
+.wingsbody .SButton_disabled,
+.wingsbody .wingsbody .SButton_form,
+.wingsbody .SButton_form_disabled,
+.wingsbody .SToggleButton,
+.wingsbody .SToggleButton_selected,
+.wingsbody .SToggleButton_disabled,
+.wingsbody .SToggleButton_form,
+.wingsbody .SToggleButton_form_selected,
+.wingsbody .SToggleButton_form_disabled,
+.wingsbody .SCheckBox,
+.wingsbody .SCheckBox_selected,
+.wingsbody .SCheckBox_disabled,
+.wingsbody .SCheckBox_form,
+.wingsbody .SCheckBox_form_selected,
+.wingsbody .SCheckBox_form_disabled,
+.wingsbody .SRadioBox,
+.wingsbody .SRadioBox_selected,
+.wingsbody .SRadioBox_selected,
+.wingsbody .SRadioBox_disabled,
+.wingsbody .SRadioBox_form,
+.wingsbody .SRadioBox_form_selected,
+.wingsbody .SRadioBox_form_disabled,
+.wingsbody .STree td.slash,
+.wingsbody .STree td.plus,
+.wingsbody .STree td.minus,
+.wingsbody .STree td.selected,
+.wingsbody .STree td.norm,
+.wingsbody .clickable
+{
+  -moz-user-select: none;
+}

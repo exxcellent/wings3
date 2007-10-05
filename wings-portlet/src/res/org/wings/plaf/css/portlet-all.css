@@ -1,0 +1,822 @@
+/*
+   $Id: gecko.css 2658 2006-05-06 15:11:24Z neurolabs $
+   wings core CSS Style Sheet for all browsers.
+
+   >> This file contains CORE CSS declarations needed for correct operation.  <<
+   >> It is applied to all browsers. You can define Browser specifics in the  <<
+   >> css files named after the browsers.  <<
+
+   Includes CSS definitions that are required for wings to work correctly.
+   - Please use the optional css files for purely optional visual stylings
+   - Please avoid generic/global css selectors and use the wings css
+     classes in your selection path
+*/
+
+/* either use this or cellpadding/cellspacing/border in table element.
+   css overwrites all attributes! */
+
+.wingsbody  {
+    padding:0px;
+    margin:0px;
+    background:#ffffff;
+    font-family:sans-serif;
+    font-style:normal;
+    font-size:0.8em;
+    /*height:100%;*/
+}
+
+.wingsbody form {
+    margin: 0px;
+}
+
+.wingsbody a {
+    text-decoration: inherit;
+}
+
+.wingsbody a:link, .wingsbody a:visited, .wingsbody a:active {
+    color: #000066;
+    text-decoration: none;
+}
+
+/* Class for all invisible HTML tables used for layouting purposes. */
+.wingsbody table, .wingsbody td, .wingsbody th {
+    padding: 0px;
+    margin: 0px;
+    border: none;
+    border-spacing: 0px;
+    /*text-align: inherit; breaks layouting of DIVs inside TD */
+}
+
+/* If the surrounding container aligns an inner component, then
+   this alignments is inherited (at least in MSIE, but this is
+   correct). To avoid this inheritance we declare a default
+   left-alignment on the table element.
+   Otherwise i.e buttons in MemoryUsage would be centered. */
+.wingsbody table {
+    text-align: left;
+}
+
+
+/* define cross browser style for lists */
+.wingsbody li, .wingsbody ul {
+    margin: 0px;
+    padding: 0px;
+}
+.wingsbody ul {
+    padding-left: 24px;
+}
+
+/* taken over by table */
+.wingsbody input, .wingsbody select, .wingsbody textarea {
+    margin: 0px;
+    padding: 0px;
+    border: none;
+}
+
+.wingsbody .SAnchor, .wingsbody .SClickable {
+    cursor: pointer;
+}
+
+.wingsbody TABLE.SButton,
+.wingsbody TABLE.SButton_disabled,
+.wingsbody TABLE.SToggleButton,
+.wingsbody TABLE.SToggleButton_selected {
+    cursor: pointer;
+    color: #000066;
+}
+
+.wingsbody TABLE.SButton_form_disabled {
+    border: 2px outset #ddd;
+    background-color: #ddd;
+    color: #9c9a9c !important;
+    cursor: default;
+    text-align: center;
+    white-space: normal;
+    text-indent: 0px;
+    border-collapse: collapse;
+}
+
+.wingsbody TABLE.SButton_form,
+.wingsbody TABLE.SToggleButton_form,
+.wingsbody TABLE.SToggleButton_form_selected {
+    border: 2px outset #ddd;
+    background-color: #ddd;
+    color: #000;
+    cursor: default;
+    text-align: center;
+    white-space: normal;
+    text-indent: 0px;
+    border-collapse: collapse;   /* Merges TABLE and TD paddings. (PaddingVoodoo and SEmptyBorder) */
+}
+
+.wingsbody TABLE.SButton_form td,
+.wingsbody TABLE.SButton_form_disabled td,
+.wingsbody TABLE.SToggleButton_form td,
+.wingsbody TABLE.SToggleButton_form_selected td {
+    padding: 2px 6px;
+}
+
+.wingsbody TABLE.SButton_form:hover,
+.wingsbody TABLE.SToggleButton_form:hover,
+.wingsbody TABLE.SToggleButton_form_selected:hover {
+    background-color: #eee;
+}
+.wingsbody TABLE.SButton_form:active,
+.wingsbody TABLE.SToggleButton_form:active {
+    border: 2px inset #ddd;
+}
+.wingsbody TABLE.SToggleButton_form_selected {
+    border: 2px inset #ddd;
+}
+.wingsbody TABLE.SToggleButton_form_selected:active {
+    border: 2px outset #ddd;
+}
+
+.wingsbody TABLE.SCheckBox,
+.wingsbody TABLE.SCheckBox_form,
+.wingsbody TABLE.SCheckBox_selected,
+.wingsbody TABLE.SCheckBox_form_selected {
+    cursor: default;
+}
+
+.wingsbody TABLE.SRadioBox,
+.wingsbody TABLE.SRadioBox_form,
+.wingsbody TABLE.SRadioBox_selected,
+.wingsbody TABLE.SRadioBox_form_selected {
+    cursor: default;
+}
+
+
+.wingsbody IMG {
+    /* keeps images inside tabs */
+    /* vertical-align: middle;       bsc:
+    This breaks IMG height in MSIE! They take always at least a lineheight!
+    --> see memory usage http://jira.j-wings.org/browse/WGS-164 */
+    /* Avoid those ugly borders around linked imgs's */
+    border: none !important;
+}
+
+/* STextField default style */
+.wingsbody input.STextField,
+.wingsbody input.XSuggest,
+.wingsbody input.SFormattedTextField,
+.wingsbody input.SPasswordField,
+.wingsbody .SFileChooser input,
+.wingsbody textarea.STextArea,
+.wingsbody select.SComboBox,
+.wingsbody select.SList {
+    font-family: sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 12px;
+    color: #000;
+    border: 1px solid #bbbbbb;
+}
+
+
+/* STabbedPane default style */
+/* Default text alignments of labels in tabs. */
+.wingsbody th.STabbedPane_top {
+    text-align: left;
+    padding-top:.1em;
+}
+.wingsbody th.STabbedPane_left {
+    vertical-align: top;
+    text-align: right;
+}
+.wingsbody th.STabbedPane_right {
+    vertical-align: top;
+    text-align: left;
+}
+.wingsbody th.STabbedPane_bottom {
+    text-align: left;
+    padding-bottom:.1em;
+}
+
+.wingsbody .STabbedPane_Tab_disabled,
+.wingsbody .STabbedPane_Tab_selected,
+.wingsbody .STabbedPane_Tab_unselected {
+    border-left: 1px solid #ffffff;
+    border-top: 1px solid #ffffff;
+    border-right: 1px solid #bbbbbb;
+    border-bottom: 1px solid #bbbbbb;
+    -moz-border-radius: 0;
+    font-size: 12px;
+    padding: 3px;
+    line-height: 20px;
+    background-color: #dddddd;
+}
+
+.wingsbody .STabbedPane_Tab_selected {
+    background-color: #eeeeee;
+}
+
+.wingsbody .STabbedPane_Tab_disabled {
+    color : #808080;
+}
+
+.wingsbody .STabbedPane_top,
+.wingsbody .STabbedPane_bottom,
+.wingsbody .STabbedPane_left,
+.wingsbody .STabbedPane_right {
+   font-size: 0px;
+   line-height: 0;
+}
+.wingsbody .STabbedPane_left {
+   padding-right: 6px;
+}
+
+.wingsbody .STabbedPane_pane {
+    border: 1px solid #bbbbbb !important;
+    width: 100%;
+}
+
+.wingsbody .STabbedPane_Tab_left,
+.wingsbody .STabbedPane_Tab_right {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+}
+
+
+.wingsbody A.STabbedPane_Tab_top IMG {
+   /* keeps images inside tabs */
+    vertical-align: middle;
+}
+
+/* STree */
+
+.wingsbody .STree td {
+   text-align: center !important;
+}
+
+.wingsbody .STree td.slash, .wingsbody .STree td.plus, .wingsbody .STree td.minus {
+    padding-bottom: 2px;
+}
+
+.wingsbody .STree td.slash {
+    background: url('../../icons/lineslash.gif') no-repeat center center;
+}
+.wingsbody .STree td.plus {
+    background: url('../../icons/lineplus.gif') no-repeat center center;
+}
+.wingsbody .STree td.minus {
+    background: url('../../icons/lineminus.gif') no-repeat center center;
+}
+.wingsbody .STree td.selected {
+    background-color: #D8E1F1;
+    cursor: pointer;
+    text-align: left !important;
+}
+.wingsbody .STree td.norm {
+    cursor: pointer;
+    text-align: left !important;
+}
+.wingsbody .STree img {
+    vertical-align: middle;
+    display: inline;
+}
+
+
+/* ---------------------------------------------------------------------------------------------------- */
+
+/* ---------- Menus */
+.wingsbody .SMenuBar{
+    width:100%;
+    background-color: #ddd;
+    border-bottom: 1px solid #ccc;
+    color: #000044;
+}
+
+/* clears the menu */
+.wingsbody .SMenuBar div.spacer {
+    height:0px;
+    clear: both;
+}
+
+.wingsbody .SMenuBar div.SMenu,
+.wingsbody .SMenuBar div.SMenu_Disabled {
+    float:left;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #eee #999 #999 #eee;
+    padding:1px 4px 1px 4px;
+    background:#eef;
+    white-space:nowrap;
+    margin:0px;
+}
+
+.wingsbody .SMenuBar div.SMenu{
+    color: #004;
+    cursor: pointer;
+}
+
+.wingsbody .SMenuBar div.SMenu_Disabled,
+.wingsbody .SMenu li.SMenu_Disabled a,
+.wingsbody .SMenu li.SMenu_Disabled a:hover,
+.wingsbody .SMenu li.SMenuItem_Disabled a,
+.wingsbody .SMenu li.SMenuItem_Disabled a:hover {
+    color: #666;
+}
+
+.wingsbody ul.SMenu A,
+.wingsbody ul.SPopupMenu A {
+    padding:1px 3px 1px 3px;
+    display:block;
+    white-space:nowrap;
+    margin:0px;
+}
+
+.wingsbody ul.SMenu a, .wingsbody .SMenu a:visited,
+.wingsbody ul.SPopupMenu a, .wingsbody .SPopupMenu a:visited {
+    color:#000;
+}
+
+.wingsbody ul.SMenu a:hover,
+.wingsbody ul.SPopupMenu a:hover {
+    color:#fff;
+    background:#66b;
+}
+
+.wingsbody ul.SMenu a:active,
+.wingsbody ul.SPopupMenu a:active{
+    color:#aaa;
+    background:#66b;
+}
+
+.wingsbody ul.SMenu li,
+.wingsbody ul.SPopupMenu li {
+    position:relative;
+    background: #eee;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #999;
+    width:auto;
+}
+
+.wingsbody ul.SMenu,
+.wingsbody ul.SPopupMenu {
+    list-style:none;
+    margin:0px;
+    padding:0px;
+    position:absolute;
+    z-index:500;
+    top:auto;
+    display:none;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #999;
+    width:auto;
+}
+
+/* Position the sub menus besides parent menus. */
+.wingsbody ul.SMenu ul,
+.wingsbody ul.SPopupMenu ul{
+    top:-1px;
+    left:100%;
+}
+
+.wingsbody ul.SMenu a span.accelerator {
+    font-size: .7em;
+    margin-left: 1.5em;
+}
+
+/* Begin non-anchor hover selectors */
+.wingsbody ul.SMenu li,
+.wingsbody ul.SMenuBar div.SMenu,
+.wingsbody ul.SPopupMenu li{
+cursor:pointer;
+}
+
+/* End of non-anchor hover selectors */
+
+/* Styling for Expand */
+
+.wingsbody ul.SMenu a.x, .wingsbody ul.SMenu a.x:visited,
+.wingsbody ul.SMenu a.y, .wingsbody ul.SMenu a.y:visited, .wingsbody ul.SMenu a.y:hover,
+.wingsbody ul.SPopupMenu a.x, .wingsbody ul.SPopupMenu a.x:visited,
+.wingsbody ul.SPopupMenu a.y, .wingsbody ul.SPopupMenu a.y:visited, .wingsbody ul.SPopupMenu a.y:hover{
+    background:#eee url('../../icons/MenuArrowRight.gif') no-repeat center right;
+    padding-right:10px;
+}
+
+.wingsbody ul.SMenu a.x:hover,
+.wingsbody ul.SPopupMenu a.x:hover{
+    background:#66b url('../../icons/MenuArrowRight.gif') no-repeat center right;
+    padding-right:10px;
+}
+
+/* SList */
+.wingsbody .SList li.selected {
+    background-color: #D8E1F1 !important;
+}
+
+.wingsbody .SList li.clickable {
+    cursor: pointer
+}
+
+.wingsbody .SList li.empty  {
+    list-style-type: none;
+}
+
+/* No vertical distance on writing down many labels. */
+.wingsbody .SLabel p {
+    margin-top:0px;
+    margin-bottom:0px;
+}
+
+.wingsbody .SLabel {
+    border-collapse: collapse;
+}
+
+.wingsbody .SPanel {
+    border-collapse: collapse;
+}
+
+.wingsbody .STable {
+    width: 100%;
+    cursor: default;
+}
+
+.wingsbody .STable td.cell, .wingsbody .STable th.cell, .wingsbody .STable td.num, .wingsbody .STable th.num, .wingsbody .STable th.head {
+    padding: 2px 8px 2px 8px;
+    border-bottom: 1px solid #c0c0c0;
+}
+
+.wingsbody .STable td.clickable, .wingsbody .STable th.clickable {
+    cursor: pointer;
+}
+
+.wingsbody .STable td.cell, .wingsbody .STable th.head {
+    border-left: 1px solid #c0c0c0;
+}
+
+.wingsbody .STable td.num {
+    text-align: right;
+}
+
+.wingsbody .STable tr.header {
+    background-color: #efefef;
+}
+
+.wingsbody .STable tr.odd {
+    background-color: #efefef;
+}
+
+.wingsbody .STable tr.even {
+    background-color: #ffffff;
+}
+
+.wingsbody .STable tr.selected {
+    background-color: #ffbbbb !important;
+}
+
+.wingsbody .STable tr.empty td {
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.wingsbody .XTable {
+    width: 100%;
+    cursor: default;
+}
+
+.wingsbody .XTable td.cell, .wingsbody .XTable th.cell, .wingsbody .XTable td.num, .wingsbody .XTable th.num, .wingsbody .XTable th.head, .wingsbody .XTable th.filter {
+    padding: 2px 8px 2px 8px;
+    border-bottom: 1px solid #c0c0c0;
+}
+
+.wingsbody .XTable td.clickable, .wingsbody .XTable th.clickable {
+    cursor: pointer;
+}
+
+.wingsbody .XTable td.cell, .wingsbody .XTable th.head, .wingsbody .XTable th.filter {
+    border-left: 1px solid #c0c0c0;
+}
+
+.wingsbody .XTable td.num {
+    text-align: right;
+}
+
+.wingsbody .XTable tr.header {
+    background-color: #efefef;
+}
+
+.wingsbody .XTable tr.filter {
+    background-color: #efefef;
+}
+
+.wingsbody .XTable tr.odd {
+    background-color: #efefef;
+}
+
+.wingsbody .XTable tr.even {
+    background-color: #ffffff;
+}
+
+.wingsbody .XTable tr.selected {
+    background-color: #ffbbbb !important;
+}
+
+.wingsbody .XTable tr.empty td {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.wingsbody .XTreeTable {
+    width: 100%;
+    cursor: default;
+}
+
+.wingsbody .XTreeTable td.cell, .wingsbody .XTreeTable th.cell, .wingsbody .XTreeTable td.num, .wingsbody .XTreeTable th.num, .wingsbody .XTreeTable th.head {
+    padding: 2px 8px 2px 8px;
+    border-bottom: 1px solid #c0c0c0;
+}
+
+.wingsbody .XTreeTable td.clickable, .wingsbody .XTreeTable th.clickable {
+    cursor: pointer;
+}
+
+.wingsbody .XTreeTable td.cell, .wingsbody .XTreeTable th.head {
+    border-left: 1px solid #c0c0c0;
+}
+
+.wingsbody .XTreeTable td.num {
+    text-align: right;
+}
+
+.wingsbody .XTreeTable tr.header {
+    background-color: #efefef;
+}
+
+.wingsbody .XTreeTable tr.odd {
+    background-color: #efefef;
+}
+
+.wingsbody .XTreeTable tr.even {
+    background-color: #ffffff;
+}
+
+.wingsbody .XTreeTable tr.selected {
+    background-color: #ffbbbb !important;
+}
+
+/* -------untested --------- */
+
+
+.wingsbody .SAnchor {
+    color: #004;
+}
+
+/* clears the windows */
+.wingsbody .SDesktopPane div.spacer, .wingsbody .SFlowLayout div.spacer {
+    height:0px;
+    clear: both;
+    line-height:0px; /* for konq */
+    font-size: 1px; /* for konq */
+}
+
+
+.wingsbody table.SPageScroller table.buttons td {
+    border: 1px solid #cccccc;
+    background-color: transparent;
+    padding: 0px;
+    cursor: pointer;
+}
+
+.wingsbody table.SPageScroller table.pages td {
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.wingsbody table.SPageScroller table.pages td:hover {
+    background-color: #ECECEC;
+}
+
+.wingsbody table.SPageScroller table.buttons td:hover {
+    border: 1px outset #cccccc;
+}
+
+.wingsbody table.XPageScroller table.buttons td {
+    cursor: pointer;
+}
+
+.wingsbody table.XPageScroller table.pages td {
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.wingsbody table.XPageScroller table.pages td:hover {
+    background-color: #ECECEC;
+}
+
+.wingsbody .SScrollBar * {
+    box-sizing: border-box;
+}
+.wingsbody .SScrollBar_vertical * {
+    width: 17px;
+}
+.wingsbody .SScrollBar_vertical .outer {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.wingsbody .SScrollBar_horizontal * {
+    height: 17px;
+}
+.wingsbody .SScrollBar_horizontal .outer {
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* ----------- SINTERNAL FRAME ----------- */
+
+.SInternalFrame {
+    border: 1px solid #cccccc;
+    margin: .2em;
+}
+
+.SInternalFrame div.WindowBar {
+    padding: .1em;
+    background-color: #aaf;
+    text-align: left;
+    cursor: pointer;
+}
+
+.SInternalFrame div.WindowBar div.WindowBar_title {
+    padding-right:4em;
+    white-space:pre;
+}
+
+.SInternalFrame div.WindowBar div.WindowBar_title img {
+    padding-right:1em;
+    vertical-align: middle;
+}
+
+.SInternalFrame div.WindowBar a.WindowButton {
+    float: right;
+}
+
+.SInternalFrame div.WindowContent {
+    padding: .2em;
+}
+
+
+/* ----------- SOPTIONPANE AND SDIALOG ----------- */
+
+.modalDialog {
+    background-color: gray;
+    -moz-opacity: .4;
+    filter:Alpha(opacity=40);
+}
+
+.SOptionPane,
+.SDialog {
+    border: 1px solid #a6a6a6;
+    border-bottom-width: 2px;
+    border-right-width: 2px;
+}
+
+form.SOptionPane,
+form.SDialog {
+    border: none;
+}
+
+.SOptionPane div.WindowBar,
+.SDialog div.WindowBar {
+    padding:.2em;
+    background-color: #1f1faa;
+    border-bottom: 1px solid #a6a6a6;
+}
+
+.SOptionPane div.WindowBar div.WindowBar_title,
+.SDialog div.WindowBar div.WindowBar_title {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.SOptionPane div.WindowBar a.WindowButton,
+.SDialog div.WindowBar a.WindowButton {
+    float: right;
+}
+
+.SOptionPane div.WindowBar a.DeiconifyButton,
+.SDialog div.WindowBar a.DeiconifyButton {
+    display: inline;
+}
+
+.SOptionPane div.WindowContent,
+.SDialog div.WindowContent {
+    padding: .8em;
+    background-color: #e6e6e6;
+}
+
+
+table.SProgressBar {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+table.SProgressBar tr.bar td {
+    border: 1px solid black;
+    padding: 0px;
+}
+table.SProgressBar tr.text td {
+    vertical-align: middle;
+    text-align: center;
+    padding: 0px;
+}
+
+
+
+.SSeparator {
+    height: 0px; /* evtl. 2px für IE */
+    white-space: nowrap;
+    margin: 0px;
+    padding: 0px;
+    border-style: solid;
+    border-width: 0px;
+    border-top-width: 1px;
+    border-color: #000;
+}
+
+td.DivisionControl {
+    padding-right: 6px !important;
+}
+
+td.DivisionTitle {
+    color: orange;
+    font-weight: bold;
+    border-bottom: 2px solid orange;
+    padding-bottom: 2px;
+}
+
+td.DivisionContent {
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+table.DivisionContent {
+    width: 100%;
+}
+
+.SSliderBgHoriz {
+	position:relative;
+	background-image: url(../../icons/SliderHoriz.png);
+	background-repeat: no-repeat;
+	height:26px;
+	width:218px;
+}
+
+.SSliderThumb {
+	text-align: left;
+        cursor:default;
+        width:18px;
+        height:18px;
+        z-index: 9;
+        position:absolute;
+}
+
+.SSliderBgVert {
+	position:relative;
+	background-image: url(../../icons/SliderVert.png);
+	background-repeat: no-repeat;
+	height:218px;
+	width:26px;
+}
+
+.SSliderValueRight {
+	position:relative;
+	left: 40px;
+	top: 100px;
+}
+
+.SSliderValueBottom {
+	position:relative;
+	top: 30px
+}
+
+.XCalendarButton {
+    margin-left: 2px;
+    cursor: pointer;
+}
+
+.XCalendarClearButton {
+    margin-left: 2px;
+    cursor: pointer;
+}
+
+.splitter {
+    background-color: gray;
+}
