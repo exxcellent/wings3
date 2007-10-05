@@ -39,7 +39,9 @@
         <file name="layout.js"/>
         <file name="keyboard.js"/>
         <file name="dnd.js"/>
-        <file name="component.js"/>
+    	<file name="tooltip.js"/>
+    	<file name="scrollbar.js"/>
+    	<file name="splitpane.js"/>
     </filelist>
 
     <target name="prepare" depends="-splash">
