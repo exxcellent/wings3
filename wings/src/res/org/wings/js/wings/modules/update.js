@@ -273,6 +273,20 @@ wingS.update.icon = function(componentId, icon, exception) {
 };
 
 /**
+ * Scrolls the table.
+ * @param {String} tableId - the ID of the table to scroll
+ * @param {String} body - the html code for the body
+ */
+wingS.update.tableScroll = function(tableId, html) {
+    var table = document.getElementById(tableId);
+    var component = table.tBodies[0];
+    if (component.outerHTML)
+        component.outerHTML = "<tbody>" + html + "</tbody>";
+    else
+        component.innerHTML = html;
+};
+
+/**
  * Updates the selection of the combobox with the given ID.
  * @param {String} comboBoxId - the ID of the combobox to update
  * @param {int} selectedIndex - the index of the entry to select

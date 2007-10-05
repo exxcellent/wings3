@@ -593,6 +593,10 @@ public class XTableCG
         return new TableCellUpdate(table, row, col);
     }
     
+    public Update getTableScrollUpdate(STable table) {
+        return new ComponentUpdate(table);
+    }
+
     protected class TableCellUpdate extends AbstractUpdate {
 
         private int row, col;

@@ -83,7 +83,7 @@ public final class ScrollBarCG extends org.wings.plaf.css.AbstractComponentCG im
         }
 
         device.print("><tbody><tr><td>\n");
-        device.print("<div class=\"outer\" xonscroll=\"wingS.scrollbar.scroll_vertical(event)\"><div class=\"inner\"/></div>\n");
+        device.print("<div class=\"outer\"><div class=\"inner\"/></div>\n");
         device.print("</td></tr></tbody></table>");
 
         sb.getSession().getScriptManager().addScriptListener(new VerticalScrollBarLayoutScript(sb));
@@ -94,7 +94,7 @@ public final class ScrollBarCG extends org.wings.plaf.css.AbstractComponentCG im
         device.print("<table");
         Utils.writeAllAttributes(device, sb);
         device.print("><tbody><tr><td>\n");
-        device.print("<div class=\"outer\" xonscroll=\"wingS.scrollbar.scroll_horizontal(event)\"><div class=\"inner\"/></div>\n");
+        device.print("<div class=\"outer\"><div class=\"inner\"/></div>\n");
         device.print("</td></tr></tbody></table>");
 
         sb.getSession().getScriptManager().addScriptListener(new HorizontalScrollBarLayoutScript(sb));

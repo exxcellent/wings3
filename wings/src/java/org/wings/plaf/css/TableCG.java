@@ -460,10 +460,15 @@ public final class TableCG
         return false;
     }
     
+    public Update getTableScrollUpdate(STable table) {
+        //return new TableScrollUpdate(table);
+        return new ComponentUpdate(table);
+    }
+    
     public Update getTableCellUpdate(STable table, int row, int col) {
         return new TableCellUpdate(table, row, col);
     }
-    
+
     protected class TableCellUpdate extends AbstractUpdate {
 
         private int row, col;
@@ -521,6 +526,51 @@ public final class TableCG
 
             return hashCode;
         }
+    }
 
+    protected class TableScrollUpdate
+        extends AbstractUpdate {
+
+        public TableScrollUpdate(SComponent component) {
+            super(component);
+        }
+
+        public Handler getHandler() {
+            STable table = (STable) component;
+
+            Rectangle currentViewport = table.getViewportSize();
+            Rectangle maximalViewport = table.getScrollableViewportSize();
+            int startX = 0;
+            int endX = table.getVisibleColumnCount();
+            int startY = 0;
+            int endY = table.getRowCount();
+            int emptyIndex = maximalViewport != null ? maximalViewport.height : endY;
+
+            if (currentViewport != null) {
+                startX = currentViewport.x;
+                endX = startX + currentViewport.width;
+                startY = currentViewport.y;
+                endY = startY + currentViewport.height;
+            }
+
+            String htmlCode = "";
+            String exception = null;
+
+            try {
+                StringBuilderDevice htmlDevice = new StringBuilderDevice();
+                writeBody(htmlDevice, table, startX, endX, startY, endY, emptyIndex);
+                htmlCode = htmlDevice.toString();
+            } catch (Throwable t) {
+                exception = t.getClass().getName();
+            }
+
+            UpdateHandler handler = new UpdateHandler("tableScroll");
+            handler.addParameter(table.getName());
+            handler.addParameter(htmlCode);
+            if (exception != null) {
+                handler.addParameter(exception);
+            }
+            return handler;
+        }
     }
 }

@@ -525,6 +525,8 @@ public class SScrollPane
             Rectangle curVp = scrollable.getViewportSize();
             Rectangle maxVp = scrollable.getScrollableViewportSize();
 
+            Rectangle newVp = (Rectangle)curVp.clone();
+
             if (horizontal) {
                 // Check range in order to prevent unnecessary update of views.
                 // This is primarily useful to prevent reloads in case the user
@@ -532,8 +534,8 @@ public class SScrollPane
                 newValue = Math.min(maxVp.width - curVp.width, newValue);
                 newValue = Math.max(0, newValue);
                 if (curVp.x != newValue) {
-                    curVp.x = newValue;
-                    updateViews();
+                    newVp.x = newValue;
+                    updateViews(newVp);
                 }
             } else {
                 // Check range in order to prevent unnecessary update of views.
@@ -542,8 +544,8 @@ public class SScrollPane
                 newValue = Math.min(virtualViewportHeight - curVp.height, newValue);
                 newValue = Math.max(0, newValue);
                 if (curVp.y != newValue) {
-                    curVp.y = newValue;
-                    updateViews();
+                    newVp.y = newValue;
+                    updateViews(newVp);
                 }
             }
         }
@@ -560,22 +562,24 @@ public class SScrollPane
             if (!isViewportAvailable()) return;
             Rectangle curVp = scrollable.getViewportSize();
 
+            Rectangle newVp = (Rectangle)curVp.clone();
+
             if (horizontal && curVp.width != newExtent) {
                 // Keep extent in sync with scrollpane
                 if (horizontalExtent != newExtent) {
                     horizontalExtent = newExtent;
                     SScrollPane.this.reload();
                 }
-                curVp.width = newExtent;
-                updateViews();
+                newVp.width = newExtent;
+                updateViews(newVp);
             } else if (curVp.height != newExtent) {
                 // Keep extent in sync with scrollpane
                 if (verticalExtent != newExtent) {
                     verticalExtent = newExtent;
                     SScrollPane.this.reload();
                 }
-                curVp.height = newExtent;
-                updateViews();
+                newVp.height = newExtent;
+                updateViews(newVp);
             }
         }
 
@@ -757,6 +761,13 @@ public class SScrollPane
                     ((ChangeListener) listeners[i+1]).stateChanged(changeEvent);
                 }
             }
+        }
+
+        private void updateViews(Rectangle newVp) {
+            // Reload scrollbar and scrollable in order to display the changes
+            viewportChanged(new SViewportChangeEvent(scrollable, horizontal));
+            //((SComponent) scrollable).reload();
+            scrollable.setViewportSize(newVp);
         }
 
         private void updateViews() {

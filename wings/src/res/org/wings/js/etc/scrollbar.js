@@ -65,7 +65,7 @@ wingS.scrollbar.scroll_vertical = function(outer) {
 
     if (outer.getAttribute("position") != position) {
         outer.setAttribute("position", position);
-        wingS.request.sendEvent(event, false, true, table.id, position);
+        wingS.request.sendEvent(null, false, true, table.id, position);
     }
 }
 
@@ -129,6 +129,6 @@ wingS.scrollbar.scroll_horizontal = function(outer) {
 
     if (outer.getAttribute("position") != position) {
         outer.setAttribute("position", position);
-        wingS.request.sendEvent(event, false, true, table.id, position);
+        wingS.request.sendEvent(null, false, true, table.id, position);
     }
 }
