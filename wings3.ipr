@@ -197,6 +197,26 @@
               <file url="file://$PROJECT_DIR$/wings/build/production/wingSet/WEB-INF/web.xml" />
             </files>
           </module>
+          <module name="demo-wingset">
+            <files>
+              <file url="file://$PROJECT_DIR$/demo-wingset/web/WEB-INF/web.xml" />
+            </files>
+          </module>
+          <module name="demo-dwr">
+            <files>
+              <file url="file://$PROJECT_DIR$/demo-dwr/src/web/WEB-INF/web.xml" />
+            </files>
+          </module>
+          <module name="demo-logconfig">
+            <files>
+              <file url="file://$PROJECT_DIR$/demo-logconfig/web/WEB-INF/web.xml" />
+            </files>
+          </module>
+          <module name="demo-mycomponent">
+            <files>
+              <file url="file://$PROJECT_DIR$/demo-mycomponent/web/WEB-INF/web.xml" />
+            </files>
+          </module>
         </modules>
       </facet-type>
     </autodetection-disabled>
