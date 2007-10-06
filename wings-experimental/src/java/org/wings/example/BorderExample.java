@@ -7,31 +7,26 @@
  * and open the template in the editor.
  */
 
-package wingset;
+package org.wings.example;
 
 import java.awt.Color;
 import javax.swing.ImageIcon;
 import org.wings.*;
+import org.wings.plaf.WingSetExample;
 import org.wings.border.*;
 
 /**
- *
- * @author pet
- */
-public class BorderExample extends WingSetPane {
-    
-
-    protected SComponent createControls() {
-        return null;
-    }
-/*
  * BorderDemo.java requires the following file:
  *    images/wavy.gif
+ * @author pet
  */
-    public SComponent createExample() {
-        
+public class BorderExample implements WingSetExample
+{
+    private SPanel panel;
+
+    public void activateExample() {
         SGridLayout layout = new SGridLayout(1, 0);
-        SPanel panel = new SPanel( layout );
+        panel = new SPanel( layout );
 
         //Keep references to the next few borders,
         //for use in titles and compound borders.
@@ -81,13 +76,13 @@ public class BorderExample extends WingSetPane {
         titledBorders.setLayout(new SBoxLayout(SBoxLayout.Y_AXIS));
         STitledBorder titled;
 
-        titled = SBorderFactory.createSTitledBorder("title");
+        titled = new STitledBorder("title");
         addCompForBorder(titled,
                          "default titled border"
                          + " (default just., default pos.)",
                          titledBorders);
 
-        titled = SBorderFactory.createSTitledBorder(
+        titled = new STitledBorder(
                               blackline, "title");
         addCompForTitledBorder(titled,
                                "titled line border"
@@ -96,7 +91,7 @@ public class BorderExample extends WingSetPane {
                                STitledBorder.DEFAULT_POSITION,
                                titledBorders);
 
-        titled = SBorderFactory.createSTitledBorder("title");
+        titled = new STitledBorder("title");
         addCompForTitledBorder(titled,
                                "titled line border Bold"
                                    + " (centered, default pos.)",
@@ -105,7 +100,7 @@ public class BorderExample extends WingSetPane {
                                titledBorders);
         titled.setTitleFont(new SFont(SFont.BOLD));
 
-        titled = SBorderFactory.createSTitledBorder("title");
+        titled = new STitledBorder("title");
         addCompForTitledBorder(titled,
                                "titled line border Italix RED"
                                    + " (centered, default pos.)",
@@ -115,7 +110,7 @@ public class BorderExample extends WingSetPane {
         titled.setTitleFont(new SFont(SFont.ITALIC));
         titled.setTitleColor(java.awt.Color.RED);
 
-        titled = SBorderFactory.createSTitledBorder(loweredetched, "title");
+        titled = new STitledBorder(loweredetched, "title");
         titled.getBorder().setColor(java.awt.Color.GREEN);
         addCompForTitledBorder(titled,
                                "titled lowered Green etched border"
@@ -124,7 +119,7 @@ public class BorderExample extends WingSetPane {
                                STitledBorder.DEFAULT_POSITION,
                                titledBorders);
 
-        titled = SBorderFactory.createSTitledBorder(
+        titled = new STitledBorder(
                         loweredbevel, "title");
         addCompForTitledBorder(titled,
                                "titled lowered bevel border"
@@ -133,7 +128,7 @@ public class BorderExample extends WingSetPane {
                                STitledBorder.ABOVE_TOP,
                                titledBorders);
 
-        titled = SBorderFactory.createSTitledBorder(
+        titled = new STitledBorder(
                         empty, "title");
         addCompForTitledBorder(titled, "titled empty border"
                                + " (default just., bottom)",
@@ -158,8 +153,6 @@ public class BorderExample extends WingSetPane {
         tabbedPane.setToolTipTextAt(1, toolTip);
 
         panel.add(tabbedPane);
-        
-        return panel;
     }
 
     void addCompForTitledBorder(STitledBorder border,
@@ -198,5 +191,19 @@ public class BorderExample extends WingSetPane {
         }
     }
 
+    public void passivateExample() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 
+    public SComponent getExample() {
+        return panel;
+    }
+
+    public String getExampleName() {
+        return "TitledBorder";
+    }
+
+    public String getExampleGroup() {
+        return "Experimental";
+    }
 }

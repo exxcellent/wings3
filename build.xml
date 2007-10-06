@@ -136,7 +136,7 @@
         <delete dir="${distname}"/>
     </target>
 
-    <target description="cleanup build results" name="clean">
+    <target name="clean" description="cleanup build results">
         <delete dir="build"/>
         <delete dir="dist"/>
         <delete>
@@ -144,7 +144,6 @@
                 <include name="wingS*.tar.gz"/>
             </fileset>
         </delete>
-        <delete file="src/java/org/wings/Version.java"/>
     </target>
 
     <target depends="clean,dist" description="re-build everything" name="all"/>
@@ -165,4 +164,38 @@
         </fail>
     </target>
 
+    <target name="cleanall" description="clean all modules">
+        <ant dir="wings" target="clean"/>
+        <ant dir="wingx" target="clean"/>
+        <ant dir="demo-wingset" target="clean"/>
+        <ant dir="demo-desktop" target="clean"/>
+        <ant dir="demo-logconfig" target="clean"/>
+    </target>
+
+    <target name="wings" description="build wings">
+        <ant dir="wings" target="build"/>
+    </target>
+
+    <target name="wingx" description="build wings and wingx">
+        <ant dir="wings" target="build"/>
+        <ant dir="wingx" target="build"/>
+    </target>
+
+    <target name="deploy demo-wingset" description="deploy demo-wingset">
+        <ant dir="wings" target="build"/>
+        <ant dir="wingx" target="build"/>
+        <ant dir="demo-wingset" target="deploy"/>
+    </target>
+
+    <target name="deploy demo-desktop" description="deploy demo-desktop">
+        <ant dir="wings" target="build"/>
+        <ant dir="wingx" target="build"/>
+        <ant dir="demo-desktop" target="deploy"/>
+    </target>
+
+    <target name="deploy demo-logconfig" description="deploy demo-logconfig">
+        <ant dir="wings" target="build"/>
+        <ant dir="wingx" target="build"/>
+        <ant dir="demo-logconfig" target="deploy"/>
+    </target>
 </project>
