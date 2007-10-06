@@ -9,7 +9,7 @@
         <fileset dir="thirdparty/lib" includes="*.jar"/>
     </path>
 
-    <target name="prepare" depends="-splash">
+    <target name="prepare">
         <mkdir dir="build/src/java"/>
         <mkdir dir="build/doc"/>
         <mkdir dir="dist"/>
@@ -149,10 +149,6 @@
     <target depends="clean,dist" description="re-build everything" name="all"/>
 
     <!-- ### Utility tasks ################################################### -->
-
-    <target name="-splash" unless="nosplash">
-        <splash imageurl="file:${basedir}/demo-wingset/src/web/icons/wings-logo.png"/>
-    </target>
 
     <target name="-check-full-dist">
         <available file="doc/docbook/build.xml" property="full-distribution"/>
