@@ -1665,7 +1665,7 @@ public class STable extends SComponent
                     fireViewportChanged(false);
                 }
             }
-            update(((TableCG)getCG()).getTableScrollUpdate(this));
+            update(((TableCG)getCG()).getTableScrollUpdate(this, newViewport, oldViewport));
         }
     }
 

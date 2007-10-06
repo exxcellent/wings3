@@ -460,11 +460,12 @@ public final class TableCG
         return false;
     }
     
-    public Update getTableScrollUpdate(STable table) {
+
+	public Update getTableScrollUpdate(STable table, Rectangle newViewport, Rectangle oldViewport) {
         //return new TableScrollUpdate(table);
         return new ComponentUpdate(table);
-    }
-    
+	}
+
     public Update getTableCellUpdate(STable table, int row, int col) {
         return new TableCellUpdate(table, row, col);
     }

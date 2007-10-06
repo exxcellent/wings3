@@ -12,12 +12,14 @@
  */
 package org.wings.plaf;
 
+import java.awt.Rectangle;
+
 import org.wings.STable;
 
 
 public interface TableCG extends ComponentCG {
     
     Update getTableCellUpdate(STable table, int row, int col);
-    Update getTableScrollUpdate(STable table);
+    Update getTableScrollUpdate(STable table, Rectangle newViewport, Rectangle oldViewport);
 
 }
