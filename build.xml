@@ -9,6 +9,8 @@
         <fileset dir="thirdparty/lib" includes="*.jar"/>
     </path>
 
+    <!-- TODO(hzeller) provide a useful toplevel target -->
+
     <target name="prepare">
         <mkdir dir="build/src/java"/>
         <mkdir dir="build/doc"/>
