@@ -14,8 +14,6 @@
 # Do not show deprecation warnings?
 #build.deprecation=false
 
-# Do not use the splash
-#nosplash
 
 # Use log4j for the wingset demo (copy log4j.xml.example to log4j.xml and edit it)
 #log4j
