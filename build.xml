@@ -14,7 +14,7 @@
         <mkdir dir="build/doc"/>
         <mkdir dir="dist"/>
         <tstamp>
-            <format property="wings.buildtime" pattern="yyyy-MM-dd HH:mm"/>
+            <format property="wings.buildtime" pattern="yyyy-MM-dd-HHmm"/>
         </tstamp>
         <property name="wings.version" value="custom-built-on-${wings.buildtime}"/>
     </target>
@@ -129,7 +129,6 @@
 
     <target name="tarball" depends="dist" description="create distribution tar.gz">
         <property name="distname" value="${ant.project.name}-${wings.version}"/>
-        <delete dir="${distname}"/>
         <mkdir dir="${distname}"/>
         <copy todir="${distname}">
             <fileset dir="dist"/>
@@ -138,6 +137,18 @@
         <tar basedir="." includes="${distname}/" tarfile="${distname}.tar"/>
         <gzip src="${distname}.tar" zipfile="${distname}.tar.gz"/>
         <delete file="${distname}.tar"/>
+        <delete dir="${distname}"/>
+    </target>
+
+    <target name="zip" depends="dist" description="create distribution tar.gz">
+        <property name="distname" value="${ant.project.name}-${wings.version}"/>
+        <delete dir="${distname}"/>
+        <mkdir dir="${distname}"/>
+        <copy todir="${distname}">
+            <fileset dir="dist"/>
+        </copy>
+
+        <zip basedir="." includes="${distname}/" zipfile="${distname}.zip"/>
         <delete dir="${distname}"/>
     </target>
 
