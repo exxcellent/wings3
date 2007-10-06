@@ -5,7 +5,7 @@
    language, or you can call lang.revdiff to get a difference report for a particular
    language, compared with the English reference.
 -->
-<project name="ReferenceDocumentation" default="all.doc" basedir=".">
+<project name="ReferenceDocumentation" default="doc.all" basedir=".">
     <!-- Allow this to be overriden by others importing this project. -->
     <dirname property="imported.basedir" file="${ant.file.ReferenceDocumentation}"/>
 
@@ -34,12 +34,12 @@
 
     <!-- ################################################################## -->
 
-    <target name="all.doc"
+    <target name="doc.all"
             depends="clean"
             description="Compile documentation for all languages and all formats.">
 
-        <antcall target="doc.all"><param name="documentname" value="userguide"/></antcall>
-        <antcall target="doc.all"><param name="documentname" value="whitepaper"/></antcall>
+        <antcall target="-doc.all"><param name="documentname" value="userguide"/></antcall>
+        <antcall target="-doc.all"><param name="documentname" value="whitepaper"/></antcall>
     </target>
 
     <!-- ################################################################## -->
@@ -48,10 +48,14 @@
 
         <!-- Delete build directory. -->
         <delete dir="${build.dir}"/>
+        <delete dir="${support.dir}/docbook-dtd"/>
+        <delete dir="${support.dir}/docbook-xsl"/>
+        <delete dir="${support.dir}/lib"/>
+        <delete file="${support.dir}/section-check.xsl"/>
 
     </target>
 
-    <target name="doc.all" depends="assert-docname-param">
+    <target name="-doc.all" depends="assert-docname-param">
         <!-- Compile the documentation for a single language in all formats. -->
         <antcall target="doc.pdf"/>
         <antcall target="doc.html"/>
