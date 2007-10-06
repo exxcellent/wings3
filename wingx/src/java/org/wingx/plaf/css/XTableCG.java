@@ -593,9 +593,9 @@ public class XTableCG
         return new TableCellUpdate(table, row, col);
     }
     
-    public Update getTableScrollUpdate(STable table) {
+	public Update getTableScrollUpdate(STable table, Rectangle newViewport, Rectangle oldViewport) {
         return new ComponentUpdate(table);
-    }
+	}
 
     protected class TableCellUpdate extends AbstractUpdate {
 
