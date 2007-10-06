@@ -176,8 +176,7 @@
         <ant dir="wings" target="build"/>
     </target>
 
-    <target name="wingx" description="build wings and wingx">
-        <ant dir="wings" target="build"/>
+    <target name="wingx" description="build wingx">
         <ant dir="wingx" target="build"/>
     </target>
 
