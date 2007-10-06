@@ -5,7 +5,7 @@ import org.wings.plaf.Update;
 
 public abstract class AbstractUpdate<COMPONENT_TYPE extends SComponent> implements Update {
 
-	protected COMPONENT_TYPE component;
+	protected final COMPONENT_TYPE component;
 
 	public AbstractUpdate(COMPONENT_TYPE component) {
         if (component == null)
@@ -14,20 +14,21 @@ public abstract class AbstractUpdate<COMPONENT_TYPE extends SComponent> implemen
 		this.component = component;
 	}
 
-	public COMPONENT_TYPE getComponent() {
+	public final COMPONENT_TYPE getComponent() {
 		return component;
 	}
 
-    public int getProperty() {
+    public final int getProperty() {
         return FINE_GRAINED_UPDATE;
     }
 
-    public int getPriority() {
+    public final int getPriority() {
         return 1;
     }
 
 	public abstract Handler getHandler();
 
+    @Override
     public boolean equals(Object object) {
         if (object == this)
             return true;
@@ -46,6 +47,7 @@ public abstract class AbstractUpdate<COMPONENT_TYPE extends SComponent> implemen
         return true;
     }
 
+    @Override
     public int hashCode() {
         int hashCode = 17;
         int dispersionFactor = 37;

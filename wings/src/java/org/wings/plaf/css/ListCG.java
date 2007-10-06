@@ -30,18 +30,17 @@ import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.List;
 
-public final class ListCG extends AbstractComponentCG implements  org.wings.plaf.ListCG {
+public final class ListCG extends AbstractComponentCG<SList> implements org.wings.plaf.ListCG {
 
     private static final long serialVersionUID = 1L;
 
-    public void installCG(final SComponent comp) {
-        super.installCG(comp);
-        final SList component = (SList) comp;
-        final CGManager manager = component.getSession().getCGManager();
+    public void installCG(final SList list) {
+        super.installCG(list);
+        final CGManager manager = list.getSession().getCGManager();
         Object value;
         value = manager.getObject("SList.cellRenderer", SDefaultListCellRenderer.class);
         if (value != null) {
-            component.setCellRenderer((SDefaultListCellRenderer) value);
+            list.setCellRenderer((SDefaultListCellRenderer) value);
         }
     }
 
@@ -90,6 +89,7 @@ public final class ListCG extends AbstractComponentCG implements  org.wings.plaf
         final javax.swing.ListModel model = list.getModel();
         final int size = model.getSize();
         final SListCellRenderer cellRenderer = list.getCellRenderer();
+        final StringBuilderDevice stringBuilderDevice = new StringBuilderDevice(512);
 
         for (int i = 0; i < size; i++) {
             SComponent renderer = null;
@@ -115,20 +115,15 @@ public final class ListCG extends AbstractComponentCG implements  org.wings.plaf
                 renderer.setToolTipText(null);
 
                 // Hack: remove all tags, because in form selections, looks ugly.
-                StringBuilderDevice string = getStringBuilderDevice();
-                renderer.write(string);
-                char[] chars = string.toString().toCharArray();
-                int pos = 0;
-                for (int c = 0; c < chars.length; c++) {
-                    switch (chars[c]) {
-                        case '<':
-                            device.print(chars, pos, c - pos);
-                            break;
-                        case '>':
-                            pos = c + 1;
-                    }
+                stringBuilderDevice.reset();
+                renderer.write(stringBuilderDevice);
+
+                final int charsWritten = Utils.writeWithoutHTML(device, stringBuilderDevice.toString());
+                if (charsWritten == 0) {
+                    // If the option is empty ("") Firefox
+                    // renders somehow smaller comboboxes!
+                    device.print("&nbsp;");
                 }
-                device.print(chars, pos, chars.length - pos);
 
                 renderer.setToolTipText( tooltipText );
             } else {
@@ -145,16 +140,6 @@ public final class ListCG extends AbstractComponentCG implements  org.wings.plaf
         Utils.optAttribute(device, "name", Utils.event(list));
         Utils.optAttribute(device, "value", -1);
         device.print("/></span>");
-    }
-
-    private StringBuilderDevice stringBufferDevice = null;
-
-    protected org.wings.io.StringBuilderDevice getStringBuilderDevice() {
-        if (stringBufferDevice == null) {
-            stringBufferDevice = new StringBuilderDevice();
-        }
-        stringBufferDevice.reset();
-        return stringBufferDevice;
     }
 
     public void writeAnchorList(Device device, SList list) throws IOException {
@@ -219,8 +204,8 @@ public final class ListCG extends AbstractComponentCG implements  org.wings.plaf
         device.print(">");
     }
 
-    public void writeInternal(final Device device, final SComponent _c) throws IOException {
-        SList list = (SList) _c;
+    @Override
+    public void writeInternal(final Device device, final SList list) throws IOException {
         if (list.getShowAsFormComponent()) {
             writeFormList(device, list);
         } else {
@@ -232,12 +217,11 @@ public final class ListCG extends AbstractComponentCG implements  org.wings.plaf
         return new SelectionUpdate(list, deselectedIndices, selectedIndices);
     }
 
-    protected class SelectionUpdate extends AbstractUpdate {
-
+    protected static class SelectionUpdate extends AbstractUpdate<SList> {
         private List deselectedIndices;
         private List selectedIndices;
 
-        public SelectionUpdate(SComponent component, List deselectedIndices, List selectedIndices) {
+        public SelectionUpdate(SList component, List deselectedIndices, List selectedIndices) {
             super(component);
             this.deselectedIndices = deselectedIndices;
             this.selectedIndices = selectedIndices;

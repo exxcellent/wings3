@@ -17,7 +17,7 @@ import java.util.List;
 import org.wings.SList;
 
 
-public interface ListCG extends ComponentCG {
+public interface ListCG extends ComponentCG<SList> {
 
     public Update getSelectionUpdate(SList list, List deselectedIndices, List selectedIndices);
 

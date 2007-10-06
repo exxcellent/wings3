@@ -520,6 +520,36 @@ public final class Utils {
     }
 
     /**
+     * Writes text to the device without any HTML tag content.
+     * @param device The output device to use for quoting
+     * @param htmlWrappedText The text which may contain HTML to strip.
+     * @return The amount of characters written to the ouput device
+     * @throws IOException
+     */
+    public static int writeWithoutHTML(final Device device, final String htmlWrappedText) throws IOException {
+        final char[] chars = htmlWrappedText.toCharArray();
+        int pos = 0;
+        int len = 0;
+        for (int c = 0; c < chars.length; c++) {
+            switch (chars[c]) {
+                case '\n':
+                    chars[c] = ' ';
+                    break;
+                case '<':
+                    len += (c - pos);
+                    device.print(chars, pos, len);
+                    break;
+                case '>':
+                    pos = c + 1;
+            }
+        }
+        final int remain = chars.length - pos;
+        device.print(chars, pos, remain);
+        len += remain;
+        return len;
+    }    
+
+    /**
      * write string as it is
      *
      * @param d
@@ -683,9 +713,8 @@ public final class Utils {
      */
     public static void optAttributes(Device d, Map attributes) throws IOException {
         if (attributes != null) {
-            Iterator iter = attributes.entrySet().iterator();
-            while (iter.hasNext()) {
-                Map.Entry entries = (Map.Entry) iter.next();
+            for (final Object o : attributes.entrySet()) {
+                Map.Entry entries = (Map.Entry) o;
 
                 Object key = entries.getKey();
                 if (key instanceof String) {
@@ -694,20 +723,15 @@ public final class Utils {
                     Object value = entries.getValue();
                     if (value instanceof SStringBuilder) {
                         Utils.optAttribute(d, attr, (SStringBuilder) value);
-                    }
-                    else if (value instanceof String) {
+                    } else if (value instanceof String) {
                         Utils.optAttribute(d, attr, (String) value);
-                    }
-                    else if (value instanceof Color) {
+                    } else if (value instanceof Color) {
                         Utils.optAttribute(d, attr, (Color) value);
-                    }
-                    else if (value instanceof Renderable) {
+                    } else if (value instanceof Renderable) {
                         Utils.optAttribute(d, attr, (Renderable) value);
-                    }
-                    else if (value instanceof Integer) {
+                    } else if (value instanceof Integer) {
                         Utils.optAttribute(d, attr, ((Integer) value).intValue());
-                    }
-                    else if (value instanceof SDimension) {
+                    } else if (value instanceof SDimension) {
                         Utils.optAttribute(d, attr, (SDimension) value);
                     }
                 }
@@ -744,7 +768,7 @@ public final class Utils {
      */
     public static void main(String argv[]) throws Exception {
         Color c = new Color(255, 254, 7);
-        Device d = new org.wings.io.StringBuilderDevice();
+        Device d = new org.wings.io.StringBuilderDevice(1024);
         write(d, c);
         quote(d, "\nThis is a <abc> string \"; foo & sons\nmoin", true, false, false);
         d.print(String.valueOf(-42));

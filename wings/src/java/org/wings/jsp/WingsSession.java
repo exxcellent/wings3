@@ -139,7 +139,7 @@ public class WingsSession
             WingsSession wingsSession = getSession(request, response);
             SFrame frame = getFrame(wingsSession);
 
-            StringBuilderDevice headerdev = new StringBuilderDevice();
+            StringBuilderDevice headerdev = new StringBuilderDevice(1024);
             for (Object next : frame.getHeaders()) {
                 if (next instanceof Renderable) {
                     ((Renderable) next).write(headerdev);
@@ -156,7 +156,7 @@ public class WingsSession
 
     public static void writeComponent(HttpServletRequest request, HttpServletResponse response, JspWriter out, SComponent component) throws IOException, ServletException {
         synchronized (request.getSession()) {
-            StringBuilderDevice outdev = new StringBuilderDevice();
+            StringBuilderDevice outdev = new StringBuilderDevice(1024);
             component.write(outdev);
             out.print(outdev);
             SessionManager.removeSession();

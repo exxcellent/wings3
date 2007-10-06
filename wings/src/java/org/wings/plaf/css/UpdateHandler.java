@@ -6,10 +6,10 @@ import java.util.List;
 
 import org.wings.plaf.Update;
 
-public class UpdateHandler implements Update.Handler {
+public final class UpdateHandler implements Update.Handler {
 
     protected String name;
-    protected List<String> parameters;
+    protected final List<String> parameters;
 
     public UpdateHandler(String name) {
         if (name == null)
@@ -51,24 +51,27 @@ public class UpdateHandler implements Update.Handler {
         return parameters.set(index, Utils.encodeJS(o));
     }
 
+    @Override
     public String toString() {
         return getClass().getName() + "[" + name + "]";
     }
 
+    @Override
     public boolean equals(Object object) {
         if (object == this)
             return true;
         if (object == null || object.getClass() != this.getClass())
             return false;
 
-        UpdateHandler handler = (UpdateHandler) object;
+        final UpdateHandler handler = (UpdateHandler) object;
 
         if (!this.getName().equals(handler.getName()))
             return false;
-        if (!parameters.equals(handler.parameters))
-            return false;
-
-        return true;
+        return parameters.equals(handler.parameters);
     }
 
+    @Override
+    public int hashCode() {
+        return name != null ? name.hashCode() : 0;
+    }
 }

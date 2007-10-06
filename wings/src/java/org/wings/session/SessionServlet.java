@@ -637,7 +637,7 @@ final class SessionServlet
             Class clazz = classLoader.loadClass(className);
             ExceptionHandler exceptionHandler = (ExceptionHandler)clazz.newInstance();
 
-            StringBuilderDevice device = new StringBuilderDevice();
+            StringBuilderDevice device = new StringBuilderDevice(4096);
             exceptionHandler.handle(device, thrown);
             Resource resource = new StringResource(device.toString(), "html", "text/html");
             String url = session.getExternalizeManager().externalize(resource);

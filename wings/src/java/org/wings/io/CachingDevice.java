@@ -10,7 +10,7 @@ import java.io.IOException;
  * is called.
  */
 public class CachingDevice  implements Device {
-    private final StringBuilderDevice bufferDevice = new StringBuilderDevice();
+    private final StringBuilderDevice bufferDevice = new StringBuilderDevice(4096);
     private final Device finalDevice ;
 
     public CachingDevice(Device finalDevice) {

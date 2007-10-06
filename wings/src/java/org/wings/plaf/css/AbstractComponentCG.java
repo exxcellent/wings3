@@ -463,7 +463,7 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
             String exception = null;
 
             try {
-                StringBuilderDevice htmlDevice = new StringBuilderDevice();
+                StringBuilderDevice htmlDevice = new StringBuilderDevice(256);
                 write(htmlDevice, component);
                 htmlCode = htmlDevice.toString();
             } catch (Throwable t) {

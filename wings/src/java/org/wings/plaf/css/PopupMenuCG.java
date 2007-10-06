@@ -199,6 +199,7 @@ public final class PopupMenuCG extends AbstractComponentCG implements
             super(component);
         }
 
+        @Override
         public Handler getHandler() {
             UpdateHandler handler = (UpdateHandler) super.getHandler();
 

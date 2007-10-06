@@ -18,6 +18,7 @@ import org.wings.script.JavaScriptEvent;
 import org.wings.script.JavaScriptListener;
 import org.wings.util.SStringBuilder;
 import org.wings.io.Device;
+import org.wings.io.StringBuilderDevice;
 import org.wings.plaf.CGManager;
 import org.wings.plaf.Update;
 
@@ -70,12 +71,12 @@ public final class ComboBoxCG extends AbstractComponentCG implements org.wings.p
 
         device.print(">");
 
-        javax.swing.ComboBoxModel model = component.getModel();
-        int size = model.getSize();
-        int selected = component.getSelectedIndex();
+        final javax.swing.ComboBoxModel model = component.getModel();
+        final int size = model.getSize();
+        final int selected = component.getSelectedIndex();
 
-        SListCellRenderer renderer = component.getRenderer();
-
+        final SListCellRenderer renderer = component.getRenderer();
+        final org.wings.io.StringBuilderDevice stringBuilderDevice = new StringBuilderDevice(512);
         for (int i = 0; i < size; i++) {
             SComponent cellRenderer = null;
             if (renderer != null) {
@@ -102,27 +103,11 @@ public final class ComboBoxCG extends AbstractComponentCG implements org.wings.p
 
             if (cellRenderer != null) {
                 // Hack: remove all tags, because in form selections, looks ugly.
-                org.wings.io.StringBuilderDevice string = getStringBuilderDevice();
-                cellRenderer.write(string);
-                char[] chars = string.toString().replace('\n',' ').trim().toCharArray();
-                int pos = 0;
-                boolean optionIsEmpty = true;
-                for (int c = 0; c < chars.length; c++) {
-                    switch (chars[c]) {
-                        case '<':
-                            int len = c - pos;
-                            device.print(chars, pos, len);
-                            if (len > 0) optionIsEmpty = false;
-                            break;
-                        case '>':
-                            pos = c + 1;
-                    }
-                }
-                int len = chars.length - pos;
-                device.print(chars, pos, len);
-                if (len > 0) optionIsEmpty = false;
+                stringBuilderDevice.reset();
+                cellRenderer.write(stringBuilderDevice);
+                final int printedChars = Utils.writeWithoutHTML(device, stringBuilderDevice.toString());
                 
-                if (optionIsEmpty) {
+                if (printedChars == 0) {
                     // If the option is empty ("") Firefox
                     // renders somehow smaller comboboxes!
                     device.print("&nbsp;");
@@ -144,19 +129,6 @@ public final class ComboBoxCG extends AbstractComponentCG implements org.wings.p
         Utils.optAttribute(device, "value", -1);
         device.print("/></span>");
     }
-
-    private org.wings.io.StringBuilderDevice
-            stringBuilderDevice = null;
-
-    protected org.wings.io.StringBuilderDevice getStringBuilderDevice() {
-        if (stringBuilderDevice == null) {
-            stringBuilderDevice = new org.wings.io.StringBuilderDevice();
-        }
-        stringBuilderDevice.reset();
-        return stringBuilderDevice;
-    }
-
-
 
     public void writeInternal(final Device device, final SComponent _c) throws IOException {
         final SComboBox comboBox = (SComboBox) _c;

@@ -193,6 +193,7 @@ public final class MenuCG extends org.wings.plaf.css.MenuItemCG implements
             super(component);
         }
 
+        @Override
         public Handler getHandler() {
             component.putClientProperty("popup", Boolean.TRUE);
             UpdateHandler handler = (UpdateHandler) super.getHandler();
