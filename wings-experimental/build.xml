@@ -19,7 +19,11 @@
         </tstamp>
     </target>
 
-    <target name="compile" depends="prepare">
+    <target name="build.dependencies" unless="skip.dependencies">
+        <ant dir="../wings/" target="build" inheritrefs="false"/>
+    </target>
+
+    <target name="compile" depends="prepare, build.dependencies">
         <javac debug="${build.debug}" deprecation="${build.deprecation}"
             destdir="build/class" srcdir="src/java" source="1.5" target="1.5">
             <classpath refid="build.classpath"/>

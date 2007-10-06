@@ -44,7 +44,7 @@
     	<file name="splitpane.js"/>
     </filelist>
 
-    <target name="prepare" depends="-splash">
+    <target name="prepare">
         <mkdir dir="build/class"/>
         <tstamp>
             <format property="wings.buildtime" pattern="yyyy-MM-dd HH:mm"/>
@@ -58,8 +58,8 @@
         <!-- Generate wingS version information class -->
         <filter token="WINGS_VERSION" value="${wings.version}"/>
         <filter token="COMPILE_TIME" value="${wings.buildtime}"/>
-        <copy file="src/res/org/wings/Version.java.in"
-            tofile="src/java/org/wings/Version.java"
+        <copy file="${basedir}/src/res/org/wings/Version.java.in"
+            tofile="${basedir}/src/java/org/wings/Version.java"
             filtering="yes"/>
     </target>
 
@@ -146,11 +146,5 @@
     </target>
 
     <target depends="clean,build" description="re-build everything" name="all"/>
-
-    <!-- ### Utility tasks ################################################### -->
-
-    <target name="-splash" unless="nosplash">
-        <splash imageurl="file:${basedir}/demo/wingset/src/web/icons/wings-logo.png"/>
-    </target>
 
 </project>

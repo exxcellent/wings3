@@ -15,16 +15,15 @@
         <fileset dir="../../build/web/WEB-INF/lib" includes="*.jar"/>
     </path>
 
-    <target name="dependencies" if="build.deps">
-        <ant dir="../.." taskname="build"/>
-    </target>
-
     <target name="prepare" depends="dependencies">
         <tstamp/>
         <mkdir dir="build"/>
         <mkdir dir="build/class"/>
         <mkdir dir="build/web"/>
         <mkdir dir="${deploy.dwr}"/>
+    </target>
+
+    <target name="build.dependencies" unless="skip.dependencies">
     </target>
 
     <target name="compile" depends="prepare">

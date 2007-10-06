@@ -19,8 +19,8 @@
     </target>
 
     <target name="build" depends="prepare" description="build wings and wingx">
-        <ant dir="wings" target="build"/>
-        <ant dir="wingx" target="build"/>
+        <ant dir="wings" target="build" inheritall="false"/>
+        <ant dir="wingx" target="build" inheritall="false"/>
     </target>
 
     <target name="javadoc" depends="prepare" description="build javadoc">
@@ -52,7 +52,7 @@
         <ant dir="doc/docbook" target="all.doc"/>
     </target>
 
-    <target name="dist" depends="-check-full-dist,clean,build,doc">
+    <target name="dist" depends="-check-full-dist,cleanall,build,doc">
         <mkdir dir="dist/doc/web"/>
         <copy todir="dist/doc/web">
             <fileset dir="wings/build/web"/>
@@ -151,7 +151,7 @@
     <!-- ### Utility tasks ################################################### -->
 
     <target name="-splash" unless="nosplash">
-        <splash imageurl="file:${basedir}/demo/wingset/src/web/icons/wings-logo.png"/>
+        <splash imageurl="file:${basedir}/demo-wingset/src/web/icons/wings-logo.png"/>
     </target>
 
     <target name="-check-full-dist">
@@ -164,12 +164,19 @@
         </fail>
     </target>
 
-    <target name="cleanall" description="clean all modules">
+    <target name="cleanall" description="clean all modules" depends="clean">
         <ant dir="wings" target="clean"/>
         <ant dir="wingx" target="clean"/>
+        <ant dir="wings-experimental" target="clean"/>
+        <ant dir="wings-portlet" target="clean"/>
         <ant dir="demo-wingset" target="clean"/>
         <ant dir="demo-desktop" target="clean"/>
+        <ant dir="demo-dwr" target="clean"/>
+        <ant dir="demo-jsp" target="clean"/>
+        <ant dir="demo-mycomponent" target="clean"/>
+        <ant dir="demo-wingsportlet" target="clean"/>
         <ant dir="demo-logconfig" target="clean"/>
+        <ant dir="doc/docbook" target="clean"/>
     </target>
 
     <target name="wings" description="build wings">
@@ -180,21 +187,15 @@
         <ant dir="wingx" target="build"/>
     </target>
 
-    <target name="deploy demo-wingset" description="deploy demo-wingset">
-        <ant dir="wings" target="build"/>
-        <ant dir="wingx" target="build"/>
+    <target name="deploy-demo-wingset" description="deploy demo-wingset">
         <ant dir="demo-wingset" target="deploy"/>
     </target>
 
-    <target name="deploy demo-desktop" description="deploy demo-desktop">
-        <ant dir="wings" target="build"/>
-        <ant dir="wingx" target="build"/>
+    <target name="deploy-demo-desktop" description="deploy demo-desktop">
         <ant dir="demo-desktop" target="deploy"/>
     </target>
 
-    <target name="deploy demo-logconfig" description="deploy demo-logconfig">
-        <ant dir="wings" target="build"/>
-        <ant dir="wingx" target="build"/>
+    <target name="deploy-demo-logconfig" description="deploy demo-logconfig">
         <ant dir="demo-logconfig" target="deploy"/>
     </target>
 </project>

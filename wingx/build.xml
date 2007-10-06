@@ -12,6 +12,10 @@
         </fileset>
     </path>
 
+    <target name="build.dependencies" unless="skip.dependencies">
+        <ant dir="../wings/" target="build" inheritall="false" inheritrefs="false" />
+    </target>
+
     <target name="prepare">
         <mkdir dir="build/class"/>
         <tstamp>
@@ -19,7 +23,7 @@
         </tstamp>
     </target>
 
-    <target name="compile" depends="prepare">
+    <target name="compile" depends="prepare, build.dependencies">
         <javac debug="${build.debug}" deprecation="${build.deprecation}"
             destdir="build/class" srcdir="src/java" source="1.5" target="1.5">
             <classpath refid="build.classpath"/>
@@ -34,6 +38,12 @@
                 <exclude name="**/*.java.in"/>
             </fileset>
         </jar>
+    </target>
+
+    <target name="cleann" depends="clean, clean.dependencies"/>
+
+    <target name="clean.dependencies" unless="skip.dependencies">
+        <ant dir="../wings/" target="build" inheritall="false" inheritrefs="false" />
     </target>
 
     <target description="cleanup build results" name="clean">

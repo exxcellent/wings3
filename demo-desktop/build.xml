@@ -21,6 +21,10 @@
         <mkdir dir="build/web"/>
     </target>
 
+    <target name="build.dependencies" unless="skip.dependencies">
+        <ant dir="../wings/" target="build" inheritrefs="false"/>
+    </target>
+
     <target name="compile" depends="prepare">
         <javac srcdir="src/java"
             destdir="build/class"
@@ -32,7 +36,7 @@
         </javac>
     </target>
 
-    <target name="build" depends="compile, includelog4j">
+    <target name="build" depends="compile, includelog4j, build.dependencies">
         <copy todir="build/web">
             <fileset dir="src/web"/>
             <fileset dir="../wings/build/web"/>

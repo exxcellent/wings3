@@ -22,13 +22,18 @@
         <mkdir dir="build/web"/>
     </target>
 
-    <target name="compile" depends="prepare">
+    <target name="build.dependencies" unless="skip.dependencies">
+        <ant dir="../wings/" target="build" inheritrefs="false"/>
+        <ant dir="../wingx/" target="build" inheritrefs="false"/>
+    </target>
+
+    <target name="compile" depends="prepare, build.dependencies">
         <javac srcdir="src/java"
-            destdir="build/class"
-            debug="${build.debug}"
-            deprecation="${build.deprecation}"
-            source="1.5"
-            target="1.5">
+        destdir="build/class"
+        debug="${build.debug}"
+        deprecation="${build.deprecation}"
+        source="1.5"
+        target="1.5">
             <classpath refid="build.classpath"/>
         </javac>
     </target>

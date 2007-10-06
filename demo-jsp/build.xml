@@ -15,11 +15,11 @@
         <fileset dir="../../build/web/WEB-INF/lib" includes="*.jar"/>
     </path>
 
-    <target name="dependencies" if="build.deps">
-        <ant dir="../.." taskname="build"/>
+    <target name="build.dependencies" unless="skip.dependencies">
+        <ant dir="../wings/" target="build" inheritrefs="false"/>
     </target>
 
-    <target name="prepare" depends="dependencies">
+    <target name="prepare" depends="build.dependencies">
         <tstamp/>
         <mkdir dir="build"/>
         <mkdir dir="build/class"/>
