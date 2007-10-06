@@ -27,9 +27,6 @@ import org.wings.table.STableCellEditor;
 
 /**
  * Default table cell editor.
- * <p/> 
- * In order to see the graphics,
- * you need the Java look and feel graphics (jlfgr*.jar)
  *
  * @author <a href="mailto:engels@mercatis.de">Holger Engels</a>
  */
@@ -76,12 +73,6 @@ public class SDefaultCellEditor
      * Store here the CellEditorListener
      */
     protected final EventListenerList listenerList;
-
-    /**
-     * Event listener, which set the fire... indicators. This event listener is
-     * added to the buttons {@link #ok} and {@link #cancel}
-     */
-    private final ActionListener fireEventListener = new FireEventListener();
 
     /**
      * Fast edit support is editing with reduced interaction. E.g. a boolean

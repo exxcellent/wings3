@@ -10,7 +10,6 @@
     <property name="regexp.version" value="jakarta-regexp-1.2.jar"/>
     <property name="beanshell.version" value="bsh-core.jar"/>
     <property name="httpclient.version" value="commons-httpclient-2.0-beta1.jar"/>
-    <property name="lfgr.version" value="kdeclassic-lfgr.jar"/>
     <property name="dwr.version" value="dwr.jar"/>
     <property name="xalan.version" value="xalan.jar"/>
 
@@ -21,7 +20,6 @@
             <include name="${regexp.version}"/>
             <include name="${beanshell.version}"/>
             <include name="${httpclient.version}"/>
-            <include name="${lfgr.version}"/>
             <include name="${dwr.version}"/>
             <include name="${xalan.version}"/>
         </fileset>
@@ -117,7 +115,6 @@
             <fileset dir="../thirdparty/lib">
                 <include name="${regexp.version}"/>
                 <include name="${beanshell.version}"/>
-                <include name="${lfgr.version}"/>
                 <include name="${commons-logging.version}"/>
                 <include name="${dwr.version}"/>
                 <include name="${xalan.version}"/>

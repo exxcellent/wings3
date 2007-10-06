@@ -52,11 +52,6 @@
           <containerElement type="library" level="module">
             <attribute name="method" value="0" />
             <attribute name="URI" value="/WEB-INF/lib" />
-            <url>jar://$MODULE_DIR$/../../../lib/kdeclassic-lfgr.jar!/</url>
-          </containerElement>
-          <containerElement type="library" level="module">
-            <attribute name="method" value="0" />
-            <attribute name="URI" value="/WEB-INF/lib" />
             <url>jar://$MODULE_DIR$/../../../lib/log4j-1.2.9.jar!/</url>
           </containerElement>
           <containerElement type="library" level="module">
