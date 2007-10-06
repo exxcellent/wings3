@@ -27,7 +27,7 @@
         <ant dir="../wingx/" target="build" inheritrefs="false"/>
     </target>
 
-    <target name="compile" depends="prepare, build.dependencies">
+    <target name="compile" depends="prepare">
         <javac srcdir="src/java"
         destdir="build/class"
         debug="${build.debug}"
@@ -38,7 +38,7 @@
         </javac>
     </target>
 
-    <target name="build" depends="compile, includelog4j">
+    <target name="build" depends="build.dependencies, compile, includelog4j">
         <copy todir="build/web">
             <fileset dir="src/web" />
             <fileset dir="../wings/build/web"/>

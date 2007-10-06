@@ -165,18 +165,18 @@
     </target>
 
     <target name="cleanall" description="clean all modules" depends="clean">
-        <ant dir="wings" target="clean"/>
-        <ant dir="wingx" target="clean"/>
-        <ant dir="wings-experimental" target="clean"/>
-        <ant dir="wings-portlet" target="clean"/>
-        <ant dir="demo-wingset" target="clean"/>
-        <ant dir="demo-desktop" target="clean"/>
-        <ant dir="demo-dwr" target="clean"/>
-        <ant dir="demo-jsp" target="clean"/>
-        <ant dir="demo-mycomponent" target="clean"/>
-        <ant dir="demo-wingsportlet" target="clean"/>
-        <ant dir="demo-logconfig" target="clean"/>
-        <ant dir="doc/docbook" target="clean"/>
+        <ant dir="wings" target="clean" inheritall="false"/>
+        <ant dir="wingx" target="clean" inheritall="false"/>
+        <ant dir="wings-experimental" target="clean" inheritall="false"/>
+        <ant dir="wings-portlet" target="clean" inheritall="false"/>
+        <ant dir="demo-wingset" target="clean" inheritall="false"/>
+        <ant dir="demo-desktop" target="clean" inheritall="false"/>
+        <ant dir="demo-dwr" target="clean" inheritall="false"/>
+        <ant dir="demo-jsp" target="clean" inheritall="false"/>
+        <ant dir="demo-mycomponent" target="clean" inheritall="false"/>
+        <ant dir="demo-wingsportlet" target="clean" inheritall="false"/>
+        <ant dir="demo-logconfig" target="clean" inheritall="false"/>
+        <ant dir="doc/docbook" target="clean" inheritall="false"/>
     </target>
 
     <target name="wings" description="build wings">

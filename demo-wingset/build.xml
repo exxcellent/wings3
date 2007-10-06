@@ -26,7 +26,7 @@
         <mkdir dir="build/web"/>
     </target>
 
-    <target name="compile" depends="prepare, build.dependencies">
+    <target name="compile" depends="prepare">
         <javac srcdir="src/java"
             destdir="build/class"
             debug="${build.debug}"
@@ -37,7 +37,7 @@
         </javac>
     </target>
 
-    <target name="build" depends="compile, includelog4j">
+    <target name="build" depends="build.dependencies, compile, includelog4j">
         <copy todir="build/web">
             <fileset dir="src/web">
                 <exclude name="WEB-INF/web.xml"/>

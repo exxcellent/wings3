@@ -15,7 +15,7 @@
         <fileset dir="../../build/web/WEB-INF/lib" includes="*.jar"/>
     </path>
 
-    <target name="prepare" depends="dependencies">
+    <target name="prepare">
         <tstamp/>
         <mkdir dir="build"/>
         <mkdir dir="build/class"/>
@@ -35,7 +35,7 @@
         </javac>
     </target>
 
-    <target name="build" depends="compile">
+    <target name="build" depends="build.dependencies, compile">
         <copy todir="build/web">
             <fileset dir="src/web"/>
             <fileset dir="../../build/web"/>
