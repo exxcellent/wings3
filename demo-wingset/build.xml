@@ -14,10 +14,6 @@
         <fileset dir="../thirdparty/lib" includes="servlet.jar"/>
     </path>
 
-    <target name="build.dependencies" unless="skip.dependencies">
-        <ant dir="../wings/" target="build" inheritrefs="false"/>
-        <ant dir="../wingx/" target="build" inheritrefs="false"/>
-    </target>
 
     <target name="prepare">
         <tstamp/>
@@ -37,7 +33,7 @@
         </javac>
     </target>
 
-    <target name="build" depends="build.dependencies, compile, includelog4j">
+    <target name="build" depends="compile, includelog4j">
         <copy todir="build/web">
             <fileset dir="src/web">
                 <exclude name="WEB-INF/web.xml"/>

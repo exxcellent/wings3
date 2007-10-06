@@ -3,14 +3,21 @@ a quickstart of how to setup and start to develop web applications
 with wingS
 
 In short words:
-- doc contains a user guide as well as the Java API documentation
-- doc/hellowings a very minimalistic demo
-- lib/ contains all files needed to develop and compile your wingS
-  application
-- demo/ contains a set of various demo, mainly the wings feature
-  showoff demo named WingSet
-- web/ contains files you need to deploy during runtime
-  with your wings application
-- src/ The sources needed to build the core wingS libraries
-  wings.jar are only contained in the binary
-  distribution under the web/WEB-INF/lib directory.
+- doc/
+    contains a user guide as well as the Java API documentation
+- doc/turorial/hellowings
+    a very minimalistic wingS project
+- thirdparty/lib
+    contains thirdparty libraries needed to develop and
+  compile wingS and wingS application
+- The demo-* directories contain various demos
+    Use the ant war target to create a deployable war file
+    Use the deploy target to deploy it directly into you tomcat (set req'd)
+- web/
+    contains all the files you need to deploy during runtime for a wingS
+    appliction. Pack it into a war and deploy it to get started
+    with your wings application
+- wings/
+    The full wingS project sources needed to build your own wingS libraries
+- wingx/ 
+    The wingS addon project wingX sources for additional convencience components

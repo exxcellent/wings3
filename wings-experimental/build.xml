@@ -30,7 +30,7 @@
         </javac>
     </target>
 
-    <target name="build" depends="build.dependencies, compile" description="builds all wingX artefacts">
+    <target name="build" depends="compile" description="builds all wingX artefacts">
         <mkdir dir="build/web/WEB-INF/lib"/>
         <jar jarfile="build/web/WEB-INF/lib/wings-experimental.jar">
             <fileset dir="build/class" />

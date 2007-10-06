@@ -1,30 +1,48 @@
 <project name="HelloWingS" default="war">
+
+    <!-- read custom properties from file -->
+    <property file="../../../etc/custom-build.properties"/>
+    <property file="../../../etc/build.properties"/>
+
     <path id="build.classpath">
-        <fileset dir="lib" includes="*.jar"/>
-        <fileset dir="web/WEB-INF/lib" includes="*.jar"/>
+        <fileset dir="../../../wings/build/web/WEB-INF/lib" includes="*.jar"/>
+        <fileset dir="../../../wingx/build/web/WEB-INF/lib" includes="*.jar"/>
+        <fileset dir="../../../thirdparty/lib" includes="servlet*.jar"/>
     </path>
 
+    <target name="build.dependencies" unless="skip.dependencies">
+        <ant dir="../../../wings/" target="build" inheritrefs="false"/>
+        <ant dir="../../../wingx/" target="build" inheritrefs="false"/>
+    </target>
+
     <target name="prepare">
-        <mkdir dir="build/class"/>
+        <mkdir dir="build/web/WEB-INF/classes"/>
     </target>
 
     <target name="compile" depends="prepare">
-        <javac srcdir="src" destdir="build/class">
+        <javac srcdir="src" destdir="build/web/WEB-INF/classes">
             <classpath refid="build.classpath"/>
         </javac>
     </target>
-    
-    <target name="war" depends="compile">
-    	<war destfile="build/hellowings.war" 
-    	     webxml="web/WEB-INF/web.xml">
-    	   <classes dir="build/class"/>
-	   <fileset dir="web">
-	      <exclude name="**/web.xml" /> 
-	   </fileset>
+
+    <target name="build" depends="compile">
+        <copy todir="build/web">
+            <fileset dir="web">
+                <exclude name="**/web.xml"/>
+            </fileset>
+            <fileset dir="web" excludes="**/web.xml"/>
+            <fileset dir="../../../wings/build/web" includes="**/*.jar"/>
+            <fileset dir="../../../wingx/build/web" includes="**/*.jar"/>
+        </copy>
+    </target>
+
+    <target name="war" depends="build">
+        <war destfile="build/hellowings.war" webxml="web/WEB-INF/web.xml">
+            <fileset dir="web" excludes="**/web.xml"/>
         </war>
     </target>
-    
+
     <target name="clean">
-       <delete dir="build"/>
+        <delete dir="build"/>
     </target>
 </project>

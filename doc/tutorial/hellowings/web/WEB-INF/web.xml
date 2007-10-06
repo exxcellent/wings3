@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE web-app
-     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
-    "http://java.sun.com/dtd/web-app_2_3.dtd">
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
     <servlet>
@@ -9,7 +7,7 @@
         <servlet-class>org.wings.session.WingServlet</servlet-class>
         <init-param>
             <param-name>wings.mainclass</param-name>
-            <param-value>HelloWingS</param-value>
+            <param-value>HelloWingS</param-value> <!-- point here to your appliction entry class -->  
         </init-param>
     </servlet>
 
@@ -30,7 +28,7 @@
 
     <servlet-mapping>
         <servlet-name>HelloWingS</servlet-name>
-        <url-pattern>/HelloWingS/*</url-pattern>
+        <url-pattern>/start/*</url-pattern>
     </servlet-mapping>
 
     <!-- DWR / AJAX service mapping                            -->
@@ -38,5 +36,4 @@
         <servlet-name>dwr-invoker</servlet-name>
         <url-pattern>/dwr/*</url-pattern>
     </servlet-mapping>
-
 </web-app>

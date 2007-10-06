@@ -1,10 +1,12 @@
-This directory contains several simple demos on how to use wingS:
+This file contains description about the demos shipped with wingS:
 
  - wingset:  A demo similar to SwingSet demonstrating the wingS
              components and capibilities.
  - desktop:  Another eye-candy demo which simulates a desktop
              with inner windows that can be opened/closed/minimized
              maximized.
+ - logconfig:  Another eye-candy demo which allows to mainpulate
+             a log4j configuration online.
 
 At the moment, the following demos are unmaintained and non functional
 

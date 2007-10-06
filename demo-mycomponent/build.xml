@@ -23,7 +23,7 @@
     <target name="build.dependencies" unless="skip.dependencies">
         <ant dir="../wings/" target="build" inheritrefs="false"/>
     </target>
-    
+
     <target name="compile" depends="prepare">
         <javac srcdir="src/java"
             destdir="build/class"
@@ -35,7 +35,7 @@
         </javac>
     </target>
 
-    <target name="build" depends="build.dependencies, compile">
+    <target name="build" depends="compile">
         <mkdir dir="build/web/WEB-INF/lib"/>
         <jar jarfile="build/web/WEB-INF/lib/${ant.project.name}.jar">
             <fileset dir="build/class" />

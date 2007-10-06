@@ -38,7 +38,7 @@
         </javac>
     </target>
 
-    <target name="build" depends="build.dependencies, compile, includelog4j">
+    <target name="build" depends="compile, includelog4j">
         <copy todir="build/web">
             <fileset dir="src/web" />
             <fileset dir="../wings/build/web"/>
