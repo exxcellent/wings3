@@ -187,28 +187,32 @@ public abstract class StaticResource extends Resource {
      * @throws IOException 
      */
     protected LimitedBuffer bufferResource() throws ResourceNotFoundException, IOException {
-        if (buffer == null) {
-            if (maxBufferSize != -1) {
-                buffer = new LimitedBuffer(maxBufferSize);
-            } else {
-                buffer = new LimitedBuffer();
-            }
-            InputStream resource = getResourceStream();
-            if (resource != null) {
-                byte[] copyBuffer = new byte[1024];
-                int read;
-                while (buffer.isValid()
-                        && (read = resource.read(copyBuffer)) > 0) {
-                    buffer.write(copyBuffer, 0, read);
+        try {
+            if (buffer == null) {
+                if (maxBufferSize < 0) {
+                    buffer = new LimitedBuffer();
+                } else {
+                    buffer = new LimitedBuffer(maxBufferSize);
                 }
-                resource.close();
-                if (buffer.isValid()) {
-                    size = buffer.size();
+                InputStream resource = getResourceStream();
+                if (resource != null) {
+                    byte[] copyBuffer = new byte[1024];
+                    int read;
+                    while (buffer.isValid() && (read = resource.read(copyBuffer)) > 0) {
+                        buffer.write(copyBuffer, 0, read);
+                    }
+                    resource.close();
+                    if (buffer.isValid()) {
+                        size = buffer.size();
+                    }
+                } else {
+                    log.fatal("Resource returned empty stream: " + this);
+                    buffer.setValid(false);
                 }
-            } else {
-                log.fatal("Resource returned empty stream: " + this);
-                buffer.setValid(false);
             }
+        } catch (ResourceNotFoundException e)  {
+            buffer = null;
+            throw e;
         }
         return buffer;
     }
@@ -245,7 +249,7 @@ public abstract class StaticResource extends Resource {
                     deliverSize += read;
                 }
                 resource.close();
-                size = deliverSize;
+                size = deliverSize; 
             }
         }
 
