@@ -40,7 +40,7 @@ import java.text.DateFormat;
  * @author <a href="mailto:engels@mercatis.de">Holger Engels</a>
  * @author <a href="mailto:haaf@mercatis.de">Armin Haaf</a>
  */
-public final class WingServlet
+public class WingServlet
         extends HttpServlet {
     private final transient static Log log = LogFactory.getLog(WingServlet.class);
 
