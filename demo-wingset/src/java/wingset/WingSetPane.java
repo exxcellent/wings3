@@ -48,6 +48,7 @@ abstract public class WingSetPane
     private boolean initialized = false;
     private SComponent controlsComponent;
     private SComponent exampleComponent;
+    private String exampleName;
 
     public WingSetPane() {
         setLayout(new SBorderLayout());
@@ -150,22 +151,27 @@ abstract public class WingSetPane
      * @inheritDoc
      */
     public String getExampleName() {
-        String name = getClass().getName();
-        name = name.substring(name.lastIndexOf('.') + 1);
-        if (name.endsWith("Example")) {
-            name = name.substring(0, name.length() - "Example".length());
-        } else if (name.endsWith("Test")) {
-            name = name.substring(0, name.length() - "Test".length());
-        } else if (name.endsWith("Experiment")) {
-            name = name.substring(0, name.length() - "Experiment".length());
+        if (exampleName == null) {
+            exampleName = getClass().getName();
+            exampleName = exampleName.substring(exampleName.lastIndexOf('.') + 1);
+            if (exampleName.endsWith("Example")) {
+                exampleName = exampleName.substring(0, exampleName.length() - "Example".length());
+            } else if (exampleName.endsWith("Test")) {
+                exampleName = exampleName.substring(0, exampleName.length() - "Test".length());
+            } else if (exampleName.endsWith("Experiment")) {
+                exampleName = exampleName.substring(0, exampleName.length() - "Experiment".length());
+            }
         }
-        return name;
+        return exampleName;
     }
 
     /**
      * @inheritDoc
      */
     public String getExampleGroup() {
-        return "wingS";
+        if (getExampleName().endsWith("Test"))
+            return "Test";
+        else
+            return getExampleName().startsWith("X") ? "wingX" : "wingS";
     }
 }

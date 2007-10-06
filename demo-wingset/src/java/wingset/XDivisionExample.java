@@ -5,7 +5,7 @@ import org.wingx.XDivision;
 
 import java.awt.*;
 
-public class XDivisionExample extends WingXetPane {
+public class XDivisionExample extends WingSetPane {
 
     protected SComponent createControls() {
         return null;

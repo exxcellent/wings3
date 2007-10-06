@@ -2,6 +2,34 @@
 <project relativePaths="false" version="4">
   <component name="AntConfiguration">
     <defaultAnt bundledAnt="true" />
+    <buildFile url="file://$PROJECT_DIR$/wings/build.xml">
+      <additionalClassPath />
+      <antReference projectDefault="true" />
+      <customJdkName value="" />
+      <maximumHeapSize value="128" />
+      <properties />
+    </buildFile>
+    <buildFile url="file://$PROJECT_DIR$/wingx/build.xml">
+      <additionalClassPath />
+      <antReference projectDefault="true" />
+      <customJdkName value="" />
+      <maximumHeapSize value="128" />
+      <properties />
+    </buildFile>
+    <buildFile url="file://$PROJECT_DIR$/wings-experimental/build.xml">
+      <additionalClassPath />
+      <antReference projectDefault="true" />
+      <customJdkName value="" />
+      <maximumHeapSize value="128" />
+      <properties />
+    </buildFile>
+    <buildFile url="file://$PROJECT_DIR$/demo-wingset/build.xml">
+      <additionalClassPath />
+      <antReference projectDefault="true" />
+      <customJdkName value="" />
+      <maximumHeapSize value="128" />
+      <properties />
+    </buildFile>
   </component>
   <component name="BuildJarProjectSettings">
     <option name="BUILD_JARS_ON_MAKE" value="false" />
@@ -229,6 +257,11 @@
           <module name="demo-desktop">
             <files>
               <file url="file://$PROJECT_DIR$/demo-desktop/build/web/WEB-INF/web.xml" />
+            </files>
+          </module>
+          <module name="wings-experimental">
+            <files>
+              <file url="file://$PROJECT_DIR$/wings-experimental/web/WEB-INF/web.xml" />
             </files>
           </module>
         </modules>
@@ -473,6 +506,7 @@
       <module fileurl="file://$PROJECT_DIR$/demo-mycomponent/demo-mycomponent.iml" filepath="$PROJECT_DIR$/demo-mycomponent/demo-mycomponent.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo-wingset/demo-wingset.iml" filepath="$PROJECT_DIR$/demo-wingset/demo-wingset.iml" />
       <module fileurl="file://$PROJECT_DIR$/wings/wings.iml" filepath="$PROJECT_DIR$/wings/wings.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wings-experimental/wings-experimental.iml" filepath="$PROJECT_DIR$/wings-experimental/wings-experimental.iml" />
       <module fileurl="file://$PROJECT_DIR$/wingx/wingx.iml" filepath="$PROJECT_DIR$/wingx/wingx.iml" />
     </modules>
   </component>

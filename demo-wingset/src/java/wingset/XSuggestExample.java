@@ -30,7 +30,7 @@ import org.wingx.XSuggestDataSource;
  * Example demonstrating the use of component XSuggest.
  * @author Christian Schyma
  */
-public class XSuggestExample extends WingXetPane {
+public class XSuggestExample extends WingSetPane {
     
     XSuggest birthCountryField = null;
     XSuggest currentCountryField = null;

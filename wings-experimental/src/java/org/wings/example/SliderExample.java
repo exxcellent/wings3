@@ -1,4 +1,4 @@
-package wingset;
+package org.wings.example;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,30 +10,28 @@ import org.wings.SForm;
 import org.wings.SGridLayout;
 import org.wings.SSlider;
 import org.wings.SLabel;
+import org.wings.plaf.WingSetExample;
 
 /**
  *
  * @author Christian Schyma
  */
 public class SliderExample
-        extends WingSetPane {
+        implements WingSetExample
+{
+    private SForm form;
 
     public SliderExample() {
     }
 
-    protected SComponent createControls() {
-        return null;
-    }
-
-    public SComponent createExample() {
-
+    public void activateExample() {
         final SLabel label = new SLabel("");
 
         SGridLayout layout = new SGridLayout(2);
         layout.setHgap(10);
         layout.setVgap(40);
 
-        SForm form = new SForm(layout);
+        form = new SForm(layout);
 
         SSlider horizSlider1 = new SSlider(0, 200, 150);
 
@@ -73,8 +71,21 @@ public class SliderExample
 
         form.add(button);
         form.add(label);
+    }
 
+    public void passivateExample() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public SComponent getExample() {
         return form;
     }
 
+    public String getExampleName() {
+        return "Slider";
+    }
+
+    public String getExampleGroup() {
+        return "Experimental";
+    }
 }

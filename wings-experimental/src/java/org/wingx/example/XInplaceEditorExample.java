@@ -12,7 +12,7 @@
  * Please see COPYING for the complete licence.
  */
 
-package wingset;
+package org.wingx.example;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,6 +25,7 @@ import org.wings.SLabel;
 import org.wings.SPanel;
 import org.wings.STextField;
 import org.wings.SURLIcon;
+import org.wings.plaf.WingSetExample;
 import org.wings.border.SLineBorder;
 import org.wings.event.SDocumentEvent;
 import org.wings.event.SDocumentListener;
@@ -34,8 +35,8 @@ import org.wingx.XInplaceEditor;
  * Example demonstrating the use of component XInplaceEditor.
  * @author Christian Schyma
  */
-public class XInplaceEditorExample extends WingXetPane {
-
+public class XInplaceEditorExample implements WingSetExample
+{
     private final String someText =
             "\"There is a theory which states that if anybody ever discovers " +
             "exactly what the Universe is for and why it is here, it will " +
@@ -44,12 +45,9 @@ public class XInplaceEditorExample extends WingXetPane {
             "that this has already happened.\" \n-- Douglas Adams";
 
     private final SIcon HZ_PICTURE = new SURLIcon("../icons/Hohenzollern.jpg");
+    private SForm form;
 
-    protected SComponent createControls() {
-        return null;
-    }
-
-    protected SComponent createExample() {
+    public void activateExample() {
         SLabel picture = new SLabel(HZ_PICTURE);
         XInplaceEditor pictureDescription = new XInplaceEditor("click here to give me a name!", 49, 1);
 
@@ -89,12 +87,25 @@ public class XInplaceEditorExample extends WingXetPane {
         SGridLayout gridLayout = new SGridLayout(1);
         gridLayout.setHgap(10);
         gridLayout.setVgap(20);
-        SForm form = new SForm(gridLayout);
+        form = new SForm(gridLayout);
         form.add(picturePanel);
         form.add(editor);
         form.add(configPanel);
+    }
 
+    public void passivateExample() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public SComponent getExample() {
         return form;
     }
 
+    public String getExampleName() {
+        return "XInplaceEditor";
+    }
+
+    public String getExampleGroup() {
+        return "Experimental";
+    }
 }

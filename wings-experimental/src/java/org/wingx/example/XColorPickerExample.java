@@ -12,7 +12,7 @@
  * Please see COPYING for the complete licence.
  */
 
-package wingset;
+package org.wingx.example;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,6 +25,7 @@ import org.wings.SGridLayout;
 import org.wings.SLabel;
 import org.wings.SPanel;
 import org.wings.SToggleButton;
+import org.wings.plaf.WingSetExample;
 import org.wings.border.SLineBorder;
 import org.wings.event.SAjaxChangeListener;
 import org.wingx.XColorPicker;
@@ -33,14 +34,11 @@ import org.wingx.XColorPicker;
  * Example demonstrating the component XColorPicker.
  * @author Christian Schyma
  */
-public class XColorPickerExample extends WingXetPane {
+public class XColorPickerExample implements WingSetExample
+{
+    private SForm form;
 
-    protected SComponent createControls() {
-        return null;
-    }
-
-    protected SComponent createExample() {
-
+    public void activateExample() {
         final SPanel colorPanel = new SPanel();
         final XColorPicker picker = new XColorPicker();
 
@@ -81,12 +79,25 @@ public class XColorPickerExample extends WingXetPane {
 
         SGridLayout gridLayout = new SGridLayout(3);
         gridLayout.setHgap(50);
-        SForm form = new SForm(gridLayout);
+        form = new SForm(gridLayout);
         form.add(picker);
         form.add(colorPanel);
         form.add(buttonPanel);
+    }
 
+    public void passivateExample() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public SComponent getExample() {
         return form;
     }
 
+    public String getExampleName() {
+        return "XColorPicker";
+    }
+
+    public String getExampleGroup() {
+        return "Experimental";
+    }
 }

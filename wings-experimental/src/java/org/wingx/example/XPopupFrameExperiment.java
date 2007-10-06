@@ -11,13 +11,14 @@
  * Please see COPYING for the complete licence.
  */
 
-package wingset;
+package org.wingx.example;
 
 import javax.swing.event.ChangeEvent;
 import org.wings.SComponent;
 import org.wings.SDimension;
 import org.wings.SFrame;
 import org.wings.SPanel;
+import org.wings.plaf.WingSetExample;
 import org.wings.border.SLineBorder;
 import org.wings.event.SAjaxChangeListener;
 import org.wings.script.JavaScriptDOMListener;
@@ -29,14 +30,12 @@ import org.wingx.XPopupFrame;
  * Example demonstrating the use of component XPopupFrame.
  * @author Christian Schyma
  */
-public class XPopupFrameExperiment extends WingXetPane {
+public class XPopupFrameExperiment implements WingSetExample
+{
+    private SPanel panel;
 
-    protected SComponent createControls() {
-        return null;
-    }
-
-    protected SComponent createExample() {
-        final SPanel panel = new SPanel();
+    public void activateExample() {
+        panel = new SPanel();
 
         SFrame f = new SFrame();
         XColorPicker picker = new XColorPicker(0, 0, 0);
@@ -57,10 +56,23 @@ public class XPopupFrameExperiment extends WingXetPane {
                 colorPanel.setBackground(((XColorPicker)e.getSource()).getSelectedColor());
             }
         });
+    }
 
+    public void passivateExample() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public SComponent getExample() {
         return panel;
     }
 
+    public String getExampleName() {
+        return "XPopupFrame";
+    }
+
+    public String getExampleGroup() {
+        return "Experimental";
+    }
 }
 
 

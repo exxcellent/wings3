@@ -80,9 +80,9 @@ public class SliderCG extends AbstractComponentCG implements org.wings.plaf.Slid
         // render HTML
         device.print("<div");
         Utils.optAttribute(device, "id", id);
-        if (SSlider.HORIZONTAL == c.getOrientation()) {
+        if (HORIZONTAL == c.getOrientation()) {
             Utils.optAttribute(device, "class", "SSliderBgHoriz");
-        } else if (SSlider.VERTICAL == c.getOrientation()) {
+        } else if (VERTICAL == c.getOrientation()) {
             Utils.optAttribute(device, "class", "SSliderBgVert");
         }
 
@@ -94,9 +94,9 @@ public class SliderCG extends AbstractComponentCG implements org.wings.plaf.Slid
         device.print(">");
 
         device.print("<img");
-        if (SSlider.HORIZONTAL == c.getOrientation()) {
+        if (HORIZONTAL == c.getOrientation()) {
             Utils.optAttribute(device, "src", horizontalThumb.getURL());
-        } else if (SSlider.VERTICAL == c.getOrientation()) {
+        } else if (VERTICAL == c.getOrientation()) {
 
             Utils.optAttribute(device, "src", verticalThumb.getURL());
         }
@@ -106,9 +106,9 @@ public class SliderCG extends AbstractComponentCG implements org.wings.plaf.Slid
 
         String valId = (new SStringBuilder(id).append("_val")).toString();
         device.print("<div");
-        if (c.getOrientation() == SSlider.VERTICAL) {
+        if (c.getOrientation() == VERTICAL) {
             Utils.optAttribute(device, "class", "SSliderValueRight");
-        } else if (c.getOrientation() == SSlider.HORIZONTAL) {
+        } else if (c.getOrientation() == HORIZONTAL) {
             Utils.optAttribute(device, "class", "SSliderValueBottom");
         }
         device.print("><input ");
@@ -127,9 +127,9 @@ public class SliderCG extends AbstractComponentCG implements org.wings.plaf.Slid
 
         SStringBuilder code = new SStringBuilder("function() {");
         code.append("var ").append(slider).append(" = YAHOO.widget.Slider.");
-        if (SSlider.HORIZONTAL == c.getOrientation()) {
+        if (HORIZONTAL == c.getOrientation()) {
             code.append("getHorizSlider(");
-        } else if (SSlider.VERTICAL == c.getOrientation()) {
+        } else if (VERTICAL == c.getOrientation()) {
             code.append("getVertSlider(");
         }
 

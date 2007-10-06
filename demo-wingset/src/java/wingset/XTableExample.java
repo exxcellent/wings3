@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * @author Holger Engels
  */
-public class XTableExample extends WingXetPane{
+public class XTableExample extends WingSetPane{
     private XTable table;
     private SLabel clicks = new SLabel();
     private TableControls controls;

@@ -1,6 +1,7 @@
-package wingset;
+package org.wings.example;
 
 import org.wings.*;
+import org.wings.plaf.WingSetExample;
 import org.wings.border.SLineBorder;
 
 import java.awt.event.*;
@@ -9,16 +10,19 @@ import java.awt.event.*;
  * @author <a href="mailto:haaf@mercatis.de">Armin Haaf</a>
  */
 public class SplitPaneExample
-    extends WingSetPane {
-    private SplitPaneControls controls;
+    implements WingSetExample
+{
+    //private SplitPaneControls controls;
     private SSplitPane splitPane;
 
+    /*
     protected SComponent createControls() {
         controls = new SplitPaneControls();
         return controls;
     }
+    */
 
-    public SComponent createExample() {
+    public void activateExample() {
         SLabel left = new SLabel("left");
         left.setPreferredSize(SDimension.FULLAREA);
         left.setBorder(new SLineBorder(1));
@@ -28,15 +32,31 @@ public class SplitPaneExample
         splitPane = new SSplitPane(SSplitPane.HORIZONTAL_SPLIT, left, right) {
             public void fireIntermediateEvents() {
                 super.fireIntermediateEvents();
-                controls.dividerLocationTextField.setText("" + getDividerLocation());
+                //controls.dividerLocationTextField.setText("" + getDividerLocation());
             }
         };
         splitPane.setPreferredSize(SDimension.FULLAREA);
 
-        controls.addControllable(splitPane);
+        //controls.addControllable(splitPane);
+    }
+
+    public void passivateExample() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public SComponent getExample() {
         return splitPane;
     }
 
+    public String getExampleName() {
+        return "SplitPane";
+    }
+
+    public String getExampleGroup() {
+        return "Experimental";
+    }
+
+    /*
     class SplitPaneControls
         extends ComponentControls {
         private final String[] ORIENTATIONS = new String[] { "horizontal", "vertical" };
@@ -94,4 +114,5 @@ public class SplitPaneExample
             addControl(dividerLocationTextField);
         }
     }
+    */
 }

@@ -26,7 +26,7 @@ input.hsvcolorpicker {
     height:18px; 
     z-index: 9;
     position:absolute; 
-	background:url(../../wingx/colorpicker/images/hline.png) no-repeat;
+	background:url( /images/hline.png ) no-repeat;
 	left: 0px;		
 }
 
@@ -35,7 +35,7 @@ input.hsvcolorpicker {
     left:216px; 
     height:198px; 
     width:18px; 
-    background:url(../../wingx/colorpicker/images/hue.png) no-repeat;
+    background:url( /images/hue.png ) no-repeat;
     top:18px;
 }
 
@@ -54,7 +54,7 @@ input.hsvcolorpicker {
     left:0px;
 	height:192px; 
     width:192px;   
-	background:url(../../wingx/colorpicker/images/pickerbg.png) no-repeat;	
+	background:url( /images/pickerbg.png ) no-repeat;
 }
 
 .hsvcolorpicker.selector { 
@@ -65,7 +65,7 @@ input.hsvcolorpicker {
     position:absolute; 
     top:0px;
     left:0px;
-	background:url(../../wingx/colorpicker/images/select.gif) no-repeat;
+	background:url( /images/select.gif ) no-repeat;
 }
 
 .hsvcolorpicker.pickerSwatch{

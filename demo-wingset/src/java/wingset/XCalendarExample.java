@@ -23,7 +23,7 @@ import org.wings.SSpinner;
 import org.wings.text.SDateFormatter;
 import org.wingx.XCalendar;
 
-public class XCalendarExample extends WingXetPane {
+public class XCalendarExample extends WingSetPane {
 
     protected SComponent createControls() {
         return null;

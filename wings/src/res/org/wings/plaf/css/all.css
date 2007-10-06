@@ -771,42 +771,6 @@ table.DivisionContent {
     width: 100%;
 }
 
-.SSliderBgHoriz {
-	position:relative;
-	background-image: url(../../icons/SliderHoriz.png);
-	background-repeat: no-repeat;
-	height:26px;
-	width:218px;
-}
-
-.SSliderThumb {
-	text-align: left;
-        cursor:default;
-        width:18px;
-        height:18px;
-        z-index: 9;
-        position:absolute;
-}
-
-.SSliderBgVert {
-	position:relative;
-	background-image: url(../../icons/SliderVert.png);
-	background-repeat: no-repeat;
-	height:218px;
-	width:26px;
-}
-
-.SSliderValueRight {
-	position:relative;
-	left: 40px;
-	top: 100px;
-}
-
-.SSliderValueBottom {
-	position:relative;
-	top: 30px
-}
-
 .XCalendarButton {
     margin-left: 2px;
     cursor: pointer;
