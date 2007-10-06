@@ -287,6 +287,37 @@ wingS.update.tableScroll = function(tableId, html) {
 };
 
 /**
+ * Replace cell content.
+ * @param {String} tableId - the ID of the table
+ * @param {String} row - the row to be replaced
+ * @param {String} column - the column to be replaced
+ * @param {String} body - the html code for the cell
+ */
+wingS.update.tableCell = function(tableId, r, c, editing, html) {
+    var table = document.getElementById(tableId);
+    var row = table.rows[r];
+    var col = row.cells[c];
+    col.innerHTML = html;
+    col.setAttribute("editing", editing);
+    if (editing)
+        col.className = "cell";
+    else
+        col.className = "cell clickable";
+};
+
+wingS.namespace("table");
+wingS.table.cellClick = function(event, cell, submit, async, eventName, eventValue) {
+    event = wingS.event.getEvent(event);
+    var editing = cell.getAttribute("editing");
+    if (!editing || editing == "false") {
+        wingS.request.sendEvent(event, submit, async, eventName, eventValue);
+        return false;
+    }
+    else
+        return true;
+}
+
+/**
  * Updates the selection of the combobox with the given ID.
  * @param {String} comboBoxId - the ID of the combobox to update
  * @param {int} selectedIndex - the index of the entry to select

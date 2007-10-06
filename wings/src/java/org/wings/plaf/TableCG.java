@@ -19,7 +19,8 @@ import org.wings.STable;
 
 public interface TableCG extends ComponentCG {
     
-    Update getTableCellUpdate(STable table, int row, int col);
     Update getTableScrollUpdate(STable table, Rectangle newViewport, Rectangle oldViewport);
 
+    Update getEditCellUpdate(STable sTable, int row, int column);
+    Update getRenderCellUpdate(STable sTable, int row, int column);
 }

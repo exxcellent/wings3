@@ -14,6 +14,7 @@ package org.wings.plaf.css;
 
 
 import org.wings.*;
+import org.wings.script.JavaScriptEvent;
 import org.wings.io.Device;
 import org.wings.io.StringBuilderDevice;
 import org.wings.plaf.CGManager;
@@ -203,13 +204,14 @@ public final class TableCG
         Utils.optAttribute(device, "oversize", horizontalOversize);
 
         String parameter = null;
-        if (table.isEditable() && !isEditingCell && editableCell)
+        if (table.isEditable() && editableCell)
             parameter = table.getEditParameter(row, col);
         else if (selectableCell)
             parameter = table.getToggleSelectionParameter(row, col);
 
-        if (parameter != null && !isEditingCell && (selectableCell || editableCell) && !isClickable) {
-            Utils.printClickability(device, table, parameter, true, table.getShowAsFormComponent());
+        if (parameter != null && (selectableCell || editableCell) && !isClickable) {
+            printClickability(device, table, parameter, table.getShowAsFormComponent());
+            device.print(isEditingCell ? " editing=\"true\"" : " editing=\"false\"");
             device.print(" class=\"cell clickable\"");
         }
         else
@@ -435,7 +437,7 @@ public final class TableCG
 
             String value = table.getToggleSelectionParameter(row, -1);
             if (table.getSelectionMode() != SListSelectionModel.NO_SELECTION) {
-                Utils.printClickability(device, table, value, true, table.getShowAsFormComponent());
+                printClickability(device, table, value, table.getShowAsFormComponent());
                 device.print(" class=\"clickable ");
                 device.print(columnStyle);
                 device.print("\"");
@@ -454,6 +456,19 @@ public final class TableCG
         }
     }
     
+    public static void printClickability(final Device device, final SComponent component, final String eventValue,
+                                         final boolean formComponent) throws IOException {
+        device.print(" onclick=\"return wingS.table.cellClick(");
+        device.print("event,this,");
+        device.print(formComponent + ",");
+        device.print(!component.isReloadForced() + ",'");
+        device.print(Utils.event(component));
+        device.print("','");
+        device.print(eventValue == null ? "" : eventValue);
+        device.print("'");
+        device.print(");\"");
+    }
+
     private boolean isSelectionColumnVisible(STable table) {
         if (table.getRowSelectionRenderer() != null && table.getSelectionModel().getSelectionMode() != SListSelectionModel.NO_SELECTION)
             return true;
@@ -466,67 +481,12 @@ public final class TableCG
         return new ComponentUpdate(table);
 	}
 
-    public Update getTableCellUpdate(STable table, int row, int col) {
-        return new TableCellUpdate(table, row, col);
+    public Update getEditCellUpdate(STable table, int row, int column) {
+        return new EditCellUpdate(table, row, column);
     }
 
-    protected class TableCellUpdate extends AbstractUpdate {
-
-        private int row, col;
-        
-        public TableCellUpdate(SComponent component, int row, int col) {
-            super(component);
-            this.row = row;
-            this.col = col;
-        }
-
-        public Handler getHandler() {
-            STable table = (STable) component;
-            SComponent cellComponent = table.prepareRenderer(table.getCellRenderer(row, col), row, col);
-            
-            String htmlCode = "";
-            String exception = null;
-
-            try {
-                StringBuilderDevice htmlDevice = new StringBuilderDevice();
-                table.getCellRendererPane().writeComponent(htmlDevice, cellComponent, table);
-                htmlCode = htmlDevice.toString();
-            } catch (Throwable t) {
-                exception = t.getClass().getName();
-            }
-
-            UpdateHandler handler = new UpdateHandler("component");
-            handler.addParameter(cellComponent.getName());
-            handler.addParameter(htmlCode);
-            if (exception != null) {
-                handler.addParameter(exception);
-            }
-            return handler;
-        }
-        
-        public boolean equals(Object object) {
-            if (!super.equals(object))
-                return false;
-            
-            TableCellUpdate other = (TableCellUpdate) object;
-
-            if (this.row != other.row)
-                return false;
-            if (this.col != other.col)
-                return false;
-
-            return true;
-        }
-
-        public int hashCode() {
-            int hashCode = super.hashCode();
-            int dispersionFactor = 37;
-
-            hashCode = hashCode * dispersionFactor + row;
-            hashCode = hashCode * dispersionFactor + col;
-
-            return hashCode;
-        }
+    public Update getRenderCellUpdate(STable table, int row, int column) {
+        return new RenderCellUpdate(table, row, column);
     }
 
     protected class TableScrollUpdate
@@ -572,6 +532,122 @@ public final class TableCG
                 handler.addParameter(exception);
             }
             return handler;
+        }
+    }
+
+    private class EditCellUpdate
+        extends AbstractUpdate<STable>
+    {
+        private int row;
+        private int column;
+
+        public EditCellUpdate(STable table, int row, int column) {
+            super(table);
+            this.row = row;
+            this.column = column;
+        }
+
+        public Handler getHandler() {
+            STable table = this.component;
+
+            String htmlCode = "";
+            String exception = null;
+
+            try {
+                StringBuilderDevice device = new StringBuilderDevice();
+                /*
+                Utils.printTableCellAlignment(device, component, SConstants.LEFT, SConstants.TOP);
+                Utils.optAttribute(device, "oversize", horizontalOversize);
+                device.print(" class=\"cell\">");
+                */
+                SComponent component = table.getEditorComponent();
+                table.getCellRendererPane().writeComponent(device, component, table);
+                htmlCode = device.toString();
+            }
+            catch (Throwable t) {
+                exception = t.getClass().getName();
+            }
+
+            UpdateHandler handler = new UpdateHandler("tableCell");
+            handler.addParameter(table.getName());
+            handler.addParameter(table.isHeaderVisible() ? row + 1 : row);
+            handler.addParameter(isSelectionColumnVisible(table) ? column + 1 : column);
+            handler.addParameter(true);
+            handler.addParameter(htmlCode);
+            if (exception != null) {
+                handler.addParameter(exception);
+            }
+            return handler;
+        }
+    }
+
+    private class RenderCellUpdate
+        extends AbstractUpdate<STable>
+    {
+        private int row;
+        private int column;
+
+        public RenderCellUpdate(STable table, int row, int column) {
+            super(table);
+            this.row = row;
+            this.column = column;
+        }
+
+        public Handler getHandler() {
+            STable table = this.component;
+
+            String htmlCode = "";
+            String exception = null;
+
+            try {
+                StringBuilderDevice device = new StringBuilderDevice();
+                /*
+                Utils.printTableCellAlignment(device, component, SConstants.LEFT, SConstants.TOP);
+                Utils.optAttribute(device, "oversize", horizontalOversize);
+                device.print(" class=\"cell\">");
+                */
+                SComponent component = table.prepareRenderer(table.getCellRenderer(row, column), row, column);
+                table.getCellRendererPane().writeComponent(device, component, table);
+                htmlCode = device.toString();
+            }
+            catch (Throwable t) {
+                exception = t.getClass().getName();
+            }
+
+            UpdateHandler handler = new UpdateHandler("tableCell");
+            handler.addParameter(table.getName());
+            handler.addParameter(table.isHeaderVisible() ? row + 1 : row);
+            handler.addParameter(isSelectionColumnVisible(table) ? column + 1 : column);
+            handler.addParameter(false);
+            handler.addParameter(htmlCode);
+            if (exception != null) {
+                handler.addParameter(exception);
+            }
+            return handler;
+        }
+
+        public boolean equals(Object object) {
+            if (!super.equals(object))
+                return false;
+
+            RenderCellUpdate other = (RenderCellUpdate) object;
+
+            if (this.row != other.row)
+                return false;
+            if (this.column != other.column)
+                return false;
+
+            return true;
+        }
+
+        public int hashCode() {
+            int hashCode = super.hashCode();
+            int dispersionFactor = 37;
+
+            hashCode = hashCode * dispersionFactor + row;
+            hashCode = hashCode * dispersionFactor + column;
+
+            return hashCode;
         }
     }
 }

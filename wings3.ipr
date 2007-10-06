@@ -578,8 +578,6 @@
       <module fileurl="file://$PROJECT_DIR$/demo-logconfig/demo-logconfig.iml" filepath="$PROJECT_DIR$/demo-logconfig/demo-logconfig.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo-mycomponent/demo-mycomponent.iml" filepath="$PROJECT_DIR$/demo-mycomponent/demo-mycomponent.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo-wingset/demo-wingset.iml" filepath="$PROJECT_DIR$/demo-wingset/demo-wingset.iml" />
-      <module fileurl="file://$PROJECT_DIR$/doc/tutorial/hellowings/doc-hellowings.iml" filepath="$PROJECT_DIR$/doc/tutorial/hellowings/doc-hellowings.iml" />
-      <module fileurl="file://$PROJECT_DIR$/global.iml" filepath="$PROJECT_DIR$/global.iml" />
       <module fileurl="file://$PROJECT_DIR$/wings/wings.iml" filepath="$PROJECT_DIR$/wings/wings.iml" />
       <module fileurl="file://$PROJECT_DIR$/wings-experimental/wings-experimental.iml" filepath="$PROJECT_DIR$/wings-experimental/wings-experimental.iml" />
       <module fileurl="file://$PROJECT_DIR$/wingx/wingx.iml" filepath="$PROJECT_DIR$/wingx/wingx.iml" />
@@ -751,7 +749,7 @@
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="true" />
   </component>
   <component name="VcsDirectoryMappings">
-    <mapping directory="$PROJECT_DIR$" vcs="svn" />
+    <mapping directory="" vcs="svn" />
   </component>
   <component name="VssConfiguration">
     <option name="CLIENT_PATH" value="" />
@@ -851,5 +849,8 @@
       <SOURCES />
     </library>
   </component>
+  <UsedPathMacros>
+    <macro name="TEMPLATE" />
+  </UsedPathMacros>
 </project>
 

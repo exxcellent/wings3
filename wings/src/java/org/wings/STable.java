@@ -12,38 +12,19 @@
  */
 package org.wings;
 
-import java.awt.Color;
-import java.awt.Rectangle;
-import java.util.*;
+ import org.apache.commons.logging.Log;
+ import org.apache.commons.logging.LogFactory;
+ import org.wings.event.*;
+ import org.wings.plaf.TableCG;
+ import org.wings.style.*;
+ import org.wings.table.*;
+ import org.wings.util.SStringBuilder;
 
-import javax.swing.event.CellEditorListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.wings.event.SMouseEvent;
-import org.wings.event.SMouseListener;
-import org.wings.event.STableColumnModelEvent;
-import org.wings.event.STableColumnModelListener;
-import org.wings.event.SViewportChangeEvent;
-import org.wings.event.SViewportChangeListener;
-import org.wings.plaf.TableCG;
-import org.wings.style.CSSAttributeSet;
-import org.wings.style.CSSProperty;
-import org.wings.style.CSSStyleSheet;
-import org.wings.style.Selector;
-import org.wings.table.SDefaultTableColumnModel;
-import org.wings.table.STableCellEditor;
-import org.wings.table.STableCellRenderer;
-import org.wings.table.STableColumn;
-import org.wings.table.STableColumnModel;
-import org.wings.util.SStringBuilder;
+ import javax.swing.event.*;
+ import javax.swing.table.DefaultTableModel;
+ import javax.swing.table.TableModel;
+ import java.awt.*;
+ import java.util.*;
 
 
 /**
@@ -804,12 +785,13 @@ public class STable extends SComponent
             editorComp = prepareEditor(editor, row, column);
 
             if (editor.isCellEditable(e) && editor.shouldSelectCell(e)) {
+                update(((TableCG)getCG()).getEditCellUpdate(this, row, column));
                 return true;
-            } else {
+            }
+            else {
                 setValueAt(editor.getCellEditorValue(), row, column);
                 removeEditor();
-            } // end of else
-
+            }
         }
         return false;
     }
@@ -897,11 +879,8 @@ public class STable extends SComponent
      *
      * @see #editingColumn
      */
-    public void setEditingColumn(int aColumn) {
-        int oldEditingColumn = editingColumn;
-        editingColumn = aColumn;
-        if (editingColumn != oldEditingColumn)
-            reload();
+    public void setEditingColumn(int editingColumn) {
+        this.editingColumn = editingColumn;
     }
 
     /**
@@ -909,11 +888,8 @@ public class STable extends SComponent
      *
      * @see #editingRow
      */
-    public void setEditingRow(int aRow) {
-        int oldEditingRow = editingRow;
-        editingRow = aRow;
-        if (editingRow != oldEditingRow)
-            reload();
+    public void setEditingRow(int editingRow) {
+        this.editingRow = editingRow;
     }
 
     /**
@@ -986,12 +962,15 @@ public class STable extends SComponent
             editor.removeCellEditorListener(this);
             //remove(editorComp);
             setCellEditor(null);
+            int oldEditingColumn = getEditingColumn();
+            int oldEditingRow = getEditingRow();
             setEditingColumn(-1);
             setEditingRow(-1);
             if (editorComp != null) {
                 editorComp.setParent(null);
             } // end of if ()
             editorComp = null;
+            update(((TableCG)getCG()).getRenderCellUpdate(this, oldEditingRow, oldEditingColumn));
         }
     }
 
@@ -1372,7 +1351,7 @@ public class STable extends SComponent
             e.getColumn() != TableModelEvent.ALL_COLUMNS &&
             e.getType() == TableModelEvent.UPDATE) {
             if (isUpdatePossible() && STable.class.isAssignableFrom(getClass()))
-                update(((TableCG) getCG()).getTableCellUpdate(this, e.getFirstRow(), e.getColumn()));
+                update(((TableCG) getCG()).getRenderCellUpdate(this, e.getFirstRow(), e.getColumn()));
             else
                 reload();
         } else {
@@ -1691,7 +1670,7 @@ public class STable extends SComponent
      * Notifies all listeners that have registered interest for notification
      * on changes to this scrollable's viewport in the specified direction.
      *
-     * @see EventListenerList
+     * @see javax.swing.event.EventListenerList
      */
     protected void fireViewportChanged(boolean horizontal) {
         Object[] listeners = getListenerList();
