@@ -30,7 +30,7 @@
             <fileset dir="web">
                 <exclude name="**/web.xml"/>
             </fileset>
-            <fileset dir="web" excludes="**/web.xml"/>
+            <fileset dir="web"/>
             <fileset dir="../../../wings/build/web" includes="**/*.jar"/>
             <fileset dir="../../../wingx/build/web" includes="**/*.jar"/>
         </copy>
