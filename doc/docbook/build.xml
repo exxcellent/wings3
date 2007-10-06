@@ -27,6 +27,11 @@
         </fileset>
     </path>
 
+    <target name="prepare">
+        <mkdir dir="${support.dir}"/>
+        <unzip src="support/docbook-tools.zip" dest="${support.dir}"/>
+    </target>
+
     <!-- ################################################################## -->
 
     <target name="all.doc"
@@ -55,7 +60,7 @@
     </target>
 
 
-    <target name="doc.pdf.prepare" depends="assert-docname-param">
+    <target name="doc.pdf.prepare" depends="assert-docname-param, prepare">
 
         <!-- Copy all the images to the output location, will be removed later. -->
         <copy todir="${build.dir}/${documentname}/pdf/images">
@@ -155,7 +160,7 @@
 		
     </target>
 
-    <target name="doc.htmlmisc" depends="assert-docname-param">
+    <target name="doc.htmlmisc" depends="assert-docname-param, prepare">
         <!-- Copy images and CSS for HTML documentation, language specific. -->
         <copy todir="${build.dir}/${documentname}/shared/images">
             <fileset dir="${basedir}/${documentname}/images">
