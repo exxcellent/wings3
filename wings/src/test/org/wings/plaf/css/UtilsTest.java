@@ -26,4 +26,10 @@ public class UtilsTest extends TestCase {
 		assertEquals("\\nfoo\\\\\\\"bar", Utils.escapeJS("\nfoo\\\"bar"));
 		assertEquals("\\nfoo\\\\\\\"bar\\t", Utils.escapeJS("\nfoo\\\"bar\t"));
 	}
+	
+	public void test_encodeJS() {
+		assertEquals("null", Utils.encodeJS(null));
+		assertEquals("42", Utils.encodeJS(new Integer(42)));
+		assertEquals("\"foo\"", Utils.encodeJS("foo"));
+	}
 }

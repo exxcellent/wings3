@@ -1346,8 +1346,9 @@ public final class Utils {
             sb.append("\"");
             escapeJS((String) o, sb);
             sb.append("\"");
-        } else
+        } else {
             sb.append(String.valueOf(o));
+        }
         return sb.toString();
     }
 
