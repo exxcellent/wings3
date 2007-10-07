@@ -1,3 +1,15 @@
+/*
+ * Copyright 2000,2005 wingS development team.
+ *
+ * This file is part of wingS (http://wingsframework.org).
+ *
+ * wingS is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * Please see COPYING for the complete licence.
+ */
 package org.wingx.plaf.css;
 
 import org.wings.plaf.css.*;
@@ -38,7 +50,7 @@ public class XTableCG
         setEditIcon(manager.getIcon("TableCG.editIcon"));
         selectionColumnWidth = (String)manager.getObject("TableCG.selectionColumnWidth", String.class);
     }
-    
+
     public int getHorizontalOversize() {
         return horizontalOversize;
     }
@@ -164,13 +176,14 @@ public class XTableCG
         Utils.optAttribute(device, "oversize", horizontalOversize);
 
         String parameter = null;
-        if (table.isEditable() && !isEditingCell && editableCell)
+        if (table.isEditable() && editableCell)
             parameter = table.getEditParameter(row, col);
         else if (selectableCell)
             parameter = table.getToggleSelectionParameter(row, col);
 
-        if (parameter != null && !isEditingCell && (selectableCell || editableCell) && !isClickable) {
-            Utils.printClickability(device, table, parameter, true, table.getShowAsFormComponent());
+        if (parameter != null && (selectableCell || editableCell) && !isClickable) {
+            printClickability(device, table, parameter, table.getShowAsFormComponent());
+            device.print(isEditingCell ? " editing=\"true\"" : " editing=\"false\"");
             device.print(" class=\"cell clickable\"");
         }
         else
@@ -276,10 +289,10 @@ public class XTableCG
             startY = currentViewport.y;
             endY = startY + currentViewport.height;
         }
-        
+
         writeColumnWidths(device, table, startX, endX);
         writeHeader(device, table, startX, endX);
-        
+
         TableModel model = table.getModel();
         boolean empty = model.getRowCount() == 0;
         boolean filtered = isModelFiltered(model);
@@ -300,7 +313,7 @@ public class XTableCG
 
         device.print("</tbody></table>");
     }
-    
+
     private boolean isModelFiltered(TableModel model) {
         if (model instanceof FilterableTableModel) {
             FilterableTableModel filterableModel = (FilterableTableModel) model;
@@ -385,7 +398,7 @@ public class XTableCG
         device.print("</tr>");
         Utils.printNewline(device, table);
     }
-    
+
     private void writeFilter(Device device, XTable table, int startX, int endX) throws IOException {
         if (!table.isFilterVisible() || !(table.getModel() instanceof FilterableTableModel))
             return;
@@ -424,7 +437,7 @@ public class XTableCG
                     startX, endX, emptyIndex, selectedArea, oddArea, evenArea);
         }
     }
-    
+
     protected void writeTableRow(
             Device device, XTable table, STableColumnModel columnModel, 
             SListSelectionModel selectionModel, SCellRendererPane rendererPane,
@@ -448,28 +461,45 @@ public class XTableCG
         if (selectionModel.isSelectedIndex(rowIndex)) {
             Utils.optAttribute(device, "style", selectedArea);
             rowClass.append("selected ");
-        } else if (rowIndex % 2 != 0) {
-            Utils.optAttribute(device, "style", oddArea);
-        } else {
-            Utils.optAttribute(device, "style", evenArea);
         }
+        else if (rowIndex % 2 != 0)
+            Utils.optAttribute(device, "style", oddArea);
+        else
+            Utils.optAttribute(device, "style", evenArea);
+
         rowClass.append(rowIndex % 2 != 0 ? "odd" : "even");
         Utils.optAttribute(device, "class", rowClass);
         device.print(">");
-        
+
         writeSelectionBody(device, table, rendererPane, rowIndex);
         
         for (int c = startX; c < endX; ++c) {
             STableColumn column = columnModel.getColumn(c);
-            if (!column.isHidden()) {
+            if (!column.isHidden())
                 renderCellContent(device, table, rendererPane, rowIndex, c);
-            } else {
+            else
                 ++endX;
-            }
         }
         
         device.print("</tr>");
         Utils.printNewline(device, table);
+    }
+
+    private void writeSelectionFilter(Device device, XTable table) throws IOException {
+        if (isSelectionColumnVisible(table)) {
+            device.print("<th valign=\"middle\"");
+            Utils.optAttribute(device, "width", selectionColumnWidth);
+
+            String parameter = table.getResetParameter();
+            Utils.printClickability(device, table, parameter, true, table.getShowAsFormComponent());
+            device.print(" class=\"num clickable\"");
+
+            device.print(">");
+
+            resetLabel.write(device);
+
+            device.print("</th>");
+        }
     }
 
     protected void writeSelectionHeader(Device device, XTable table) throws IOException {
@@ -487,23 +517,6 @@ public class XTableCG
             else {
                 device.print(" class=\"num\">");
             }
-            device.print("</th>");
-        }
-    }
-
-    private void writeSelectionFilter(Device device, XTable table) throws IOException {
-        if (isSelectionColumnVisible(table)) {
-            device.print("<th valign=\"middle\"");
-            Utils.optAttribute(device, "width", selectionColumnWidth);
-    
-            String parameter = table.getResetParameter();
-            Utils.printClickability(device, table, parameter, true, table.getShowAsFormComponent());
-            device.print(" class=\"num clickable\"");
-    
-            device.print(">");
-    
-            resetLabel.write(device);
-    
             device.print("</th>");
         }
     }
@@ -558,13 +571,13 @@ public class XTableCG
                                                                                        table.isRowSelected(row),
                                                                                        row, -1);
             final String columnStyle = Utils.joinStyles(comp, "num");
-    
+
             device.print("<td valign=\"top\" align=\"right\"");
             Utils.optAttribute(device, "width", selectionColumnWidth);
-    
+
             String value = table.getToggleSelectionParameter(row, -1);
             if (table.getSelectionMode() != SListSelectionModel.NO_SELECTION) {
-                Utils.printClickability(device, table, value, true, table.getShowAsFormComponent());
+                printClickability(device, table, value, table.getShowAsFormComponent());
                 device.print(" class=\"clickable ");
                 device.print(columnStyle);
                 device.print("\"");
@@ -575,71 +588,193 @@ public class XTableCG
                 device.print("\"");
             }
             device.print(">");
-    
+
             // Renders the content of the row selection row
             rendererPane.writeComponent(device, comp, table);
-    
+
             device.print("</td>");
         }
     }
     
+    public static void printClickability(final Device device, final SComponent component, final String eventValue,
+                                         final boolean formComponent) throws IOException {
+        device.print(" onclick=\"return wingS.table.cellClick(");
+        device.print("event,this,");
+        device.print(formComponent + ",");
+        device.print(!component.isReloadForced() + ",'");
+        device.print(Utils.event(component));
+        device.print("','");
+        device.print(eventValue == null ? "" : eventValue);
+        device.print("'");
+        device.print(");\"");
+    }
+
     private boolean isSelectionColumnVisible(STable table) {
         if (table.getRowSelectionRenderer() != null && table.getSelectionModel().getSelectionMode() != SListSelectionModel.NO_SELECTION)
             return true;
         return false;
     }
     
-    public Update getTableCellUpdate(STable table, int row, int col) {
-        return new TableCellUpdate(table, row, col);
-    }
-    
-	public Update getTableScrollUpdate(STable table, Rectangle newViewport, Rectangle oldViewport) {
+
+    public Update getTableScrollUpdate(STable table, Rectangle newViewport, Rectangle oldViewport) {
+        //return new TableScrollUpdate(table);
         return new ComponentUpdate(table);
-	}
+    }
 
-    protected class TableCellUpdate extends AbstractUpdate {
+    public Update getEditCellUpdate(STable table, int row, int column) {
+        return new EditCellUpdate(table, row, column);
+    }
 
-        private int row, col;
-        
-        public TableCellUpdate(SComponent component, int row, int col) {
+    public Update getRenderCellUpdate(STable table, int row, int column) {
+        return new RenderCellUpdate(table, row, column);
+    }
+
+    protected class TableScrollUpdate
+        extends AbstractUpdate {
+
+        public TableScrollUpdate(SComponent component) {
             super(component);
-            this.row = row;
-            this.col = col;
         }
 
         public Handler getHandler() {
-            STable table = (STable) component;
-            SComponent cellComponent = table.prepareRenderer(table.getCellRenderer(row, col), row, col);
-            
+            XTable table = (XTable) component;
+
+            Rectangle currentViewport = table.getViewportSize();
+            Rectangle maximalViewport = table.getScrollableViewportSize();
+            int startX = 0;
+            int endX = table.getVisibleColumnCount();
+            int startY = 0;
+            int endY = table.getRowCount();
+            int emptyIndex = maximalViewport != null ? maximalViewport.height : endY;
+
+            if (currentViewport != null) {
+                startX = currentViewport.x;
+                endX = startX + currentViewport.width;
+                startY = currentViewport.y;
+                endY = startY + currentViewport.height;
+            }
+
             String htmlCode = "";
             String exception = null;
 
             try {
                 StringBuilderDevice htmlDevice = new StringBuilderDevice();
-                table.getCellRendererPane().writeComponent(htmlDevice, cellComponent, table);
+                writeBody(htmlDevice, table, startX, endX, startY, endY, emptyIndex);
                 htmlCode = htmlDevice.toString();
             } catch (Throwable t) {
                 exception = t.getClass().getName();
             }
 
-            UpdateHandler handler = new UpdateHandler("component");
-            handler.addParameter(cellComponent.getName());
+            UpdateHandler handler = new UpdateHandler("tableScroll");
+            handler.addParameter(table.getName());
             handler.addParameter(htmlCode);
             if (exception != null) {
                 handler.addParameter(exception);
             }
             return handler;
         }
-        
+    }
+
+    private class EditCellUpdate
+        extends AbstractUpdate<STable>
+    {
+        private int row;
+        private int column;
+
+        public EditCellUpdate(STable table, int row, int column) {
+            super(table);
+            this.row = row;
+            this.column = column;
+        }
+
+        public Handler getHandler() {
+            STable table = this.component;
+
+            String htmlCode = "";
+            String exception = null;
+
+            try {
+                StringBuilderDevice device = new StringBuilderDevice(512);
+                /*
+                Utils.printTableCellAlignment(device, component, SConstants.LEFT, SConstants.TOP);
+                Utils.optAttribute(device, "oversize", horizontalOversize);
+                device.print(" class=\"cell\">");
+                */
+                SComponent component = table.getEditorComponent();
+                table.getCellRendererPane().writeComponent(device, component, table);
+                htmlCode = device.toString();
+            }
+            catch (Throwable t) {
+                exception = t.getClass().getName();
+            }
+
+            UpdateHandler handler = new UpdateHandler("tableCell");
+            handler.addParameter(table.getName());
+            handler.addParameter(table.isHeaderVisible() ? row + 1 : row);
+            handler.addParameter(isSelectionColumnVisible(table) ? column + 1 : column);
+            handler.addParameter(true);
+            handler.addParameter(htmlCode);
+            if (exception != null) {
+                handler.addParameter(exception);
+            }
+            return handler;
+        }
+    }
+
+    private class RenderCellUpdate
+        extends AbstractUpdate<STable>
+    {
+        private int row;
+        private int column;
+
+        public RenderCellUpdate(STable table, int row, int column) {
+            super(table);
+            this.row = row;
+            this.column = column;
+        }
+
+        public Handler getHandler() {
+            STable table = this.component;
+
+            String htmlCode = "";
+            String exception = null;
+
+            try {
+                StringBuilderDevice device = new StringBuilderDevice(256);
+                /*
+                Utils.printTableCellAlignment(device, component, SConstants.LEFT, SConstants.TOP);
+                Utils.optAttribute(device, "oversize", horizontalOversize);
+                device.print(" class=\"cell\">");
+                */
+                SComponent component = table.prepareRenderer(table.getCellRenderer(row, column), row, column);
+                table.getCellRendererPane().writeComponent(device, component, table);
+                htmlCode = device.toString();
+            }
+            catch (Throwable t) {
+                exception = t.getClass().getName();
+            }
+
+            UpdateHandler handler = new UpdateHandler("tableCell");
+            handler.addParameter(table.getName());
+            handler.addParameter(table.isHeaderVisible() ? row + 1 : row);
+            handler.addParameter(isSelectionColumnVisible(table) ? column + 1 : column);
+            handler.addParameter(false);
+            handler.addParameter(htmlCode);
+            if (exception != null) {
+                handler.addParameter(exception);
+            }
+            return handler;
+        }
+
         public boolean equals(Object object) {
             if (!super.equals(object))
                 return false;
-            
-            TableCellUpdate other = (TableCellUpdate) object;
+
+            RenderCellUpdate other = (RenderCellUpdate) object;
 
             if (this.row != other.row)
                 return false;
-            if (this.col != other.col)
+            if (this.column != other.column)
                 return false;
 
             return true;
@@ -650,10 +785,9 @@ public class XTableCG
             int dispersionFactor = 37;
 
             hashCode = hashCode * dispersionFactor + row;
-            hashCode = hashCode * dispersionFactor + col;
+            hashCode = hashCode * dispersionFactor + column;
 
             return hashCode;
         }
-
     }
 }
