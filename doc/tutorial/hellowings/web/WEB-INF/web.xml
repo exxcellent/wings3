@@ -9,6 +9,10 @@
             <param-name>wings.mainclass</param-name>
             <param-value>HelloWingS</param-value> <!-- point here to your appliction entry class -->  
         </init-param>
+        <init-param>
+            <param-name>wings.client.debug</param-name>
+            <param-value>true</param-value>
+        </init-param>
     </servlet>
 
     <!-- the DWR stuff is for the AJAX based features of wingS  -->

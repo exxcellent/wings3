@@ -27,6 +27,10 @@
        <param-value>./resources/log4j.dtd</param-value>
        <description>Path to 'log4j.dtd' (relative to 'logconfig' context).</description>
     </init-param>
+    <init-param>
+        <param-name>wings.client.debug</param-name>
+        <param-value>true</param-value>
+    </init-param>
   </servlet>
 
   <servlet-mapping>

@@ -23,6 +23,10 @@
             <param-value>org.wings.plaf.css.CSSLookAndFeel</param-value>
         </init-param>
         <init-param>
+            <param-name>wings.client.debug</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
             <param-name>wings.error.template</param-name>
             <param-value>/templates/ErrorTemplate.thtml</param-value>
     	    <description>The template for the default error catcher</description>

@@ -3589,6 +3589,39 @@ frame.addHeader(new Link("stylesheet",
       <title>Miscellaneous Topics</title>
 
       <sect2>
+        <title>Client debugging</title>
+       
+        <para>wingS allows you to enable client side debugging. In order to use
+        this feature, you need to include the following parameter in your web.xml:
+        </para>
+        <programlisting>&lt;init-param&gt;
+&lt;param-name&gt;<emphasis role="bold">wings.client.debug</emphasis>&lt;/param-name&gt;
+&lt;param-value&gt;<emphasis role="bold">true</emphasis>&lt;/param-value&gt;
+&lt;/init-param&gt;</programlisting></para>
+        <para>Setting this parameter enables a couple of features, which are
+        toggled via setting a cookie on the client with the name "DEBUG" and a colon
+        separated list of settings. The exact features are described below.
+        </para>
+        <para>By default, wingS compresses the included Javascript files in
+        order to save bandwidth. For this task wingS uses the packer originating
+        in the DOJO project.
+        </para>
+        <para>The generated Javascript code is not human readable. If you want to
+        debug an issue in the Javascript code, add the setting "javascript" to the
+        cookie. The included Javascript files are then included in a human readable
+        version. As a bonus, the debugging console firebug lite is included as well.
+        Just hit [F12] to make it visible.
+        </para>
+        <para>
+        if you are using the included firebug lite console or are using an own
+        debugging console, you can switch the enabled log levels. For example,
+        just add "loglevel=info" to the debug cookie to disable all loglevels
+        beneath "info", namely "debug". Only log messages with a log level of
+        "info" or higher will be printed to the debugging console. 
+        </para>
+      </sect2>
+    
+      <sect2>
         <title>wingS Session</title>
 
         <para>The wingS session is the root instance of a user application
@@ -4821,9 +4854,7 @@ public MyFoo getSessionHelper(HttpServletRequest request)
         <title id="css-concepts">Interaction between CSS and PLAFs</title>
 
         <para>The code generators provide the HTML structure. The CSS makes
-        the HTML code look like proper components. For example the TreeCG
-        renderes a bunch of nested &lt;li&gt; elements. The vertical lines are
-        created by CSS.</para>
+        the HTML code look like proper components.</para>
       </section>
     </section>
   </chapter>
