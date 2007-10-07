@@ -39,7 +39,7 @@ wingS.ajax.sendRequest = function(method, uri, postData) {
     // the activity indicator is shown with a slight delay, as not to
     // make the end user nervous and shorten the felt request time.
     var responded = false;
-    window.setTimeout(function () {if (!responded) {wingS.ajax.setActivityIndicatorsVisible(true);}},750);
+    window.setTimeout(function () {if (!responded) {wingS.ajax.setActivityIndicatorsVisible(true);}},500);
 
   
     // Since some browsers cache GET requests via the XMLHttpRequest
