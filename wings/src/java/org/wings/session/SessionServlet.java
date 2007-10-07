@@ -385,8 +385,8 @@ final class SessionServlet
                     
                     if ("DEBUG".equals(paramName)
                         && clientDebuggingEnabled()) {
-                        // Cookies haben eine Längenbeschränkung, wir müssen uns hier keine Sorgen
-                        // um die Datenmengen machen.
+                        // Cookies have a limited length, therefore we copy
+                        // them trustingly into the session.
                         session.setProperty("debug.cookie", cookie.getValue().split(":"));
                     } else {
                         cookiesToDispatch.add(cookie);

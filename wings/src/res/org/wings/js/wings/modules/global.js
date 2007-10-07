@@ -68,7 +68,6 @@ wingS.global.init =  function(configObject) {
 
     // Try to set loglevel in firebug/lite
     if ("console" in window) {
-        console.info("logLevel %o", configObject.loglevel);
         var loglevel = configObject.loglevel;
         if (loglevel) {
             switch (loglevel) {
