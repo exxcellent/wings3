@@ -52,8 +52,8 @@ public class UtilsTest extends TestCase {
         // And now: all together ;-)
         assertEquals("\"foo\\\\\\\"bar\"", encodeJSToString("foo\\\"bar"));
         assertEquals("\"\\nfoo\\\\\\\"bar\"", encodeJSToString("\nfoo\\\"bar"));
-        assertEquals("\"\\nfoo\\\\\\\"bar\\t\"",
-                encodeJSToString("\nfoo\\\"bar\t"));
+        assertEquals("\"\\nfoo\\\\\\\"b\\u00e4r\\t\"",
+                encodeJSToString("\nfoo\\\"bär\t"));
     }
 
     public void test_JsonArray_rendering() {
