@@ -21,7 +21,8 @@ public interface Update {
 
         public String getName();
 
-        public Iterator getParameters();
+        /** Return the raw objects representing the parameters. */
+        public Iterator<Object> getParameters();
 
     }
 

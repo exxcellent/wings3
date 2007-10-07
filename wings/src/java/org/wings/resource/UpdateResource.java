@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wings.ReloadManager;
 import org.wings.SFrame;
 import org.wings.plaf.Update;
+import org.wings.plaf.css.Utils;
 import org.wings.io.Device;
 import org.wings.script.ScriptListener;
 import org.wings.session.ScriptManager;
@@ -100,13 +101,15 @@ public class UpdateResource extends DynamicResource {
         Update.Handler handler = update.getHandler();
 
         writePrefix(out);
-    	out.print(handler.getName()).print("(");
+    	out.print(handler.getName()).print('(');
         Iterator parameters = handler.getParameters();
-        if (parameters.hasNext())
-            out.print(parameters.next());
-        while (parameters.hasNext())
-            out.print(",").print(parameters.next());
-		out.print(")");
+        boolean isFirst = true;
+        while (parameters.hasNext()) {
+            if (!isFirst) out.print(',');
+            Utils.encodeJS(out, parameters.next());
+            isFirst = false;
+        }
+        out.print(')');
         writePostfix(out);
 
         if (log.isDebugEnabled()) {

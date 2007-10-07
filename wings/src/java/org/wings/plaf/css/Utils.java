@@ -25,6 +25,7 @@ import org.wings.header.Script;
 import org.wings.header.StyleSheetHeader;
 import org.wings.io.Device;
 import org.wings.io.NullDevice;
+import org.wings.io.StringBuilderDevice;
 import org.wings.resource.*;
 import org.wings.script.JavaScriptDOMListener;
 import org.wings.script.JavaScriptEvent;
@@ -777,9 +778,6 @@ public final class Utils {
         write(d, "hello test&nbsp;\n");
         write(d, "<html>hallo test&nbsp;\n");
         
-        System.out.println(escapeJS("Hallo Welt\\ \n\rPeter"));
-        System.out.println(escapeJS("Hallo Welt\\ \n\rPeter\t"));
-
         d = new org.wings.io.NullDevice();
         long start = System.currentTimeMillis();
         for (int i = 0; i < 1000000; ++i) {
@@ -1339,98 +1337,100 @@ public final class Utils {
         return new StyleSheetHeader(new SessionResource(cssUrl));
     }
     
-    public static Object listToJsArray(List list) {
+    public static Renderable listToJsArray(List list) {
         return new JSArray(list);
     }
 
-    public static Object mapToJsObject(Map map) {
+    public static Renderable mapToJsObject(Map map) {
         return new JSObject(map);
     }
-    
-    public static String encodeJS(Object o) {
-        final SStringBuilder sb = new SStringBuilder();
-        if (o instanceof String) {
-            sb.append("\"");
-            escapeJS((String) o, sb);
-            sb.append("\"");
-        } else {
-            sb.append(String.valueOf(o));
-        }
-        return sb.toString();
-    }
-
-    public static String escapeJS(final String s) {
-    	if (s == null) return null;
-        final SStringBuilder sb = new SStringBuilder(s.length() * 2);
-        escapeJS(s, sb);
-        return sb.toString();
-    }
-    
-    private static void escapeJS(final String s, final SStringBuilder sb) {
-        if (s == null)
-            return;
         
-        final int l = s.length();
+    public static void encodeJS(Device d, Object o) throws IOException {        
+        // The common cases that never need escaping.
+        if (o == null) {
+            d.print("null");
+            return;
+        }
+        if (o instanceof Number || o instanceof Boolean) {
+            d.print(o.toString());
+            return;
+        }
+        if (o instanceof Renderable) {
+            ((Renderable)o).write(d);
+            return;
+        }
+        
+        // Using an Objects toString() method to JSON-serialize them is DIRTY.
+        assert(o instanceof String) : " never rely on toString() to serialize "
+            + "an object in JSON! Implement org.wings.Renderable instead. "
+            + "Object was a " + o.getClass() + ": >" + o + "<";
+        
+        d.print('"');
+        final String stringRep = o.toString();
+        final char chars[] = stringRep.toCharArray();
+        char c;
         int last = 0;
-        for (int i = 0; i < l; ++i) {
-            char ch = s.charAt(i);
-            switch (ch) {
+        for (int pos = 0; pos < chars.length; ++pos) {
+            c = chars[pos];
+            switch (c) {
             case '"':
-                sb.append(s.substring(last, i));
-                sb.append("\\\"");
-                last = i + 1;
+                d.print(chars, last, (pos - last));
+                d.print("\\\"");
+                last = pos + 1;
                 break;
+                // I don't know JS, but what about single quote ? (Henner)
             case '\\':
-                sb.append(s.substring(last, i));
-                sb.append("\\\\");
-                last = i + 1;
+                d.print(chars, last, (pos - last));
+                d.print("\\\\");
+                last = pos + 1;
                 break;
             case '\b':
-                sb.append(s.substring(last, i));
-                sb.append("\\b");
-                last = i + 1;
+                d.print(chars, last, (pos - last));
+                d.print("\\b");
+                last = pos + 1;
                 break;
             case '\f':
-                sb.append(s.substring(last, i));
-                sb.append("\\f");
-                last = i + 1;
+                d.print(chars, last, (pos - last));
+                d.print("\\f");
+                last = pos + 1;
                 break;
             case '\n':
-                sb.append(s.substring(last, i));
-                sb.append("\\n");
-                last = i + 1;
+                d.print(chars, last, (pos - last));
+                d.print("\\n");
+                last = pos + 1;
                 break;
             case '\r':
-                sb.append(s.substring(last, i));
-                sb.append("\\r");
-                last = i + 1;
+                d.print(chars, last, (pos - last));
+                d.print("\\r");
+                last = pos + 1;
                 break;
             case '\t':
-                sb.append(s.substring(last, i));
-                sb.append("\\t");
-                last = i + 1;
-                break;
+                d.print(chars, last, (pos - last));
+                d.print("\\t");
+                last = pos + 1;
+                break;    
             case '/':
-                sb.append(s.substring(last, i));
-                sb.append("\\/");
-                last = i + 1;
+                d.print(chars, last, (pos - last));
+                d.print("\\/");
+                last = pos + 1;
                 break;
             default:
-                if (ch >= '\u0000' && ch <= '\u001F') {
-                    sb.append(s.substring(last, i));
-                    String ss = Integer.toHexString(ch);
-                    sb.append("\\u");
-                    for (int j = 0; j < 4 - ss.length(); ++j) {
-                        sb.append('0');
+                if (c >= '\u0000' && c <= '\u001F') {
+                    d.print(chars, last, pos-last);
+                    final String hex = Integer.toHexString(c);
+                    d.print("\\u");
+                    for (int j = 4 - hex.length(); j > 0; --j) {
+                        d.print('0');
                     }
-                    sb.append(ss.toUpperCase());
-                    last = i + 1;
+                    d.print(hex);
+                    last = pos + 1;
                 }
             }
         }
-        sb.append(s.substring(last, l));
+        d.print(chars, last, chars.length - last);
+        d.print('"');
     }
-
+    
     public static void writeAllAttributes(Device device, SComponent component) throws IOException {
         optAttribute(device, "class", component.getStyle());
         optAttribute(device, "id", component.getName());
@@ -1503,7 +1503,8 @@ public final class Utils {
     /**
      * Write Tooltip code.
      */
-    public static void writeTooltipMouseOver(Device device, SComponent component) throws IOException {
+    public static void writeTooltipMouseOver(Device device, SComponent component) 
+    throws IOException {
         final String toolTipText = component != null ? component.getToolTipText() : null;
         if (toolTipText != null && toolTipText.length() > 0) {
             device.print(" onmouseover=\"Tip('");
@@ -1514,78 +1515,88 @@ public final class Utils {
 
     public static final boolean hasDimension(final SComponent component) {
         SDimension dim = component.getPreferredSize();
-        return dim != null && (dim.getHeightInt() != SDimension.AUTO_INT || dim.getWidthInt() != SDimension.AUTO_INT);
+        return dim != null && (dim.getHeightInt() != SDimension.AUTO_INT 
+                               || dim.getWidthInt() != SDimension.AUTO_INT);
     }
 
-    private static class JSArray {
-
-        private List list;
+    private static class JSArray implements Renderable {
+        private final List list;
 
         public JSArray(List list) {
             this.list = list;
         }
 
-        @Override
-        public String toString() {
-            final Iterator i = list.iterator();
-            final StringBuffer sb = new StringBuffer("[");
-            if (i.hasNext())
-                sb.append(encodeJS(i.next()));
-            while (i.hasNext())
-                sb.append(",").append(encodeJS(i.next()));
-            return sb.append("]").toString();
+        public void write(Device d) throws IOException {
+            d.print('[');
+            final Iterator it = list.iterator();
+            boolean isFirst = true;
+            while (it.hasNext()) {
+                if (!isFirst) d.print(',');
+                encodeJS(d, it.next());
+                isFirst = false;
+            }
+            d.print(']');
         }
-
+               
         @Override
-        public boolean equals(Object object) {
+            public String toString() {
+            final StringBuilderDevice sb = new StringBuilderDevice(10);
+            // Prevent this toString() be used for rendering, provide
+            // info string to break that assumption.
+            sb.print("JSArray.toString():");
+            try { write(sb); } catch (IOException e) { }
+            return sb.toString();
+        }
+        
+        @Override
+            public boolean equals(Object object) {
             return list.equals(object);
         }
 
         @Override
-        public int hashCode() {
+            public int hashCode() {
             return list.hashCode();
         }
-
     }
 
-    private static class JSObject {
-
-        private Map map;
+    private static final class JSObject implements Renderable {
+        private final Map map;
 
         public JSObject(Map map) {
             this.map = map;
         }
 
-        @Override
-        public String toString() {
-            final Iterator i = map.entrySet().iterator();
-            final StringBuffer sb = new StringBuffer("{");
-            if (i.hasNext())
-                sb.append(toString((Map.Entry) i.next()));
-            while (i.hasNext()) {
-                sb.append(",").append(toString((Map.Entry) i.next()));
+        public void write(Device d) throws IOException {
+            final Iterator it = map.entrySet().iterator();
+            boolean isFirst = true;
+            d.print('{');
+            while (it.hasNext()) {
+                if (!isFirst) d.print(",");
+                Map.Entry entry = (Map.Entry) it.next();
+                d.print('"').print(entry.getKey().toString()).print("\":");
+                encodeJS(d, entry.getValue());
+                isFirst = false;
             }
-            return sb.append("}").toString();
+            d.print('}');
         }
-
-        private String toString(Map.Entry entry) {
-            final StringBuffer sb = new StringBuffer();
-            sb.append("\"");
-            sb.append(escapeJS(entry.getKey().toString()));
-            sb.append("\":");
-            sb.append(encodeJS(entry.getValue()));
+        
+        @Override  // TODO: removeme
+            public String toString() {
+            final StringBuilderDevice sb = new StringBuilderDevice(10);
+            // Prevent this toString() be used for rendering, provide
+            // info string to break that assumption.
+            sb.print("JSObject.toString():");
+            try { write(sb); } catch (IOException e) {}
             return sb.toString();
         }
-
+        
         public boolean equals(Object object) {
             return map.equals(object);
         }
 
-
         @Override
-        public int hashCode() {
+            public int hashCode() {
             return map.hashCode();
         }
     }
-
 }

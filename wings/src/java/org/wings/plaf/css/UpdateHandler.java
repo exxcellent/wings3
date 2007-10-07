@@ -9,14 +9,14 @@ import org.wings.plaf.Update;
 public final class UpdateHandler implements Update.Handler {
 
     protected String name;
-    protected final List<String> parameters;
+    protected final List<Object> parameters;
 
     public UpdateHandler(String name) {
         if (name == null)
             throw new IllegalArgumentException("Handler name must not be null!");
 
         this.name = name;
-        parameters = new ArrayList<String>(5);
+        parameters = new ArrayList<Object>(5);
     }
 
     public String getName() {
@@ -28,10 +28,10 @@ public final class UpdateHandler implements Update.Handler {
     }
 
     public void addParameter(Object o) {
-        parameters.add(Utils.encodeJS(o));
+        parameters.add(o);
     }
 
-    public Iterator getParameters() {
+    public Iterator<Object> getParameters() {
         return parameters.iterator();
     }
 
@@ -44,11 +44,11 @@ public final class UpdateHandler implements Update.Handler {
     }
 
     public void addParameter(int index, Object o) {
-        parameters.add(index, Utils.encodeJS(o));
+        parameters.add(index, o);
     }
 
     public Object setParameter(int index, Object o) {
-        return parameters.set(index, Utils.encodeJS(o));
+        return parameters.set(index, o);
     }
 
     @Override

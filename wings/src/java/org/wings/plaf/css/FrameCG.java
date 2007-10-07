@@ -499,9 +499,10 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         device.print("<script type=\"text/javascript\">\n");
 
         // print all scripts
-        device.print(getGlobalInitScript(frame)).print("\n");
-        device.print(getTooltipInitScript(tooltipManager)).print("\n");
-
+        writeGlobalInitScript(device, frame);
+        device.print("\n");
+        writeTooltipInitScript(device, tooltipManager);
+        device.print("\n");
         ScriptListener[] scriptListeners = scriptManager.getScriptListeners();
         for (int i = 0; i < scriptListeners.length; ++i) {
             if (scriptListeners[i].getScript() != null) {
@@ -513,7 +514,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         device.print("</script>\n");
     }
 
-    private String getGlobalInitScript(SFrame frame) throws IOException {
+    private void writeGlobalInitScript(Device out, SFrame frame) throws IOException {
         Map<String, Object> initConfig = new HashMap<String, Object>();
         initConfig.put("eventEpoch", frame.getEventEpoch());
         initConfig.put("reloadResource", frame.getDynamicResource(ReloadResource.class).getURL().toString());
@@ -526,18 +527,16 @@ public class FrameCG implements org.wings.plaf.FrameCG {
             initConfig.put("loglevel", logLevel);
         }
         
-        SStringBuilder script = new SStringBuilder();
-        script.append("wingS.global.init(").append(Utils.mapToJsObject(initConfig)).append(");");
-        return script.toString();
+        out.print("wingS.global.init(");
+        Utils.mapToJsObject(initConfig).write(out);
+        out.print(");");
     }
     
-    private String getTooltipInitScript(SToolTipManager tooltipManager) throws IOException {
-        SStringBuilder script = new SStringBuilder();
-        script.append("wingS.tooltip.init(");
-        script.append(tooltipManager.getInitialDelay()).append(",");
-        script.append(tooltipManager.getDismissDelay()).append(",");
-        script.append(tooltipManager.isFollowMouse()).append(");");
-        return script.toString();
+    private void writeTooltipInitScript(Device out, SToolTipManager tooltipManager) throws IOException {        
+        out.print("wingS.tooltip.init(");
+        out.print(tooltipManager.getInitialDelay()).print(",");
+        out.print(tooltipManager.getDismissDelay()).print(",");
+        out.print(tooltipManager.isFollowMouse()).print(");");
     }
 
     public String getDocumentType() {
