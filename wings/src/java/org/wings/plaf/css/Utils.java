@@ -1352,6 +1352,7 @@ public final class Utils {
     }
 
     public static String escapeJS(final String s) {
+    	if (s == null) return null;
         final SStringBuilder sb = new SStringBuilder(s.length() * 2);
         escapeJS(s, sb);
         return sb.toString();

@@ -4,6 +4,10 @@ import junit.framework.TestCase;
 
 public class UtilsTest extends TestCase {
 	public void test_escapeJS() {
+		// Empty.
+		assertEquals(null, Utils.escapeJS(null));
+		assertEquals("", Utils.escapeJS(""));
+		
 		// Generic escapes.
 		assertEquals("\\\\", Utils.escapeJS("\\"));
 		assertEquals("\\b", Utils.escapeJS("\b"));
@@ -17,7 +21,7 @@ public class UtilsTest extends TestCase {
 		assertEquals("\\u001F", Utils.escapeJS("\u001f"));
 		assertEquals(" ", Utils.escapeJS("\u0020")); // first non-special
 		
-		// and now: all together ;-)
+		// And now: all together ;-)
 		assertEquals("foo\\\\\\\"bar", Utils.escapeJS("foo\\\"bar"));
 		assertEquals("\\nfoo\\\\\\\"bar", Utils.escapeJS("\nfoo\\\"bar"));
 		assertEquals("\\nfoo\\\\\\\"bar\\t", Utils.escapeJS("\nfoo\\\"bar\t"));
