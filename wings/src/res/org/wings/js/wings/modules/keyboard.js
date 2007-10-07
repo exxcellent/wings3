@@ -37,11 +37,13 @@ wingS.keyboard.handler.match = function(event, element) {
     if (!keyStrokes)
         return false;
 
+    var wu = wingS.util;
     for (var index = 0, len = keyStrokes.length; index < len; ++index) {
         var keyStroke = keyStrokes[index];
         if (keyStroke.keyCode == keyCode && keyStroke.shiftKey == shiftKey && keyStroke.ctrlKey == ctrlKey && keyStroke.altKey == altKey) {
-            if (!keyStroke.focussed || wingS.util.getParentByAttributeAndValue(element, "id", keyStroke.component) != null) {
+            if (!keyStroke.focussed || wu.getParentByAttributeAndValue(element, "id", keyStroke.component) != null) {
                 wingS.request.sendEvent(event, true, true, keyStroke.component + '_keystroke', keyStroke.command);
+                window.console.log("match true");
                 return true;
             }
         }

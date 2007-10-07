@@ -266,7 +266,9 @@ public class FrameCG implements org.wings.plaf.FrameCG {
             return null;
 
         StringBuilder builder = new StringBuilder();
-        builder.append("wingS.keyboard.keyStrokes = new Array();");
+        builder.append("var wk = wingS.keyboard;");
+        builder.append("var kss = wk.keyStrokes = [];");
+        builder.append("var ks = wingS.keyboard.KeyStroke;\n");
         for (SComponent component : components) {
             if (component.isRecursivelyVisible()) {
                 appendStrokes(builder, component, SComponent.WHEN_FOCUSED_OR_ANCESTOR_OF_FOCUSED_COMPONENT, component.getInputMap(SComponent.WHEN_FOCUSED_OR_ANCESTOR_OF_FOCUSED_COMPONENT));
@@ -285,20 +287,20 @@ public class FrameCG implements org.wings.plaf.FrameCG {
 
                 switch (keyStroke.getKeyEventType()) {
                     case KeyEvent.KEY_PRESSED:
-                        builder.append("wingS.keyboard.keyStrokes.push(new wingS.keyboard.KeyStroke('");
+                        builder.append("kss.push(new ks('");
                         builder.append(component.getName());
                         builder.append("',");
-                        builder.append(condition == SComponent.WHEN_FOCUSED_OR_ANCESTOR_OF_FOCUSED_COMPONENT ? "true" : "false");
+                        builder.append(condition == SComponent.WHEN_FOCUSED_OR_ANCESTOR_OF_FOCUSED_COMPONENT ? "!0" : "!1");
                         builder.append(",'");
                         builder.append(binding);
                         builder.append("',");
                         builder.append(keyStroke.getKeyCode());
                         builder.append(',');
-                        builder.append((keyStroke.getModifiers() & InputEvent.SHIFT_DOWN_MASK) != 0);
+                        builder.append((keyStroke.getModifiers() & InputEvent.SHIFT_DOWN_MASK) != 0 ? "!0" : "!1");
                         builder.append(',');
-                        builder.append((keyStroke.getModifiers() & InputEvent.CTRL_DOWN_MASK) != 0);
+                        builder.append((keyStroke.getModifiers() & InputEvent.CTRL_DOWN_MASK) != 0 ? "!0" : "!1");
                         builder.append(',');
-                        builder.append((keyStroke.getModifiers() & InputEvent.ALT_DOWN_MASK) != 0);
+                        builder.append((keyStroke.getModifiers() & InputEvent.ALT_DOWN_MASK) != 0 ? "!0" : "!1");
                         builder.append("));\n");
                         break;
                     case KeyEvent.KEY_TYPED:
