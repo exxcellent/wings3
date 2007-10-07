@@ -1811,11 +1811,13 @@ public class STable extends SComponent
     protected class TableColumnModelHandler implements STableColumnModelListener {
 
         public void columnAdded(STableColumnModelEvent e) {
+            removeEditor();
             fireViewportChanged(true);
             reload();
         }
 
         public void columnHidden(ChangeEvent e) {
+            removeEditor();
             fireViewportChanged(true);
             reload();
         }
@@ -1825,15 +1827,18 @@ public class STable extends SComponent
         }
 
         public void columnMoved(STableColumnModelEvent e) {
+            removeEditor();
             reload();
         }
 
         public void columnRemoved(STableColumnModelEvent e) {
+            removeEditor();
             fireViewportChanged(true);
             reload();
         }
 
         public void columnShown(ChangeEvent e) {
+            removeEditor();
             fireViewportChanged(true);
             reload();
         }

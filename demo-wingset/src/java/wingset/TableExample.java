@@ -382,6 +382,7 @@ public class TableExample
                 public void actionPerformed(ActionEvent e) {
                     STableColumnModel columnModel = table.getColumnModel();
                     Collections.reverse((java.util.List)columnModel.getColumns());
+                    table.removeEditor();
                     table.reload();
                 }
             });

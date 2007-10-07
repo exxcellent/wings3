@@ -14,7 +14,6 @@ package org.wings.plaf.css;
 
 
 import org.wings.*;
-import org.wings.script.JavaScriptEvent;
 import org.wings.io.Device;
 import org.wings.io.StringBuilderDevice;
 import org.wings.plaf.CGManager;
@@ -26,6 +25,7 @@ import org.wings.util.SStringBuilder;
 import java.awt.*;
 import java.io.IOException;
 
+// Please do NOT reformat this class!
 public final class TableCG
     extends AbstractComponentCG
     implements org.wings.plaf.TableCG
@@ -178,7 +178,7 @@ public final class TableCG
         if (parameter != null && (selectableCell || editableCell) && !isClickable) {
             printClickability(device, table, parameter, table.getShowAsFormComponent());
             device.print(isEditingCell ? " editing=\"true\"" : " editing=\"false\"");
-            device.print(" class=\"cell clickable\"");
+            device.print(isEditingCell ? " class=\"cell\"" : " class=\"cell clickable\"");
         }
         else
             device.print(" class=\"cell\"");
@@ -541,10 +541,14 @@ public final class TableCG
                 exception = t.getClass().getName();
             }
 
+            row = table.isHeaderVisible() ? this.row + 1 : this.row;
+            column = columnInView(table, column);
+            column = isSelectionColumnVisible(table) ? column + 1 : column;
+
             UpdateHandler handler = new UpdateHandler("tableCell");
             handler.addParameter(table.getName());
-            handler.addParameter(table.isHeaderVisible() ? row + 1 : row);
-            handler.addParameter(isSelectionColumnVisible(table) ? column + 1 : column);
+            handler.addParameter(row);
+            handler.addParameter(column);
             handler.addParameter(true);
             handler.addParameter(htmlCode);
             if (exception != null) {
@@ -587,10 +591,14 @@ public final class TableCG
                 exception = t.getClass().getName();
             }
 
+            row = table.isHeaderVisible() ? this.row + 1 : this.row;
+            column = columnInView(table, column);
+            column = isSelectionColumnVisible(table) ? column + 1 : column;
+
             UpdateHandler handler = new UpdateHandler("tableCell");
             handler.addParameter(table.getName());
-            handler.addParameter(table.isHeaderVisible() ? row + 1 : row);
-            handler.addParameter(isSelectionColumnVisible(table) ? column + 1 : column);
+            handler.addParameter(row);
+            handler.addParameter(column);
             handler.addParameter(false);
             handler.addParameter(htmlCode);
             if (exception != null) {
@@ -622,5 +630,15 @@ public final class TableCG
 
             return hashCode;
         }
+    }
+
+    private int columnInView(STable table, int column) {
+        int viewColumn = 0;
+        for (int i=0; i < column; i++) {
+            STableColumn tableColumn = table.getColumnModel().getColumn(i);
+            if (!tableColumn.isHidden())
+                viewColumn++;
+        }
+        return viewColumn;
     }
 }

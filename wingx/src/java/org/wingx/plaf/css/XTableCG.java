@@ -163,6 +163,7 @@ public class XTableCG
         }
 
         final boolean isClickable = component instanceof SClickable;
+        final boolean isEditableCellRenderer = component instanceof EditableTableCellRenderer;
 
         device.print("<td col=\"");
         device.print(col);
@@ -183,8 +184,8 @@ public class XTableCG
 
         if (parameter != null && (selectableCell || editableCell) && !isClickable) {
             printClickability(device, table, parameter, table.getShowAsFormComponent());
-            device.print(isEditingCell ? " editing=\"true\"" : " editing=\"false\"");
-            device.print(" class=\"cell clickable\"");
+            device.print(isEditingCell || isEditableCellRenderer ? " editing=\"true\"" : " editing=\"false\"");
+            device.print(isEditingCell || isEditableCellRenderer ? " class=\"cell\"" : " class=\"cell clickable\"");
         }
         else
             device.print(" class=\"cell\"");
@@ -622,11 +623,11 @@ public class XTableCG
     }
 
     public Update getEditCellUpdate(STable table, int row, int column) {
-        return new EditCellUpdate(table, row, column);
+        return new EditCellUpdate((XTable)table, row, column);
     }
 
     public Update getRenderCellUpdate(STable table, int row, int column) {
-        return new RenderCellUpdate(table, row, column);
+        return new RenderCellUpdate((XTable)table, row, column);
     }
 
     protected class TableScrollUpdate
@@ -676,19 +677,19 @@ public class XTableCG
     }
 
     private class EditCellUpdate
-        extends AbstractUpdate<STable>
+        extends AbstractUpdate<XTable>
     {
         private int row;
         private int column;
 
-        public EditCellUpdate(STable table, int row, int column) {
+        public EditCellUpdate(XTable table, int row, int column) {
             super(table);
             this.row = row;
             this.column = column;
         }
 
         public Handler getHandler() {
-            STable table = this.component;
+            XTable table = this.component;
 
             String htmlCode = "";
             String exception = null;
@@ -708,10 +709,15 @@ public class XTableCG
                 exception = t.getClass().getName();
             }
 
+            row = table.isHeaderVisible() ? this.row + 1 : this.row;
+            row = table.isFilterVisible() ? this.row + 1 : this.row;
+            column = columnInView(table, column);
+            column = isSelectionColumnVisible(table) ? column + 1 : column;
+
             UpdateHandler handler = new UpdateHandler("tableCell");
             handler.addParameter(table.getName());
-            handler.addParameter(table.isHeaderVisible() ? row + 1 : row);
-            handler.addParameter(isSelectionColumnVisible(table) ? column + 1 : column);
+            handler.addParameter(row);
+            handler.addParameter(column);
             handler.addParameter(true);
             handler.addParameter(htmlCode);
             if (exception != null) {
@@ -722,19 +728,19 @@ public class XTableCG
     }
 
     private class RenderCellUpdate
-        extends AbstractUpdate<STable>
+        extends AbstractUpdate<XTable>
     {
         private int row;
         private int column;
 
-        public RenderCellUpdate(STable table, int row, int column) {
+        public RenderCellUpdate(XTable table, int row, int column) {
             super(table);
             this.row = row;
             this.column = column;
         }
 
         public Handler getHandler() {
-            STable table = this.component;
+            XTable table = this.component;
 
             String htmlCode = "";
             String exception = null;
@@ -754,10 +760,15 @@ public class XTableCG
                 exception = t.getClass().getName();
             }
 
+            row = table.isHeaderVisible() ? this.row + 1 : this.row;
+            row = table.isFilterVisible() ? this.row + 1 : this.row;
+            column = columnInView(table, column);
+            column = isSelectionColumnVisible(table) ? column + 1 : column;
+
             UpdateHandler handler = new UpdateHandler("tableCell");
             handler.addParameter(table.getName());
-            handler.addParameter(table.isHeaderVisible() ? row + 1 : row);
-            handler.addParameter(isSelectionColumnVisible(table) ? column + 1 : column);
+            handler.addParameter(row);
+            handler.addParameter(column);
             handler.addParameter(false);
             handler.addParameter(htmlCode);
             if (exception != null) {
@@ -789,5 +800,15 @@ public class XTableCG
 
             return hashCode;
         }
+    }
+
+    private int columnInView(STable table, int column) {
+        int viewColumn = 0;
+        for (int i=0; i < column; i++) {
+            STableColumn tableColumn = table.getColumnModel().getColumn(i);
+            if (!tableColumn.isHidden())
+                viewColumn++;
+        }
+        return viewColumn;
     }
 }
