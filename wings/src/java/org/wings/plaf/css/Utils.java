@@ -776,6 +776,9 @@ public final class Utils {
 
         write(d, "hello test&nbsp;\n");
         write(d, "<html>hallo test&nbsp;\n");
+        
+        System.out.println(escapeJS("Hallo Welt\\ \n\rPeter"));
+        System.out.println(escapeJS("Hallo Welt\\ \n\rPeter\t"));
 
         d = new org.wings.io.NullDevice();
         long start = System.currentTimeMillis();
@@ -1263,12 +1266,27 @@ public final class Utils {
     // Beta: public static final String JS_YUI_LOADER = "JS.yuiLoader";
     // Beta: public static final String JS_YUI_TEST = "JS.yuiTest";
 
+    public static final String JS_YUI_ANIMATION_DEBUG = "JS.yuiAnimationDebug";
+    public static final String JS_YUI_CONNECTION_DEBUG = "JS.yuiConnectionDebug";
+    public static final String JS_YUI_CONTAINER_DEBUG = "JS.yuiContainerDebug";
+    public static final String JS_YUI_DRAGDROP_DEBUG = "JS.yuiDragdropDebug";
+    public static final String JS_YUI_YAHOO_DOM_EVENT_DEBUG = "JS.yuiYahooDomEventDebug";
+    public static final String JS_WINGS_ALL_DEBUG = "JS.wingsAllDebug";
+
     /**
      * Lookup keys for other resources
      */
     public static final String JS_ETC_MENU = "JS.etcMenu";
     public static final String JS_ETC_POPUP = "JS.etcPopup";
     public static final String JS_ETC_WZ_TOOLTIP = "JS.etcWzTooltip";
+
+    public static final String JS_DEBUG_FIREBUGLITE = "JS.debugFirebugLite";
+    public static final String HTML_DEBUG_FIREBUGLITE = "HTML.debugFirebugLite";
+    public static final String CSS_DEBUG_FIREBUGLITE = "CSS.debugFirebugLite";
+    public static final String IMG_DEBUG_FIREBUGLITE_ERROR = "IMG.debugFirebugLiteError";
+    public static final String IMG_DEBUG_FIREBUGLITE_WARN = "IMG.debugFirebugLiteWarn";
+    public static final String IMG_DEBUG_FIREBUGLITE_INFO = "IMG.debugFirebugLiteInfo";
+
 
     /**
      * Load a Javascript library that comes with wingS by a property. Check <code>JS_XXX</code> constants.
@@ -1323,62 +1341,85 @@ public final class Utils {
     }
     
     public static String encodeJS(Object o) {
-        StringBuffer sb = new StringBuffer();
+        final SStringBuilder sb = new SStringBuilder();
         if (o instanceof String) {
             sb.append("\"");
-            sb.append(escapeJS((String) o));
+            escapeJS((String) o, sb);
             sb.append("\"");
         } else
             sb.append(String.valueOf(o));
         return sb.toString();
     }
 
-    public static String escapeJS(String s) {
+    public static String escapeJS(final String s) {
+        final SStringBuilder sb = new SStringBuilder(s.length() * 2);
+        escapeJS(s, sb);
+        return sb.toString();
+    }
+    
+    private static void escapeJS(final String s, final SStringBuilder sb) {
         if (s == null)
-            return null;
-
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < s.length(); ++i) {
+            return;
+        
+        final int l = s.length();
+        int last = 0;
+        for (int i = 0; i < l; ++i) {
             char ch = s.charAt(i);
             switch (ch) {
             case '"':
+                sb.append(s.substring(last, i));
                 sb.append("\\\"");
+                last = i + 1;
                 break;
             case '\\':
+                sb.append(s.substring(last, i));
                 sb.append("\\\\");
+                last = i + 1;
                 break;
             case '\b':
+                sb.append(s.substring(last, i));
                 sb.append("\\b");
+                last = i + 1;
                 break;
             case '\f':
+                sb.append(s.substring(last, i));
                 sb.append("\\f");
+                last = i + 1;
                 break;
             case '\n':
+                sb.append(s.substring(last, i));
                 sb.append("\\n");
+                last = i + 1;
                 break;
             case '\r':
+                sb.append(s.substring(last, i));
                 sb.append("\\r");
+                last = i + 1;
                 break;
             case '\t':
+                sb.append(s.substring(last, i));
                 sb.append("\\t");
+                last = i + 1;
                 break;
             case '/':
+                sb.append(s.substring(last, i));
                 sb.append("\\/");
+                last = i + 1;
                 break;
             default:
                 if (ch >= '\u0000' && ch <= '\u001F') {
+                    sb.append(s.substring(last, i));
                     String ss = Integer.toHexString(ch);
                     sb.append("\\u");
                     for (int j = 0; j < 4 - ss.length(); ++j) {
                         sb.append('0');
                     }
                     sb.append(ss.toUpperCase());
-                } else {
-                    sb.append(ch);
+                    last = i + 1;
                 }
             }
         }
-        return sb.toString();
+        sb.append(s.substring(last, l));
     }
 
     public static void writeAllAttributes(Device device, SComponent component) throws IOException {
