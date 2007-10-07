@@ -37,6 +37,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Arrays;
+import java.util.StringTokenizer;
 
 /**
  * The servlet engine creates for each user a new HttpSession. This
@@ -387,7 +388,14 @@ final class SessionServlet
                         && clientDebuggingEnabled()) {
                         // Cookies have a limited length, therefore we copy
                         // them trustingly into the session.
-                        session.setProperty("debug.cookie", cookie.getValue().split(":"));
+                        
+                        // Use a Tokenizer for performance. 
+                        StringTokenizer tokenizer = new StringTokenizer(cookie.getValue(),":");
+                        String[] values = new String[tokenizer.countTokens()];
+                        for (int j = 0; j < values.length; j++) {
+                            values[i] = tokenizer.nextToken();
+                        }
+                        session.setProperty("debug.cookie", values);
                     } else {
                         cookiesToDispatch.add(cookie);
                     }
