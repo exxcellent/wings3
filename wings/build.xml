@@ -90,21 +90,24 @@
 
     <target name="generate-wings.js" depends="-concat-wings.js" unless="nominimize">
         <!-- Minimize concatenated JS-file -->
-        <java jar="tools/javascript-compressor/custom_rhino.jar" failonerror="true"
-            fork="true" maxmemory="128m" output="${basedir}/src/res/org/wings/js/wings/wings-min.js">
+        <java jar="tools/javascript-compressor/js-compressor-1.2.7.jar" failonerror="true"
+            fork="true" maxmemory="128m">
             <!--
                 Use this instead "-c" to achieve a greater compression and replace the
                 output file with the 3rd argument to use alternative compression
                 approach (55kb vs. 24kb. vs 16kb).
                 <arg value="${basedir}/tools/javascript-compressor/packer.js"/>
             -->
+            <arg value="-v"/>
             <arg value="-c"/>
             <arg value="${basedir}/src/res/org/wings/js/wings/wings.js"/>
             <classpath>
-                <pathelement location="tools/javascript-compressor/custom_rhino.jar"/>
+                <pathelement location="tools/javascript-compressor/js-compressor-1.2.7.jar"/>
                 <pathelement path="${java.class.path}"/>
             </classpath>
         </java>
+        <copy file="${basedir}/src/res/org/wings/js/wings/wings.js.compressed"
+            tofile="${basedir}/src/res/org/wings/js/wings/wings-min.js"/>
     </target>
 
     <target name="compile" depends="prepare, generate">
