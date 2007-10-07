@@ -98,6 +98,7 @@ public class RadioButtonExample
         public ButtonControls() {
             formComponentCheckBox.setSelected(true);
             final SCheckBox customIcons = new SCheckBox("custom icons");
+            customIcons.setToolTipText("define custom icons for usage as checkboxes");
             customIcons.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     for (int i = 0; i < buttons.length; i++) {
@@ -130,6 +131,7 @@ public class RadioButtonExample
             addControl(customIcons);
 
             final SCheckBox useImages = new SCheckBox("icons in form");
+            useImages.setToolTipText("use images in form elements - if you defined custom images, use those");
             final RadioButtonCG cg = (RadioButtonCG) getSession().getCGManager().getCG(SRadioButton.class);
             useImages.setSelected(true);
             cg.setUseIconsInForm(true);
