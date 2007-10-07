@@ -25,6 +25,12 @@
         </fileset>
     </path>
 
+    <path id="test.classpath">
+      <fileset dir="../thirdparty/lib">
+            <include name="junit-4.4.jar"/>
+      </fileset>
+    </path>
+
     <filelist dir="src/res/org/wings/js/wings/modules"
         id="wings.js.modules">
     	<file name="namespace.js"/>
@@ -45,6 +51,7 @@
 
     <target name="prepare">
         <mkdir dir="build/class"/>
+        <mkdir dir="build/test-class"/>
         <tstamp>
             <format property="wings.buildtime" pattern="yyyy-MM-dd HH:mm"/>
         </tstamp>
@@ -96,6 +103,16 @@
         <javac debug="${build.debug}" deprecation="${build.deprecation}"
             destdir="build/class" srcdir="src/java" source="1.5" target="1.5">
             <classpath refid="build.classpath"/>
+        </javac>
+    </target>
+
+    <target name="compile-tests" depends="prepare, generate, compile">
+        <javac debug="${build.debug}" deprecation="${build.deprecation}"
+            destdir="build/test-class" srcdir="src/test"
+	    source="1.5" target="1.5">
+	    <classpath path="build/class"/>
+            <classpath refid="build.classpath"/>
+            <classpath refid="test.classpath"/>
         </javac>
     </target>
 
