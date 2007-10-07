@@ -9,7 +9,7 @@
         <fileset dir="../thirdparty/lib">
            <include name="jetty-6.1.6rc0.jar"/>
            <include name="jetty-util-6.1.6rc0.jar"/>
-	   <include name="selenium-server-0.9.2.jar"/>
+           <include name="selenium-server-0.9.2.jar"/>
         </fileset>
     </path>
 
@@ -26,21 +26,23 @@
 
     <target name="run-demo-wingset" depends="compile">
         <java classname="wings.test.JettyRunner" fork="true">
+          <jvmarg value="-enableassertions"/>
           <arg value="../demo-wingset/build/web"/>
-	  <arg value="6533"/>
-	  <classpath>
-	    <pathelement path="build/class"/>
-	  </classpath>
-	  <classpath refid="build.classpath"/>
+          <arg value="8989"/>
+          <classpath>
+            <pathelement path="build/class"/>
+          </classpath>
+          <classpath refid="build.classpath"/>
        </java>
     </target>
 
     <target name="run-demo-desktop" depends="compile">
         <java classname="wings.test.JettyRunner" fork="true">
+          <jvmarg value="-enableassertions"/>
           <arg value="../demo-desktop/build/web"/>
-	  <arg value="6533"/>
-	  <classpath path="build/class"/>
-	  <classpath refid="build.classpath"/>
+          <arg value="8989"/>
+          <classpath path="build/class"/>
+          <classpath refid="build.classpath"/>
        </java>
     </target>
 
