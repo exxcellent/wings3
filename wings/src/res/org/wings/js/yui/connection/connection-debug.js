@@ -534,10 +534,13 @@ YAHOO.util.Connect =
 				}
 			}
 
-			if(this._isFormSubmit == false && this._use_default_post_header){
-				this.initHeader('Content-Type', this._default_post_header);
-				YAHOO.log('Initialize header Content-Type to application/x-www-form-urlencoded; UTF_8 for POST transaction.', 'info', 'Connection');
-			}
+            if(this._isFormSubmit || (postData && this._use_default_post_header)){
+                this.initHeader('Content-Type', this._default_post_header);
+                YAHOO.log('Initialize header Content-Type to application/x-www-form-urlencoded; UTF_8 for POST transaction.', 'info', 'Connection');
+                if(this._isFormSubmit){
+                    this.resetFormState();
+                }
+            }
 
 			if(this._has_default_headers || this._has_http_headers){
 				this.setHeader(o);
