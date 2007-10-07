@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
@@ -320,8 +321,8 @@ public class DefaultReloadManager implements ReloadManager {
     private static class PathComparator implements Comparator<String> {
 
         public int compare(String path1, String path2) {
-            int depthOfPath1 = path1.split("/").length;
-            int depthOfPath2 = path2.split("/").length;
+            int depthOfPath1 = (new StringTokenizer(path1, ":")).countTokens();
+            int depthOfPath2 = (new StringTokenizer(path2, ":")).countTokens();
             if (depthOfPath1 < depthOfPath2) return -1;
             if (depthOfPath1 > depthOfPath2) return 1;
             return path1.compareTo(path2);
