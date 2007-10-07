@@ -185,7 +185,7 @@ public class XTableCG
         if (parameter != null && (selectableCell || editableCell) && !isClickable) {
             printClickability(device, table, parameter, table.getShowAsFormComponent());
             device.print(isEditingCell || isEditableCellRenderer ? " editing=\"true\"" : " editing=\"false\"");
-            device.print(isEditingCell || isEditableCellRenderer ? " class=\"cell\"" : " class=\"cell clickable\"");
+            device.print(isEditingCell || isEditableCellRenderer     ? " class=\"cell\"" : " class=\"cell clickable\"");
         }
         else
             device.print(" class=\"cell\"");

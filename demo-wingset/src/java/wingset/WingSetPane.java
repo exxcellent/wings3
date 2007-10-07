@@ -49,6 +49,7 @@ abstract public class WingSetPane
     private SComponent controlsComponent;
     private SComponent exampleComponent;
     private String exampleName;
+    private String group;
 
     public WingSetPane() {
         setLayout(new SBorderLayout());
@@ -151,17 +152,8 @@ abstract public class WingSetPane
      * @inheritDoc
      */
     public String getExampleName() {
-        if (exampleName == null) {
-            exampleName = getClass().getName();
-            exampleName = exampleName.substring(exampleName.lastIndexOf('.') + 1);
-            if (exampleName.endsWith("Example")) {
-                exampleName = exampleName.substring(0, exampleName.length() - "Example".length());
-            } else if (exampleName.endsWith("Test")) {
-                exampleName = exampleName.substring(0, exampleName.length() - "Test".length());
-            } else if (exampleName.endsWith("Experiment")) {
-                exampleName = exampleName.substring(0, exampleName.length() - "Experiment".length());
-            }
-        }
+        if (exampleName == null)
+            naming();
         return exampleName;
     }
 
@@ -169,9 +161,23 @@ abstract public class WingSetPane
      * @inheritDoc
      */
     public String getExampleGroup() {
-        if (getExampleName().endsWith("Test"))
-            return "Test";
-        else
-            return getExampleName().startsWith("X") ? "wingX" : "wingS";
+        if (group == null)
+            naming();
+        return group;
+    }
+
+    private void naming() {
+        exampleName = getClass().getName();
+        exampleName = exampleName.substring(exampleName.lastIndexOf('.') + 1);
+        if (exampleName.endsWith("Example")) {
+            group = getExampleName().startsWith("X") ? "wingX" : "wingS";
+            exampleName = exampleName.substring(0, exampleName.length() - "Example".length());
+        } else if (exampleName.endsWith("Test")) {
+            group = "Test";
+            exampleName = exampleName.substring(0, exampleName.length() - "Test".length());
+        } else if (exampleName.endsWith("Experiment")) {
+            group = "Experiment";
+            exampleName = exampleName.substring(0, exampleName.length() - "Experiment".length());
+        }
     }
 }

@@ -98,6 +98,6 @@ public class XColorPickerExample implements WingSetExample
     }
 
     public String getExampleGroup() {
-        return "Experimental";
+        return "Experiment";
     }
 }

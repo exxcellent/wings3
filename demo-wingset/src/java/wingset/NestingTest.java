@@ -18,7 +18,7 @@ public class NestingTest
 
     protected SComponent createControls() {
         for(int i = 5; i< 30; i++) {
-            selectComboBox.addItem(new Integer(i));
+            selectComboBox.addItem(i);
         }
         selectComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {

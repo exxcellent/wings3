@@ -101,7 +101,7 @@ class WingSetTreeModel extends DefaultTreeModel {
         for (String sectionName : registry.keySet()) {
             if (!includeTests && "Test".equalsIgnoreCase(sectionName))
                 continue;
-            if (!includeExperiments && "Experimental".equalsIgnoreCase(sectionName))
+            if (!includeExperiments && "Experiment".equalsIgnoreCase(sectionName))
                 continue;
 
             DefaultMutableTreeNode sectionNode = sectionNodeMap.get(sectionName);

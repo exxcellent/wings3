@@ -53,7 +53,7 @@ public class SplitPaneExample
     }
 
     public String getExampleGroup() {
-        return "Experimental";
+        return "Experiment";
     }
 
     /*

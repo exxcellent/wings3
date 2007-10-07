@@ -137,13 +137,15 @@ TABLE.SCheckBox_form,
 TABLE.SCheckBox_selected,
 TABLE.SCheckBox_form_selected {
     cursor: default;
+    border-collapse: collapse;
 }
 
-TABLE.SRadioBox,
-TABLE.SRadioBox_form,
-TABLE.SRadioBox_selected,
-TABLE.SRadioBox_form_selected {
+TABLE.SRadioButton,
+TABLE.SRadioButton_form,
+TABLE.SRadioButton_selected,
+TABLE.SRadioButton_form_selected {
     cursor: default;
+    border-collapse: collapse;
 }
 
 
@@ -428,6 +430,7 @@ ul.SPopupMenu a.x:hover{
 }
 
 .SPanel {
+    border-collapse: collapse;
     border-collapse: collapse;
 }
 

@@ -86,6 +86,6 @@ public class SliderExample
     }
 
     public String getExampleGroup() {
-        return "Experimental";
+        return "Experiment";
     }
 }

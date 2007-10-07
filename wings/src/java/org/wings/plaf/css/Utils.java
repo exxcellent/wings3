@@ -1099,11 +1099,18 @@ public final class Utils {
     }
 
     /**
+     * @return true if current browser is microsoft exploder
+     */
+    public static boolean isMSIE() {
+        return SessionManager.getSession().getUserAgent().getBrowserType() == BrowserType.IE;
+    }
+
+    /**
      * @param insets The inset param to test
      * @return <code>true</code> if any valid inset greater zero is set
      */
     public static boolean hasInsets(Insets insets) {
-        return insets != null && (insets.top > 0 || insets.left >0 || insets.right > 0 || insets.bottom > 0);
+        return insets != null && (insets.top > 0 || insets.left > 0 || insets.right > 0 || insets.bottom > 0);
     }
 
     public static void optFullSize(Device device, SComponent component) throws IOException {

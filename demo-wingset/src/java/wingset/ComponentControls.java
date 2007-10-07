@@ -37,6 +37,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Arrays;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 /**
  * A visual control used in many WingSet demos.
@@ -215,10 +217,17 @@ public class ComponentControls  extends SPanel {
             }
         };
         formComponentCheckBox.addActionListener(showAsFormComponentListener);
+
+        SessionManager.getSession().addPropertyChangeListener("ajax", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                ajaxCheckBox.setSelected((Boolean)evt.getNewValue());
+            }
+        });
     }
 
     void ajax() {
         SessionManager.getSession().getRootFrame().setUpdateEnabled(ajaxCheckBox.isSelected());
+        SessionManager.getSession().setProperty("ajax", ajaxCheckBox.isSelected());
     }
 
     void preferredSize() {

@@ -106,6 +106,6 @@ public class XInplaceEditorExample implements WingSetExample
     }
 
     public String getExampleGroup() {
-        return "Experimental";
+        return "Experiment";
     }
 }

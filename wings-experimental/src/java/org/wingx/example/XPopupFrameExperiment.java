@@ -71,7 +71,7 @@ public class XPopupFrameExperiment implements WingSetExample
     }
 
     public String getExampleGroup() {
-        return "Experimental";
+        return "Experiment";
     }
 }
 
