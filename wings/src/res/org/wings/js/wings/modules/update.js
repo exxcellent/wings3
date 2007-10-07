@@ -277,13 +277,49 @@ wingS.update.icon = function(componentId, icon, exception) {
  * @param {String} tableId - the ID of the table to scroll
  * @param {String} body - the html code for the body
  */
-wingS.update.tableScroll = function(tableId, html) {
+wingS.update.tableScroll = function(tableId, oldmin, min, max, tabledata) {
+console.info("tableScroll:");
+console.info(tableId);
+console.info(oldmin);
+console.info(min);
+console.info(max);
+console.info(tabledata);
+
     var table = document.getElementById(tableId);
-    var component = table.tBodies[0];
-    if (component.outerHTML)
-        component.outerHTML = "<tbody>" + html + "</tbody>";
-    else
-        component.innerHTML = html;
+    for (rownumber in tabledata) {
+        var rowindex = rownumber - oldmin;
+console.info("rownumber" + rownumber + ": " + rowindex);
+        var row = table.rows[rowindex];
+        if (row == null || row == undefined) {
+console.info("existiert nicht. fuege ein");
+            row = table.insertRow(rowindex);
+        }
+
+console.info("row" + row);
+        var rowdata = tabledata[rownumber];
+        if (rowdata == null) {
+console.info("keine daten. loesche");
+            table.deleteRow(rowindex);
+        } else {
+            // creating a domnode for our new cell
+            var celldiv = document.createElement("div");
+console.info("celldiv" + celldiv);
+
+            for (cellnumber in rowdata) {
+                var cell = row.cells[cellnumber];
+console.info("cell %o",cell);
+
+                // convert data into domnode and replace old child
+                celldiv.innerHTML = rowdata[cellnumber];
+                var cellnode = celldiv.firstChild();
+//console.info("cellnode: %o",cellnode);
+                row.replaceChild(cell, cellnode);
+
+                var cell = row.cells[cellnumber];
+console.info("cell %o",cell);
+            }
+        }
+    }
 };
 
 /**
