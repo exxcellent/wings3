@@ -40,7 +40,8 @@ wingS.ajax.sendRequest = function(method, uri, postData) {
     // make the end user nervous and shorten the felt request time.
     var responded = false;
     window.setTimeout(function () {if (!responded) {wingS.ajax.setActivityIndicatorsVisible(true);}},750);
-  
+
+  
     // Since some browsers cache GET requests via the XMLHttpRequest
     // object, an additional parameter called "_xhrID" will be added
     // to the request URI with a unique numeric value.
@@ -48,7 +49,8 @@ wingS.ajax.sendRequest = function(method, uri, postData) {
         uri += ((uri.indexOf("?")>-1) ? "&" : "?");
         uri += "_xhrID=" + new Date().getTime();
     }
-  var callbackProxy = {
+
+  var callbackProxy = {
         success : function(request) { responded = true; wingS.ajax.callbackObject.success(request); },
         failure : function(request) { responded = true; wingS.ajax.callbackObject.failure(request); },
         upload  : function(request) { responded = true; wingS.ajax.callbackObject.upload(request); }
@@ -141,7 +143,7 @@ wingS.ajax.processRequestSuccess = function(request) {
                                updates[i].firstChild.data;
 
                 if ("console" in window && window.console)
-                    console.error("%o", errorMsg);
+                    console.error("message: %o\nexception: %o\nupdate: %o", e.message, e, updates[i].firstChild.data);
                 alert(errorMsg);
             }
         }
