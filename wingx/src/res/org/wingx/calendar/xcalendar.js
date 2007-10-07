@@ -13,18 +13,15 @@ YAHOO.widget.XCalendar = function(containerId, config, xcalId, buttonId, hiddenI
 YAHOO.lang.extend( YAHOO.widget.XCalendar, YAHOO.widget.Calendar );
 
 YAHOO.widget.XCalendar.prototype.showCalendar = function() {
-    if (this.hiddenField.value != "") { 
+    if (this.hiddenField.value != "") {
         this.select(this.hiddenField.value); 
         var selectedDates = this.getSelectedDates(); 
         if (selectedDates.length > 0) { 
             var firstDate = selectedDates[0]; 
-            this.cfg.setProperty("pagedate", (firstDate.getMonth()+1) + "/" + firstDate.getFullYear()); 
-            this.render(); 
-        } else { 
-            alert("Cannot select a date"); 
+            this.cfg.setProperty("pagedate", (firstDate.getMonth()+1) + "/" + firstDate.getFullYear());  
         }
     }
-
+    this.render();
     this.show();
 
     var regionButton = YAHOO.util.Dom.getRegion(this.buttonId);
@@ -58,8 +55,8 @@ YAHOO.widget.XCalendar.prototype.handleSelect = function(type,args,obj) {
     
     if ( this.hiddenField.value != value ) {
         wingS.request.sendEvent(null, false, true, this.xcalId, value );
-        this.hide();
     }
+    this.hide();
 }
 
 /**

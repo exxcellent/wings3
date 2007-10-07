@@ -104,7 +104,7 @@ public class CalendarCG extends AbstractComponentCG implements org.wingx.plaf.Ca
         fTextField.write(device);
 
         device.print("\n</td><td class=\"b\">\n");
-
+        
         device.print("<input type=\"hidden\" id=\""+id_hidden+"\" name=\""+id_hidden+"\" value=\""+ format(dateFormat, component.getDate() )+"\">\n");
         device.print("<img class=\"XCalendarButton\" id=\""+id_button+"\" src=\""+component.getEditIcon().getURL()+"\" />\n");
         device.print("<div style=\"display:none;position:fixed;z-index:1001\" id=\""+id_cal+"\"></div>");
@@ -165,8 +165,6 @@ public class CalendarCG extends AbstractComponentCG implements org.wingx.plaf.Ca
     }
     
     private String format(DateFormat dateFormat, Date date) {
-        if (date == null)
-            date = new Date();
         return date != null ? dateFormat.format( date ) : "";
     }
 
