@@ -27,17 +27,15 @@ public final class StringBuilderDevice implements Device, Serializable {
     private SStringBuilder builder;
     private transient ByteArrayOutputStream byteStream = null;
 
-    @Deprecated // define  initial size
+    @Deprecated // specify a capacity
     public StringBuilderDevice() {
         builder = new SStringBuilder();
     }
 
-    public StringBuilderDevice(int initialCapacity) {
-        builder = new SStringBuilder(initialCapacity);
+    public StringBuilderDevice(int capacity) {
+        builder = new SStringBuilder(capacity);
     }
 
-
-    @Override
     public String toString() {
         flush();
         return builder.toString();

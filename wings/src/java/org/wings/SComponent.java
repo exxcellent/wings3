@@ -1956,5 +1956,4 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
                 e.getParentFrame().deregisterGlobalInputMapComponent(me);
         }
     }
-
 }

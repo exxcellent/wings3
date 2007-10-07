@@ -12,26 +12,9 @@
  */
 package org.wings;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.*;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wings.event.InvalidLowLevelEvent;
-import org.wings.event.SInvalidLowLevelEventListener;
-import org.wings.event.SRenderListener;
-import org.wings.event.SRequestEvent;
-import org.wings.event.SRequestListener;
+import org.wings.event.*;
 import org.wings.header.SessionHeaders;
 import org.wings.io.Device;
 import org.wings.plaf.FrameCG;
@@ -40,6 +23,12 @@ import org.wings.resource.ReloadResource;
 import org.wings.style.StyleSheet;
 import org.wings.util.ComponentVisitor;
 import org.wings.util.StringUtil;
+
+import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * The root component of every component hierarchy.
@@ -133,7 +122,7 @@ public class SFrame
     /**
      * Global input maps
      */
-    private ArrayList<SComponent> globalInputMapComponents;
+    private HashSet<SComponent> globalInputMapComponents = new HashSet<SComponent>();
 
 
     /**
@@ -670,9 +659,6 @@ public class SFrame
     }
 
     public void registerGlobalInputMapComponent(SComponent comp) {
-        if (globalInputMapComponents == null) {
-            globalInputMapComponents = new ArrayList<SComponent>();
-        }
         if (!globalInputMapComponents.contains(comp)) {
             // not yet registered
             globalInputMapComponents.add(comp);
@@ -686,7 +672,7 @@ public class SFrame
     }
 
 
-    public List<SComponent> getGlobalInputMapComponents() {
+    public Set<SComponent> getGlobalInputMapComponents() {
         return globalInputMapComponents;
     }
 

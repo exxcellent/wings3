@@ -39,6 +39,7 @@
         <file name="dnd.js"/>
     	<file name="tooltip.js"/>
     	<file name="scrollbar.js"/>
+    	<file name="table.js"/>
     	<file name="splitpane.js"/>
     </filelist>
 

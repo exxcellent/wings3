@@ -161,7 +161,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
                     if (e.getType() == SRequestEvent.DELIVER_START && InputMapRequestListener.this.frame.getDynamicResources().contains(e.getRequestedResource().getObject())) {
                         boolean changeDetected = false;
 
-                        List<SComponent> components = InputMapRequestListener.this.frame.getGlobalInputMapComponents();
+                        Set<SComponent> components = InputMapRequestListener.this.frame.getGlobalInputMapComponents();
 
                         for (SComponent component : components) {
                             boolean visible = component.isRecursivelyVisible();
@@ -207,7 +207,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         }
     }
 
-    protected String strokes(List<SComponent> components) {
+    protected String strokes(Set<SComponent> components) {
         if (components == null)
             return null;
 

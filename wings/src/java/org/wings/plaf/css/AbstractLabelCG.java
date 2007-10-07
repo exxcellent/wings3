@@ -88,7 +88,7 @@ public abstract class AbstractLabelCG extends AbstractComponentCG {
             String exception = null;
 
             try {
-                StringBuilderDevice textDevice = new StringBuilderDevice();
+                StringBuilderDevice textDevice = new StringBuilderDevice(32);
                 boolean wordWrap = false;
                 if (component instanceof SLabel)
                     wordWrap = ((SLabel) component).isWordWrap();
@@ -124,7 +124,7 @@ public abstract class AbstractLabelCG extends AbstractComponentCG {
             String exception = null;
 
             try {
-                StringBuilderDevice iconDevice = new StringBuilderDevice();
+                StringBuilderDevice iconDevice = new StringBuilderDevice(32);
                 writeIcon(iconDevice, icon, Utils.isMSIE(component));
                 iconCode = iconDevice.toString();
             } catch (Throwable t) {

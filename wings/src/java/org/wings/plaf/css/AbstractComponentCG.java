@@ -289,6 +289,7 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
     }
 
     public void componentChanged(COMPONENT_TYPE component) {
+        /*
         InputMap inputMap = component.getInputMap();
         if (inputMap != null && inputMap.size() > 0) {
             if (!(inputMap instanceof VersionedInputMap)) {
@@ -303,6 +304,7 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
                 component.putClientProperty("inputMapVersion", new Integer(versionedInputMap.getVersion()));
             }
         }
+        */
 
         // Add script listener support.
         List scriptListenerList = component.getScriptListenerList();
@@ -463,7 +465,7 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
             String exception = null;
 
             try {
-                StringBuilderDevice htmlDevice = new StringBuilderDevice(256);
+                StringBuilderDevice htmlDevice = new StringBuilderDevice(1024);
                 write(htmlDevice, component);
                 htmlCode = htmlDevice.toString();
             } catch (Throwable t) {

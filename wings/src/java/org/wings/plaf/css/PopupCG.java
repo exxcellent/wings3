@@ -122,7 +122,7 @@ public final class PopupCG extends AbstractComponentCG implements org.wings.plaf
     }
     
     public String getRenderedContent() {
-        StringBuilderDevice device = new StringBuilderDevice();
+        StringBuilderDevice device = new StringBuilderDevice(128);
 
         if (this.popup.getComponent() != null) {
             try {

@@ -231,7 +231,7 @@ public class DefaultReloadManager implements ReloadManager {
     private void printAllUpdates(String header) {
         log.debug(header);
         int numberOfUpdates = 0;
-        SStringBuilder output = new SStringBuilder();
+        SStringBuilder output = new SStringBuilder(512);
         for (SComponent component : getDirtyComponents()) {
             output.setLength(0);
             output.append("    ").append(component + ":");

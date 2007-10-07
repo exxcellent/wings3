@@ -13,31 +13,23 @@
 package org.wings.plaf.css;
 
 
-import org.wings.SCellRendererPane;
-import org.wings.SClickable;
-import org.wings.SComponent;
-import org.wings.SConstants;
-import org.wings.SDimension;
-import org.wings.SIcon;
-import org.wings.SListSelectionModel;
-import org.wings.STable;
+import org.wings.*;
+import org.wings.script.JavaScriptEvent;
 import org.wings.io.Device;
 import org.wings.io.StringBuilderDevice;
 import org.wings.plaf.CGManager;
 import org.wings.plaf.Update;
 import org.wings.session.SessionManager;
-import org.wings.table.SDefaultTableCellRenderer;
-import org.wings.table.STableCellRenderer;
-import org.wings.table.STableColumn;
-import org.wings.table.STableColumnModel;
+import org.wings.table.*;
 import org.wings.util.SStringBuilder;
 
-import java.awt.Rectangle;
+import java.awt.*;
 import java.io.IOException;
 
 public final class TableCG
-        extends AbstractComponentCG
-        implements org.wings.plaf.TableCG {
+    extends AbstractComponentCG
+    implements org.wings.plaf.TableCG
+{
     private static final long serialVersionUID = 1L;
     protected String fixedTableBorderWidth;
     protected SIcon editIcon;
@@ -45,22 +37,22 @@ public final class TableCG
 
     int horizontalOversize = 4;
 
+    /**
+     * Initialize properties from config
+     */
+    public TableCG() {
+        final CGManager manager = SessionManager.getSession().getCGManager();
+        setFixedTableBorderWidth((String)manager.getObject("TableCG.fixedTableBorderWidth", String.class));
+        setEditIcon(manager.getIcon("TableCG.editIcon"));
+        selectionColumnWidth = (String)manager.getObject("TableCG.selectionColumnWidth", String.class);
+    }
+
     public int getHorizontalOversize() {
         return horizontalOversize;
     }
 
     public void setHorizontalOversize(int horizontalOversize) {
         this.horizontalOversize = horizontalOversize;
-    }
-
-    /**
-     * Initialize properties from config
-     */
-    public TableCG() {
-        final CGManager manager = SessionManager.getSession().getCGManager();
-        setFixedTableBorderWidth((String) manager.getObject("TableCG.fixedTableBorderWidth", String.class));
-        setEditIcon(manager.getIcon("TableCG.editIcon"));
-        selectionColumnWidth = (String) manager.getObject("TableCG.selectionColumnWidth", String.class);
     }
 
     /**
@@ -110,74 +102,39 @@ public final class TableCG
     public void installCG(final SComponent comp) {
         super.installCG(comp);
 
-        final STable table = (STable) comp;
+        final STable table = (STable)comp;
         final CGManager manager = table.getSession().getCGManager();
         Object value;
 
         value = manager.getObject("STable.defaultRenderer", STableCellRenderer.class);
         if (value != null) {
-            table.setDefaultRenderer((STableCellRenderer) value);
+            table.setDefaultRenderer((STableCellRenderer)value);
             if (value instanceof SDefaultTableCellRenderer) {
-                SDefaultTableCellRenderer cellRenderer = (SDefaultTableCellRenderer) value;
+                SDefaultTableCellRenderer cellRenderer = (SDefaultTableCellRenderer)value;
                 cellRenderer.setEditIcon(editIcon);
             }
         }
 
         value = manager.getObject("STable.headerRenderer", STableCellRenderer.class);
         if (value != null) {
-            table.setHeaderRenderer((STableCellRenderer) value);
+            table.setHeaderRenderer((STableCellRenderer)value);
         }
 
         value = manager.getObject("STable.rowSelectionRenderer", org.wings.table.STableCellRenderer.class);
         if (value != null) {
-            table.setRowSelectionRenderer((org.wings.table.STableCellRenderer) value);
+            table.setRowSelectionRenderer((org.wings.table.STableCellRenderer)value);
         }
 
-        /*
-        InputMap inputMap = new InputMap();
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK, false), "left");
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK, false), "right");
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK, false), "up");
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK, false), "down");
-        table.setInputMap(SComponent.WHEN_IN_FOCUSED_FRAME, inputMap);
-
-        Action action = new AbstractAction()
-        {
-            public void actionPerformed(ActionEvent e) {
-                if (!table.isEditing())
-                    return;
-                if (table.getEditingRow() > 0 && "up".equals(e.getActionCommand()))
-                    table.setEditingRow(table.getEditingRow() - 1);
-                if (table.getEditingRow() < table.getRowCount() - 1 && "down".equals(e.getActionCommand()))
-                    table.setEditingRow(table.getEditingRow() + 1);
-                if (table.getEditingColumn() > 0 && "left".equals(e.getActionCommand()))
-                    table.setEditingColumn(table.getEditingColumn() - 1);
-                if (table.getEditingColumn() < table.getColumnCount() - 1 && "right".equals(e.getActionCommand()))
-                    table.setEditingColumn(table.getEditingColumn() + 1);
-                table.requestFocus();
-            }
-        };
-        ActionMap actionMap = new ActionMap();
-        actionMap.put("up", action);
-        actionMap.put("down", action);
-        actionMap.put("left", action);
-        actionMap.put("right", action);
-        table.setActionMap(actionMap);
-        */
-
-        if (isMSIE(table)) {
+        if (isMSIE(table))
             table.putClientProperty("horizontalOversize", new Integer(horizontalOversize));
-        }
     }
 
     public void uninstallCG(SComponent component) {
         super.uninstallCG(component);
-        final STable table = (STable) component;
+        final STable table = (STable)component;
         table.setHeaderRenderer(null);
         table.setDefaultRenderer(null);
         table.setRowSelectionRenderer(null);
-        table.setActionMap(null);
-        table.setInputMap(null);
     }
 
     /**
@@ -185,7 +142,8 @@ public final class TableCG
      */
     protected void renderCellContent(final Device device, final STable table, final SCellRendererPane rendererPane,
                                      final int row, final int col)
-            throws IOException {
+        throws IOException
+    {
         final boolean isEditingCell = table.isEditing() && row == table.getEditingRow() && col == table.getEditingColumn();
         final boolean editableCell = table.isCellEditable(row, col);
         final boolean selectableCell = table.getSelectionMode() != SListSelectionModel.NO_SELECTION && !table.isEditable() && table.isSelectable();
@@ -193,7 +151,8 @@ public final class TableCG
         final SComponent component;
         if (isEditingCell) {
             component = table.getEditorComponent();
-        } else {
+        }
+        else {
             component = table.prepareRenderer(table.getCellRenderer(row, col), row, col);
         }
 
@@ -211,19 +170,18 @@ public final class TableCG
         Utils.optAttribute(device, "oversize", horizontalOversize);
 
         String parameter = null;
-        if (table.isEditable() && editableCell) {
+        if (table.isEditable() && editableCell)
             parameter = table.getEditParameter(row, col);
-        } else if (selectableCell) {
+        else if (selectableCell)
             parameter = table.getToggleSelectionParameter(row, col);
-        }
 
         if (parameter != null && (selectableCell || editableCell) && !isClickable) {
             printClickability(device, table, parameter, table.getShowAsFormComponent());
             device.print(isEditingCell ? " editing=\"true\"" : " editing=\"false\"");
             device.print(" class=\"cell clickable\"");
-        } else {
-            device.print(" class=\"cell\"");
         }
+        else
+            device.print(" class=\"cell\"");
         device.print(">");
 
         rendererPane.writeComponent(device, component, table);
@@ -235,7 +193,8 @@ public final class TableCG
     protected void writeHeaderCell(final Device device, final STable table,
                                    final SCellRendererPane rendererPane,
                                    final int col)
-            throws IOException {
+        throws IOException
+    {
         final SComponent comp = table.prepareHeaderRenderer(table.getHeaderRenderer(col), col);
 
         device.print("<th col=\"");
@@ -252,7 +211,7 @@ public final class TableCG
     }
 
     public final void writeInternal(final Device device, final SComponent _c) throws IOException {
-        final STable table = (STable) _c;
+        final STable table = (STable)_c;
 
         device.print("<table");
         Utils.writeAllAttributes(device, table);
@@ -305,17 +264,15 @@ public final class TableCG
         STableColumnModel columnModel = table.getColumnModel();
         if (columnModel != null && atLeastOneColumnWidthIsNotNull(columnModel)) {
             device.print("<colgroup>");
-            if (isSelectionColumnVisible(table)) {
+            if (isSelectionColumnVisible(table))
                 writeCol(device, selectionColumnWidth);
-            }
 
             for (int i = startX; i < endX; ++i) {
                 STableColumn column = columnModel.getColumn(i);
-                if (!column.isHidden()) {
+                if (!column.isHidden())
                     writeCol(device, column.getWidth());
-                } else {
+                else
                     ++endX;
-                }
             }
             device.print("</colgroup>");
             Utils.printNewline(device, table);
@@ -323,9 +280,8 @@ public final class TableCG
     }
 
     private void writeHeader(Device device, STable table, int startX, int endX) throws IOException {
-        if (!table.isHeaderVisible()) {
+        if (!table.isHeaderVisible())
             return;
-        }
 
         final SCellRendererPane rendererPane = table.getCellRendererPane();
         STableColumnModel columnModel = table.getColumnModel();
@@ -340,18 +296,17 @@ public final class TableCG
 
         for (int i = startX; i < endX; ++i) {
             STableColumn column = columnModel.getColumn(i);
-            if (!column.isHidden()) {
+            if (!column.isHidden())
                 writeHeaderCell(device, table, rendererPane, i);
-            } else {
+            else
                 ++endX;
-            }
         }
         device.print("</tr>");
         Utils.printNewline(device, table);
     }
 
-    private void writeBody(Device device, STable table,
-                           int startX, int endX, int startY, int endY, int emptyIndex) throws IOException {
+    protected void writeBody(Device device, STable table,
+            int startX, int endX, int startY, int endY, int emptyIndex) throws IOException {
         final SListSelectionModel selectionModel = table.getSelectionModel();
 
         SStringBuilder selectedArea = Utils.inlineStyles(table.getDynamicStyle(STable.SELECTOR_SELECTED));
@@ -360,51 +315,57 @@ public final class TableCG
         final SCellRendererPane rendererPane = table.getCellRendererPane();
         STableColumnModel columnModel = table.getColumnModel();
 
-        int backupEndX = endX; // Backup endX because we have to restore it after each inner loop.
-
         for (int r = startY; r < endY; ++r) {
-            if (r >= emptyIndex) {
-                int colspan = endX - startX;
-                device.print("<tr class=\"empty\">\n");
-                if (isSelectionColumnVisible(table)) {
-                    device.print("  <td></td>\n");
-                }
-                device.print("  <td colspan=\"" + colspan + "\">&nbsp;</td>\n");
-                device.print("</tr>\n");
-                continue;
-            }
-
-            String rowStyle = table.getRowStyle(r);
-            SStringBuilder rowClass = new SStringBuilder(rowStyle != null ? rowStyle + " " : "");
-            device.print("<tr");
-            if (selectionModel.isSelectedIndex(r)) {
-                Utils.optAttribute(device, "style", selectedArea);
-                rowClass.append("selected ");
-            } else if (r % 2 != 0) {
-                Utils.optAttribute(device, "style", oddArea);
-            } else {
-                Utils.optAttribute(device, "style", evenArea);
-            }
-
-            rowClass.append(r % 2 != 0 ? "odd" : "even");
-            Utils.optAttribute(device, "class", rowClass);
-            device.print(">");
-
-            writeSelectionBody(device, table, rendererPane, r);
-
-            for (int c = startX; c < endX; ++c) {
-                STableColumn column = columnModel.getColumn(c);
-                if (!column.isHidden()) {
-                    renderCellContent(device, table, rendererPane, r, c);
-                } else {
-                    ++endX;
-                }
-            }
-            endX = backupEndX;
-
-            device.print("</tr>");
-            Utils.printNewline(device, table);
+            writeTableRow(device, table, columnModel, selectionModel, rendererPane, r,
+                    startX, endX, emptyIndex, selectedArea, oddArea, evenArea);
         }
+    }
+
+    protected void writeTableRow(
+            Device device, STable table, STableColumnModel columnModel,
+            SListSelectionModel selectionModel, SCellRendererPane rendererPane,
+            final int rowIndex, int startX, int endX,
+            int emptyIndex, SStringBuilder selectedArea,
+            SStringBuilder oddArea, SStringBuilder evenArea) throws IOException {
+        if (rowIndex >= emptyIndex) {
+            int colspan = endX - startX;
+            device.print("<tr class=\"empty\">\n");
+            if (isSelectionColumnVisible(table)) {
+                device.print("  <td></td>\n");
+            }
+            device.print("  <td colspan=\"" + colspan + "\">&nbsp;</td>\n");
+            device.print("</tr>\n");
+            return;
+        }
+
+        String rowStyle = table.getRowStyle(rowIndex);
+        SStringBuilder rowClass = new SStringBuilder(rowStyle != null ? rowStyle + " " : "");
+        device.print("<tr");
+        if (selectionModel.isSelectedIndex(rowIndex)) {
+            Utils.optAttribute(device, "style", selectedArea);
+            rowClass.append("selected ");
+        }
+        else if (rowIndex % 2 != 0)
+            Utils.optAttribute(device, "style", oddArea);
+        else
+            Utils.optAttribute(device, "style", evenArea);
+
+        rowClass.append(rowIndex % 2 != 0 ? "odd" : "even");
+        Utils.optAttribute(device, "class", rowClass);
+        device.print(">");
+
+        writeSelectionBody(device, table, rendererPane, rowIndex);
+
+        for (int c = startX; c < endX; ++c) {
+            STableColumn column = columnModel.getColumn(c);
+            if (!column.isHidden())
+                renderCellContent(device, table, rendererPane, rowIndex, c);
+            else
+                ++endX;
+        }
+
+        device.print("</tr>");
+        Utils.printNewline(device, table);
     }
 
     protected void writeSelectionHeader(Device device, STable table) throws IOException {
@@ -418,9 +379,8 @@ public final class TableCG
     private boolean atLeastOneColumnWidthIsNotNull(STableColumnModel columnModel) {
         int columnCount = columnModel.getColumnCount();
         for (int i = 0; i < columnCount; i++)
-            if (columnModel.getColumn(i).getWidth() != null) {
+            if (columnModel.getColumn(i).getWidth() != null)
                 return true;
-            }
         return false;
     }
 
@@ -434,8 +394,9 @@ public final class TableCG
      * Renders the row sometimes needed to allow row selection.
      */
     protected void writeSelectionBody(final Device device, final STable table, final SCellRendererPane rendererPane,
-                                      final int row)
-            throws IOException {
+                                         final int row)
+        throws IOException
+    {
         final STableCellRenderer rowSelectionRenderer = table.getRowSelectionRenderer();
         if (isSelectionColumnVisible(table)) {
             final SComponent comp = rowSelectionRenderer.getTableCellRendererComponent(table,
@@ -453,7 +414,8 @@ public final class TableCG
                 device.print(" class=\"clickable ");
                 device.print(columnStyle);
                 device.print("\"");
-            } else {
+            }
+            else {
                 device.print(" class=\"");
                 device.print(columnStyle);
                 device.print("\"");
@@ -481,9 +443,8 @@ public final class TableCG
     }
 
     private boolean isSelectionColumnVisible(STable table) {
-        if (table.getRowSelectionRenderer() != null && table.getSelectionModel().getSelectionMode() != SListSelectionModel.NO_SELECTION) {
+        if (table.getRowSelectionRenderer() != null && table.getSelectionModel().getSelectionMode() != SListSelectionModel.NO_SELECTION)
             return true;
-        }
         return false;
     }
 
@@ -501,20 +462,22 @@ public final class TableCG
         return new RenderCellUpdate(table, row, column);
     }
 
-    protected class TableScrollUpdate extends AbstractUpdate<STable> {
+    protected class TableScrollUpdate
+        extends AbstractUpdate {
 
-        public TableScrollUpdate(STable component) {
+        public TableScrollUpdate(SComponent component) {
             super(component);
         }
 
-        @Override
         public Handler getHandler() {
-            final Rectangle currentViewport = component.getViewportSize();
-            final Rectangle maximalViewport = component.getScrollableViewportSize();
+            STable table = (STable) component;
+
+            Rectangle currentViewport = table.getViewportSize();
+            Rectangle maximalViewport = table.getScrollableViewportSize();
             int startX = 0;
-            int endX = component.getVisibleColumnCount();
+            int endX = table.getVisibleColumnCount();
             int startY = 0;
-            int endY = component.getRowCount();
+            int endY = table.getRowCount();
             int emptyIndex = maximalViewport != null ? maximalViewport.height : endY;
 
             if (currentViewport != null) {
@@ -528,15 +491,15 @@ public final class TableCG
             String exception = null;
 
             try {
-                final StringBuilderDevice htmlDevice = new StringBuilderDevice(4096);
-                writeBody(htmlDevice, component, startX, endX, startY, endY, emptyIndex);
+                StringBuilderDevice htmlDevice = new StringBuilderDevice();
+                writeBody(htmlDevice, table, startX, endX, startY, endY, emptyIndex);
                 htmlCode = htmlDevice.toString();
             } catch (Throwable t) {
                 exception = t.getClass().getName();
             }
 
-            final UpdateHandler handler = new UpdateHandler("tableScroll");
-            handler.addParameter(component.getName());
+            UpdateHandler handler = new UpdateHandler("tableScroll");
+            handler.addParameter(table.getName());
             handler.addParameter(htmlCode);
             if (exception != null) {
                 handler.addParameter(exception);
@@ -546,7 +509,8 @@ public final class TableCG
     }
 
     private class EditCellUpdate
-            extends AbstractUpdate<STable> {
+        extends AbstractUpdate<STable>
+    {
         private int row;
         private int column;
 
@@ -590,7 +554,9 @@ public final class TableCG
         }
     }
 
-    private class RenderCellUpdate extends AbstractUpdate<STable> {
+    private class RenderCellUpdate
+        extends AbstractUpdate<STable>
+    {
         private int row;
         private int column;
 
@@ -600,7 +566,6 @@ public final class TableCG
             this.column = column;
         }
 
-        @Override
         public Handler getHandler() {
             STable table = this.component;
 
@@ -608,7 +573,7 @@ public final class TableCG
             String exception = null;
 
             try {
-                StringBuilderDevice device = new StringBuilderDevice();
+                StringBuilderDevice device = new StringBuilderDevice(256);
                 /*
                 Utils.printTableCellAlignment(device, component, SConstants.LEFT, SConstants.TOP);
                 Utils.optAttribute(device, "oversize", horizontalOversize);
@@ -634,28 +599,20 @@ public final class TableCG
             return handler;
         }
 
-        @Override
         public boolean equals(Object object) {
-            if (object == this) {
-                return true;
-            }
-            if (object == null || object.getClass() != this.getClass()) {
+            if (!super.equals(object))
                 return false;
-            }
-
-            if (!super.equals(object)) {
-                return false;
-            }
 
             RenderCellUpdate other = (RenderCellUpdate) object;
 
-            if (this.row != other.row) {
+            if (this.row != other.row)
                 return false;
-            }
-            return this.column == other.column;
+            if (this.column != other.column)
+                return false;
+
+            return true;
         }
 
-        @Override
         public int hashCode() {
             int hashCode = super.hashCode();
             int dispersionFactor = 37;
