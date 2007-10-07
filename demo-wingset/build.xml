@@ -25,7 +25,7 @@
     <target name="compile" depends="prepare">
         <javac srcdir="src/java"
             destdir="build/class"
-            debug="${build.debug}"
+            debug="${build.debug}" encoding="utf-8"
             deprecation="${build.deprecation}"
             source="1.5"
             target="1.5">

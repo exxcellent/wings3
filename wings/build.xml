@@ -112,15 +112,16 @@
 
     <target name="compile" depends="prepare, generate">
         <javac debug="${build.debug}" deprecation="${build.deprecation}"
-            destdir="build/class" srcdir="src/java" source="1.5" target="1.5">
+               encoding="utf-8" source="1.5" target="1.5"
+	       srcdir="src/java" destdir="build/class">
             <classpath refid="build.classpath"/>
         </javac>
     </target>
 
     <target name="compile-tests" depends="prepare, generate, compile">
         <javac debug="${build.debug}" deprecation="${build.deprecation}"
-            destdir="${test.classes.dir}" srcdir="src/test"
-	    source="1.5" target="1.5">
+               encoding="utf-8" source="1.5" target="1.5"
+	       srcdir="src/test" destdir="${test.classes.dir}">
 	    <classpath path="build/class"/>
             <classpath refid="build.classpath"/>
             <classpath refid="test.classpath"/>

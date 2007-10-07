@@ -1415,7 +1415,7 @@ public final class Utils {
                 last = pos + 1;
                 break;
             default:
-                if (c >= '\u0000' && c <= '\u001F') {
+                if ((c >= '\u0000' && c <= '\u001F') || c >= '\u007F') {
                     d.print(chars, last, pos-last);
                     final String hex = Integer.toHexString(c);
                     d.print("\\u");

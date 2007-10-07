@@ -43,7 +43,12 @@ public class UtilsTest extends TestCase {
         assertEquals("\"\\u0000\"", encodeJSToString("\u0000"));
         assertEquals("\"\\u001f\"", encodeJSToString("\u001F"));
         assertEquals("\" \"", encodeJSToString("\u0020")); // first non-special
-
+        
+        // Seems, that proper UTF-8 encoding currently requires it to be
+        // escaped for JS. It seemed to have worked before, but .. mmh.
+        // If this is changed, back this with selenium browser tests.
+        assertEquals("\"\\u00e4\"", encodeJSToString("ä"));
+        
         // And now: all together ;-)
         assertEquals("\"foo\\\\\\\"bar\"", encodeJSToString("foo\\\"bar"));
         assertEquals("\"\\nfoo\\\\\\\"bar\"", encodeJSToString("\nfoo\\\"bar"));
