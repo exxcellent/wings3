@@ -393,7 +393,7 @@ final class SessionServlet
                         StringTokenizer tokenizer = new StringTokenizer(cookie.getValue(),":");
                         String[] values = new String[tokenizer.countTokens()];
                         for (int j = 0; j < values.length; j++) {
-                            values[i] = tokenizer.nextToken();
+                            values[j] = tokenizer.nextToken();
                         }
                         session.setProperty("debug.cookie", values);
                     } else {

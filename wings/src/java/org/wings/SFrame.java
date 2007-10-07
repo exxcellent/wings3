@@ -802,7 +802,7 @@ public class SFrame
                 }
             }
         }
-        return "off";
+        return null;
     }
     
     public boolean isDebugJs() {

@@ -519,7 +519,10 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         initConfig.put("updateEnabled", frame.isUpdateEnabled());
         initConfig.put("updateCursor", Utils.mapToJsObject(frame.getUpdateCursor()));
         initConfig.put("autoAdjustLayout", Utils.mapToJsObject(frame.getAutoAdjustLayout()));
-        initConfig.put("loglevel", frame.getLogLevel());
+        final String logLevel = frame.getLogLevel();
+        if (logLevel != null && !"".equals(logLevel)) {
+            initConfig.put("loglevel", logLevel);
+        }
         
         SStringBuilder script = new SStringBuilder();
         script.append("wingS.global.init(").append(Utils.mapToJsObject(initConfig)).append(");");
