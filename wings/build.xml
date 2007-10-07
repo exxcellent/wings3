@@ -124,19 +124,21 @@
         </javac>
     </target>
 
-    <target name="run-tests" depends="compile-tests" description="executes all tests">
-        <junit fork="yes" haltonfailure="no" printsummary="on" showoutput="false">
-	        <classpath path="build/class"/>
+    <target name="run-tests" depends="compile-tests"
+            description="executes all tests">
+        <junit fork="yes" haltonfailure="no" printsummary="on"
+	       showoutput="false">
+	    <classpath path="build/class"/>
+	    <classpath path="${test.classes.dir}"/>
+	    <classpath path="src/res"/>
             <classpath refid="build.classpath"/>
             <classpath refid="test.classpath"/>
-            <formatter type="plain" usefile="true" />
             <batchtest todir="${test.log.dir}">
                 <fileset refid="test.classes.files" />
             </batchtest>
+            <formatter type="plain" usefile="false" />
         </junit>
     </target>
-
-
 
     <target name="build" depends="compile" description="build">
         <mkdir dir="build/web/WEB-INF/lib"/>
