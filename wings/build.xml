@@ -13,6 +13,8 @@
     <property name="dwr.version" value="dwr.jar"/>
     <property name="xalan.version" value="xalan.jar"/>
 
+    <property name="test.log.dir" value="/tmp/" />
+
     <path id="build.classpath">
         <fileset dir="../thirdparty/lib">
             <include name="${servlet.version}"/>
@@ -30,6 +32,12 @@
             <include name="junit-4.4.jar"/>
       </fileset>
     </path>
+
+    <property name="test.classes.dir" value="build/test-class" />
+
+    <fileset id="test.classes.files" dir="${test.classes.dir}" defaultexcludes="yes">
+      <include name="**/*Test.class" />
+    </fileset>
 
     <filelist dir="src/res/org/wings/js/wings/modules"
         id="wings.js.modules">
@@ -51,7 +59,7 @@
 
     <target name="prepare">
         <mkdir dir="build/class"/>
-        <mkdir dir="build/test-class"/>
+        <mkdir dir="${test.classes.dir}"/>
         <tstamp>
             <format property="wings.buildtime" pattern="yyyy-MM-dd HH:mm"/>
         </tstamp>
@@ -108,13 +116,27 @@
 
     <target name="compile-tests" depends="prepare, generate, compile">
         <javac debug="${build.debug}" deprecation="${build.deprecation}"
-            destdir="build/test-class" srcdir="src/test"
+            destdir="${test.classes.dir}" srcdir="src/test"
 	    source="1.5" target="1.5">
 	    <classpath path="build/class"/>
             <classpath refid="build.classpath"/>
             <classpath refid="test.classpath"/>
         </javac>
     </target>
+
+    <target name="run-tests" depends="compile-tests" description="executes all tests">
+        <junit fork="yes" haltonfailure="no" printsummary="on" showoutput="false">
+	        <classpath path="build/class"/>
+            <classpath refid="build.classpath"/>
+            <classpath refid="test.classpath"/>
+            <formatter type="plain" usefile="true" />
+            <batchtest todir="${test.log.dir}">
+                <fileset refid="test.classes.files" />
+            </batchtest>
+        </junit>
+    </target>
+
+
 
     <target name="build" depends="compile" description="build">
         <mkdir dir="build/web/WEB-INF/lib"/>
