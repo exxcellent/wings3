@@ -39,21 +39,21 @@ public class UtilsTest extends TestCase {
         assertEquals("\"\\r\"", encodeJSToString("\r"));
         assertEquals("\"\\t\"", encodeJSToString("\t"));
 
-        // Special characters are encoded as utf-8 escape
+        // Special characters are encoded as utf-8 escape.
         assertEquals("\"\\u0000\"", encodeJSToString("\u0000"));
         assertEquals("\"\\u001f\"", encodeJSToString("\u001F"));
         assertEquals("\" \"", encodeJSToString("\u0020")); // first non-special
         
         // Seems, that proper UTF-8 encoding currently requires it to be
-        // escaped for JS. It seemed to have worked before, but .. mmh.
+        // escaped for JS. Did it work before ? - mmh.
         // If this is changed, back this with selenium browser tests.
-        assertEquals("\"\\u00e4\"", encodeJSToString("ä"));
+        assertEquals("\"\\u00e4\"", encodeJSToString("\u00E4"));
         
         // And now: all together ;-)
         assertEquals("\"foo\\\\\\\"bar\"", encodeJSToString("foo\\\"bar"));
         assertEquals("\"\\nfoo\\\\\\\"bar\"", encodeJSToString("\nfoo\\\"bar"));
         assertEquals("\"\\nfoo\\\\\\\"b\\u00e4r\\t\"",
-                encodeJSToString("\nfoo\\\"bär\t"));
+                encodeJSToString("\nfoo\\\"b\u00E4r\t"));
     }
 
     public void test_JsonArray_rendering() {
@@ -65,7 +65,7 @@ public class UtilsTest extends TestCase {
     }
     
     public void test_JsonObject_rendering() {
-        // Use TreeMap to have a certain sequence
+        // Use TreeMap to have predictable sequence.
         final Map<String, Object> map = new TreeMap<String,Object>();
         map.put("bar", new Integer(42));
         map.put("baz", "s");
