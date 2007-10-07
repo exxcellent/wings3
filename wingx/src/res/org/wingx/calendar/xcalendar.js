@@ -34,10 +34,15 @@ YAHOO.widget.XCalendar.prototype.showCalendar = function() {
     
     var regionCalendar = YAHOO.util.Dom.getRegion(this.calId);
     var viewportWidth  = YAHOO.util.Dom.getViewportWidth();
+    var viewportHeight = YAHOO.util.Dom.getViewportHeight();
 
     if ( regionCalendar.right > viewportWidth ) {
         YAHOO.util.Dom.setX( this.calId, regionCalendar.left - ( regionCalendar.right - viewportWidth ) );
     }
+    if ( regionCalendar.bottom > viewportHeight ) {
+        YAHOO.util.Dom.setY( this.calId, regionCalendar.top - ( regionCalendar.bottom - viewportHeight ) );
+    }
+
 }
 
 YAHOO.widget.XCalendar.prototype.handleSelect = function(type,args,obj) {
