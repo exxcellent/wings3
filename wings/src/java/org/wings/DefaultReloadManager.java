@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,12 +35,16 @@ public class DefaultReloadManager implements ReloadManager {
 
     private boolean acceptChanges = true;
 
-    protected final Map<SComponent, PotentialUpdate> fullReplaceUpdates = new HashMap<SComponent, PotentialUpdate>(256);
+    private final Map<SComponent, PotentialUpdate> fullReplaceUpdates = new HashMap<SComponent, PotentialUpdate>(256);
 
-    protected final Map<SComponent, Set<PotentialUpdate>> fineGrainedUpdates = new HashMap<SComponent, Set<PotentialUpdate>>(64);
+    private final Map<SComponent, Set<PotentialUpdate>> fineGrainedUpdates = new HashMap<SComponent, Set<PotentialUpdate>>(64);
 
-    protected final List<SComponent> componentsToReload = new ArrayList<SComponent>();
-
+    /** 
+     * All the components to reload. A LinkedHashSet to have an ordered
+     * sequence that allows for fast lookup.
+     */
+    private final Set<SComponent> componentsToReload = new LinkedHashSet<SComponent>();
+    
     public void reload(SComponent component) {
         if (component == null)
             throw new IllegalArgumentException("Component must not be null!");
@@ -149,7 +154,7 @@ public class DefaultReloadManager implements ReloadManager {
         updateMode = false;
         acceptChanges = true;
         fullReplaceUpdates.clear();
-        fineGrainedUpdates.clear();
+        fineGrainedUpdates.clear();        
         componentsToReload.clear();
     }
 
