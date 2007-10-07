@@ -573,7 +573,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/demo-desktop/demo-desktop.iml" filepath="$PROJECT_DIR$/demo-desktop/demo-desktop.iml" />
-      <module fileurl="file://$PROJECT_DIR$/demo-dwr/demo-dwr.iml" filepath="$PROJECT_DIR$/demo-dwr/demo-dwr.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo-jsp/demo-jsp.iml" filepath="$PROJECT_DIR$/demo-jsp/demo-jsp.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo-logconfig/demo-logconfig.iml" filepath="$PROJECT_DIR$/demo-logconfig/demo-logconfig.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo-mycomponent/demo-mycomponent.iml" filepath="$PROJECT_DIR$/demo-mycomponent/demo-mycomponent.iml" />
