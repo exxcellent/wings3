@@ -11,7 +11,7 @@ import org.mortbay.jetty.webapp.WebAppContext;
 public class JettyRunner {
 	public static void main(String argv[]) throws Exception {
 		if (argv.length != 2) { 
-			System.err.println("usage: WingsetRunner <warfile> <port>");
+			System.err.println("usage: WingsetRunner <warfile|directory> <port>");
 			System.exit(1);
 		}
 		
@@ -32,7 +32,7 @@ public class JettyRunner {
 
         server.start();
 
-        System.out.println("\n\n===> Point your browser to "
-		           + " http://localhost:" + port + "/ <===\n");
+        System.out.println("\n\n[===> Point your browser to "
+		           + " http://localhost:" + port + "/  <===]\n");
 	}
 }
