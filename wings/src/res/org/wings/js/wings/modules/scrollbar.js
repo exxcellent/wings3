@@ -27,12 +27,14 @@ wingS.scrollbar.layout_vertical = function(id) {
         _tOutId : 0,
         _adjust : function (target) {
             wingS.scrollbar.scroll_vertical(target);
+            table.callbackObject._tOutId = 0;
         },
         adjust : function (event) {
-            var target = wingS.event.getTarget(event);
-            clearTimeout(table.callbackObject._tOutId);
-            var cb = table.callbackObject;
-            table.callbackObject._tOutId = setTimeout(function() { cb._adjust(target); }, wingS.global.autoAdjustLayout.delay);
+            if (table.callbackObject._tOutId == 0) {
+                var cb = table.callbackObject;
+                var target = wingS.event.getTarget(event);
+                table.callbackObject._tOutId = setTimeout(function() { cb._adjust(target); }, wingS.global.autoAdjustLayout.delay);
+            }
         }
     };
 
@@ -91,12 +93,14 @@ wingS.scrollbar.layout_horizontal = function(id) {
         _tOutId : 0,
         _adjust : function (target) {
             wingS.scrollbar.scroll_horizontal(target);
+            table.callbackObject._tOutId = 0;
         },
         adjust : function (event) {
-            var target = wingS.event.getTarget(event);
-            clearTimeout(table.callbackObject._tOutId);
-            var cb = table.callbackObject;
-            table.callbackObject._tOutId = setTimeout(function() { cb._adjust(target); }, wingS.global.autoAdjustLayout.delay);
+            if (table.callbackObject._tOutId == 0) {
+                var cb = table.callbackObject;
+                var target = wingS.event.getTarget(event);
+                table.callbackObject._tOutId = setTimeout(function() { cb._adjust(target); }, wingS.global.autoAdjustLayout.delay);
+            }
         }
     };
 

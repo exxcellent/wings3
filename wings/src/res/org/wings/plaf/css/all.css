@@ -180,7 +180,8 @@ select.SList {
 /* Default text alignments of labels in tabs. */
 th.STabbedPane_top {
     text-align: left;
-    padding-top:.1em;
+    padding-top: 3px;
+    padding-bottom: 3px;
 }
 th.STabbedPane_left {
     vertical-align: top;
@@ -192,7 +193,8 @@ th.STabbedPane_right {
 }
 th.STabbedPane_bottom {
     text-align: left;
-    padding-bottom:.1em;
+    padding-top: 3px;
+    padding-bottom: 3px;
 }
 
 .STabbedPane_Tab_disabled,
@@ -236,7 +238,6 @@ th.STabbedPane_bottom {
 .STabbedPane_Tab_left,
 .STabbedPane_Tab_right {
     display: block;
-    width: 100%;
     white-space: nowrap;
 }
 
