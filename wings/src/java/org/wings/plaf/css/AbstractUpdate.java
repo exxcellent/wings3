@@ -18,11 +18,11 @@ public abstract class AbstractUpdate<COMPONENT_TYPE extends SComponent> implemen
 		return component;
 	}
 
-    public final int getProperty() {
+    public int getProperty() {
         return FINE_GRAINED_UPDATE;
     }
 
-    public final int getPriority() {
+    public int getPriority() {
         return 1;
     }
 
