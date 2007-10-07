@@ -77,6 +77,9 @@ wingS.ajax.processRequestFailure = function(request) {
     if (wingS.global.debugMode)
         wingS.ajax.updateDebugView(request);
 
+    if ("console" in window && window.console)
+        console.error("Error occured while processing request %o", request);
+
     // Reset activity indicators and active flag
     wingS.ajax.setActivityIndicatorsVisible(false);
     wingS.ajax.requestIsActive = false;
@@ -136,6 +139,9 @@ wingS.ajax.processRequestSuccess = function(request) {
                                "Error Message: " + e.message + "!\n\n" +
                                "The error occurred while evaluating the following JS code:\n" +
                                updates[i].firstChild.data;
+
+                if ("console" in window && window.console)
+                    console.error("%o", errorMsg);
                 alert(errorMsg);
             }
         }
