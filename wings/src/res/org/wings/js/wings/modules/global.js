@@ -65,6 +65,30 @@ wingS.global.init =  function(configObject) {
         var layout = wingS.layout.callbackObject;
         YAHOO.util.Event.addListener(window, 'resize', layout.adjust, layout, true);
     }
+
+    // Try to set loglevel in firebug/lite
+    if ("console" in window) {
+        console.info("logLevel %o", configObject.loglevel);
+        var loglevel = configObject.loglevel;
+        if (loglevel) {
+            switch (loglevel) {
+            case "off":
+                console.error = function(){};
+                // fall-through
+            case "error":
+                console.warn = function(){};
+                // fall-through
+            case "warn":
+                console.info = function(){};
+                // fall-through
+            case "info":
+                console.debug = function(){};
+                // fall-through
+            case "debug":
+                break;
+            }
+        }
+    }
 };
 
 /**
@@ -158,3 +182,12 @@ Function.prototype.bind = function(obj) {
     return temp;
 };
 
+wingS.global.setClientDebug = function(loglevel) {
+   if (loglevel === undefined || loglevel === null || loglevel === "") {
+       loglevel = "off";
+   }
+   
+   wingS.util.setCookie("DEBUG", "javascript;loglevel="+loglevel,365,"/");
+  
+   window.location.reload();
+};

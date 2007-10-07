@@ -19,14 +19,18 @@ import org.wings.plaf.Update;
 import org.wings.*;
 import org.wings.event.SRequestListener;
 import org.wings.event.SRequestEvent;
+import org.wings.externalizer.AbstractExternalizeManager;
+import org.wings.externalizer.ExternalizeManager;
 import org.wings.util.SStringBuilder;
 import org.wings.dnd.DragAndDropManager;
 import org.wings.header.*;
 import org.wings.io.Device;
 import org.wings.plaf.CGManager;
 import org.wings.plaf.css.script.OnPageRenderedScript;
+import org.wings.resource.ClassPathJavascriptResource;
 import org.wings.resource.ClassPathResource;
 import org.wings.resource.ReloadResource;
+import org.wings.resource.ResourceManager;
 import org.wings.resource.UpdateResource;
 import org.wings.resource.ResourceNotFoundException;
 import org.wings.script.*;
@@ -81,6 +85,63 @@ public class FrameCG implements org.wings.plaf.FrameCG {
      * This has effects which rendering mode the browsers will choose (quirks/strict)
      */
     private Boolean renderXmlDeclaration = Boolean.FALSE;
+    
+    private final List<Script> compressedHeaders = new ArrayList<Script>();
+    private final Map<Script, Script> debugReplacementJsHeaders = new HashMap<Script, Script>();
+    private final List<Script> debugAddonJsHeaders = new ArrayList<Script>();
+    private final String[] firebugResources = new String[] {Utils.HTML_DEBUG_FIREBUGLITE, Utils.CSS_DEBUG_FIREBUGLITE, Utils.IMG_DEBUG_FIREBUGLITE_ERROR, Utils.IMG_DEBUG_FIREBUGLITE_WARN, Utils.IMG_DEBUG_FIREBUGLITE_INFO};
+
+    private boolean debugJs = false;
+    
+    final Script yuiYahooDomEvent = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_YAHOO_DOM_EVENT);
+    final Script yuiConnection = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONNECTION);
+    final Script yuiAnimation = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_ANIMATION);
+    final Script yuiDragDrop = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DRAGDROP);
+    final Script yuiContainer = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONTAINER);
+    final Script wingsAll = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_WINGS_ALL);
+
+    {
+        compressedHeaders.add(yuiYahooDomEvent);
+        compressedHeaders.add(yuiConnection);
+        compressedHeaders.add(yuiAnimation);
+        compressedHeaders.add(yuiDragDrop);
+        compressedHeaders.add(yuiContainer);
+        compressedHeaders.add(wingsAll);
+        debugReplacementJsHeaders.put(
+                yuiYahooDomEvent, 
+                Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_YAHOO_DOM_EVENT_DEBUG)
+        );
+        debugReplacementJsHeaders.put(
+                yuiConnection, 
+                Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONNECTION_DEBUG)
+        );
+        debugReplacementJsHeaders.put(
+                yuiAnimation, 
+                Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_ANIMATION_DEBUG)
+        );
+        debugReplacementJsHeaders.put(
+                yuiDragDrop, 
+                Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DRAGDROP_DEBUG)
+        );
+        debugReplacementJsHeaders.put(
+                yuiContainer, 
+                Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONTAINER_DEBUG)
+        );
+        debugReplacementJsHeaders.put(
+                wingsAll, 
+                Utils.createExternalizedJSHeaderFromProperty(Utils.JS_WINGS_ALL_DEBUG)
+        );
+        
+        debugAddonJsHeaders.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_DEBUG_FIREBUGLITE));
+        // HTML, CSS and Images for firebuglite
+        ExternalizeManager extMgr = SessionManager.getSession().getExternalizeManager();
+        for (int i = 0; i < firebugResources.length; i++) {
+            String classPath = (String) ResourceManager.getObject(firebugResources[i], String.class);
+            ClassPathResource res = new ClassPathResource(classPath);
+            String string = extMgr.externalize(res, AbstractExternalizeManager.GLOBAL);
+
+        }
+    }
 
     /**
      * Initialize properties from config
@@ -101,14 +162,6 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         // Externalize JavaScript headers
         // JS_YUI_UTILITIES = aggregate: yahoo, dom, event, connection, animation, dragdrop
         // headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_UTILITIES));
-        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_YAHOO_DOM_EVENT));
-        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONNECTION));
-        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_ANIMATION));
-        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DRAGDROP));
-        
-        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONTAINER));
-
-        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_WINGS_ALL));
 
         headers.add(new JavaScriptHeader("../dwr/engine.js"));
         headers.add(new JavaScriptHeader("../dwr/util.js"));
@@ -144,6 +197,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         component.addScriptListener(Utils.isMSIE(component) ? storeFocusIE : storeFocusFF);
 
         SessionHeaders.getInstance().registerHeaders(0, headers);
+        SessionHeaders.getInstance().registerHeaders(0, compressedHeaders);
         SessionHeaders.getInstance().registerHeaders(getBrowserStylesheets());
 
         new InputMapRequestListener(component);
@@ -355,8 +409,18 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         device.print("\" />\n");
 
         // Render all headers
+        boolean isDebug = frame.isDebugJs();
+        if (isDebug) {
+            for (Script debugAddon : debugAddonJsHeaders) {
+                ((Renderable) debugAddon).write(device);
+                device.print("\n");
+            }
+        }
         for (Object next : frame.getHeaders()) {
             if (next instanceof Renderable) {
+                if (isDebug) {
+                    next = getPotentialReplacementFor(next);
+                }
                 try {
                     ((Renderable) next).write(device);
                 } catch (ResourceNotFoundException e) {
@@ -410,6 +474,18 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         component.fireRenderEvent(SComponent.DONE_RENDERING);
     }
 
+    /**
+     * @param next
+     * @return
+     */
+    private Object getPotentialReplacementFor(Object next) {
+        if (debugReplacementJsHeaders.containsKey(next)) {
+            return debugReplacementJsHeaders.get(next);
+        } else {
+            return next;
+        }
+    }
+
     protected void handleScripts(Device device, SComponent component) throws IOException {
         final SFrame frame = (SFrame) component;
         final ScriptManager scriptManager = frame.getSession().getScriptManager();
@@ -443,6 +519,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         initConfig.put("updateEnabled", frame.isUpdateEnabled());
         initConfig.put("updateCursor", Utils.mapToJsObject(frame.getUpdateCursor()));
         initConfig.put("autoAdjustLayout", Utils.mapToJsObject(frame.getAutoAdjustLayout()));
+        initConfig.put("loglevel", frame.getLogLevel());
         
         SStringBuilder script = new SStringBuilder();
         script.append("wingS.global.init(").append(Utils.mapToJsObject(initConfig)).append(");");
@@ -686,5 +763,4 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         }
 
     }
-
 }

@@ -15,11 +15,13 @@ package org.wings;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.event.*;
+import org.wings.header.Header;
 import org.wings.header.SessionHeaders;
 import org.wings.io.Device;
 import org.wings.plaf.FrameCG;
 import org.wings.resource.DynamicResource;
 import org.wings.resource.ReloadResource;
+import org.wings.session.SessionManager;
 import org.wings.style.StyleSheet;
 import org.wings.util.ComponentVisitor;
 import org.wings.util.StringUtil;
@@ -56,7 +58,7 @@ public class SFrame
      * A list of all header used by this frame.
      */
     protected List headers = new ArrayList();
-
+    
     /**
      * the style sheet used in certain look and feels.
      */
@@ -124,6 +126,10 @@ public class SFrame
      */
     private HashSet<SComponent> globalInputMapComponents = new HashSet<SComponent>();
 
+    /**
+     * Should we send JS Headers in debug mode?
+     */
+    private String logLevel = "off";
 
     /**
      * Creates a new SFrame
@@ -518,6 +524,20 @@ public class SFrame
                 }
             }
         }
+        /*
+         * When there is a debug Cookie,
+         * change the debug headers in the CG according to the value of the
+         * cookie.
+         */
+        if (name.endsWith("_debug")) {
+            log.info("input "+name+values);
+            String newLogLevel = (values.length == 1) 
+                    ? values[0] != null 
+                    ? values[0] 
+                    : "off" 
+                    : "off";
+            logLevel = newLogLevel;
+        }
     }
 
     /**
@@ -768,5 +788,32 @@ public class SFrame
             Object constraint = constraints.get(i);
             newPanel.add(component, constraint);
         }
+    }
+
+    /**
+     * @return
+     */
+    public String getLogLevel() {
+        String[] debugSettings = (String[])SessionManager.getSession().getProperty("debug.cookie");
+        if (debugSettings != null) {
+            for (int i = 0; i < debugSettings.length; i++) {
+                if (debugSettings[i] != null && debugSettings[i].startsWith("loglevel=")) {
+                    return debugSettings[i].substring(9);
+                }
+            }
+        }
+        return "off";
+    }
+    
+    public boolean isDebugJs() {
+        String[] debugSettings = (String[])SessionManager.getSession().getProperty("debug.cookie");
+        if (debugSettings != null) {
+            for (int i = 0; i < debugSettings.length; i++) {
+                if ("javascript".equals(debugSettings[i])) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

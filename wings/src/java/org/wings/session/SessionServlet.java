@@ -32,6 +32,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Arrays;
@@ -71,6 +73,8 @@ final class SessionServlet
 
     /** Refer to comment in {@link #doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)} */
     private String exitSessionWorkaround;
+
+    private Boolean clientDebuggingEnabled = null;
 
     /**
      * Default constructor.
@@ -368,23 +372,42 @@ final class SessionServlet
             session.getDispatcher().setEventEpoch(req.getParameter("event_epoch"));
 
             Enumeration en = req.getParameterNames();
-            Cookie[] cookies = req.getCookies();
+            final Cookie[] cookies = req.getCookies();
+            final Collection<Cookie> cookiesToDispatch = new ArrayList<Cookie>();
+            
+            // handle debug.cookie - read it every time. 
+            session.removeProperty("debug.cookie");
+            if (cookies != null) {
+                //handle cookies
+                for (int i = 0; i < cookies.length; i++) {
+                    Cookie cookie = cookies[i];
+                    String paramName = cookie.getName();
+                    
+                    if ("DEBUG".equals(paramName)
+                        && clientDebuggingEnabled()) {
+                        // Cookies haben eine Längenbeschränkung, wir müssen uns hier keine Sorgen
+                        // um die Datenmengen machen.
+                        session.setProperty("debug.cookie", cookie.getValue().split(":"));
+                    } else {
+                        cookiesToDispatch.add(cookie);
+                    }
+                }
+            }
 
             // are there parameters/low level events to dispatch
             if (en.hasMoreElements()) {
                 // only fire DISPATCH_START if we have parameters to dispatch
                 session.fireRequestEvent(SRequestEvent.DISPATCH_START);
 
-                if (cookies != null) {
+                if (cookiesToDispatch != null) {
                     //dispatch cookies
-                    for (int i = 0; i < cookies.length; i++) {
-                        Cookie cookie = cookies[i];
+                    for (Cookie cookie : cookiesToDispatch) {
                         String paramName = cookie.getName();
                         String value = cookie.getValue();
-
+                        
                         if (log.isDebugEnabled())
                             log.debug("dispatching cookie " + paramName + " = " + value);
-
+                        
                         session.getDispatcher().dispatch(paramName, new String[] { value });
                     }
                 }
@@ -543,6 +566,18 @@ final class SessionServlet
             SessionManager.removeSession();
             SForm.clearArmedComponents();
         }
+    }
+
+    /**
+     * @return
+     */
+    private boolean clientDebuggingEnabled() {
+        if (clientDebuggingEnabled == null) {
+            clientDebuggingEnabled = "true".equals((String)session.getProperty("wings.client.debug")) 
+                                     ? Boolean.TRUE 
+                                     : Boolean.FALSE;
+        }
+        return clientDebuggingEnabled .booleanValue();
     }
 
     /**

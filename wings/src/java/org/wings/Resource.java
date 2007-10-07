@@ -31,7 +31,8 @@ import java.util.Map;
 
 /**
  * Wrapper to decorate various resource (i.e. images, files, scripts) with
- * a MIME type and make it accessible to the client via HTTP and the {@link org.wings.externalizer.ExternalizeManager}.
+ * a MIME type and make it accessible to the client via HTTP and the 
+ * {@link org.wings.externalizer.ExternalizeManager}.
  *
  * @author <a href="mailto:haaf@mercatis.de">Armin Haaf</a>
  * @author <a href="mailto:H.Zeller@acm.org">Henner Zeller</a>
@@ -143,8 +144,9 @@ public abstract class Resource implements Serializable, URLResource, Renderable 
             if (k1 == k2 || (k1 != null && k1.equals(k2))) {
                 Object v1 = getValue();
                 Object v2 = e.getValue();
-                if (v1 == v2 || (v1 != null && v1.equals(v2)))
+                if (v1 == v2 || (v1 != null && v1.equals(v2))) {
                     return true;
+                }
             }
             return false;
         }

@@ -102,7 +102,7 @@ public final class SessionHeaders {
     }
 
     protected void decrementLinkCount(Header header) {
-        linkCounts.put(header, new Integer(getLinkCount(header) - 1));
+        linkCounts.put(header, new Integer(getLinkCount(header) > 0 ? getLinkCount(header) - 1 : 0));
     }
 
 }
