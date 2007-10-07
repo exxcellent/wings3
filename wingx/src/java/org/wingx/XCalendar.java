@@ -356,7 +356,6 @@ public class XCalendar extends SContainer implements LowLevelEventListener, SDoc
      * @see SDocumentListener#changedUpdate()
      */
     public void changedUpdate(SDocumentEvent e){
-        System.out.println( "XCalendar#SDocumentListener#changedUpdate( " + (Date)getFormattedTextField().getValue() + " )" );
         setDate( (Date)getFormattedTextField().getValue() );
     }
 
@@ -389,8 +388,7 @@ public class XCalendar extends SContainer implements LowLevelEventListener, SDoc
     /**
      * @see LowLevelEventListener#processLowLevelEvent(String action, String[] values)
      */
-    public void processLowLevelEvent(String action, String[] values) {    
-        System.out.println( "XCalendar#LowLevelEventListener#processLowLevelEvent( " + action + ", " + Arrays.toString( values ) + ")" );   
+    public void processLowLevelEvent(String action, String[] values) {     
         processKeyEvents(values);
         if (action.endsWith("_keystroke"))
             return;

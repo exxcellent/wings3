@@ -47,7 +47,9 @@ public class CalendarCG extends AbstractComponentCG implements org.wingx.plaf.Ca
         String[] images = new String [] {
             "org/wings/js/yui/calendar/assets/callt.gif",
             "org/wings/js/yui/calendar/assets/calrt.gif",
-            "org/wings/js/yui/calendar/assets/calx.gif"
+            "org/wings/js/yui/calendar/assets/calx.gif",
+            "org/wingx/calendar/cally.gif",
+            "org/wingx/calendar/calry.gif"
         };
 
         for ( int x = 0, y = images.length ; x < y ; x++ ) {
@@ -59,9 +61,9 @@ public class CalendarCG extends AbstractComponentCG implements org.wingx.plaf.Ca
         headerList.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_CALENDAR));
         headerList.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_YAHOO));
         headerList.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_EVENT));
-        headerList.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DOM));
-        headerList.add(Utils.createExternalizedJSHeader("org/wingx/calendar/yuicalendar.js"));
+        headerList.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DOM));    
         headerList.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CALENDAR));
+        headerList.add(Utils.createExternalizedJSHeader("org/wingx/calendar/xcalendar.js"));
         headers = Collections.unmodifiableList(headerList);
     }
 
@@ -105,7 +107,7 @@ public class CalendarCG extends AbstractComponentCG implements org.wingx.plaf.Ca
 
         device.print("<input type=\"hidden\" id=\""+id_hidden+"\" name=\""+id_hidden+"\" value=\""+ format(dateFormat, component.getDate() )+"\">\n");
         device.print("<img class=\"XCalendarButton\" id=\""+id_button+"\" src=\""+component.getEditIcon().getURL()+"\" />\n");
-        device.print("<div style=\"display:none;position:absolute;z-index:1001\" id=\""+id_cal+"\"></div>");
+        device.print("<div style=\"display:none;position:fixed;z-index:1001\" id=\""+id_cal+"\"></div>");
 
         writeTableSuffix(device, component);
 
@@ -115,17 +117,19 @@ public class CalendarCG extends AbstractComponentCG implements org.wingx.plaf.Ca
         SimpleDateFormat format_weekdays_short  = new SimpleDateFormat("EE");
         format_weekdays_short.setTimeZone( component.getTimeZone() );
 
-        SStringBuilder newXCalendar = new SStringBuilder("new wingS.XCalendar(");
-            newXCalendar.append("\"").append( component.getName() ).append("\",");
+        SStringBuilder newXCalendar = new SStringBuilder("new YAHOO.widget.XCalendar(");
             newXCalendar.append("\"").append( id_cal ).append("\",");
+            newXCalendar.append("{close:true,");
+            newXCalendar.append("months_long:").append(createMonthsString( format_months_long ) ).append(",");
+            newXCalendar.append("weekdays_short:").append(createWeekdaysString( format_weekdays_short ) ).append(",");
+            newXCalendar.append("start_weekday:").append( (Calendar.getInstance().getFirstDayOfWeek()-1) ).append("}, ");
+            newXCalendar.append("\"").append( component.getName() ).append("\",");
             newXCalendar.append("\"").append( id_button ).append("\",");
-            newXCalendar.append("\"").append( id_hidden ).append("\",");
-            newXCalendar.append( createMonthsString( format_months_long ) ).append(",");
-            newXCalendar.append( createWeekdaysString( format_weekdays_short ) ).append(",");
-            newXCalendar.append( (Calendar.getInstance().getFirstDayOfWeek()-1) );
+            newXCalendar.append("\"").append( id_hidden ).append("\"");
             newXCalendar.append( ");");
-        
-        ScriptManager.getInstance().addScriptListener(new OnHeadersLoadedScript( newXCalendar.toString(), true));
+            
+        ScriptManager.getInstance().addScriptListener(new OnHeadersLoadedScript( newXCalendar.toString(), true));    
+            
     }
 
     private String createMonthsString ( Format format ) {
