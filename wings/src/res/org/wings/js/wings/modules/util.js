@@ -369,3 +369,13 @@ wingS.util.printAllFields = function(obj) {
     }
 };
 
+// firebug API support for safari
+if (wingS.util.checkUserAgent('safari')) {
+    var wc = window.console;
+    if (wc) {
+        wc.debug = wc.log;
+        wc.info = wc.log
+        wc.warn = wc.log;
+        wc.error = wc.log;
+    }
+}
