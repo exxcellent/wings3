@@ -32,7 +32,7 @@ public class JettyRunner {
 
         server.start();
 
-        System.out.println("\n===> Point your browser to "
-		           + " http://localhost:" + port + "/ <===");
+        System.out.println("\n\n===> Point your browser to "
+		           + " http://localhost:" + port + "/ <===\n");
 	}
 }

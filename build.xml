@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project basedir="." name="wingS">
+<project basedir="." name="wingS" default="help">
     <!-- read properties from file -->
     <property file="etc/custom-build.properties"/>
     <property file="etc/build.properties"/>
@@ -8,8 +8,6 @@
     <path id="build.classpath">
         <fileset dir="thirdparty/lib" includes="*.jar"/>
     </path>
-
-    <!-- TODO(hzeller) provide a useful toplevel target -->
 
     <target name="prepare">
         <mkdir dir="build/src/java"/>
@@ -230,5 +228,9 @@
         <ant dir="wings" target="build"/>
         <ant dir="wingx" target="build"/>
         <ant dir="demo-logconfig" target="deploy"/>
+    </target>
+
+    <target name="help">
+      <exec executable="ant"><arg value="-p"/></exec>
     </target>
 </project>
