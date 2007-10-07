@@ -537,7 +537,7 @@ public final class Utils {
                     break;
                 case '<':
                     len += (c - pos);
-                    device.print(chars, pos, len);
+                    device.print(chars, pos, c - pos);
                     break;
                 case '>':
                     pos = c + 1;
