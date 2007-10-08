@@ -24,22 +24,30 @@ YAHOO.widget.XCalendar.prototype.showCalendar = function() {
     this.render();
     this.show();
 
-    var regionButton = YAHOO.util.Dom.getRegion(this.buttonId);
-    
-    YAHOO.util.Dom.setX( this.calId, regionButton.left );
-    YAHOO.util.Dom.setY( this.calId, regionButton.buttom );
-    
+    var regionButton   = YAHOO.util.Dom.getRegion(this.buttonId);
     var regionCalendar = YAHOO.util.Dom.getRegion(this.calId);
+
     var viewportWidth  = YAHOO.util.Dom.getViewportWidth();
     var viewportHeight = YAHOO.util.Dom.getViewportHeight();
 
-    if ( regionCalendar.right > viewportWidth ) {
-        YAHOO.util.Dom.setX( this.calId, regionCalendar.left - ( regionCalendar.right - viewportWidth ) );
-    }
-    if ( regionCalendar.bottom > viewportHeight ) {
-        YAHOO.util.Dom.setY( this.calId, regionCalendar.top - ( regionCalendar.bottom - viewportHeight ) );
-    }
+    var documentScrollLeft = YAHOO.util.Dom.getDocumentScrollLeft();
+    var documentScrollTop  = YAHOO.util.Dom.getDocumentScrollTop();
 
+    var documentWidth  = YAHOO.util.Dom.getDocumentWidth();
+    var documentHeight = YAHOO.util.Dom.getDocumentHeight();
+
+    if ( regionCalendar.right > viewportWidth ) {
+        YAHOO.util.Dom.setX( this.calId, regionCalendar.left - ( documentWidth - ( viewportWidth + documentScrollLeft ) ) );
+    } else {
+        YAHOO.util.Dom.setX( this.calId, regionButton.left );
+    }
+    
+    if ( regionCalendar.bottom > viewportHeight ) {
+        YAHOO.util.Dom.setY( this.calId, regionCalendar.top - ( documentHeight - ( viewportHeight + documentScrollTop ) ) );
+    } else {
+        YAHOO.util.Dom.setY( this.calId, regionButton.bottom );
+    }
+    
 }
 
 YAHOO.widget.XCalendar.prototype.handleSelect = function(type,args,obj) {
