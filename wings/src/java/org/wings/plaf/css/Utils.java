@@ -1344,7 +1344,7 @@ public final class Utils {
     public static Renderable mapToJsObject(Map map) {
         return new JSObject(map);
     }
-        
+
     public static void encodeJS(Device d, Object o) throws IOException {        
         // The common cases that never need escaping.
         if (o == null) {
@@ -1365,7 +1365,7 @@ public final class Utils {
             + "an object in JSON! Implement org.wings.Renderable instead. "
             + "Object was a " + o.getClass() + ": >" + o + "<";
         
-        d.print('"');
+        d.print('\'');
         final String stringRep = o.toString();
         final char chars[] = stringRep.toCharArray();
         char c;
@@ -1373,12 +1373,11 @@ public final class Utils {
         for (int pos = 0; pos < chars.length; ++pos) {
             c = chars[pos];
             switch (c) {
-            case '"':
+            case '\'':
                 d.print(chars, last, (pos - last));
-                d.print("\\\"");
+                d.print("\\'");
                 last = pos + 1;
                 break;
-                // I don't know JS, but what about single quote ? (Henner)
             case '\\':
                 d.print(chars, last, (pos - last));
                 d.print("\\\\");
@@ -1409,7 +1408,7 @@ public final class Utils {
                 d.print("\\t");
                 last = pos + 1;
                 break;    
-            case '/':
+            case '/':  // Regular expressions start with a slash.
                 d.print(chars, last, (pos - last));
                 d.print("\\/");
                 last = pos + 1;
@@ -1428,7 +1427,7 @@ public final class Utils {
             }
         }
         d.print(chars, last, chars.length - last);
-        d.print('"');
+        d.print('\'');
     }
     
     public static void writeAllAttributes(Device device, SComponent component) throws IOException {
@@ -1573,7 +1572,7 @@ public final class Utils {
             while (it.hasNext()) {
                 if (!isFirst) d.print(",");
                 Map.Entry entry = (Map.Entry) it.next();
-                d.print('"').print(entry.getKey().toString()).print("\":");
+                d.print('\'').print(entry.getKey().toString()).print("':");
                 encodeJS(d, entry.getValue());
                 isFirst = false;
             }

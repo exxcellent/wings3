@@ -11,8 +11,8 @@ import org.wings.io.StringBuilderDevice;
 import junit.framework.TestCase;
 
 public class UtilsTest extends TestCase {
-    private String encodeJSToString(Object o) {
-        StringBuilderDevice sb = new StringBuilderDevice(10);
+    private static String encodeJSToString(Object o) {
+        final StringBuilderDevice sb = new StringBuilderDevice(10);
         try {
             Utils.encodeJS(sb, o);
         } catch (IOException e) {
@@ -23,49 +23,54 @@ public class UtilsTest extends TestCase {
     public void test_encodeJS_anytype() {
         assertEquals("null", encodeJSToString(null));
         assertEquals("42", encodeJSToString(new Integer(42)));
-        assertEquals("\"foo\"", encodeJSToString("foo"));
+        assertEquals("'foo'", encodeJSToString("foo"));
     }
 
     public void test_encodeJS_Stringquoting() {
         // Empty.
         assertEquals("null", encodeJSToString(null));
-        assertEquals("\"\"", encodeJSToString(""));
+        assertEquals("''", encodeJSToString(""));
 
         // Generic escapes.
-        assertEquals("\"\\\\\"", encodeJSToString("\\"));
-        assertEquals("\"\\b\"", encodeJSToString("\b"));
-        assertEquals("\"\\f\"", encodeJSToString("\f"));
-        assertEquals("\"\\n\"", encodeJSToString("\n"));
-        assertEquals("\"\\r\"", encodeJSToString("\r"));
-        assertEquals("\"\\t\"", encodeJSToString("\t"));
+        assertEquals("'\\\\'", encodeJSToString("\\"));
+        assertEquals("'\\b'", encodeJSToString("\b"));
+        assertEquals("'\\f'", encodeJSToString("\f"));
+        assertEquals("'\\n'", encodeJSToString("\n"));
+        assertEquals("'\\r'", encodeJSToString("\r"));
+        assertEquals("'\\t'", encodeJSToString("\t"));
+        
+        // Quoting quotes. We have more double quotes than single
+        // quotes in the output so its wise to quote strings with single
+        // quotes and escape only them.
+        assertEquals("'\\''", encodeJSToString("'")); // Single quote escaped.
+        assertEquals("'\"'", encodeJSToString("\"")); // Double not.
 
         // Special characters are encoded as utf-8 escape.
-        assertEquals("\"\\u0000\"", encodeJSToString("\u0000"));
-        assertEquals("\"\\u001f\"", encodeJSToString("\u001F"));
-        assertEquals("\" \"", encodeJSToString("\u0020")); // first non-special
+        assertEquals("'\\u0000'", encodeJSToString("\u0000"));
+        assertEquals("'\\u001f'", encodeJSToString("\u001F"));
+        assertEquals("' '", encodeJSToString("\u0020")); // first non-special
         
-        // Seems, that proper UTF-8 encoding currently requires it to be
-        // escaped for JS. Did it work before ? - mmh.
-        // If this is changed, back this with selenium browser tests.
-        assertEquals("\"\\u00e4\"", encodeJSToString("\u00E4"));
+        // Seems, that we need to encode every UTF-8 which is not ASCII.
+        // Did it work before ? - mmh, maybe by accident.
+        // If this is changed, back this decision with selenium browser tests.
+        assertEquals("'\\u00e4'", encodeJSToString("\u00E4"));
         
         // And now: all together ;-)
-        assertEquals("\"foo\\\\\\\"bar\"", encodeJSToString("foo\\\"bar"));
-        assertEquals("\"\\nfoo\\\\\\\"bar\"", encodeJSToString("\nfoo\\\"bar"));
-        assertEquals("\"\\nfoo\\\\\\\"b\\u00e4r\\t\"",
-                encodeJSToString("\nfoo\\\"b\u00E4r\t"));
+        assertEquals("'foo\\\\\\'bar'", encodeJSToString("foo\\'bar"));
+        assertEquals("'\\nfoo\\\\\\'bar'", encodeJSToString("\nfoo\\'bar"));
+        assertEquals("'\\nfoo\\\\\"b\\u00e4r\\t'",
+                     encodeJSToString("\nfoo\\\"b\u00E4r\t"));
     }
 
     public void test_JsonArray_rendering() {
         List<Object> list = new ArrayList<Object>();
         list.add("foo");
         list.add(new Integer(42));        
-        assertEquals("[\"foo\",42]", 
-                encodeJSToString(Utils.listToJsArray(list)));
+        assertEquals("['foo',42]", encodeJSToString(Utils.listToJsArray(list)));
     }
     
     public void test_JsonObject_rendering() {
-        // Use TreeMap to have predictable sequence.
+        // Use TreeMap to have a predictable sequence.
         final Map<String, Object> map = new TreeMap<String,Object>();
         map.put("bar", new Integer(42));
         map.put("baz", "s");
@@ -75,9 +80,7 @@ public class UtilsTest extends TestCase {
         map.put("foo", Utils.mapToJsObject(nestedMap));
         
         final Object json = Utils.mapToJsObject(map);
-        assertEquals("{\"bar\":42,"
-                     + "\"baz\":\"s\","
-                     + "\"foo\":{\"success\":true}}",
+        assertEquals("{'bar':42,'baz':'s','foo':{'success':true}}",
                      encodeJSToString(json));                
     }
 }
