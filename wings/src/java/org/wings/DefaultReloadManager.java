@@ -195,16 +195,17 @@ public class DefaultReloadManager implements ReloadManager {
                 fullReplaceUpdates.remove(component);
                 fineGrainedUpdates.remove(component);
             } else {
-                componentHierarchy.put(getPath(component).toString(), component);
+                componentHierarchy.put(getPath(component), component);
             }
         }
-
+        
         for (Iterator i = componentHierarchy.keySet().iterator(); i.hasNext();) {
-            String topPath = (String) i.next();
+            final String topPath = (String) i.next();
+            final String comparePath = (topPath + "/").substring(1); // get rid of depth.
             if (fullReplaceUpdates.containsKey(componentHierarchy.get(topPath))) {
                 while (i.hasNext()) {
-                    String subPath = (String) i.next();
-                    if (subPath.startsWith(topPath + "/")) {
+                    final String subPath = (String) i.next();
+                    if (subPath.substring(1).startsWith(comparePath)) {
                         fullReplaceUpdates.remove(componentHierarchy.get(subPath));
                         fineGrainedUpdates.remove(componentHierarchy.get(subPath));
                         i.remove();
@@ -218,20 +219,27 @@ public class DefaultReloadManager implements ReloadManager {
             printAllUpdates("Effective updates:");
     }
 
-    private SStringBuilder getPath(SComponent component) {
-        if (component == null) {
-            return new SStringBuilder();
+    private SStringBuilder getPath(SStringBuilder builder, SComponent component) {
+        if (component == null) return builder;
+        builder.setCharAt(0, (char) (builder.charAt(0)+1));  // inc depth.
+        if (component instanceof SMenuItem) {
+            SMenuItem menuItem = (SMenuItem) component;
+            return getPath(builder, menuItem.getParentMenu()).append("/").append(component.getName());
+        } else if (component instanceof SSpinner.DefaultEditor) {
+            SSpinner.DefaultEditor defaultEditor = (SSpinner.DefaultEditor) component;
+            return getPath(builder, defaultEditor.getSpinner()).append("/").append(component.getName());
         } else {
-            if (component instanceof SMenuItem) {
-                SMenuItem menuItem = (SMenuItem) component;
-                return getPath(menuItem.getParentMenu()).append("/").append(component.getName());
-            } else if (component instanceof SSpinner.DefaultEditor) {
-                SSpinner.DefaultEditor defaultEditor = (SSpinner.DefaultEditor) component;
-                return getPath(defaultEditor.getSpinner()).append("/").append(component.getName());
-            } else {
-                return getPath(component.getParent()).append("/").append(component.getName());
-            }
+            builder.setCharAt(0, (char) (builder.charAt(0)+1));
+            return getPath(builder, component.getParent()).append("/").append(component.getName());
         }
+    }
+
+    /**
+     * return the path of the component. The first character denotes the
+     * depth of the path.
+     */
+    private String getPath(SComponent component) {
+        return getPath(new SStringBuilder("0"), component).toString();
     }
 
     private void printAllUpdates(String header) {
@@ -326,13 +334,9 @@ public class DefaultReloadManager implements ReloadManager {
     private static class PathComparator implements Comparator<String> {
 
         public int compare(String path1, String path2) {
-            int depthOfPath1 = (new StringTokenizer(path1, "/")).countTokens();
-            int depthOfPath2 = (new StringTokenizer(path2, "/")).countTokens();
-            if (depthOfPath1 < depthOfPath2) return -1;
-            if (depthOfPath1 > depthOfPath2) return 1;
             return path1.compareTo(path2);
         }
-
+        
     }
 
     private static class PositionComparator implements Comparator<PotentialUpdate> {
