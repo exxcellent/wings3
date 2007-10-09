@@ -1345,7 +1345,10 @@ public final class Utils {
         return new JSObject(map);
     }
 
-    public static void encodeJS(Device d, Object o) throws IOException {        
+    private static final char[] BACKSLASH_N = "\\n".toCharArray();
+    private static final char[] BACKSLASH_R = "\\r".toCharArray();
+    private static final char[] BACKSLASH_T = "\\t".toCharArray();
+    public static void encodeJS(Device d, Object o) throws IOException {
         // The common cases that never need escaping.
         if (o == null) {
             d.print("null");
@@ -1375,13 +1378,13 @@ public final class Utils {
             switch (c) {
             case '\'':
                 d.print(chars, last, (pos - last));
-                d.print("\\'");
-                last = pos + 1;
+                d.print('\\');
+                last = pos;  // next starts with single quote
                 break;
             case '\\':
                 d.print(chars, last, (pos - last));
-                d.print("\\\\");
-                last = pos + 1;
+                d.print('\\');
+                last = pos;  // next starts with backslash
                 break;
             case '\b':
                 d.print(chars, last, (pos - last));
@@ -1395,23 +1398,23 @@ public final class Utils {
                 break;
             case '\n':
                 d.print(chars, last, (pos - last));
-                d.print("\\n");
+                d.print(BACKSLASH_N);
                 last = pos + 1;
                 break;
             case '\r':
                 d.print(chars, last, (pos - last));
-                d.print("\\r");
+                d.print(BACKSLASH_R);
                 last = pos + 1;
                 break;
             case '\t':
                 d.print(chars, last, (pos - last));
-                d.print("\\t");
+                d.print(BACKSLASH_T);
                 last = pos + 1;
                 break;    
             case '/':  // Regular expressions start with a slash.
                 d.print(chars, last, (pos - last));
-                d.print("\\/");
-                last = pos + 1;
+                d.print('\\');
+                last = pos;  // next starts with slash.
                 break;
             default:
                 if ((c >= '\u0000' && c <= '\u001F') || c >= '\u007F') {
