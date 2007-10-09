@@ -616,7 +616,7 @@ public final class Utils {
         if (value != null && value.length() > 0) {
             d.print(' ').print(attributeName).print("=\"");
             quote(d, value, true, false, false);
-            d.print('\"');
+            d.print('"');
         }
     }
 
@@ -630,7 +630,7 @@ public final class Utils {
         if (value != null && value.length() > 0) {
             d.print(' ').print(attributeName).print("=\"");
             quote(d, value, true, false, false);
-            d.print('\"');
+            d.print('"');
         }
     }
 
@@ -643,7 +643,7 @@ public final class Utils {
             d.print(' ').print(attr).print("=\"");
             if (value != null)
                quote(d, value, true, false, false);
-            d.print('\"');
+            d.print('"');
     }
 
     /**
@@ -658,7 +658,7 @@ public final class Utils {
             d.print(attr);
             d.print("=\"");
             write(d, value);
-            d.print('\"');
+            d.print('"');
         }
     }
 
@@ -672,7 +672,7 @@ public final class Utils {
             d.print(attr);
             d.print("=\"");
             r.write(d);
-            d.print('\"');
+            d.print('"');
         }
     }
 
@@ -687,7 +687,7 @@ public final class Utils {
             d.print(attributeName);
             d.print("=\"");
             d.print(String.valueOf(value));
-            d.print('\"');
+            d.print('"');
         }
     }
 
@@ -702,7 +702,7 @@ public final class Utils {
             d.print(attributeName);
             d.print("=\"");
             d.print(String.valueOf(value));
-            d.print('\"');
+            d.print('"');
         }
     }
 
@@ -717,7 +717,7 @@ public final class Utils {
             d.print(attr);
             d.print("=\"");
             write(d, value.toString());
-            d.print('\"');
+            d.print('"');
         }
     }
 
@@ -899,7 +899,7 @@ public final class Utils {
         }
 
         while (offset > 0) {
-            d.print("\t");
+            d.print('\t');
             offset--;
         }
         return d;
