@@ -100,12 +100,10 @@ public class SInternalFrame
 
     public boolean isMaximized() { return maximized; }
 
-    public void setClosed(boolean v) {
-        v &= isClosable();
-        boolean old = closed;
-        closed = v;
-        if (old != closed)
-            reload();
+    public void setClosed(boolean closed) {
+        closed &= isClosable();
+        reloadIfChange(this.closed, closed);
+        this.closed = closed;
     }
 
     public boolean isClosed() { return closed; }
