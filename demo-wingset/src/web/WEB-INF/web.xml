@@ -38,12 +38,12 @@
         </init-param>
         <init-param>
             <param-name>SComponent.printDebug</param-name>
-            <param-value>TRUE</param-value>
+            <param-value>FALSE</param-value>
     	    <description>Decorate generated HTML with comments about the compoennt</description>
         </init-param>
         <init-param>
             <param-name>SComponent.printPretty</param-name>
-            <param-value>TRUE</param-value>
+            <param-value>FALSE</param-value>
     	    <description>Do identation according to component depth.</description>
         </init-param>
         <init-param>
