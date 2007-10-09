@@ -34,16 +34,11 @@
             <attribute name="URI" value="/WEB-INF/lib/wingx.jar" />
           </containerElement>
           <containerElement type="library" name="BeanShell" level="project">
-            <attribute name="method" value="0" />
+            <attribute name="method" value="1" />
             <attribute name="URI" value="/WEB-INF/lib" />
           </containerElement>
-          <containerElement type="library" level="module">
-            <attribute name="method" value="0" />
-            <attribute name="URI" value="&lt;N/A&gt;" />
-            <url>jar://$APPLICATION_HOME_DIR$/lib/j2ee.jar!/</url>
-          </containerElement>
           <containerElement type="library" name="DWR" level="project">
-            <attribute name="method" value="0" />
+            <attribute name="method" value="1" />
             <attribute name="URI" value="/WEB-INF/lib" />
           </containerElement>
           <containerElement type="library" name="J2EE Servlet API" level="project">
@@ -56,7 +51,7 @@
           </containerElement>
           <containerElement type="library" name="commons-httpclient" level="project">
             <attribute name="method" value="0" />
-            <attribute name="URI" value="/WEB-INF/lib" />
+            <attribute name="URI" value="&lt;N/A&gt;" />
           </containerElement>
           <containerElement type="library" name="commons-logging" level="project">
             <attribute name="method" value="1" />
@@ -76,17 +71,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/j2ee.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="module" module-name="wings" />
     <orderEntry type="module" module-name="wingx" />
+    <orderEntry type="library" name="J2EE Servlet API" level="project" />
     <orderEntryProperties />
   </component>
 </module>

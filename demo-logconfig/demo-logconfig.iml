@@ -38,11 +38,6 @@
             <attribute name="URI" value="/WEB-INF/lib" />
           </containerElement>
           <containerElement type="library" level="module">
-            <attribute name="method" value="0" />
-            <attribute name="URI" value="&lt;N/A&gt;" />
-            <url>jar://$APPLICATION_HOME_DIR$/lib/j2ee.jar!/</url>
-          </containerElement>
-          <containerElement type="library" level="module">
             <attribute name="method" value="1" />
             <attribute name="URI" value="/WEB-INF/lib/dom4j-1.6.1.jar" />
             <url>jar://$MODULE_DIR$/src/web/WEB-INF/lib/dom4j-1.6.1.jar!/</url>
@@ -86,15 +81,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/j2ee.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="module" module-name="wings" exported="" />
     <orderEntry type="module" module-name="wingx" exported="" />
     <orderEntry type="module-library" exported="">
@@ -115,6 +101,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="J2EE Servlet API" level="project" />
     <orderEntryProperties />
   </component>
 </module>
