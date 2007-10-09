@@ -46,14 +46,14 @@ public class ClassPathStylesheetResource
      * A static css resource that is obtained from the default classpath.
      */
     public ClassPathStylesheetResource(String resourceFileName) {
-        this(Resource.class.getClassLoader(), resourceFileName, "unkonwn");
+        this(Thread.currentThread().getContextClassLoader(), resourceFileName, "unkonwn");
     }
 
     /**
      * A static css resource that is obtained from the default classpath.
      */
     public ClassPathStylesheetResource(String resourceFileName, String mimeType) {
-        this(Resource.class.getClassLoader(), resourceFileName, mimeType);
+        this(Thread.currentThread().getContextClassLoader(), resourceFileName, mimeType);
     }
 
     /**

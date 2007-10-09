@@ -59,7 +59,7 @@ public class SResourceIcon extends ClassPathResource implements SIcon {
 
 
     public SResourceIcon(String resourceFileName) {
-        this(SResourceIcon.class.getClassLoader(), resourceFileName);
+        this(Thread.currentThread().getContextClassLoader(), resourceFileName);
     }
 
     public SResourceIcon(ClassLoader classLoader, String resourceFileName) {
