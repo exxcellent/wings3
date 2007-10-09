@@ -13,7 +13,11 @@
 package org.wings.io;
 
 import javax.servlet.ServletOutputStream;
+
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 /**
  * A Device encapsulating a ServletOutputStream.
@@ -21,23 +25,26 @@ import java.io.IOException;
  * @author <a href="mailto:H.Zeller@acm.org">Henner Zeller</a>
  */
 public final class ServletDevice implements Device {
-    private ServletOutputStream out;
-
-
-    public ServletDevice(ServletOutputStream out) {
-        this.out = out;
+    private final ServletOutputStream out;
+    private final Writer writer;
+    
+    public ServletDevice(ServletOutputStream stream,
+                         String encoding) throws IOException {
+        out = stream;
+        writer = new BufferedWriter(new OutputStreamWriter(stream, encoding));
     }
 
     public boolean isSizePreserving() { return true; }
-
+    
     /**
      * Flush this Stream.
      */
     public void flush() throws IOException {
-        out.flush();
+        writer.flush();
     }
 
     public void close() throws IOException {
+        writer.flush();
         out.close();
     }
 
@@ -46,9 +53,9 @@ public final class ServletDevice implements Device {
      */
     public Device print(String s) throws IOException {
         if (s == null)
-            out.print("null");
+            writer.write("null");
         else
-            out.print(s);
+            writer.write(s);
         return this;
     }
 
@@ -56,7 +63,7 @@ public final class ServletDevice implements Device {
      * Print an integer.
      */
     public Device print(int i) throws IOException {
-        out.print(i);
+        print(String.valueOf(i));
         return this;
     }
 
@@ -65,9 +72,9 @@ public final class ServletDevice implements Device {
      */
     public Device print(Object o) throws IOException {
         if (o == null)
-            out.print("null");
+            print("null");
         else
-            out.print(o.toString());
+            print(o.toString());
         return this;
     }
 
@@ -75,7 +82,7 @@ public final class ServletDevice implements Device {
      * Print a character.
      */
     public Device print(char c) throws IOException {
-        out.print(c);
+        writer.write(c);
         return this;
     }
 
@@ -83,16 +90,15 @@ public final class ServletDevice implements Device {
      * Print an array of chars.
      */
     public Device print(char[] c) throws IOException {
-        return print(c, 0, c.length - 1);
+        writer.write(c);
+        return this;
     }
 
     /**
      * Print a character array.
      */
     public Device print(char[] c, int start, int len) throws IOException {
-        final int end = start + len;
-        for (int i = start; i < end; ++i)
-            out.print(c[i]);
+        writer.write(c, start, len);
         return this;
     }
 
@@ -100,7 +106,10 @@ public final class ServletDevice implements Device {
      * Writes the specified byte to this data output stream.
      */
     public Device write(int c) throws IOException {
+        // This method is expensive.
+        writer.flush();
         out.write(c);
+        out.flush();
         return this;
     }
 
@@ -109,7 +118,10 @@ public final class ServletDevice implements Device {
      * output stream.
      */
     public Device write(byte b[]) throws IOException {
+        // This method is expensive.
+        writer.flush();
         out.write(b);
+        out.flush();
         return this;
     }
 
@@ -118,7 +130,10 @@ public final class ServletDevice implements Device {
      * off to this output stream.
      */
     public Device write(byte b[], int off, int len) throws IOException {
+        // This method is expensive.
+        writer.flush();
         out.write(b, off, len);
+        out.flush();
         return this;
     }
 }

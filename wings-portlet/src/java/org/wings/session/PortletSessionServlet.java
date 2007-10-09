@@ -760,7 +760,7 @@ final class PortletSessionServlet
                 String encoding = session.getCharacterEncoding();
                 response.setContentType("text/xml; charset=" + encoding);
                 ServletOutputStream out = response.getOutputStream();
-                Device outputDevice = new ServletDevice(out);
+                Device outputDevice = new ServletDevice(out, encoding);
                 UpdateResource.writeHeader(outputDevice);
                 UpdateResource.writeUpdate(outputDevice, "wingS.request.sendRedirect(\"" + url + "\");");
                 UpdateResource.writeFooter(outputDevice);

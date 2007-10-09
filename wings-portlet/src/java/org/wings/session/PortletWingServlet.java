@@ -500,7 +500,8 @@ public final class PortletWingServlet
                                         HttpServletResponse response,
                                         ExternalizedResource extInfo)
             throws IOException {
-        return new ServletDevice(response.getOutputStream());
+        return new ServletDevice(response.getOutputStream(),
+                                 response.getCharacterEncoding());
     }
 
     // TODO BSC: This issue is still pending. Refer to http://jira.j-wings.org/browse/WGS-84

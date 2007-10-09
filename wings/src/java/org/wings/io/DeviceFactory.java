@@ -15,6 +15,7 @@ package org.wings.io;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.externalizer.ExternalizedResource;
+import org.wings.session.Session;
 import org.wings.session.SessionManager;
 
 import java.io.IOException;
@@ -95,7 +96,9 @@ public abstract class DeviceFactory {
      */
     static class Default extends DeviceFactory {
         protected Device create(ExternalizedResource externalizedResource) throws IOException {
-            return new ServletDevice(SessionManager.getSession().getServletResponse().getOutputStream());
+            final Session session = SessionManager.getSession();
+            return new ServletDevice(session.getServletResponse().getOutputStream(),
+                                     session.getCharacterEncoding());
             /*if (externalizedResource.getExtension().equalsIgnoreCase("html"))
               return new CachingDevice(new ServletDevice(SessionManager.getSession().getServletResponse().getOutputStream()));
             else
