@@ -26,6 +26,7 @@ public final class AnchorCG extends AbstractComponentCG implements org.wings.pla
     /* (non-Javadoc)
      * @see org.wings.plaf.css.AbstractComponentCG#writeContent(org.wings.io.Device, org.wings.SComponent)
      */
+    @Override
     public void writeInternal(final Device device,
                       final SComponent _c)
             throws IOException {

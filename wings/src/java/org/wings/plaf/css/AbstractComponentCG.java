@@ -62,6 +62,17 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
         }
     };
 
+    // Performance optimisation: keep selected immutable Strings as char-arrays
+    private static final char[] TABLE_OPENER = "<table".toCharArray();
+    private static final char[] DIV_OPENER = "<div".toCharArray();
+    private static final char[] TR_TD_OPENER = "><tr><td".toCharArray();
+    private static final char[] TABLE_CLOSENER = "</td></tr></table>".toCharArray();
+    private static final char[] DIV_CLOSENER = "</div>".toCharArray();
+    private static final char TAG_CLOSE = '>';
+    private static final char[] DEBUG_1 = "<!-- ".toCharArray();
+    private static final char[] DEBUG_2 = " -->".toCharArray();
+    private static final char[] DEBUG_3 = "<!-- /".toCharArray();
+
     protected AbstractComponentCG() {
     }
 
@@ -175,10 +186,10 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
         // This is the containing element of a component
         // it is responsible for styles, sizing...
         if (useTable) {
-            device.print("<table"); // table
+            device.print(TABLE_OPENER); // table
         }
         else {
-            device.print("<div"); // div
+            device.print(DIV_OPENER); // div
         }
 
         // We cant render this here.
@@ -190,26 +201,25 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
         Utils.optAttributes(device, optionalAttributes);
 
         if (useTable) {
-            device.print("><tr><td"); // table
-            final SStringBuilder styleString = new SStringBuilder();
-            if (component.getBorder() != null) {
-                Utils.createInlineStylesForInsets(styleString, component.getBorder().getInsets());
-            }
-            Utils.optAttribute(device, "style", styleString);
+            device.print(TR_TD_OPENER); // table
 
-            device.print(">"); // table
+            if (component.getBorder() != null) {
+                Utils.printInlineStylesForInsets(device, component.getBorder().getInsets());
+            }
+
+            device.print(TAG_CLOSE); // table
         }
         else {
-            device.print(">"); // div
+            device.print(TAG_CLOSE); // div
         }
     }
 
     protected final void writeSuffix(Device device, COMPONENT_TYPE component, boolean useTable) throws IOException {
         if (useTable) {
-            device.print("</td></tr></table>");
+            device.print(TABLE_CLOSENER);
         }
         else {
-            device.print("</div>");
+            device.print(DIV_CLOSENER);
         }
     }
 
@@ -363,7 +373,7 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
      * This method renders the component (and all of its subcomponents) to the given device.
      */
 	public final void write(final Device device, final COMPONENT_TYPE component) throws IOException {
-        Utils.printDebug(device, "<!-- ").print(component.getName()).print(" -->");
+        Utils.printDebug(device, DEBUG_1).print(component.getName()).print(DEBUG_2);
         component.fireRenderEvent(SComponent.START_RENDERING);
 
         try {
@@ -378,7 +388,7 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
         }
 
         component.fireRenderEvent(SComponent.DONE_RENDERING);
-        Utils.printDebug(device, "<!-- /").print(component.getName()).print(" -->");
+        Utils.printDebug(device, DEBUG_3).print(component.getName()).print(DEBUG_2);
 
         updateDragAndDrop(component);
     }

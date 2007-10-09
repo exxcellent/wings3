@@ -98,6 +98,15 @@ public final class Utils {
             '6', '7', '8', '9', 'a', 'b',
             'c', 'd', 'e', 'f'};
 
+    // Performance optimizations strings kept as chartarrays
+    private static final char[] ATTRIBUTE_OPENER = "=\"".toCharArray();
+    private static final char ATTRIBUTE_CLOSER = '\"';
+    private static final char SPACE = ' ';
+    private static final char COMMA = ',';
+    private static final char[] CLICKABILITY_1 = ",'".toCharArray();
+    private static final char[] CLICKABILITY_2 = "','".toCharArray();
+    private static final char[] CLICKABILITY_3 = "); return false;\"".toCharArray();
+
     private Utils() {
     }
 
@@ -498,7 +507,7 @@ public final class Utils {
                          * white-space: pre; property...so conditionalize it.
                          *                                                       Ole
                          */
-                    case ' ':
+                    case SPACE:
                         if (quoteSpaces) {
                             d.print(chars, last, (pos - last));
                             d.print("&nbsp;");
@@ -534,7 +543,7 @@ public final class Utils {
         for (int c = 0; c < chars.length; c++) {
             switch (chars[c]) {
                 case '\n':
-                    chars[c] = ' ';
+                    chars[c] = SPACE;
                     break;
                 case '<':
                     len += (c - pos);
@@ -548,7 +557,7 @@ public final class Utils {
         device.print(chars, pos, remain);
         len += remain;
         return len;
-    }    
+    }
 
     /**
      * write string as it is
@@ -601,7 +610,7 @@ public final class Utils {
      * (value != null && value.length > 0), the attrib is added otherwise
      * it is left out
      */
-    public static void optAttribute(Device d, String attr, SStringBuilder value)
+    public static void optAttribute(final Device d, String attr, final SStringBuilder value)
             throws IOException {
         optAttribute(d, attr, value != null ? value.toString() : null);
     }
@@ -611,12 +620,26 @@ public final class Utils {
      * (value != null && value.length > 0), the attrib is added otherwise
      * it is left out
      */
-    public static void optAttribute(Device d, String attr, String value)
+    public static void optAttribute(final Device d, final char[] attributeName, final String value)
             throws IOException {
         if (value != null && value.length() > 0) {
-            d.print(' ').print(attr).print("=\"");
+            d.print(SPACE).print(attributeName).print(ATTRIBUTE_OPENER);
             quote(d, value, true, false, false);
-            d.print('"');
+            d.print(ATTRIBUTE_CLOSER);
+        }
+    }
+
+    /**
+     * Prints an <b>optional</b> attribute. If the String value has a content
+     * (value != null && value.length > 0), the attrib is added otherwise
+     * it is left out
+     */
+    public static void optAttribute(final Device d, final String attributeName, final String value)
+            throws IOException {
+        if (value != null && value.length() > 0) {
+            d.print(SPACE).print(attributeName).print(ATTRIBUTE_OPENER);
+            quote(d, value, true, false, false);
+            d.print(ATTRIBUTE_CLOSER);
         }
     }
 
@@ -625,11 +648,11 @@ public final class Utils {
      * (value != null && value.length > 0), the attrib is added otherwise
      * it is left out
      */
-    public static void attribute(Device d, String attr, String value) throws IOException {
-            d.print(' ').print(attr).print("=\"");
+    public static void attribute(final Device d, final String attr, final String value) throws IOException {
+            d.print(SPACE).print(attr).print(ATTRIBUTE_OPENER);
             if (value != null)
                quote(d, value, true, false, false);
-            d.print('"');
+            d.print(ATTRIBUTE_CLOSER);
     }
 
     /**
@@ -637,28 +660,28 @@ public final class Utils {
      * (value != null && value.length > 0), the attrib is added otherwise
      * it is left out
      */
-    public static void optAttribute(Device d, String attr, Color value)
+    public static void optAttribute(final Device d, final String attr, final Color value)
             throws IOException {
         if (value != null) {
-            d.print(' ');
+            d.print(SPACE);
             d.print(attr);
-            d.print("=\"");
+            d.print(ATTRIBUTE_OPENER);
             write(d, value);
-            d.print('"');
+            d.print(ATTRIBUTE_CLOSER);
         }
     }
 
     /**
      * Prints an optional, renderable attribute.
      */
-    public static void optAttribute(Device d, String attr, Renderable r)
+    public static void optAttribute(final Device d, final String attr, final Renderable r)
             throws IOException {
         if (r != null) {
-            d.print(' ');
+            d.print(SPACE);
             d.print(attr);
-            d.print("=\"");
+            d.print(ATTRIBUTE_OPENER);
             r.write(d);
-            d.print('"');
+            d.print(ATTRIBUTE_CLOSER);
         }
     }
 
@@ -666,14 +689,29 @@ public final class Utils {
      * Prints an <b>optional</b> attribute. If the integer value is greater than 0,
      * the attrib is added otherwise it is left out
      */
-    public static void optAttribute(Device d, String attr, int value)
+    public static void optAttribute(final Device d, final char[] attributeName, final int value)
             throws IOException {
         if (value > 0) {
-            d.print(' ');
-            d.print(attr);
-            d.print("=\"");
+            d.print(SPACE);
+            d.print(attributeName);
+            d.print(ATTRIBUTE_OPENER);
             d.print(String.valueOf(value));
-            d.print('"');
+            d.print(ATTRIBUTE_CLOSER);
+        }
+    }
+
+    /**
+     * Prints an <b>optional</b> attribute. If the integer value is greater than 0,
+     * the attrib is added otherwise it is left out
+     */
+    public static void optAttribute(final Device d, final String attributeName, final int value)
+            throws IOException {
+        if (value > 0) {
+            d.print(SPACE);
+            d.print(attributeName);
+            d.print(ATTRIBUTE_OPENER);
+            d.print(String.valueOf(value));
+            d.print(ATTRIBUTE_CLOSER);
         }
     }
 
@@ -681,14 +719,14 @@ public final class Utils {
      * Prints an <b>optional</b> attribute. If the dimension value not equals <i>null</i>
      * the attrib is added otherwise it is left out
      */
-    public static void optAttribute(Device d, String attr, SDimension value)
+    public static void optAttribute(final Device d, final String attr, final SDimension value)
             throws IOException {
         if (value != null) {
-            d.print(' ');
+            d.print(SPACE);
             d.print(attr);
-            d.print("=\"");
+            d.print(ATTRIBUTE_OPENER);
             write(d, value.toString());
-            d.print('"');
+            d.print(ATTRIBUTE_CLOSER);
         }
     }
 
@@ -712,7 +750,7 @@ public final class Utils {
      * @throws IOException The exception maybe thrown if an error occurs
      *                     while trying to write to device.
      */
-    public static void optAttributes(Device d, Map attributes) throws IOException {
+    public static void optAttributes(final Device d, final Map attributes) throws IOException {
         if (attributes != null) {
             for (final Object o : attributes.entrySet()) {
                 Map.Entry entries = (Map.Entry) o;
@@ -744,7 +782,7 @@ public final class Utils {
      * writes the given java.awt.Color to the device. Speed optimized;
      * character conversion avoided.
      */
-    public static void write(Device d, Color c) throws IOException {
+    public static void write(final Device d, final Color c) throws IOException {
         d.print('#');
         int rgb = (c == null) ? 0 : c.getRGB();
         int mask = 0xf00000;
@@ -757,7 +795,7 @@ public final class Utils {
     /**
      * writes anything Renderable
      */
-    public static void write(Device d, Renderable r) throws IOException {
+    public static void write(final Device d, final Renderable r) throws IOException {
         if (r == null) {
             return;
         }
@@ -777,7 +815,7 @@ public final class Utils {
 
         write(d, "hello test&nbsp;\n");
         write(d, "<html>hallo test&nbsp;\n");
-        
+
         d = new org.wings.io.NullDevice();
         long start = System.currentTimeMillis();
         for (int i = 0; i < 1000000; ++i) {
@@ -794,7 +832,24 @@ public final class Utils {
      * @param d The original device
      * @return The original device or a {@link NullDevice}
      */
-    public static Device printDebug(Device d, String s) throws IOException {
+    public static Device printDebug(final Device d, final char[] s) throws IOException {
+        if (PRINT_DEBUG) {
+            return d.print(s);
+        }
+        else {
+            return NullDevice.DEFAULT;
+        }
+    }
+
+    /**
+     * Helper method for CGs to print out debug information in output stream.
+     * If {@link #PRINT_DEBUG} prints the passed string and returns the current {@link Device}.
+     * In other case omits ouput and returns a {@link NullDevice}
+     *
+     * @param d The original device
+     * @return The original device or a {@link NullDevice}
+     */
+    public static Device printDebug(final Device d, final String s) throws IOException {
         if (PRINT_DEBUG) {
             return d.print(s);
         }
@@ -812,7 +867,7 @@ public final class Utils {
             return printNewline(d, currentComponent);
         }
         else {
-            return d;
+            return NullDevice.DEFAULT;
         }
     }
 
@@ -843,24 +898,24 @@ public final class Utils {
     /**
      * Prints a hierarchical idented newline. For each surrounding container of the passed component one ident level.
      */
+    private static final char[][] NEWLINE_IDENTED = {
+            "\n".toCharArray(), "\n\t".toCharArray(), "\n\t\t".toCharArray(), "\n\t\t\t".toCharArray(),
+            "\n\t\t\t\t".toCharArray(),"\n\t\t\t\t\t".toCharArray(), "\n\t\t\t\t\t\t".toCharArray(),
+            "\n\t\t\t\t\t\t\t".toCharArray(),"\n\t\t\t\t\t\t\t\t".toCharArray(),"\n\t\t\t\t\t\t\t\t\t".toCharArray()};
     public static Device printNewline(final Device d, SComponent currentComponent, int offset) throws IOException {
-        if (currentComponent == null) // special we save every ms handling for holger ;-)
-            return d;
-
-        d.print('\n');
-
         if (PRINT_PRETTY) {
-            SContainer current = currentComponent.getParent();
-            while (current != null) {
-                d.print('\t');
-                current = current.getParent();
+            while (currentComponent != null) {
+                offset++;
+                currentComponent = currentComponent.getParent();
             }
         }
 
-        while (offset > 0) {
-            d.print('\t');
-            offset--;
+        if (offset < NEWLINE_IDENTED.length ) {
+            d.print(NEWLINE_IDENTED[offset]);
+        } else {
+            d.print(NEWLINE_IDENTED[NEWLINE_IDENTED.length - 1]);
         }
+
         return d;
     }
 
@@ -871,7 +926,7 @@ public final class Utils {
      * @param path the path where the script can be found
      * @return the script as a String
      */
-    public static String loadScript(String path) {
+    public static String loadScript(final String path) {
         InputStream in = null;
         BufferedReader reader = null;
 
@@ -909,7 +964,7 @@ public final class Utils {
      * prints a String. Substitutes spaces with nbsp's
      */
     public static String nonBreakingSpaces(String text) {
-        return text.replace(' ', '\u00A0');
+        return text.replace(SPACE, '\u00A0');
     }
 
 
@@ -926,7 +981,7 @@ public final class Utils {
         }
 
         // trivial case
-        if (words.indexOf(" ") < 0) {
+        if (words.indexOf(SPACE) < 0) {
             return words + wordSuffix;
         }
 
@@ -936,7 +991,7 @@ public final class Utils {
         while (tokenizer.hasMoreElements()) {
             returnValue.append(tokenizer.nextToken()).append(wordSuffix);
             if (tokenizer.hasMoreTokens()) {
-                returnValue.append(" ");
+                returnValue.append(SPACE);
             }
         }
 
@@ -1013,16 +1068,19 @@ public final class Utils {
             final boolean enabled, final boolean formComponent) throws IOException {
         if (enabled) {
             // Render onclick JS listeners
-            device.print(" onclick=\"wingS.request.sendEvent(");
-            device.print("event,");
-            device.print(formComponent + ",");
-            device.print(!component.isReloadForced() + ",'");
+            device.print(" onclick=\"wingS.request.sendEvent(event,");
+            device.print(formComponent);
+            device.print(COMMA);
+            device.print(!component.isReloadForced());
+            device.print(CLICKABILITY_1);
             device.print(Utils.event(component));
-            device.print("','");
-            device.print(eventValue == null ? "" : eventValue);
-            device.print("'");
+            device.print(CLICKABILITY_2);
+            if (eventValue != null) {
+                device.print(eventValue);
+            }
+            device.print('\'');
             device.print(collectJavaScriptListenerCode(component, JavaScriptEvent.ON_CLICK));
-            device.print("); return false;\"");
+            device.print(CLICKABILITY_3);
 
             // Render remaining JS listeners
             Utils.writeEvents(device, component, EXCLUDE_ON_CLICK);
@@ -1039,24 +1097,27 @@ public final class Utils {
      * @param javascriptEventType the event type declared in {@link JavaScriptEvent}
      * @return javascript code fragment n the form of <code>,new Array(function(){...},function(){...})</code>
      */
-    public static SStringBuilder collectJavaScriptListenerCode(final SComponent component, final String javascriptEventType) {
-        final SStringBuilder script = new SStringBuilder();
+    public static String collectJavaScriptListenerCode(final SComponent component, final String javascriptEventType) {
+        SStringBuilder script = null;
         JavaScriptListener[] eventListeners = getEventTypeListeners(component, javascriptEventType);
         if (eventListeners != null && eventListeners.length > 0) {
             for (int i = 0; i < eventListeners.length; ++i) {
                 if (eventListeners[i].getCode() != null) {
+                    if (script == null) {
+                        script = new SStringBuilder(64);
+                    }
                     if (i > 0) {
                         script.append(",");
                     }
                     script.append("function(){").append(eventListeners[i].getCode()).append("}");
                 }
             }
-            if (script.length() > 0) {
+            if (script != null && script.length() > 0) {
                 script.insert(0, ",new Array(");
                 script.append(")");
             }
         }
-        return script;
+        return script != null ? script.toString() : "";
     }
 
     /**
@@ -1138,6 +1199,29 @@ public final class Utils {
      */
     public static SStringBuilder createInlineStylesForInsets(Insets insets) {
         return createInlineStylesForInsets(new SStringBuilder(), insets);
+    }
+
+    /**
+     * Converts a hgap/vgap in according inline css padding style.
+     *
+     * @param device Appender to append inset style.
+     * @param insets The insets to generate CSS padding declaration
+     * @return Empty or filled stringbuffer with padding declaration
+     */
+    public static Device printInlineStylesForInsets(final Device device, final Insets insets) throws IOException {
+        if (insets != null && (insets.top > 0 || insets.left > 0 || insets.right > 0 || insets.bottom > 0)) {
+            if (insets.top == insets.left && insets.left == insets.right && insets.right == insets.bottom) {
+                device.print("style=\"padding:").print(insets.top).print("px;\"");
+            }
+            else if (insets.top == insets.bottom && insets.left == insets.right) {
+                device.print("style=\"padding:").print(insets.top).print("px ").print(insets.right).print("px;\"");
+            }
+            else {
+                device.print("style=\"padding:").print(insets.top).print("px ").print(insets.right).print("px ")
+                        .print(insets.bottom).print("px ").print(insets.left).print("px;\"");
+            }
+        }
+        return device;
     }
 
     /**
@@ -1236,7 +1320,7 @@ public final class Utils {
 
     /**
      * Lookup keys for yui resources
-     */    
+     */
     public static final String JS_YUI_ANIMATION = "JS.yuiAnimation";
     // [CSS???]: public static final String CSS_YUI_ASSETS = "CSS.yuiAssets";
     public static final String JS_YUI_AUTOCOMPLETE = "JS.yuiAutocomplete";
@@ -1336,7 +1420,7 @@ public final class Utils {
         String cssUrl = extMgr.externalize(res, ExternalizeManager.GLOBAL);
         return new StyleSheetHeader(new SessionResource(cssUrl));
     }
-    
+
     public static Renderable listToJsArray(List list) {
         return new JSArray(list);
     }
@@ -1362,12 +1446,12 @@ public final class Utils {
             ((Renderable)o).write(d);
             return;
         }
-        
+
         // Using an Objects toString() method to JSON-serialize them is DIRTY.
         assert(o instanceof String) : " never rely on toString() to serialize "
             + "an object in JSON! Implement org.wings.Renderable instead. "
             + "Object was a " + o.getClass() + ": >" + o + "<";
-        
+
         d.print('\'');
         final String stringRep = o.toString();
         final char chars[] = stringRep.toCharArray();
@@ -1410,7 +1494,7 @@ public final class Utils {
                 d.print(chars, last, (pos - last));
                 d.print(BACKSLASH_T);
                 last = pos + 1;
-                break;    
+                break;
             case '/':  // Regular expressions start with a slash.
                 d.print(chars, last, (pos - last));
                 d.print('\\');
@@ -1432,11 +1516,10 @@ public final class Utils {
         d.print(chars, last, chars.length - last);
         d.print('\'');
     }
-    
+
     public static void writeAllAttributes(Device device, SComponent component) throws IOException {
         optAttribute(device, "class", component.getStyle());
         optAttribute(device, "id", component.getName());
-
         optAttribute(device, "style", getInlineStyles(component));
 
         if (component instanceof LowLevelEventListener) {
@@ -1505,7 +1588,7 @@ public final class Utils {
     /**
      * Write Tooltip code.
      */
-    public static void writeTooltipMouseOver(Device device, SComponent component) 
+    public static void writeTooltipMouseOver(Device device, SComponent component)
     throws IOException {
         final String toolTipText = component != null ? component.getToolTipText() : null;
         if (toolTipText != null && toolTipText.length() > 0) {
@@ -1517,7 +1600,7 @@ public final class Utils {
 
     public static final boolean hasDimension(final SComponent component) {
         SDimension dim = component.getPreferredSize();
-        return dim != null && (dim.getHeightInt() != SDimension.AUTO_INT 
+        return dim != null && (dim.getHeightInt() != SDimension.AUTO_INT
                                || dim.getWidthInt() != SDimension.AUTO_INT);
     }
 
@@ -1533,13 +1616,13 @@ public final class Utils {
             final Iterator it = list.iterator();
             boolean isFirst = true;
             while (it.hasNext()) {
-                if (!isFirst) d.print(',');
+                if (!isFirst) d.print(COMMA);
                 encodeJS(d, it.next());
                 isFirst = false;
             }
             d.print(']');
         }
-               
+
         @Override
             public String toString() {
             final StringBuilderDevice sb = new StringBuilderDevice(256);
@@ -1549,7 +1632,7 @@ public final class Utils {
             try { write(sb); } catch (IOException e) { }
             return sb.toString();
         }
-        
+
         @Override
             public boolean equals(Object object) {
             return list.equals(object);
@@ -1581,7 +1664,7 @@ public final class Utils {
             }
             d.print('}');
         }
-        
+
         @Override  // TODO: removeme
             public String toString() {
             final StringBuilderDevice sb = new StringBuilderDevice(10);
@@ -1591,7 +1674,7 @@ public final class Utils {
             try { write(sb); } catch (IOException e) {}
             return sb.toString();
         }
-        
+
         public boolean equals(Object object) {
             return map.equals(object);
         }

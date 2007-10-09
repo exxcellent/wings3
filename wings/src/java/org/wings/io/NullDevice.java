@@ -25,7 +25,7 @@ import java.io.Serializable;
  */
 public final class NullDevice implements Device, Serializable {
 
-    public static NullDevice DEFAULT = new NullDevice();
+    public static final NullDevice DEFAULT = new NullDevice();
 
     private long byteCount;
 

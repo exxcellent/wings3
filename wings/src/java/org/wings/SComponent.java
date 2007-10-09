@@ -188,11 +188,11 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
     /**
      * Contains all script listeners of the component.
      */
-    private final List<ScriptListener> scriptListenerList = new LinkedList<ScriptListener>();
+    private List<ScriptListener> scriptListenerList;
 
     private ActionMap actionMap;
 
-    private final Map<Action, ActionEvent> actionEvents = new HashMap<Action, ActionEvent>();
+    private Map<Action, ActionEvent> actionEvents;
 
     private transient SRenderEvent renderEvent;
 
@@ -227,7 +227,16 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * @see #setInputMap(int, javax.swing.InputMap)
      */
     public static final int WHEN_IN_FOCUSED_FRAME = 1;
+
+    /**
+     * Global CSS selector 
+     */
     public static final Selector SELECTOR_ALL = new Selector("everything");
+
+    /**
+     * Performance improvement constant
+     */
+    private static final ScriptListener[] EMPTY_SCRIPTLISTENERLIST = new ScriptListener[0];
 
 
     /**
@@ -586,8 +595,12 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * @see org.wings.SComponent#removeComponentListener
      */
     public final void addScriptListener(ScriptListener listener) {
-        if (scriptListenerList.contains(listener))
+        if (scriptListenerList != null && scriptListenerList.contains(listener))
             return;
+
+        if (scriptListenerList == null) {
+            scriptListenerList  = new LinkedList<ScriptListener>();
+        }
 
         int placingPosition = -1;
         for (int i = 0; i < scriptListenerList.size() && placingPosition < 0; i++) {
@@ -616,8 +629,10 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * @see org.wings.SComponent#addComponentListener
      */
     public final void removeScriptListener(ScriptListener listener) {
-        scriptListenerList.remove(listener);
-        reload();
+        if (scriptListenerList != null) {
+            scriptListenerList.remove(listener);
+            reload();
+        }
     }
 
     /**
@@ -626,7 +641,11 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * @return the ScriptListener Array.
      */
     public ScriptListener[] getScriptListeners() {
-        return scriptListenerList.toArray(new ScriptListener[scriptListenerList.size()]);
+        if (scriptListenerList != null) {
+            return scriptListenerList.toArray(new ScriptListener[scriptListenerList.size()]);
+        } else {
+            return EMPTY_SCRIPTLISTENERLIST;
+        }
     }
 
     /**
@@ -634,8 +653,12 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      *
      * @return The <code>ScriptListener</code>s in a <code>List</code>.
      */
-    public List getScriptListenerList() {
-        return Collections.unmodifiableList(scriptListenerList);
+    public List<ScriptListener> getScriptListenerList() {
+        if (scriptListenerList != null) {
+            return Collections.unmodifiableList(scriptListenerList);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     /**
@@ -1208,6 +1231,7 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * Mark this component as subject to reload if the property,
      * that is given in its old and new fashion, changed.
      */
+    @SuppressWarnings({"unchecked"})
     public void write(Device s) throws IOException {
         try {
             if (visible) {
@@ -1216,10 +1240,6 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
         } catch (IOException se) {
             // Typical double-clicks. Not severe
             log.debug("Not Severe: Socket exception during code generation for " + getClass().getName() + se);
-// FIXME Error should no tbe catched!
-        } catch (NoClassDefFoundError e) {
-            // Mostly happens when DWR jar is not in classpath
-            log.fatal("Error during code generation for " + getClass().getName(), e);
         } catch (Throwable t) {
             // should we warn here? or maybe throw an error...
             log.error("Exception during code generation for " + getClass().getName(), t);
@@ -1231,6 +1251,7 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      *
      * @return string representation of this component with all properties.
      */
+    @Override
     public String toString() {
         return getClass().getName() + "[" + getName() + "]";
     }
@@ -1493,6 +1514,7 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * @see org.wings.plaf.CGManager#getLookAndFeel
      * @see org.wings.plaf.CGManager#getCG
      */
+    @SuppressWarnings({"unchecked"})
     public void setCG(ComponentCG newCG) {
         /* We do not check that the CG instance is different
          * before allowing the switch in order to enable the
@@ -1857,8 +1879,11 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
 
         boolean arm = false;
         for (String value : values) {
-            Action action = actionMap.get(value);
+            final Action action = actionMap.get(value);
             if (action != null) {
+                if (actionEvents == null)
+                    actionEvents = new HashMap<Action, ActionEvent>();
+
                 actionEvents.put(action, new ActionEvent(this, 0, value));
                 arm = true;
             }
@@ -1881,12 +1906,14 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * Internal method to trigger firing of key events.
      */
     protected void fireKeyEvents() {
-        for (Map.Entry<Action, ActionEvent> entry : actionEvents.entrySet()) {
-            Action action = entry.getKey();
-            ActionEvent event = entry.getValue();
-            action.actionPerformed(event);
+        if (actionEvents != null) {
+            for (Map.Entry<Action, ActionEvent> entry : actionEvents.entrySet()) {
+                Action action = entry.getKey();
+                ActionEvent event = entry.getValue();
+                action.actionPerformed(event);
+            }
+            actionEvents.clear();
         }
-        actionEvents.clear();
     }
 
     /**
