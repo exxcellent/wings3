@@ -98,15 +98,6 @@ public final class Utils {
             '6', '7', '8', '9', 'a', 'b',
             'c', 'd', 'e', 'f'};
 
-    // Performance optimizations strings kept as chartarrays
-    private static final char[] ATTRIBUTE_OPENER = "=\"".toCharArray();
-    private static final char ATTRIBUTE_CLOSER = '\"';
-    private static final char SPACE = ' ';
-    private static final char COMMA = ',';
-    private static final char[] CLICKABILITY_1 = ",'".toCharArray();
-    private static final char[] CLICKABILITY_2 = "','".toCharArray();
-    private static final char[] CLICKABILITY_3 = "); return false;\"".toCharArray();
-
     private Utils() {
     }
 
@@ -507,7 +498,7 @@ public final class Utils {
                          * white-space: pre; property...so conditionalize it.
                          *                                                       Ole
                          */
-                    case SPACE:
+                    case ' ':
                         if (quoteSpaces) {
                             d.print(chars, last, (pos - last));
                             d.print("&nbsp;");
@@ -543,7 +534,7 @@ public final class Utils {
         for (int c = 0; c < chars.length; c++) {
             switch (chars[c]) {
                 case '\n':
-                    chars[c] = SPACE;
+                    chars[c] = ' ';
                     break;
                 case '<':
                     len += (c - pos);
@@ -623,9 +614,9 @@ public final class Utils {
     public static void optAttribute(final Device d, final char[] attributeName, final String value)
             throws IOException {
         if (value != null && value.length() > 0) {
-            d.print(SPACE).print(attributeName).print(ATTRIBUTE_OPENER);
+            d.print(' ').print(attributeName).print("=\"");
             quote(d, value, true, false, false);
-            d.print(ATTRIBUTE_CLOSER);
+            d.print('\"');
         }
     }
 
@@ -637,9 +628,9 @@ public final class Utils {
     public static void optAttribute(final Device d, final String attributeName, final String value)
             throws IOException {
         if (value != null && value.length() > 0) {
-            d.print(SPACE).print(attributeName).print(ATTRIBUTE_OPENER);
+            d.print(' ').print(attributeName).print("=\"");
             quote(d, value, true, false, false);
-            d.print(ATTRIBUTE_CLOSER);
+            d.print('\"');
         }
     }
 
@@ -649,10 +640,10 @@ public final class Utils {
      * it is left out
      */
     public static void attribute(final Device d, final String attr, final String value) throws IOException {
-            d.print(SPACE).print(attr).print(ATTRIBUTE_OPENER);
+            d.print(' ').print(attr).print("=\"");
             if (value != null)
                quote(d, value, true, false, false);
-            d.print(ATTRIBUTE_CLOSER);
+            d.print('\"');
     }
 
     /**
@@ -663,11 +654,11 @@ public final class Utils {
     public static void optAttribute(final Device d, final String attr, final Color value)
             throws IOException {
         if (value != null) {
-            d.print(SPACE);
+            d.print(' ');
             d.print(attr);
-            d.print(ATTRIBUTE_OPENER);
+            d.print("=\"");
             write(d, value);
-            d.print(ATTRIBUTE_CLOSER);
+            d.print('\"');
         }
     }
 
@@ -677,11 +668,11 @@ public final class Utils {
     public static void optAttribute(final Device d, final String attr, final Renderable r)
             throws IOException {
         if (r != null) {
-            d.print(SPACE);
+            d.print(' ');
             d.print(attr);
-            d.print(ATTRIBUTE_OPENER);
+            d.print("=\"");
             r.write(d);
-            d.print(ATTRIBUTE_CLOSER);
+            d.print('\"');
         }
     }
 
@@ -692,11 +683,11 @@ public final class Utils {
     public static void optAttribute(final Device d, final char[] attributeName, final int value)
             throws IOException {
         if (value > 0) {
-            d.print(SPACE);
+            d.print(' ');
             d.print(attributeName);
-            d.print(ATTRIBUTE_OPENER);
+            d.print("=\"");
             d.print(String.valueOf(value));
-            d.print(ATTRIBUTE_CLOSER);
+            d.print('\"');
         }
     }
 
@@ -707,11 +698,11 @@ public final class Utils {
     public static void optAttribute(final Device d, final String attributeName, final int value)
             throws IOException {
         if (value > 0) {
-            d.print(SPACE);
+            d.print(' ');
             d.print(attributeName);
-            d.print(ATTRIBUTE_OPENER);
+            d.print("=\"");
             d.print(String.valueOf(value));
-            d.print(ATTRIBUTE_CLOSER);
+            d.print('\"');
         }
     }
 
@@ -722,11 +713,11 @@ public final class Utils {
     public static void optAttribute(final Device d, final String attr, final SDimension value)
             throws IOException {
         if (value != null) {
-            d.print(SPACE);
+            d.print(' ');
             d.print(attr);
-            d.print(ATTRIBUTE_OPENER);
+            d.print("=\"");
             write(d, value.toString());
-            d.print(ATTRIBUTE_CLOSER);
+            d.print('\"');
         }
     }
 
@@ -837,7 +828,7 @@ public final class Utils {
             return d.print(s);
         }
         else {
-            return NullDevice.DEFAULT;
+            return d;
         }
     }
 
@@ -854,7 +845,7 @@ public final class Utils {
             return d.print(s);
         }
         else {
-            return NullDevice.DEFAULT;
+            return d;
         }
     }
 
@@ -898,24 +889,19 @@ public final class Utils {
     /**
      * Prints a hierarchical idented newline. For each surrounding container of the passed component one ident level.
      */
-    private static final char[][] NEWLINE_IDENTED = {
-            "\n".toCharArray(), "\n\t".toCharArray(), "\n\t\t".toCharArray(), "\n\t\t\t".toCharArray(),
-            "\n\t\t\t\t".toCharArray(),"\n\t\t\t\t\t".toCharArray(), "\n\t\t\t\t\t\t".toCharArray(),
-            "\n\t\t\t\t\t\t\t".toCharArray(),"\n\t\t\t\t\t\t\t\t".toCharArray(),"\n\t\t\t\t\t\t\t\t\t".toCharArray()};
     public static Device printNewline(final Device d, SComponent currentComponent, int offset) throws IOException {
+        d.print('\n');
         if (PRINT_PRETTY) {
             while (currentComponent != null) {
-                offset++;
+                d.print('\t');
                 currentComponent = currentComponent.getParent();
             }
         }
 
-        if (offset < NEWLINE_IDENTED.length ) {
-            d.print(NEWLINE_IDENTED[offset]);
-        } else {
-            d.print(NEWLINE_IDENTED[NEWLINE_IDENTED.length - 1]);
+        while (offset > 0) {
+            d.print("\t");
+            offset--;
         }
-
         return d;
     }
 
@@ -964,7 +950,7 @@ public final class Utils {
      * prints a String. Substitutes spaces with nbsp's
      */
     public static String nonBreakingSpaces(String text) {
-        return text.replace(SPACE, '\u00A0');
+        return text.replace(' ', '\u00A0');
     }
 
 
@@ -981,7 +967,7 @@ public final class Utils {
         }
 
         // trivial case
-        if (words.indexOf(SPACE) < 0) {
+        if (words.indexOf(' ') < 0) {
             return words + wordSuffix;
         }
 
@@ -991,7 +977,7 @@ public final class Utils {
         while (tokenizer.hasMoreElements()) {
             returnValue.append(tokenizer.nextToken()).append(wordSuffix);
             if (tokenizer.hasMoreTokens()) {
-                returnValue.append(SPACE);
+                returnValue.append(' ');
             }
         }
 
@@ -1070,17 +1056,17 @@ public final class Utils {
             // Render onclick JS listeners
             device.print(" onclick=\"wingS.request.sendEvent(event,");
             device.print(formComponent);
-            device.print(COMMA);
+            device.print(',');
             device.print(!component.isReloadForced());
-            device.print(CLICKABILITY_1);
+            device.print(",'");
             device.print(Utils.event(component));
-            device.print(CLICKABILITY_2);
+            device.print("','");
             if (eventValue != null) {
                 device.print(eventValue);
             }
             device.print('\'');
             device.print(collectJavaScriptListenerCode(component, JavaScriptEvent.ON_CLICK));
-            device.print(CLICKABILITY_3);
+            device.print("); return false;\"");
 
             // Render remaining JS listeners
             Utils.writeEvents(device, component, EXCLUDE_ON_CLICK);
@@ -1616,7 +1602,7 @@ public final class Utils {
             final Iterator it = list.iterator();
             boolean isFirst = true;
             while (it.hasNext()) {
-                if (!isFirst) d.print(COMMA);
+                if (!isFirst) d.print(',');
                 encodeJS(d, it.next());
                 isFirst = false;
             }
@@ -1634,12 +1620,12 @@ public final class Utils {
         }
 
         @Override
-            public boolean equals(Object object) {
+        public boolean equals(Object object) {
             return list.equals(object);
         }
 
         @Override
-            public int hashCode() {
+        public int hashCode() {
             return list.hashCode();
         }
     }
@@ -1675,12 +1661,13 @@ public final class Utils {
             return sb.toString();
         }
 
+        @Override
         public boolean equals(Object object) {
             return map.equals(object);
         }
 
         @Override
-            public int hashCode() {
+        public int hashCode() {
             return map.hashCode();
         }
     }

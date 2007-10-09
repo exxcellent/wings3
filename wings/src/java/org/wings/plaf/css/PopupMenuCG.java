@@ -190,13 +190,13 @@ public final class PopupMenuCG extends AbstractComponentCG implements
     }
 
     public Update getComponentUpdate(SComponent component) {
-        return new ComponentUpdate(component);
+        return new ComponentUpdate(this, component);
     }
 
-    protected class ComponentUpdate extends AbstractComponentCG.ComponentUpdate {
+    protected static class ComponentUpdate extends AbstractComponentCG.ComponentUpdate {
 
-        public ComponentUpdate(SComponent component) {
-            super(component);
+        public ComponentUpdate(AbstractComponentCG cg, SComponent component) {
+            super(cg, component);
         }
 
         @Override

@@ -184,13 +184,13 @@ public final class MenuCG extends org.wings.plaf.css.MenuItemCG implements
         if (parentMenu != null)
             return parentMenu.getCG().getComponentUpdate(parentMenu);
         else
-            return new ComponentUpdate(component);
+            return new ComponentUpdate(this, component);
     }
 
-    protected class ComponentUpdate extends AbstractComponentCG.ComponentUpdate {
+    protected static class ComponentUpdate extends AbstractComponentCG.ComponentUpdate {
 
-        public ComponentUpdate(SComponent component) {
-            super(component);
+        public ComponentUpdate(AbstractComponentCG cg, SComponent component) {
+            super(cg, component);
         }
 
         @Override
