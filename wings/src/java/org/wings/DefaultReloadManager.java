@@ -326,8 +326,8 @@ public class DefaultReloadManager implements ReloadManager {
     private static class PathComparator implements Comparator<String> {
 
         public int compare(String path1, String path2) {
-            int depthOfPath1 = (new StringTokenizer(path1, ":")).countTokens();
-            int depthOfPath2 = (new StringTokenizer(path2, ":")).countTokens();
+            int depthOfPath1 = (new StringTokenizer(path1, "/")).countTokens();
+            int depthOfPath2 = (new StringTokenizer(path2, "/")).countTokens();
             if (depthOfPath1 < depthOfPath2) return -1;
             if (depthOfPath1 > depthOfPath2) return 1;
             return path1.compareTo(path2);
