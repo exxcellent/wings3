@@ -106,7 +106,7 @@ public class XInplaceEditor extends SLabel implements XInplaceEditorInterface {
      * client-side JavaScript.
      */
     private String getAjaxFormattedText() {
-        StringBuilderDevice device = new StringBuilderDevice(32);
+        StringBuilderDevice device = new StringBuilderDevice(256);
         try {
             Utils.quote(device, ajaxDocument.getText(), true, !isWordWrap(), false);
         } catch (IOException ex) {

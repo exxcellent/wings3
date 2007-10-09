@@ -27,9 +27,8 @@ public final class StringBuilderDevice implements Device, Serializable {
     private SStringBuilder builder;
     private transient ByteArrayOutputStream byteStream = null;
 
-    @Deprecated // specify a capacity
     public StringBuilderDevice() {
-        builder = new SStringBuilder();
+        builder = new SStringBuilder(4 * 1024);
     }
 
     public StringBuilderDevice(int capacity) {

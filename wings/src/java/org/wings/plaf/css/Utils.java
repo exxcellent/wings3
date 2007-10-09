@@ -1542,8 +1542,8 @@ public final class Utils {
                
         @Override
             public String toString() {
-            final StringBuilderDevice sb = new StringBuilderDevice(10);
-            // Prevent this toString() be used for rendering, provide
+            final StringBuilderDevice sb = new StringBuilderDevice(256);
+           // Prevent this toString() be used for rendering, provide
             // info string to break that assumption.
             sb.print("JSArray.toString():");
             try { write(sb); } catch (IOException e) { }
