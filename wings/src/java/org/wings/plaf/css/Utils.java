@@ -455,7 +455,7 @@ public final class Utils {
                 else {
                     d.print("&#");
                     d.print((int) c);
-                    d.print(";");
+                    d.print(';');
                 } // end of if ()
                 last = pos + 1;
             }
@@ -509,8 +509,8 @@ public final class Utils {
                     case '\'':
                         if (quoteApostroph) {
                             d.print(chars, last, (pos - last));
-                            d.print("\\'");
-                            last = pos + 1;
+                            d.print('\\');
+                            last = pos;
                         }
                         break;
 
@@ -614,9 +614,9 @@ public final class Utils {
     public static void optAttribute(Device d, String attr, String value)
             throws IOException {
         if (value != null && value.length() > 0) {
-            d.print(" ").print(attr).print("=\"");
+            d.print(' ').print(attr).print("=\"");
             quote(d, value, true, false, false);
-            d.print("\"");
+            d.print('"');
         }
     }
 
@@ -626,10 +626,10 @@ public final class Utils {
      * it is left out
      */
     public static void attribute(Device d, String attr, String value) throws IOException {
-            d.print(" ").print(attr).print("=\"");
+            d.print(' ').print(attr).print("=\"");
             if (value != null)
                quote(d, value, true, false, false);
-            d.print("\"");
+            d.print('"');
     }
 
     /**
@@ -640,11 +640,11 @@ public final class Utils {
     public static void optAttribute(Device d, String attr, Color value)
             throws IOException {
         if (value != null) {
-            d.print(" ");
+            d.print(' ');
             d.print(attr);
             d.print("=\"");
             write(d, value);
-            d.print("\"");
+            d.print('"');
         }
     }
 
@@ -654,11 +654,11 @@ public final class Utils {
     public static void optAttribute(Device d, String attr, Renderable r)
             throws IOException {
         if (r != null) {
-            d.print(" ");
+            d.print(' ');
             d.print(attr);
             d.print("=\"");
             r.write(d);
-            d.print("\"");
+            d.print('"');
         }
     }
 
@@ -669,11 +669,11 @@ public final class Utils {
     public static void optAttribute(Device d, String attr, int value)
             throws IOException {
         if (value > 0) {
-            d.print(" ");
+            d.print(' ');
             d.print(attr);
             d.print("=\"");
             d.print(String.valueOf(value));
-            d.print("\"");
+            d.print('"');
         }
     }
 
@@ -684,11 +684,11 @@ public final class Utils {
     public static void optAttribute(Device d, String attr, SDimension value)
             throws IOException {
         if (value != null) {
-            d.print(" ");
+            d.print(' ');
             d.print(attr);
             d.print("=\"");
             write(d, value.toString());
-            d.print("\"");
+            d.print('"');
         }
     }
 
@@ -745,7 +745,7 @@ public final class Utils {
      * character conversion avoided.
      */
     public static void write(Device d, Color c) throws IOException {
-        d.print("#");
+        d.print('#');
         int rgb = (c == null) ? 0 : c.getRGB();
         int mask = 0xf00000;
         for (int bitPos = 20; bitPos >= 0; bitPos -= 4) {
@@ -1573,7 +1573,7 @@ public final class Utils {
             boolean isFirst = true;
             d.print('{');
             while (it.hasNext()) {
-                if (!isFirst) d.print(",");
+                if (!isFirst) d.print(',');
                 Map.Entry entry = (Map.Entry) it.next();
                 d.print('\'').print(entry.getKey().toString()).print("':");
                 encodeJS(d, entry.getValue());
