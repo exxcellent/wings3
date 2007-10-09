@@ -49,8 +49,7 @@ import java.util.*;
  *
  * @author Holger Engels
  */
-public class MultipartRequest
-        extends HttpServletRequestWrapper {
+public final class MultipartRequest extends HttpServletRequestWrapper {
     private final transient static Log log = LogFactory.getLog(MultipartRequest.class);
 
     private static final int DEFAULT_MAX_POST_SIZE = 1024 * 1024;  // 1 Meg
@@ -58,9 +57,9 @@ public class MultipartRequest
     private int maxSize;
     private boolean urlencodedRequest;
 
-    private final HashMap parameters = new HashMap();  // name - value
-    private final HashMap files = new HashMap();       // name - UploadedFile
-    private HashMap map;
+    private Map<String,List> parameters;        // name - value
+    private Map<String,UploadedFile> files;     // name - UploadedFile
+    private Map<String,String[]> parameterMap;  // name - values
 
     /**
      * @param request       the servlet request
@@ -105,11 +104,9 @@ public class MultipartRequest
             public boolean hasMoreElements() {
                 return iter.hasNext();
             }
-
             public Object nextElement() {
                 return iter.next();
             }
-
         };
     }
 
@@ -122,31 +119,33 @@ public class MultipartRequest
      * @return the names of all the uploaded files as an Enumeration of Strings
      */
     public Iterator getFileNames() {
+        if (urlencodedRequest) return Collections.EMPTY_SET.iterator();
         return files.keySet().iterator();
     }
 
     public String[] getParameterValues(String name) {
-        if (urlencodedRequest)
-            return super.getParameterValues(name);
-        ArrayList v = (ArrayList) parameters.get(name);
+        if (urlencodedRequest) return super.getParameterValues(name);
+        
+        List v = parameters.get(name);
         if (v == null) return null;
         String result[] = new String[v.size()];
         return (String[]) v.toArray(result);
     }
 
     public Map getParameterMap() {
-        if (urlencodedRequest)
-            return super.getParameterMap();
-        if (map == null) {
-            map = new HashMap();
-            for (Iterator iterator = parameters.entrySet().iterator(); iterator.hasNext();) {
-                Map.Entry entry = (Map.Entry) iterator.next();
-                List list = (List) entry.getValue();
+        if (urlencodedRequest) return super.getParameterMap();
+        
+        if (parameterMap == null) {
+            parameterMap = new HashMap<String,String[]>();
+            Iterator<Map.Entry<String,List>> it = parameters.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<String,List> entry = it.next();
+                List list = entry.getValue();
                 String[] values = (String[]) list.toArray(new String[list.size()]);
-                map.put(entry.getKey(), values);
+                parameterMap.put(entry.getKey(), values);
             }
         }
-        return map;
+        return parameterMap;
     }
 
     /**
@@ -160,8 +159,7 @@ public class MultipartRequest
      */
     public String getFileName(String name) {
         try {
-            UploadedFile file = (UploadedFile) files.get(name);
-            return file.getFileName();  // may be null
+            return files.get(name).getFileName();
         } catch (Exception e) {
             return null;
         }
@@ -177,8 +175,7 @@ public class MultipartRequest
      */
     public String getFileId(String name) {
         try {
-            UploadedFile file = (UploadedFile) files.get(name);
-            return file.getId();  // may be null
+            return files.get(name).getId();
         } catch (Exception e) {
             return null;
         }
@@ -193,8 +190,7 @@ public class MultipartRequest
      */
     public String getContentType(String name) {
         try {
-            UploadedFile file = (UploadedFile) files.get(name);
-            return file.getContentType();  // may be null
+            return files.get(name).getContentType();
         } catch (Exception e) {
             return null;
         }
@@ -209,8 +205,7 @@ public class MultipartRequest
      */
     public File getFile(String name) {
         try {
-            UploadedFile file = (UploadedFile) files.get(name);
-            return file.getFile();  // may be null
+            return files.get(name).getFile();
         } catch (Exception e) {
             return null;
         }
@@ -227,9 +222,10 @@ public class MultipartRequest
      * Store exception as request parameter.
      */
     protected void setException(String param, Exception ex) {
-        parameters.clear();
-        files.clear();
-
+        if (!urlencodedRequest) {
+            parameters.clear();
+            files.clear();
+        }
         putParameter(param, "exception");
         putParameter(param, ex.getMessage());
     }
@@ -246,11 +242,16 @@ public class MultipartRequest
             urlencodedRequest = true;
             return;
         }
+        
         urlencodedRequest = false;
-
-        for (Iterator iterator = req.getParameterMap().entrySet().iterator(); iterator.hasNext();) {
+        parameters = new HashMap<String,List>();
+        files = new HashMap<String,UploadedFile>();
+        
+        for (Iterator iterator = req.getParameterMap().entrySet().iterator();
+             iterator.hasNext(); /**/) {
             Map.Entry entry = (Map.Entry) iterator.next();
-            parameters.put(entry.getKey(), new ArrayList(Arrays.asList((String[]) entry.getValue())));
+            parameters.put((String) entry.getKey(),
+                           new ArrayList(Arrays.asList((String[]) entry.getValue())));
         }
 
         String boundaryToken = extractBoundaryToken(type);
