@@ -450,14 +450,15 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
 
 	public Update getComponentUpdate(COMPONENT_TYPE component) {
         updateDragAndDrop(component);
-        return new ComponentUpdate(component);
+        return new ComponentUpdate(this, component);
 	}
 
-	protected class ComponentUpdate extends AbstractUpdate<COMPONENT_TYPE> {
-
-		public ComponentUpdate(COMPONENT_TYPE component) {
+	protected static class ComponentUpdate<COMPONENT_TYPE extends SComponent> extends AbstractUpdate<COMPONENT_TYPE> {
+        private final AbstractComponentCG<COMPONENT_TYPE> cg;
+		public ComponentUpdate(AbstractComponentCG<COMPONENT_TYPE> cg, COMPONENT_TYPE component) {
 			super(component);
-		}
+            this.cg = cg;
+        }
 
         @Override
         public int getProperty() {
@@ -476,7 +477,7 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
 
             try {
                 StringBuilderDevice htmlDevice = new StringBuilderDevice(1024);
-                write(htmlDevice, component);
+                cg.write(htmlDevice, component);
                 htmlCode = htmlDevice.toString();
             } catch (Throwable t) {
                 log.fatal("An error occured during rendering", t);

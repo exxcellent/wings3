@@ -25,22 +25,21 @@ import java.io.IOException;
  *
  * @author holger
  */
-public final class ScrollBarCG extends org.wings.plaf.css.AbstractComponentCG implements org.wings.plaf.ScrollBarCG {
+public final class ScrollBarCG extends org.wings.plaf.css.AbstractComponentCG<SScrollBar>
+        implements org.wings.plaf.ScrollBarCG {
     private static final long serialVersionUID = 1L;
 
-    public void writeInternal(Device d, SComponent c)
+    public void writeInternal(final Device d, final SScrollBar scrollBar)
             throws IOException {
-        SScrollBar sb = (SScrollBar) c;
-
-        String style = sb.getStyle();
-        if (sb.getOrientation() == SConstants.VERTICAL) {
-            sb.setStyle(style + " SScrollBar_vertical");
-            writeVerticalScrollbar(d, sb);
+        final String style = scrollBar.getStyle();
+        if (scrollBar.getOrientation() == SConstants.VERTICAL) {
+            scrollBar.setStyle(style + " SScrollBar_vertical");
+            writeVerticalScrollbar(d, scrollBar);
         } else {
-            sb.setStyle(style + " SScrollBar_horizontal");
-            writeHorizontalScrollbar(d, sb);
+            scrollBar.setStyle(style + " SScrollBar_horizontal");
+            writeHorizontalScrollbar(d, scrollBar);
         }
-        sb.setStyle(style);
+        scrollBar.setStyle(style);
     }
 
     private void writeVerticalScrollbar(Device device, SScrollBar sb) throws IOException {
@@ -85,7 +84,7 @@ public final class ScrollBarCG extends org.wings.plaf.css.AbstractComponentCG im
     public Update getAdjustmentUpdate(SScrollBar scrollBar, int value, int extent, int size) {
         if (scrollBar.isChangeFromEvent())
             return null;
-        return new ComponentUpdate(scrollBar);
+        return new ComponentUpdate<SScrollBar>(this, scrollBar);
     }
 
     private static class VerticalScrollBarLayoutScript

@@ -618,8 +618,7 @@ public class XTableCG
     
 
     public Update getTableScrollUpdate(STable table, Rectangle newViewport, Rectangle oldViewport) {
-        //return new TableScrollUpdate(table);
-        return new ComponentUpdate(table);
+        return new ComponentUpdate(this, table);
     }
 
     public Update getEditCellUpdate(STable table, int row, int column) {
