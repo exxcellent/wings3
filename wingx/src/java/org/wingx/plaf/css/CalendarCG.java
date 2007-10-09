@@ -58,10 +58,7 @@ public class CalendarCG extends AbstractComponentCG implements org.wingx.plaf.Ca
         }
 
         List<Header> headerList = new ArrayList<Header>();
-        headerList.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_CALENDAR));
-        headerList.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_YAHOO));
-        headerList.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_EVENT));
-        headerList.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DOM));    
+        headerList.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_CALENDAR));   
         headerList.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CALENDAR));
         headerList.add(Utils.createExternalizedJSHeader("org/wingx/calendar/xcalendar.js"));
         headers = Collections.unmodifiableList(headerList);
