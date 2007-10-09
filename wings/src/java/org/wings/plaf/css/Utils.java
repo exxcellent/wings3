@@ -828,12 +828,12 @@ public final class Utils {
         if (currentComponent == null) {
             return d;
         }
-        d.print("\n");
+        d.print('\n');
 
         if (PRINT_PRETTY) {
             SContainer current = currentComponent.getParent();
             while (current != null) {
-                d.print("\t");
+                d.print('\t');
                 current = current.getParent();
             }
         }
@@ -847,18 +847,18 @@ public final class Utils {
         if (currentComponent == null) // special we save every ms handling for holger ;-)
             return d;
 
-        d.print("\n");
+        d.print('\n');
 
         if (PRINT_PRETTY) {
             SContainer current = currentComponent.getParent();
             while (current != null) {
-                d.print("\t");
+                d.print('\t');
                 current = current.getParent();
             }
         }
 
         while (offset > 0) {
-            d.print("\t");
+            d.print('\t');
             offset--;
         }
         return d;
