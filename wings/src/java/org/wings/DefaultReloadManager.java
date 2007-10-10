@@ -187,7 +187,7 @@ public class DefaultReloadManager implements ReloadManager {
 
         fineGrainedUpdates.keySet().removeAll(fullReplaceUpdates.keySet());
 
-        SortedMap<String, SComponent> componentHierarchy = new TreeMap<String, SComponent>(new PathComparator());
+        SortedMap<String, SComponent> componentHierarchy = new TreeMap<String, SComponent>();
 
         for (SComponent component : getDirtyComponents()) {
             if ((!component.isRecursivelyVisible() && !(component instanceof SMenu)) ||
@@ -329,14 +329,6 @@ public class DefaultReloadManager implements ReloadManager {
                 new InverseComparator<PotentialUpdate>(new PriorityComparator()),
                 new PositionComparator()
             );
-    }
-
-    private static class PathComparator implements Comparator<String> {
-
-        public int compare(String path1, String path2) {
-            return path1.compareTo(path2);
-        }
-        
     }
 
     private static class PositionComparator implements Comparator<PotentialUpdate> {
