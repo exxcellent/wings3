@@ -18,7 +18,7 @@ import org.wings.externalizer.ExternalizeManager;
 import org.wings.resource.FileResource;
 import org.wings.script.JavaScriptListener;
 import org.wings.script.ScriptListener;
-import org.wings.session.SessionManager;
+import org.wings.session.ScriptManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -272,7 +272,7 @@ public class EditorPanel
             resource.setHeaders(headers.entrySet());
 
             final ScriptListener listener = new JavaScriptListener(null, null, "location.href='" + resource.getURL() + "'");
-            SessionManager.getSession().getScriptManager().addScriptListener(listener);
+            ScriptManager.getInstance().addScriptListener(listener);
 
         }
         catch (IOException e) {
