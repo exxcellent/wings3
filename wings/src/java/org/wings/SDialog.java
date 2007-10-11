@@ -26,7 +26,7 @@ import org.wings.plaf.DialogCG;
  *
  * @author <a href="mailto:engels@mercatis.de">Holger Engels</a>
  */
-public class SDialog extends SForm {
+public class SDialog extends SWindow {
     private final transient static Log log = LogFactory.getLog(SDialog.class);
 
     /**
@@ -46,14 +46,12 @@ public class SDialog extends SForm {
 
     protected SIcon icon = null;
 
+    protected boolean modal = false;
+
+    protected boolean draggable;
+
     private boolean closable = true;
     private boolean closed = false;
-
-    /**
-     * The parent of the Dialog
-     */
-    protected SRootContainer owner = null;
-
 
     /**
      * Creates a Dialog without parent <code>SFrame</code> or <code>SDialog</code>
@@ -69,7 +67,25 @@ public class SDialog extends SForm {
      * @param owner the parent <code>SFrame</code>
      */
     public SDialog(SFrame owner) {
-        this.owner = owner;
+        this(owner, null, false);
+    }
+
+    /**
+     * Creates a modal or non-modal dialog without a title and
+     * with the specified owner <code>Frame</code>.  If <code>owner</code>
+     * is <code>null</code>, a shared, hidden frame will be set as the
+     * owner of the dialog.
+     * <p>
+     * This constructor sets the component's locale property to the value
+     * returned by <code>JComponent.getDefaultLocale</code>.
+     *
+     * @param owner the <code>Frame</code> from which the dialog is displayed
+     * @param modal  true for a modal dialog, false for one that allows
+     *               others windows to be active at the same time
+     * returns true.
+     */
+    public SDialog(SFrame owner, boolean modal) {
+        this(owner, null, modal);
     }
 
     /**
@@ -79,12 +95,38 @@ public class SDialog extends SForm {
      * @param title the <code>String</code> to display as titke
      */
     public SDialog(SFrame owner, String title) {
+        this(owner, title, false);
+    }
+
+    /**
+     * Creates a modal or non-modal dialog with the specified title
+     * and the specified owner <code>Frame</code>.  If <code>owner</code>
+     * is <code>null</code>, a shared, hidden frame will be set as the
+     * owner of this dialog.  All constructors defer to this one.
+     * <p>
+     * NOTE: Any popup components (<code>JComboBox</code>,
+     * <code>JPopupMenu</code>, <code>JMenuBar</code>)
+     * created within a modal dialog will be forced to be lightweight.
+     * <p>
+     * This constructor sets the component's locale property to the value
+     * returned by <code>JComponent.getDefaultLocale</code>.
+     *
+     * @param owner the <code>Frame</code> from which the dialog is displayed
+     * @param title  the <code>String</code> to display in the dialog's
+     *			title bar
+     * @param modal  true for a modal dialog, false for one that allows
+     *               other windows to be active at the same time
+     * returns true.
+     */
+    public SDialog(SFrame owner, String title, boolean modal)  {
         this.owner = owner;
         this.title = title;
+        this.modal = modal;
     }
 
     /**
      * Sets the title of the dialog.
+     *
      * @param t the title displayed in the dialog's border; a null value results in an empty title
      */
     public void setTitle(String t) {
@@ -117,6 +159,23 @@ public class SDialog extends SForm {
         return icon;
     }
 
+    public boolean isModal() {
+        return modal;
+    }
+
+    public void setModal(boolean modal) {
+        this.modal = modal;
+    }
+
+    public boolean isDraggable() {
+        return draggable;
+    }
+
+    public void setDraggable(boolean draggable) {
+        this.draggable = draggable;
+    }
+
+    /*
     public void setClosable(boolean v) {
         boolean old = closable;
         closable = v;
@@ -139,79 +198,10 @@ public class SDialog extends SForm {
     public boolean isClosed() {
         return closed;
     }
-
-    /**
-     * Removes all <code>SComponents</code> from the pane
-     */
-      public void dispose() {
-        if (visible)
-            hide();
-        removeAll();
-      }
-
-    /**
-     * Remove this dialog from its frame.
-     */
-    public void hide() {
-        log.debug("hide dialog");
-        if (owner != null)
-            owner.popDialog();
-        visible = false;
-    }
-
-    public void setVisible(boolean visible) {
-        if (visible) {
-            show(owner);
-        } else {
-            if (isVisible()) hide();
-        }
-        super.setVisible(visible);
-    }
-
-    /**
-     * sets the root container in which this dialog is to be displayed.
-     */
-    protected void setFrame(SRootContainer f) {
-        owner = f;
-    }
-
-    /**
-     * shows this dialog in the given SRootContainer. If the component is
-     * not a root container, then the root container the component is in
-     * is used.
-     * If the component is null, the root frame of the session is used. If there
-     * is no root frame in the session, a NullPointerException is thrown (this
-     * should not happen ;-).
-     */
-    public void show(SComponent c) {
-        log.debug("show dialog");
-        if (c == null)
-            c = getSession().getRootFrame();
-
-        SContainer frame = null;
-        if (c instanceof SContainer)
-            frame = (SContainer) c;
-        else
-            frame = c.getParent();
-
-        // find RootContainer
-        while (frame != null && !(frame instanceof SRootContainer)) {
-            frame = frame.getParent();
-        }
-
-        if (frame == null) {
-            frame = getSession().getRootFrame();
-        }
-
-        if (frame == null) {
-            throw new IllegalArgumentException("Component has no root container");
-        }
-        owner = (SRootContainer) frame;
-        owner.pushDialog(this);
-        visible = true;
-    }
+    */
 
     // LowLevelEventListener interface. Handle own events.
+    /*
     public void processLowLevelEvent(String action, String[] values) {
         processKeyEvents(values);
         if (action.endsWith("_keystroke"))
@@ -221,7 +211,7 @@ public class SDialog extends SForm {
         try {
             switch (new Integer(values[0]).intValue()) {
                 case org.wings.event.SInternalFrameEvent.INTERNAL_FRAME_CLOSED:
-                     setClosed(true);
+                    setClosed(true);
                     actionCommand = CLOSE_ACTION;
                     break;
 
@@ -234,6 +224,7 @@ public class SDialog extends SForm {
         }
         SForm.addArmedComponent(this); // trigger later invocation of fire*()
     }
+    */
 
     public void setCG(DialogCG cg) {
         super.setCG(cg);

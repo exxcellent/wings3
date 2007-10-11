@@ -25,6 +25,7 @@ import org.wings.util.SStringBuilder;
 import org.wings.dnd.DragAndDropManager;
 import org.wings.header.*;
 import org.wings.io.Device;
+import org.wings.io.StringBuilderDevice;
 import org.wings.plaf.CGManager;
 import org.wings.plaf.css.script.OnPageRenderedScript;
 import org.wings.resource.ClassPathJavascriptResource;
@@ -165,6 +166,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
 
         headers.add(new JavaScriptHeader("../dwr/engine.js"));
         headers.add(new JavaScriptHeader("../dwr/util.js"));
+        headers.add(Utils.createExternalizedCSSHeaderFromProperty("CSS.yuiAssetsContainer"));
 
         formbutton = new ClassPathResource("org/wings/plaf/css/formbutton.htc", "text/x-component");
         formbutton.getId(); // externalize
@@ -355,6 +357,11 @@ public class FrameCG implements org.wings.plaf.FrameCG {
 
     public void write(final Device device, final SComponent component) throws IOException {
         final SFrame frame = (SFrame) component;
+
+        // Create a new OverlayManager for each SFrame to handly overlay like SDialog, etc.
+        StringBuilder sb = new StringBuilder();
+        sb.append("var ").append(frame.getName()).append("_overlay_manager = new YAHOO.widget.OverlayManager();");
+        ScriptManager.getInstance().addScriptListener(new OnPageRenderedScript(sb.toString()));
 
         String strokes = strokes(frame.getGlobalInputMapComponents());
         if (strokes != null)
@@ -764,6 +771,42 @@ public class FrameCG implements org.wings.plaf.FrameCG {
             UpdateHandler handler = new UpdateHandler("updateEnabled");
             handler.addParameter(enabled);
             return handler;
+        }
+
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public Update getWindowsUpdate(SRootContainer container) {
+        return new WindowsUpdate(container.getWindowsPane());
+    }
+
+    protected class WindowsUpdate extends AbstractUpdate {
+
+        public WindowsUpdate(SContainer container) {
+            super(container);
+        }
+
+        public Handler getHandler() {
+            String htmlCode = "";
+            String exception = null;
+
+            try {
+                StringBuilderDevice htmlDevice = new StringBuilderDevice();
+                write(htmlDevice, component);
+                htmlCode = htmlDevice.toString();
+            } catch (Throwable t) {
+                log.fatal("An error occured during rendering", t);
+                exception = t.getClass().getName();
+            }
+
+            UpdateHandler handler = new UpdateHandler("component");
+            handler.addParameter(component.getName());
+            handler.addParameter(htmlCode);
+            if (exception != null) {
+                handler.addParameter(exception);
+            }
+			return handler;
         }
 
     }

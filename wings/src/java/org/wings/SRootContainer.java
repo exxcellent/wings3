@@ -14,26 +14,23 @@ package org.wings;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
+import org.wings.plaf.RootContainerCG;
+import org.wings.style.Selector;
 
 /**
- * A root container.
- * The classes derived from this class ({@link SFrame} and
- * {@link SInternalFrame}) render in the content pane of this RootContainer.
- *
- * <p>The RootContainer has a stack of components. Ususally, the stack
- * contains only <em>one</em> element, the content pane; this is the bottom-most
- * component. When dialogs are added to the RootContainer, then these dialogs
- * are stacked on top of this content pane and only <em>that</em> dialog is
- * visible then. This emulates the behaviour of modal dialogs in a windowing
- * system.
+ * A root container. The classes derived from this class ({@link SFrame} and {@link SInternalFrame}) render in the content pane of this
+ * RootContainer.
+ * <p/>
+ * <p>The RootContainer has a stack of components. Ususally, the stack contains only <em>one</em> element, the content pane; this is the
+ * bottom-most component. When dialogs are added to the RootContainer, then these dialogs are stacked on top of this content pane and only
+ * <em>that</em> dialog is visible then. This emulates the behaviour of modal dialogs in a windowing system.
  *
  * @author Holger Engels
  * @author <a href="mailto:H.Zeller@acm.org">Henner Zeller</a>
  * @author <a href="mailto:Haaf@mercatis.de">Armin Haaf</a>
  */
 public abstract class SRootContainer extends SContainer {
-    private final static Log log = LogFactory.getLog(SRootContainer.class);
+    private final static Log LOG = LogFactory.getLog(SRootContainer.class);
 
     /**
      * The container for the contentPane.
@@ -41,29 +38,47 @@ public abstract class SRootContainer extends SContainer {
     protected SContainer contentPane;
 
     /**
-     * default constructor initializes the stack layout system of this
-     * SRootContainer.
+     * Contains all windows linked to this root container.
+     */
+    protected SContainer windowsPane;
+
+    /**
+     * default constructor initializes the stack layout system of this SRootContainer.
      */
     public SRootContainer() {
         super(new SRootLayout());
         initializeContentPane();
+        initializeWindowsPane();
     }
 
     protected void initializeContentPane() {
         setContentPane(new SPanel(new SBorderLayout()));
     }
 
+    protected void initializeWindowsPane() {
+        SContainer windowsPane = new SContainer(new SFlowDownLayout());
+        windowsPane.setStyle("SWindowsPane");
+        setWindowsPane(windowsPane);
+    }
+
+    public void setCG(RootContainerCG cg) {
+        super.setCG(cg);
+    }
+
     /**
-     * Push a new dialog on top of the stack. If this RootContainer is
-     * rendered, then only this dialog is shown.
+     * Push a new window on top of the stack. If this RootContainer is rendered, then only this window is shown.
      *
-     * @param dialog the SDialog that is to be shown on top.
+     * @param window the SDialog that is to be shown on top.
      */
-    public void pushDialog(SDialog dialog) {
-        log.debug("push dialog = " + dialog.getName());
-        super.addComponent(dialog, null, getComponentCount());
-        dialog.setFrame(this);
-        reload();
+    public void pushWindow(SWindow window) {
+        windowsPane.addComponent(window);
+
+        /*
+        if (isUpdatePossible() && SRootContainer.class.isAssignableFrom(getClass())) {
+            update(((RootContainerCG) getCG()).getWindowsUpdate(this));
+        }
+        */
+        LOG.debug("push window = " + window.getName());
     }
 
     /**
@@ -71,31 +86,39 @@ public abstract class SRootContainer extends SContainer {
      *
      * @return the dialog, that is popped from the stack.
      */
-    public SDialog popDialog() {
-        int count = getComponentCount();
-        if (count <= 1)
-            throw new IllegalStateException("there's no dialog left!");
+    public SWindow popWindow() {
 
-        SDialog dialog = (SDialog) getComponent(count - 1);
-        super.remove(dialog);
-        dialog.setFrame(null);
+        int count = windowsPane.getComponentCount();
+        if (count < 1) {
+            throw new IllegalStateException("there's no window left!");
+        }
 
-        reload();
-        log.debug("pop dialog = " + dialog.getName());
-        return dialog;
+        SWindow window = (SWindow) windowsPane.getComponent(count - 1);
+        removeWindow(window);
+
+        /*
+        if (isUpdatePossible() && SRootContainer.class.isAssignableFrom(getClass()))
+            update(((RootContainerCG) getCG()).getWindowsUpdate(this));
+        */
+
+        LOG.debug("pop window = " + window.getName());
+        return window;
     }
 
-    public void removeDialog(SDialog dialog) {
-        super.remove(dialog);
-        dialog.setFrame((SFrame) null);
-        reload();
+    public void removeWindow(SWindow window) {
+        windowsPane.remove(window);
+
+        /*
+        if (isUpdatePossible() && SRootContainer.class.isAssignableFrom(getClass()))
+            update(((RootContainerCG) getCG()).getWindowsUpdate(this));
+        */
     }
 
     /**
      * @return the number of dialogs that are on the stack currently.
      */
-    public int getDialogCount() {
-        return getComponentCount() - 1;
+    public int getWindowCount() {
+        return windowsPane.getComponentCount();
     }
 
     /**
@@ -103,6 +126,15 @@ public abstract class SRootContainer extends SContainer {
      */
     public SContainer getContentPane() {
         return contentPane;
+    }
+
+    /**
+     * Returns the container that contains the windows linked to this root container.
+     *
+     * @return The container that contains the windows linked to this root container.
+     */
+    public SContainer getWindowsPane() {
+        return windowsPane;
     }
 
     /**
@@ -119,17 +151,30 @@ public abstract class SRootContainer extends SContainer {
     }
 
     /**
-     * Use getContentPane().addComponent(c) instead.
+     * Sets the container for the windowsPane. ! This is not like in swing. Each window object is bound to its frame or internal frame.
+     *
+     * @param windowsPane The container for the windowsPane.
      */
-    public SComponent addComponent(SComponent c, Object constraint, int index) {
-        throw new IllegalArgumentException("use getContentPane().addComponent()");
+    protected void setWindowsPane(SContainer windowsPane) {
+        if (this.windowsPane != null) {
+            super.remove(this.windowsPane);
+        }
+        this.windowsPane = windowsPane;
+        super.addComponent(this.windowsPane, null, 1);
     }
 
     /**
-     * Use getContentPane().removeComponent(c) instead.
+     * Adds the component to the content pane of the root container.
+     */
+    public SComponent addComponent(SComponent c, Object constraint, int index) {
+        return contentPane.addComponent(c, constraint, index);
+    }
+
+    /**
+     * Removes the component from the content pane.
      */
     public void remove(SComponent c) {
-        throw new IllegalArgumentException("use getContentPane().removeComponent()");
+        contentPane.addComponent(c);
     }
 
     // allow frame.setBackground(Color.yellow);

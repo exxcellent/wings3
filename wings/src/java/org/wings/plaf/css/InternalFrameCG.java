@@ -12,20 +12,21 @@
  */
 package org.wings.plaf.css;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wings.SComponent;
-import org.wings.SIcon;
-import org.wings.SInternalFrame;
-import org.wings.util.SStringBuilder;
+import org.wings.*;
 import org.wings.event.SInternalFrameEvent;
 import org.wings.io.Device;
+import org.wings.io.StringBuilderDevice;
+import org.wings.plaf.css.script.OnPageRenderedScript;
+import org.wings.plaf.Update;
 import org.wings.resource.ResourceManager;
+import org.wings.session.ScriptManager;
+import org.wings.util.SStringBuilder;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 public class InternalFrameCG extends AbstractComponentCG implements
         org.wings.plaf.InternalFrameCG {
@@ -82,6 +83,11 @@ public class InternalFrameCG extends AbstractComponentCG implements
             throws IOException {
 
         SInternalFrame frame = (SInternalFrame)_c;
+
+        // Create a new OverlayManager for each SInternalFrame to handly overlay like SDialog, etc.
+        StringBuilder sb = new StringBuilder();
+        sb.append("var ").append(frame.getName()).append("_overlay_manager = new YAHOO.widget.OverlayManager();");
+        ScriptManager.getInstance().addScriptListener(new OnPageRenderedScript(sb.toString()));
 
         // Optional attribute to identify the internal frame for
         // SDialog and SOptionPane usage.
@@ -197,5 +203,42 @@ public class InternalFrameCG extends AbstractComponentCG implements
 
     public void setUnmaximizeIcon(SIcon unmaximizeIcon) {
         this.unmaximizeIcon = unmaximizeIcon;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Update getWindowsUpdate(SRootContainer container) {
+        return new WindowsUpdate(container.getWindowsPane());
+    }
+
+    protected class WindowsUpdate extends AbstractUpdate {
+
+        public WindowsUpdate(SContainer container) {
+            super(container);
+        }
+
+        public Handler getHandler() {
+            String htmlCode = "";
+            String exception = null;
+
+            try {
+                StringBuilderDevice htmlDevice = new StringBuilderDevice();
+                write(htmlDevice, component);
+                htmlCode = htmlDevice.toString();
+            } catch (Throwable t) {
+                log.fatal("An error occured during rendering", t);
+                exception = t.getClass().getName();
+            }
+
+            UpdateHandler handler = new UpdateHandler("component");
+            handler.addParameter(component.getName());
+            handler.addParameter(htmlCode);
+            if (exception != null) {
+                handler.addParameter(exception);
+            }
+			return handler;
+        }
+
     }
 }

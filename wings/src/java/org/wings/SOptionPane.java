@@ -375,13 +375,13 @@ public class SOptionPane extends SDialog implements ActionListener {
 
         // Actually we should not delete all resize listeners, but only the desired one --> TODO!
         // Also to do --> move JS to CG, somehow!?!
-        String code = "YAHOO.util.Event.removeListener(window, 'resize');";
-        JavaScriptListener listener = new JavaScriptListener(JavaScriptEvent.ON_CLICK, code);
+        //String code = "YAHOO.util.Event.removeListener(window, 'resize');";
+        //JavaScriptListener listener = new JavaScriptListener(JavaScriptEvent.ON_CLICK, code);
 
-        optionOK.addScriptListener(listener);
-        optionCancel.addScriptListener(listener);
-        optionYes.addScriptListener(listener);
-        optionNo.addScriptListener(listener);
+        //optionOK.addScriptListener(listener);
+        //optionCancel.addScriptListener(listener);
+        //optionYes.addScriptListener(listener);
+        //optionNo.addScriptListener(listener);
     }
 
     public void setCG(OptionPaneCG cg) {
@@ -610,9 +610,9 @@ public class SOptionPane extends SDialog implements ActionListener {
             optionData.add((SComponent) message);
         }
         else {
-            StringTokenizer stt = new StringTokenizer(message.toString(), "\n");
-            while (stt.hasMoreElements()) {
-                optionData.add(new SLabel(stt.nextElement().toString()));
+            StringTokenizer stringTokenizer = new StringTokenizer(message.toString(), "\n");
+            while (stringTokenizer.hasMoreElements()) {
+                optionData.add(new SLabel(stringTokenizer.nextElement().toString()));
             }
         }
         show(c);

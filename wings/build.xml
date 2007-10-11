@@ -55,6 +55,7 @@
     	<file name="scrollbar.js"/>
     	<file name="table.js"/>
     	<file name="splitpane.js"/>
+        <file name="dialog.js"/>
     </filelist>
 
     <target name="prepare">

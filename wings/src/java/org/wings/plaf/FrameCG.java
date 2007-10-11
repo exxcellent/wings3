@@ -15,8 +15,7 @@ package org.wings.plaf;
 import org.wings.SComponent;
 import org.wings.SFrame;
 
-
-public interface FrameCG extends ComponentCG {
+public interface FrameCG extends RootContainerCG {
 
 	public Update getAddHeaderUpdate(SFrame frame, Object header);
 

@@ -12,5 +12,19 @@
  */
 package org.wings.plaf;
 
-public interface DialogCG extends WindowCG {
+import org.wings.SWindow;
+
+/**
+ * <code>WindowCG</code>.
+ * <p/>
+ * User: raedler
+ * Date: Oct 5, 2007
+ * Time: 1:29:48 AM
+ *
+ * @author raedler
+ * @version $Id
+ */
+public interface WindowCG extends ComponentCG {
+    public Update getWindowAddedUpdate(SWindow window);
+    public Update getWindowClosedUpdate(SWindow window);
 }

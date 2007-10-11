@@ -12,5 +12,16 @@
  */
 package org.wings.plaf;
 
-public interface DialogCG extends WindowCG {
+/**
+ * <code>RootContainerCG</code>.
+ * <p/>
+ * User: raedler
+ * Date: Oct 4, 2007
+ * Time: 5:28:10 PM
+ *
+ * @author raedler
+ * @version $Id
+ */
+public interface RootContainerCG extends ContainerCG {
+    //public Update getWindowsUpdate(SRootContainer container);
 }

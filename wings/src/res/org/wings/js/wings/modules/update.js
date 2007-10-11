@@ -192,6 +192,78 @@ wingS.update.component = function(componentId, html, exception) {
 };
 
 /**
+ * Removes the component with the given id.
+ *
+ * @param {String} componentId - The id of the component that will be removed.
+ *
+wingS.update.remove = function(componentId) {
+    var element = document.getElementById(componentId);
+    element.parentNode.removeChild(element);
+}
+
+/**
+ * Adds the html to the component with the given id as inner html.
+ *
+ * @param {String} parentId - the ID of the parent component
+ * @param {String} childHtml - the new HTML code of the component
+ * @param {String} exception - the server exception (optional)
+ *
+wingS.update.addChildComponent = function(parentId, childHTML, exception) {
+    // Exception handling
+    if (exception != null) {
+        var update = "ComponentUpdate for '" + componentId + "'";
+        wingS.update.alertException(exception, update);
+        return;
+    }
+
+    // Search DOM for according component
+    var component = document.getElementById(componentId);
+
+    // Handle layout workaround for IE (if necessary)
+    var wrapping = component.getAttribute("wrapping");
+    if (wrapping != null && !isNaN(wrapping)) {
+        for (var i = 0; i < parseInt(wrapping); i++) {
+            component = component.parentNode;
+        }
+    }
+
+    if (typeof component.innerHTML != "undefined") {
+        // Use innerHTML if available
+        component.innerHTML = component.innerHTML + childHTML;
+    } else {
+        alert("Unexpected error!");
+        /*
+        var parent = component.parentNode;
+        if (parent == null) return;
+
+        var nrOfChildElements = 0;
+        for (var i = 0; i < parent.childNodes.length; i++) {
+            // We have to filter everything except element nodes
+            // since browsers treat whitespace nodes differently
+            if (parent.childNodes[i].nodeType == 1) {
+                nrOfChildElements++;
+            }
+        }
+
+        if (nrOfChildElements == 1) {
+            // If there is only one child it must be our component
+            parent.innerHTML = html;
+        } else {
+            var range;
+            // If there is no other way we have to use proprietary methods
+            if (document.createRange && (range = document.createRange()) &&
+                range.createContextualFragment) {
+                range.selectNode(component);
+                var newComponent = range.createContextualFragment(html);
+                parent.replaceChild(newComponent, component);
+            }
+        }
+        *
+    }
+};
+*/
+
+/**
  * Adds or replaces the HTML code of the menu with the given ID.
  * @param {String} menuId - the ID of the menu to add or replace
  * @param {String} html - the new HTML code of the menu

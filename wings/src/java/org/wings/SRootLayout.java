@@ -30,7 +30,7 @@ import java.net.URL;
  * border, a title or a footer line by defining your own template with a STemplateLayout.
  */
 public class SRootLayout extends STemplateLayout {
-    private final static Log log = LogFactory.getLog(SRootLayout.class);
+    private final static Log LOG = LogFactory.getLog(SRootLayout.class);
 
     /**
      * Use the default template.
@@ -38,7 +38,7 @@ public class SRootLayout extends STemplateLayout {
     public SRootLayout() {
         setTemplate(new StringTemplateSource(
                 "<object name=\"frame\"></object>\n"
-                +"<object name=\"dialog\"></object>"));
+                +"<object name=\"windows\"></object>"));
     }
 
     /**
@@ -73,14 +73,17 @@ public class SRootLayout extends STemplateLayout {
 
     public SComponent getComponent(String name) {
         if ("frame".equals(name)) {
-            if (container.getComponentCount() > 0) {
+            int count = container.getComponentCount();
+            if (count > 0) {
                 return container.getComponent(0);
             }
+            else {
+                throw new IllegalStateException("The root container contains " + count + " components but a root container can not contain more than 1 component.");
+            }
         }
-        else if ("dialog".equals(name)) {
-            if (container.getComponentCount() > 1) {
-                int topmost = container.getComponentCount() - 1;
-                return container.getComponent(topmost);
+        else if ("windows".equals(name)) {
+            if (container instanceof SRootContainer) {
+                return ((SRootContainer) container).getWindowsPane();
             }
         }
         return null;

@@ -680,12 +680,7 @@ table.XPageScroller table.pages td:hover {
 
 /* ----------- SOPTIONPANE AND SDIALOG ----------- */
 
-.modalDialog {
-    background-color: gray;
-    -moz-opacity: .4;
-    filter:Alpha(opacity=40);
-}
-
+/*
 .SOptionPane,
 .SDialog {
     border: 1px solid #a6a6a6;
@@ -726,6 +721,7 @@ form.SDialog {
     padding: .8em;
     background-color: #e6e6e6;
 }
+*/
 
 
 table.SProgressBar {
@@ -787,4 +783,13 @@ table.DivisionContent {
 
 .splitter {
     background-color: gray;
+}
+
+/* ----------- SWINDOWSPANE ----------- */
+
+.SWindowsPane {
+    border-collapse:collapse;
+    width:0;
+    height:0;
+    display:block;
 }
