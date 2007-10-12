@@ -476,28 +476,37 @@ public class DynamicLayoutExample extends WingSetPane {
             add(p);
 
             c = new GridBagConstraints();
+
+            // 1st column
             c.gridx = 0;
             c.gridheight = GridBagConstraints.REMAINDER;
             p.add(new SLabel("1"), c);
-            c.gridheight = 1;
 
+            // 2nd column
             c.gridx = 1;
+            c.gridheight = 1;
             p.add(new SLabel("2"), c);
+            
             c.gridheight = GridBagConstraints.REMAINDER;
             p.add(new SLabel("3"), c);
             c.gridheight = 1;
 
+            // 3rd column
             c.gridx = 2;
+            c.gridheight = 1;
             p.add(new SLabel("4"), c);
             p.add(new SLabel("5"), c);
+
             c.gridheight = GridBagConstraints.REMAINDER;
             p.add(new SLabel("6"), c);
-            c.gridheight = 1;
 
+             // 4th column
             c.gridx = 3;
+            c.gridheight = 1;
             p.add(new SLabel("7"), c);
             p.add(new SLabel("8"), c);
             p.add(new SLabel("9"), c);
+            
             c.gridheight = GridBagConstraints.REMAINDER;
             p.add(new SLabel("10"), c);
         }
