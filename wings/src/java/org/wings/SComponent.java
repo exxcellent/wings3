@@ -878,6 +878,17 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
     }
 
     /**
+     * Defines a free text css property / value pair to this component.
+     * The CSS property will appear as an inline style in the generated HTML code.
+     */
+    public void setAttribute(String cssPropertyName, String value) {
+        final CSSProperty property = CSSProperty.valueOf(cssPropertyName);
+        if (CSSProperty.BORDER_PROPERTIES.contains(property))
+            throw new IllegalArgumentException("Border properties have to be applied to the border!");
+        setAttribute(SELECTOR_ALL, property, value);
+    }
+
+    /**
      * Assign or overwrite a CSS property/value pair on this component. This CSS property definition will
      * use a CSS selector which adresses this component as whole as CSS selector (<code>new CSSProperty(this)</code>).
      * The CSS property will appear as an inline style in the generated HTML code.
