@@ -80,7 +80,7 @@
 
     <target name="-concat-wings.js" depends="prepare">
         <!-- Generate concatenated JS-file -->
-        <concat destfile="src/res/org/wings/js/wings/wings.js" force="no">
+        <concat destfile="src/res/org/wings/js/wings/wings.js" force="yes">
             <filelist refid="wings.js.modules" />
         </concat>
 

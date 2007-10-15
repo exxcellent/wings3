@@ -12,14 +12,7 @@ import java.util.GregorianCalendar;
 
 import javax.swing.*;
 
-import org.wings.SButton;
-import org.wings.SComponent;
-import org.wings.SConstants;
-import org.wings.SFormattedTextField;
-import org.wings.SGridLayout;
-import org.wings.SLabel;
-import org.wings.SPanel;
-import org.wings.SSpinner;
+import org.wings.*;
 import org.wings.text.SDateFormatter;
 import org.wingx.XCalendar;
 
@@ -39,6 +32,7 @@ public class XCalendarExample extends WingSetPane {
         final DateFormat nullableDateFormat = new NullableDateFormatter();
         panel.add(new SLabel("Calendar: ", SConstants.RIGHT_ALIGN));
         final XCalendar nullablXCalendar = new XCalendar(new SDateFormatter(nullableDateFormat));
+        nullablXCalendar.setPreferredSize(SDimension.FULLWIDTH);
         nullablXCalendar.setNullable(true);
         nullablXCalendar.setDate(null);
         panel.add(nullablXCalendar);

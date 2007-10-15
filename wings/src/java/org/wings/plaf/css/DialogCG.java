@@ -13,9 +13,7 @@
 package org.wings.plaf.css;
 
 
-import org.wings.SComponent;
-import org.wings.SDialog;
-import org.wings.SRootContainer;
+import org.wings.*;
 import org.wings.io.Device;
 import org.wings.plaf.css.script.OnPageRenderedScript;
 import org.wings.session.ScriptManager;
@@ -44,19 +42,27 @@ public class DialogCG extends WindowCG implements org.wings.plaf.DialogCG {
                 "</div>\n");
 
         StringBuilder sb = new StringBuilder();
-        sb.append("\n\n" +
-                "var " + name + " = new wingS.dialog.SDialog(\"" + name + "\", { " +
-                "  visible:" + dialog.isVisible() + ", " +
-                "  modal:" + dialog.isModal() + "," +
-                "  draggable:" + dialog.isDraggable() + ", " +
-                "  close: false," +
-                "  constraintoviewport:true," +
-                "  viewportelement:\"" + owner.getName() + "\"," +
-                "  fixedcenter: true" +
-                "} );\n" +
-                name + ".render();\n" +
-//                name + ".show();" +
-                "\n\n");
+        sb
+            .append("\n\n" + "var ")
+            .append(name)
+            .append(" = new wingS.dialog.SDialog(\"")
+            .append(name)
+            .append("\", { " + "  visible:")
+            .append(dialog.isVisible())
+            .append(", " + "  modal:")
+            .append(dialog.isModal())
+            .append("," + "  draggable:")
+            .append(dialog.isDraggable())
+            .append(", close: false, constraintoviewport:true,");
+        if (!(owner instanceof SFrame))
+            sb
+                .append("  viewportelement:\"")
+                .append(owner.getName())
+                .append("\",");
+        sb
+            .append("  fixedcenter: true" + "} );\n")
+            .append(name)
+            .append(".render();\n" + "\n\n");
 
 //        sb.append(owner.getName() + "_overlay_manager.register(" + name + ");\n\n");
 

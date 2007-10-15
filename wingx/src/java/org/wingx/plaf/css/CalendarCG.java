@@ -9,10 +9,7 @@
 
 package org.wingx.plaf.css;
 
-import org.wings.SComponent;
-import org.wings.SFormattedTextField;
-import org.wings.SIcon;
-import org.wings.SResourceIcon;
+import org.wings.*;
 import org.wings.header.Header;
 import org.wings.header.SessionHeaders;
 import org.wings.plaf.Update;
@@ -88,7 +85,7 @@ public class CalendarCG extends AbstractComponentCG implements org.wingx.plaf.Ca
 
         device.print("<table");
         Utils.writeAllAttributes(device, component);
-        device.print("><tr><td class=\"tf\"");
+        device.print("><tr><td class=\"tf\" width=\"*\"");
 
         int oversizePadding = Utils.calculateHorizontalOversize(fTextField, true);
 
@@ -96,10 +93,13 @@ public class CalendarCG extends AbstractComponentCG implements org.wingx.plaf.Ca
             Utils.optAttribute(device, "oversize", oversizePadding);
         device.print(">");
 
+        SDimension preferredSize = component.getPreferredSize();
+        if (preferredSize != null && preferredSize.getWidth() != null && "auto".equals(preferredSize.getWidth()))
+            fTextField.setPreferredSize(SDimension.FULLWIDTH);
         fTextField.setEnabled( component.isEnabled() );
         fTextField.write(device);
 
-        device.print("\n</td><td class=\"b\">\n");
+        device.print("\n</td><td class=\"b\" width=\"1\">\n");
         
         device.print("<input type=\"hidden\" id=\""+id_hidden+"\" name=\""+id_hidden+"\" value=\""+ format(dateFormat, component.getDate() )+"\">\n");
         device.print("<img class=\"XCalendarButton\" id=\""+id_button+"\" src=\""+component.getEditIcon().getURL()+"\" />\n");
