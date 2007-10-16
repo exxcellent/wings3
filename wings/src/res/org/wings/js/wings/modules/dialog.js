@@ -199,10 +199,10 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Panel, {
         }
     },
 
-/**
- * Registers the Panel's header for drag & drop capability.
- * @method registerDragDrop
- */
+    /**
+     * Registers the Panel's header for drag & drop capability.
+     * @method registerDragDrop
+     */
     registerDragDrop: function () {
 
         var viewportelementId = this.cfg.getProperty("viewportelement");
@@ -312,11 +312,11 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Panel, {
         }
     },
 
-/**
- * Builds the mask that is laid over the document when the Panel is
- * configured to be modal.
- * @method buildMask
- */
+    /**
+     * Builds the mask that is laid over the document when the Panel is
+     * configured to be modal.
+     * @method buildMask
+     */
     buildMask: function () {
 
         var oMask = this.mask;
@@ -335,52 +335,31 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Panel, {
         }
     },
 
-/**
- * Hides the modality mask.
- * @method hideMask
- */
+    /**
+     * Hides the modality mask.
+     * @method hideMask
+     */
     hideMask: function () {
-
-        var viewportelementId = this.cfg.getProperty("viewportelement");
-
-        if (typeof viewportelementId == 'undefined') {
-            wingS.dialog.SDialog.superclass.sizeMask.call(this);
-            return;
-        }
-
-        if (this.cfg.getProperty("modal") && this.mask) {
-            this.mask.style.display = "none";
-            this.hideMaskEvent.fire();
-//            YAHOO.util.Dom.removeClass(document.getElementById(viewportelementId), "masked");
-        }
+        // override this function to avoid default behavior -> display:none;
     },
 
-/**
- * Shows the modality mask.
- * @method showMask
- */
+    /**
+     * Shows the modality mask.
+     * @method showMask
+     */
     showMask: function () {
-
-        var viewportelementId = this.cfg.getProperty("viewportelement");
-
-        if (typeof viewportelementId == 'undefined') {
-            wingS.dialog.SDialog.superclass.sizeMask.call(this);
-            return;
-        }
-
         if (this.cfg.getProperty("modal") && this.mask) {
-  //          YAHOO.util.Dom.addClass(document.getElementById(viewportelementId), "masked");
             this.sizeMask();
             this.mask.style.display = "block";
             this.showMaskEvent.fire();
         }
     },
 
-/**
- * Sets the size of the modality mask to cover the entire scrollable
- * area of the document
- * @method sizeMask
- */
+    /**
+     * Sets the size of the modality mask to cover the entire scrollable
+     * area of the document
+     * @method sizeMask
+     */
     sizeMask: function () {
 
         var viewportelementId = this.cfg.getProperty("viewportelement");

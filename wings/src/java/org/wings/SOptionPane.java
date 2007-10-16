@@ -370,6 +370,7 @@ public class SOptionPane extends SDialog implements ActionListener {
         initPanel();
         setOptionType(optionType);
         setMessageType(messageType);
+        setModal(true);
         // value = UNINITIALIZED_VALUE;
         // inputValue = UNINITIALIZED_VALUE;
 

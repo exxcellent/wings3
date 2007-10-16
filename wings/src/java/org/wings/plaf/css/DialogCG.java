@@ -42,28 +42,25 @@ public class DialogCG extends WindowCG implements org.wings.plaf.DialogCG {
                 "</div>\n");
 
         StringBuilder sb = new StringBuilder();
-        sb
-            .append("\n\n" + "var ")
-            .append(name)
-            .append(" = new wingS.dialog.SDialog(\"")
-            .append(name)
-            .append("\", { " + "  visible:")
-            .append(dialog.isVisible())
-            .append(", " + "  modal:")
-            .append(dialog.isModal())
-            .append("," + "  draggable:")
-            .append(dialog.isDraggable())
-            .append(", close: false, constraintoviewport:true,");
-        if (!(owner instanceof SFrame))
-            sb
-                .append("  viewportelement:\"")
-                .append(owner.getName())
-                .append("\",");
-        sb
-            .append("  fixedcenter: true" + "} );\n")
-            .append(name)
-            .append(".render();\n" + "\n\n");
+        sb.append("\n\n")
+                .append("var ").append(name).append(" = new wingS.dialog.SDialog(\"").append(name).append("\"")
+                .append(", {")
+                .append("visible:").append(dialog.isVisible()).append(",")
+                .append("modal:").append(dialog.isModal()).append(",")
+                .append("draggable:").append(dialog.isDraggable()).append(",")
+                .append("close:false,")
+                .append("constraintoviewport:true,");
 
+        if (!(owner instanceof SFrame))
+            sb.append("viewportelement:\"").append(owner.getName()).append("\",");
+
+        sb.append("fixedcenter:true")
+                .append("});")
+                .append("\n")
+                .append(name).append(".render();")
+                .append("\n\n");
+
+// todo: use overlay manager if required to manage multiple dialogs. -> uncomment definition of overlay manager in FrameCG and InternalFrameCG
 //        sb.append(owner.getName() + "_overlay_manager.register(" + name + ");\n\n");
 
         ScriptManager.getInstance().addScriptListener(new OnPageRenderedScript(sb.toString()));
