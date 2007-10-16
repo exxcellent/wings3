@@ -102,7 +102,10 @@ public class SInternalFrame
 
     public void setClosed(boolean closed) {
         closed &= isClosable();
-        reloadIfChange(this.closed, closed);
+        if (closed)
+            hide();
+        else
+            reloadIfChange(this.closed, closed);
         this.closed = closed;
     }
 
@@ -178,7 +181,7 @@ public class SInternalFrame
         if (action.endsWith("_keystroke"))
             return;
 
-        switch (new Integer(values[0]).intValue()) {
+        switch (new Integer(values[0])) {
             case SInternalFrameEvent.INTERNAL_FRAME_CLOSED:
                 setClosed(true);
                 break;
