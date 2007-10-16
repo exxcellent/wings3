@@ -62,9 +62,6 @@ li, ul {
     margin: 0px;
     padding: 0px;
 }
-ul {
-    padding-left: 24px;
-}
 
 /* taken over by table */
 input, select, textarea {
@@ -408,6 +405,10 @@ ul.SPopupMenu a.x:hover{
 }
 
 /* SList */
+.SList li {
+	list-style-type: none;
+}
+
 .SList li.selected {
     background-color: #D8E1F1 !important;
 }
