@@ -43,12 +43,6 @@ public class XCalendar extends SContainer implements LowLevelEventListener, SDoc
     public static final SIcon DEFAULT_EDIT_ICON = new SResourceIcon("org/wingx/calendar/calendar_edit.png");
     
     /**
-     * The <code>XCalendar</code> default <code>SIcon</code> for reseting the datechooser.
-     * @deprecated 
-     */
-    public static final SIcon DEFAULT_CLEAR_ICON = new SResourceIcon("org/wingx/calendar/calendar_delete.png");
-    
-    /**
      * The current <code>XCalendar</code>'s icon to choos a new date.
      */
     private SIcon editIcon = DEFAULT_EDIT_ICON;
@@ -159,10 +153,10 @@ public class XCalendar extends SContainer implements LowLevelEventListener, SDoc
     /**
      * The current icon to use for clearing the input/ date.
      * @return The current icon to use for clearing the input/ date.
-     * @deprecated 
+     * @deprecated Returns now the DEFAULT_EDIT_ICON
      */
     public SIcon getClearIcon() {
-        return DEFAULT_CLEAR_ICON;
+        return DEFAULT_EDIT_ICON;
     }
 
     /**

@@ -91,7 +91,7 @@ public class CalendarCG extends AbstractComponentCG implements org.wingx.plaf.Ca
 
         if (oversizePadding != 0)
             Utils.optAttribute(device, "oversize", oversizePadding);
-        device.print(">");
+        device.print('>');
 
         SDimension preferredSize = component.getPreferredSize();
         if (preferredSize != null && preferredSize.getWidth() != null && "auto".equals(preferredSize.getWidth()))
@@ -101,62 +101,74 @@ public class CalendarCG extends AbstractComponentCG implements org.wingx.plaf.Ca
 
         device.print("\n</td><td class=\"b\" width=\"1\">\n");
         
-        device.print("<input type=\"hidden\" id=\""+id_hidden+"\" name=\""+id_hidden+"\" value=\""+ format(dateFormat, component.getDate() )+"\">\n");
-        device.print("<img class=\"XCalendarButton\" id=\""+id_button+"\" src=\""+component.getEditIcon().getURL()+"\" />\n");
-        device.print("<div style=\"display:none;position:absolute;z-index:1001\" id=\""+id_cal+"\"></div>");
+        device.print("<input type=\"hidden\" id=\"").print(id_hidden)
+              .print("\" name=\"").print(id_hidden)
+              .print("\" value=\"").print( format(dateFormat, component.getDate() ) )
+              .print("\">\n");
+
+        device.print("<img class=\"XCalendarButton\" id=\"").print(id_button)
+              .print("\" src=\"").print( component.getEditIcon().getURL() )
+              .print("\" />\n");
+        
+        device.print("<div style=\"display:none;position:absolute;z-index:1001\" id=\"").print(id_cal)
+              .print("\"></div>");
 
         writeTableSuffix(device, component);
 
-        SimpleDateFormat format_months_long     = new SimpleDateFormat("MMMMM");
-        format_months_long.setTimeZone( component.getTimeZone() );
-        
-        SimpleDateFormat format_weekdays_short  = new SimpleDateFormat("EE");
-        format_weekdays_short.setTimeZone( component.getTimeZone() );
-
-        SStringBuilder newXCalendar = new SStringBuilder("new YAHOO.widget.XCalendar(");
-            newXCalendar.append("\"").append( id_cal ).append("\",");
+        if ( component.isEnabled() ) {
+            
+            SimpleDateFormat format_months_long     = new SimpleDateFormat("MMMMM");
+            format_months_long.setTimeZone( component.getTimeZone() );
+            
+            SimpleDateFormat format_weekdays_short  = new SimpleDateFormat("EE");
+            format_weekdays_short.setTimeZone( component.getTimeZone() );
+            
+            SStringBuilder newXCalendar = new SStringBuilder("new YAHOO.widget.XCalendar(");
+            newXCalendar.append('"').append( id_cal ).append("\",");
             newXCalendar.append("{close:true,");
-            newXCalendar.append("months_long:").append(createMonthsString( format_months_long ) ).append(",");
-            newXCalendar.append("weekdays_short:").append(createWeekdaysString( format_weekdays_short ) ).append(",");
-            newXCalendar.append("start_weekday:").append( (Calendar.getInstance().getFirstDayOfWeek()-1) ).append("}, ");
-            newXCalendar.append("\"").append( component.getName() ).append("\",");
-            newXCalendar.append("\"").append( id_button ).append("\",");
-            newXCalendar.append("\"").append( id_hidden ).append("\"");
+            newXCalendar.append("months_long:").append(createMonthsString( format_months_long ) ).append(',');
+            newXCalendar.append("weekdays_short:").append(createWeekdaysString( format_weekdays_short ) ).append(',');
+            newXCalendar.append("start_weekday:").append( (Calendar.getInstance().getFirstDayOfWeek()-1) ).append("},");
+            newXCalendar.append('"').append( component.getName() ).append("\",");
+            newXCalendar.append('"').append( id_button ).append("\",");
+            newXCalendar.append('"').append( id_hidden ).append('"');
             newXCalendar.append( ");");
             
-        ScriptManager.getInstance().addScriptListener(new OnHeadersLoadedScript( newXCalendar.toString(), true));    
+            ScriptManager.getInstance().addScriptListener(new OnHeadersLoadedScript( newXCalendar.toString(), true));
+            
+        }
             
     }
 
     private String createMonthsString ( Format format ) {
         SStringBuilder stringBuilder = new SStringBuilder();
-        stringBuilder.append( "[" );
+        stringBuilder.append('[');
         Calendar cal = new GregorianCalendar();
         cal.set( Calendar.MONTH, cal.JANUARY );
         for ( int x = 0, y = 12; x < y ; x++ ) {
-            stringBuilder.append( "\"");
+            stringBuilder.append('"');
             stringBuilder.append( format.format( cal.getTime() ) );
             stringBuilder.append( "\",");
             cal.add( Calendar.MONTH, 1 );
         }
         stringBuilder.deleteCharAt( stringBuilder.length()-1 );
-        stringBuilder.append( "]" );    
+        stringBuilder.append(']');    
         return stringBuilder.toString();
     }
     
     private String createWeekdaysString ( Format format ) {
         SStringBuilder stringBuilder = new SStringBuilder();
-        stringBuilder.append( "[" );
+        stringBuilder.append('[');
         Calendar cal = new GregorianCalendar();
         cal.set( Calendar.DAY_OF_WEEK, Calendar.SUNDAY );
         for ( int x = 0, y = 7; x < y ; x++ ) {
-            stringBuilder.append( "\"");
+            stringBuilder.append('"');
             stringBuilder.append( format.format( cal.getTime() ) );
             stringBuilder.append( "\",");
             cal.add( Calendar.DAY_OF_WEEK, 1 );
         }
         stringBuilder.deleteCharAt( stringBuilder.length()-1 );
-        stringBuilder.append( "]" );    
+        stringBuilder.append(']');    
         return stringBuilder.toString();
     }
     
