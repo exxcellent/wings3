@@ -13,6 +13,10 @@ YAHOO.widget.XCalendar = function(containerId, config, xcalId, buttonId, hiddenI
 YAHOO.lang.extend( YAHOO.widget.XCalendar, YAHOO.widget.Calendar );
 
 YAHOO.widget.XCalendar.prototype.showCalendar = function() {
+    var regionButton   = YAHOO.util.Dom.getRegion(this.buttonId);
+    var viewportWidth  = YAHOO.util.Dom.getViewportWidth();
+    var viewportHeight = YAHOO.util.Dom.getViewportHeight();
+
     if (this.hiddenField.value != "") {
         this.select(this.hiddenField.value); 
         var selectedDates = this.getSelectedDates(); 
@@ -24,28 +28,17 @@ YAHOO.widget.XCalendar.prototype.showCalendar = function() {
     this.render();
     this.show();
 
-    var regionButton   = YAHOO.util.Dom.getRegion(this.buttonId);
+    YAHOO.util.Dom.setXY( this.calId, YAHOO.util.Dom.getXY( "r"+this.calId ) );
+
     var regionCalendar = YAHOO.util.Dom.getRegion(this.calId);
 
-    var viewportWidth  = YAHOO.util.Dom.getViewportWidth();
-    var viewportHeight = YAHOO.util.Dom.getViewportHeight();
-
-    var documentScrollLeft = YAHOO.util.Dom.getDocumentScrollLeft();
-    var documentScrollTop  = YAHOO.util.Dom.getDocumentScrollTop();
-
-    var documentWidth  = YAHOO.util.Dom.getDocumentWidth();
-    var documentHeight = YAHOO.util.Dom.getDocumentHeight();
-
-    if ( regionCalendar.right > viewportWidth ) {
-        YAHOO.util.Dom.setX( this.calId, regionCalendar.left - ( documentWidth - ( viewportWidth + documentScrollLeft ) ) );
-    } else {
-        YAHOO.util.Dom.setX( this.calId, regionButton.left );
+    var overlabRight = ( regionButton.left + ( regionCalendar.right - regionCalendar.left ) ) - ( viewportWidth + YAHOO.util.Dom.getDocumentScrollLeft() );
+    if ( overlabRight > 0 ) {
+        YAHOO.util.Dom.setX( this.calId, regionCalendar.left - ( overlabRight + 8 ) );
     }
-    
-    if ( regionCalendar.bottom > viewportHeight ) {
-        YAHOO.util.Dom.setY( this.calId, regionCalendar.top - ( documentHeight - ( viewportHeight + documentScrollTop ) ) );
-    } else {
-        YAHOO.util.Dom.setY( this.calId, regionButton.bottom );
+    var overlabBottom = ( regionButton.top + ( regionCalendar.bottom - regionCalendar.top ) ) - ( viewportHeight + YAHOO.util.Dom.getDocumentScrollTop() );
+    if ( overlabBottom > 0 ) {
+        YAHOO.util.Dom.setY( this.calId, regionCalendar.top - ( overlabBottom + 8 ) );
     }
     
 }
