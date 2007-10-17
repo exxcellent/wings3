@@ -3597,7 +3597,7 @@ frame.addHeader(new Link("stylesheet",
         <programlisting>&lt;init-param&gt;
 &lt;param-name&gt;<emphasis role="bold">wings.client.debug</emphasis>&lt;/param-name&gt;
 &lt;param-value&gt;<emphasis role="bold">true</emphasis>&lt;/param-value&gt;
-&lt;/init-param&gt;</programlisting></para>
+&lt;/init-param&gt;</programlisting>
         <para>Setting this parameter enables a couple of features, which are
         toggled via setting a cookie on the client with the name "DEBUG" and a colon
         separated list of settings. The exact features are described below.
