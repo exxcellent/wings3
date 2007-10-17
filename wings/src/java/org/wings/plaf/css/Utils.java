@@ -1197,13 +1197,13 @@ public final class Utils {
     public static Device printInlineStylesForInsets(final Device device, final Insets insets) throws IOException {
         if (insets != null && (insets.top > 0 || insets.left > 0 || insets.right > 0 || insets.bottom > 0)) {
             if (insets.top == insets.left && insets.left == insets.right && insets.right == insets.bottom) {
-                device.print("style=\"padding:").print(insets.top).print("px;\"");
+                device.print(" style=\"padding:").print(insets.top).print("px;\"");
             }
             else if (insets.top == insets.bottom && insets.left == insets.right) {
-                device.print("style=\"padding:").print(insets.top).print("px ").print(insets.right).print("px;\"");
+                device.print(" style=\"padding:").print(insets.top).print("px ").print(insets.right).print("px;\"");
             }
             else {
-                device.print("style=\"padding:").print(insets.top).print("px ").print(insets.right).print("px ")
+                device.print(" style=\"padding:").print(insets.top).print("px ").print(insets.right).print("px ")
                         .print(insets.bottom).print("px ").print(insets.left).print("px;\"");
             }
         }
