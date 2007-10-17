@@ -629,7 +629,7 @@ final class SessionServlet
                 UpdateResource.writeHeader(outputDevice);
                 UpdateResource.writeUpdate(outputDevice, "wingS.request.sendRedirect(\"" + session.getRedirectAddress() + "\");");
                 UpdateResource.writeFooter(outputDevice);
-                out.flush();
+                outputDevice.flush();
 
                 session.fireRequestEvent(SRequestEvent.DELIVER_DONE, externalizedResource);
                 session.fireRequestEvent(SRequestEvent.REQUEST_END);
@@ -703,7 +703,7 @@ final class SessionServlet
                 UpdateResource.writeHeader(outputDevice);
                 UpdateResource.writeUpdate(outputDevice, "wingS.request.sendRedirect(\"" + url + "\");");
                 UpdateResource.writeFooter(outputDevice);
-                out.flush();
+                outputDevice.flush();
 
                 session.fireRequestEvent(SRequestEvent.DELIVER_DONE, externalizedResource);
                 session.fireRequestEvent(SRequestEvent.REQUEST_END);
