@@ -57,8 +57,8 @@
 
         <!-- Assemble a full featured sample wingS application war -->
         <ant dir="doc/tutorial/hellowings" target="build" inheritall="false"/>
-        <mkdir dir="dist/web"/>
-        <copy todir="dist/web">
+        <mkdir dir="dist/doc/web"/>
+        <copy todir="dist/doc/web">
             <fileset dir="doc/tutorial/hellowings/build/web"/>
         </copy>
 
@@ -98,10 +98,12 @@
             <fileset dir="." excludes="*/build/**" includes="thirdparty/**" />
             <fileset dir="." excludes="*/build/**" includes="wings/**"/>
             <fileset dir="." excludes="*/build/**" includes="wingx/**"/>
+            <fileset dir="." excludes="*/build/**" includes="wings-tests/**"/>
             <fileset dir="." excludes="*/build/**" includes="demo-wingset/**"/>
             <fileset dir="." excludes="*/build/**" includes="demo-mycomponent/**"/>
             <fileset dir="." excludes="*/build/**" includes="demo-desktop/**"/>
             <fileset dir="." excludes="*/build/**" includes="demo-logconfig/**"/>
+            <fileset dir="." includes="build.xml"/>
         </copy>
 
         <!-- etc -->
@@ -127,7 +129,7 @@
         </copy>
     </target>
 
-    <target name="tarball" depends="dist" description="create distribution tar.gz">
+    <target name="tarball" depends="dist">
         <property name="distname" value="${ant.project.name}-${wings.version}"/>
         <mkdir dir="${distname}"/>
         <copy todir="${distname}">

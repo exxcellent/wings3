@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="wingSet" default="deploy" basedir=".">
+<project name="demo wingset" default="deploy" basedir=".">
 
     <!-- read custom properties from file -->
     <property file="../etc/custom-build.properties"/>

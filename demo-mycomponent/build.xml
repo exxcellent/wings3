@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="mycomponent" default="build" basedir=".">
+<project name="demo mycomponent" default="build" basedir=".">
 
     <!-- read custom properties from file -->
     <property file="../etc/custom-build.properties"/>
