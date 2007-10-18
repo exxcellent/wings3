@@ -28,7 +28,7 @@ public class XScrollPane extends SScrollPane {
     protected final SLabel extentComboLabel = new SLabel();
     protected final SLabel totalLabel = new SLabel();
     private STable tableComponent;
-    private String visibleSectionLabel = "{0} .. {1} von {2}";
+    private String visibleSectionLabel = "{0} .. {1} of {2}";
 
     public XScrollPane() {
         this(null);
