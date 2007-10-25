@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
-import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
@@ -40,8 +39,7 @@ public class DefaultReloadManager implements ReloadManager {
     private final Map<SComponent, Set<PotentialUpdate>> fineGrainedUpdates = new HashMap<SComponent, Set<PotentialUpdate>>(64);
 
     /** 
-     * All the components to reload. A LinkedHashSet to have an ordered
-     * sequence that allows for fast lookup.
+     * All the components to reload. A LinkedHashSet to have an ordered sequence that allows for fast lookup.
      */
     private final Set<SComponent> componentsToReload = new LinkedHashSet<SComponent>();
     
@@ -154,7 +152,7 @@ public class DefaultReloadManager implements ReloadManager {
         updateMode = false;
         acceptChanges = true;
         fullReplaceUpdates.clear();
-        fineGrainedUpdates.clear();        
+        fineGrainedUpdates.clear();
         componentsToReload.clear();
     }
 
@@ -201,7 +199,7 @@ public class DefaultReloadManager implements ReloadManager {
         
         for (Iterator i = componentHierarchy.keySet().iterator(); i.hasNext();) {
             final String topPath = (String) i.next();
-            final String comparePath = (topPath + "/").substring(1); // get rid of depth.
+            final String comparePath = (topPath + "/").substring(1); // get rid of depth
             if (fullReplaceUpdates.containsKey(componentHierarchy.get(topPath))) {
                 while (i.hasNext()) {
                     final String subPath = (String) i.next();
@@ -218,10 +216,17 @@ public class DefaultReloadManager implements ReloadManager {
         if (log.isDebugEnabled())
             printAllUpdates("Effective updates:");
     }
+    
+    /**
+     * Return the path of the component. The first character denotes the depth of the path.
+     */
+    private String getPath(SComponent component) {
+        return getPath(new SStringBuilder("0"), component).toString();
+    }
 
     private SStringBuilder getPath(SStringBuilder builder, SComponent component) {
-        if (component == null) return builder;
-        builder.setCharAt(0, (char) (builder.charAt(0)+1));  // inc depth.
+        if (component == null)
+            return builder;
         if (component instanceof SMenuItem) {
             SMenuItem menuItem = (SMenuItem) component;
             return getPath(builder, menuItem.getParentMenu()).append("/").append(component.getName());
@@ -229,17 +234,9 @@ public class DefaultReloadManager implements ReloadManager {
             SSpinner.DefaultEditor defaultEditor = (SSpinner.DefaultEditor) component;
             return getPath(builder, defaultEditor.getSpinner()).append("/").append(component.getName());
         } else {
-            builder.setCharAt(0, (char) (builder.charAt(0)+1));
+            builder.setCharAt(0, (char) (builder.charAt(0) + 1)); // increase depth
             return getPath(builder, component.getParent()).append("/").append(component.getName());
         }
-    }
-
-    /**
-     * return the path of the component. The first character denotes the
-     * depth of the path.
-     */
-    private String getPath(SComponent component) {
-        return getPath(new SStringBuilder("0"), component).toString();
     }
 
     private void printAllUpdates(String header) {
