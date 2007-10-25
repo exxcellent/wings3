@@ -100,9 +100,9 @@ public class MenuBarCG extends AbstractComponentCG<SMenuBar>
         if (menu.isEnabled()) {
             device.print("<div class=\"SMenu\" onMouseDown=\"wpm_menu(event,'");
             device.print(menu.getName());
-            device.print("_pop');\" onMouseOver=\"wpm_changeMenu(event,'");
+            device.print("_pop');\" onMouseOver=\"if (wpm_changeMenu) {wpm_changeMenu(event,'");
             device.print(menu.getName());
-            device.print("_pop');\"");
+            device.print("_pop');}\"");
         } else {
             device.print("<div class=\"SMenu_Disabled\"");
         }
