@@ -113,7 +113,7 @@ public class CalendarCG extends AbstractComponentCG implements org.wingx.plaf.Ca
               .print("\" src=\"").print( component.getEditIcon().getURL() )
               .print("\" />\n");
      
-        device.print("<div style=\"display:none;position:absolute;z-index:1001\" id=\"").print(id_cal)
+        device.print("<div style=\"display:none;position:fixed;z-index:1001\" id=\"").print(id_cal)
               .print("\"></div>");
 
         writeTableSuffix(device, component);

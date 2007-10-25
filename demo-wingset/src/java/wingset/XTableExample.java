@@ -346,10 +346,12 @@ public class XTableExample extends WingSetPane{
             final SCheckBox hideSomeColumns = new SCheckBox("Hide some Columns");
             hideSomeColumns.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    boolean hide = hideSomeColumns.isSelected();
-                    STableColumnModel columnModel = table.getColumnModel();
-                    for (int i=0; i < columnModel.getColumnCount(); i++) {
-                        columnModel.getColumn(i).setHidden(hide && i %3 == 0);
+                    SDefaultTableColumnModel columnModel = (SDefaultTableColumnModel) table.getColumnModel();
+                    for (int i = 0; i < columnModel.getColumnCount(); ++i) {
+                        if (i % 3 == 0) {
+                            STableColumn column = columnModel.getColumn(i);
+                            columnModel.setColumnHidden(column, hideSomeColumns.isSelected());
+                        }
                     }
                 }
             });

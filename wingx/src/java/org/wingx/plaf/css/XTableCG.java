@@ -541,16 +541,24 @@ public class XTableCG
 
     private void writeNoData(Device device, XTable table, int startX, int endX, int endY, boolean filtered) throws IOException {
         int colspan = endX - startX;
-        device.print("<tr class=\"nodata\">\n");
-        if (isSelectionColumnVisible(table)) {
-            device.print("  <td>&nbsp;</td>\n");
+        int middle = endY / 2;
+
+        // till middle
+        for (int i = 0; i < middle; ++i) {
+            device.print("<tr class=\"empty\"><td colspan=\"" + (colspan + 1) + "\">&nbsp;</td></tr>");
         }
-        device.print("  <td colspan=\"" + colspan + "\" rowspan=\"" + endY + "\" align=\"center\" valign=\"middle\">");
+
+        device.print("<tr class=\"nodata\">\n");
+        if (isSelectionColumnVisible(table))
+            device.print("  <td>&nbsp;</td>\n");
+
+        device.print("  <td colspan=\"" + colspan + "\" align=\"center\" valign=\"middle\">");
         device.print(filtered ? table.getNoDataFoundLabel() : table.getNoDataAvailableLabel());
         device.print("</td>\n");
         device.print("</tr>\n");
-        for (int i = 1; i < endY; ++i) {
-            device.print("<tr class=\"empty\"><td>&nbsp;</td></tr>");
+
+        for (int i = middle + 1; i < endY; ++i) {
+            device.print("<tr class=\"empty\"><td colspan=\"" + (colspan + 1) + "\">&nbsp;</td></tr>");
         }
     }
 

@@ -13,10 +13,6 @@ YAHOO.widget.XCalendar = function(containerId, config, xcalId, buttonId, hiddenI
 YAHOO.lang.extend( YAHOO.widget.XCalendar, YAHOO.widget.Calendar );
 
 YAHOO.widget.XCalendar.prototype.showCalendar = function() {
-    var regionButton   = YAHOO.util.Dom.getRegion(this.buttonId);
-    var viewportWidth  = YAHOO.util.Dom.getViewportWidth();
-    var viewportHeight = YAHOO.util.Dom.getViewportHeight();
-
     if (this.hiddenField.value != "") {
         this.select(this.hiddenField.value); 
         var selectedDates = this.getSelectedDates(); 
@@ -28,19 +24,23 @@ YAHOO.widget.XCalendar.prototype.showCalendar = function() {
     this.render();
     this.show();
 
-    YAHOO.util.Dom.setXY( this.calId, YAHOO.util.Dom.getXY( "r"+this.calId ) );
+    var pos = YAHOO.util.Dom.getXY( "r"+this.calId )
+    var cal = document.getElementById(this.calId);
+    cal.style.left = pos[0] + "px";
+    cal.style.top = pos[1] + "px";
 
-    var regionCalendar = YAHOO.util.Dom.getRegion(this.calId);
+    var regionCalendar = new YAHOO.util.Region(pos[1], pos[0] + cal.offsetWidth, pos[1] + cal.offsetHeight, pos[0]);
+    var viewportWidth  = YAHOO.util.Dom.getViewportWidth();
+    var viewportHeight = YAHOO.util.Dom.getViewportHeight();
 
-    var overlabRight = ( regionButton.left + ( regionCalendar.right - regionCalendar.left ) ) - ( viewportWidth + YAHOO.util.Dom.getDocumentScrollLeft() );
+    var overlabRight = regionCalendar.right - ( viewportWidth + YAHOO.util.Dom.getDocumentScrollLeft() );
     if ( overlabRight > 0 ) {
-        YAHOO.util.Dom.setX( this.calId, regionCalendar.left - ( overlabRight + 8 ) );
+        cal.style.left = (regionCalendar.left - ( overlabRight + 8 ) ) + "px";
     }
-    var overlabBottom = ( regionButton.top + ( regionCalendar.bottom - regionCalendar.top ) ) - ( viewportHeight + YAHOO.util.Dom.getDocumentScrollTop() );
+    var overlabBottom = regionCalendar.bottom - ( viewportHeight + YAHOO.util.Dom.getDocumentScrollTop() );
     if ( overlabBottom > 0 ) {
-        YAHOO.util.Dom.setY( this.calId, regionCalendar.top - ( overlabBottom + 8 ) );
+        cal.style.top = (regionCalendar.top - ( overlabBottom + 8 ) ) + "px";
     }
-    
 }
 
 YAHOO.widget.XCalendar.prototype.handleSelect = function(type,args,obj) {
