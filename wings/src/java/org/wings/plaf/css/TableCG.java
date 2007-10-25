@@ -235,7 +235,6 @@ public final class TableCG
         }
 
         writeColumnWidths(device, table, startX, endX);
-
         writeHeader(device, table, startX, endX);
 
         device.print("</thead>");
