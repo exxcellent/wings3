@@ -212,30 +212,18 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
 
     /**
      * Write JS code for context menus. Common implementaton for MSIE and gecko.
+     * @deprecated use {@link Utils#writeContextMenu(Device, SComponent)}
      */
     protected static void writeContextMenu(Device device, SComponent component) throws IOException {
-        final SPopupMenu menu = component.getComponentPopupMenu();
-        if (menu != null && menu.isEnabled()) {
-            final String componentId = menu.getName();
-            final String popupId = componentId + "_pop";
-            device.print(" onContextMenu=\"return wpm_menuPopup(event, '");
-            device.print(popupId);
-            device.print("');\" onMouseDown=\"return wpm_menuPopup(event, '");
-            device.print(popupId);
-            device.print("');\"");
-        }
+        Utils.writeContextMenu(device, component);
     }
 
     /**
      * Write Tooltip code.
+     * @deprecated use {@link Utils#writeTooltipMouseOver(Device, SComponent)}
      */
     protected static void writeTooltipMouseOver(Device device, SComponent component) throws IOException {
-        final String toolTipText = component != null ? component.getToolTipText() : null;
-        if (toolTipText != null && toolTipText.length() > 0) {
-            device.print(" onmouseover=\"Tip('");
-            Utils.quote(device, toolTipText, true, false, true);
-            device.print("')\"");
-        }
+        Utils.writeTooltipMouseOver(device, component);
     }
 
     /**
