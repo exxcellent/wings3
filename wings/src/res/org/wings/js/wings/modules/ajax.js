@@ -36,11 +36,13 @@ wingS.ajax.submitForm = function(form) {
  */
 wingS.ajax.sendRequest = function(method, uri, postData) {
     wingS.ajax.requestIsActive = true;
-    // the activity indicator is shown with a slight delay, as not to
+    // The activity indicator is shown with a slight delay, as not to
     // make the end user nervous and shorten the felt request time.
     var responded = false;
-    window.setTimeout(function () {if (!responded) {wingS.ajax.setActivityIndicatorsVisible(true);}},500);
-
+    window.setTimeout(function() {
+    	if (!responded) {
+    		wingS.ajax.setActivityIndicatorsVisible(true);
+    	}}, 500);
   
     // Since some browsers cache GET requests via the XMLHttpRequest
     // object, an additional parameter called "_xhrID" will be added
@@ -50,7 +52,7 @@ wingS.ajax.sendRequest = function(method, uri, postData) {
         uri += "_xhrID=" + new Date().getTime();
     }
 
-  var callbackProxy = {
+    var callbackProxy = {
         success : function(request) { responded = true; wingS.ajax.callbackObject.success(request); },
         failure : function(request) { responded = true; wingS.ajax.callbackObject.failure(request); },
         upload  : function(request) { responded = true; wingS.ajax.callbackObject.upload(request); }
