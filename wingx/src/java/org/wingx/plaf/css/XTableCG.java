@@ -269,9 +269,15 @@ public class XTableCG
 
     public final void writeInternal(final Device device, final SComponent _c) throws IOException {
         final XTable table = (XTable)_c;
+        
+        TableModel model = table.getModel();
+        boolean empty = model.getRowCount() == 0;
+        boolean filtered = isModelFiltered(model);
 
         device.print("<table");
+        if (empty) table.addStyle("nodata");
         Utils.writeAllAttributes(device, table);
+        if (empty) table.removeStyle("nodata");
         writeTableAttributes(device, table);
         device.print("><thead>");
         Utils.printNewline(device, table);
@@ -293,10 +299,6 @@ public class XTableCG
 
         writeColumnWidths(device, table, startX, endX);
         writeHeader(device, table, startX, endX);
-
-        TableModel model = table.getModel();
-        boolean empty = model.getRowCount() == 0;
-        boolean filtered = isModelFiltered(model);
         
         if (!empty || filtered)
             writeFilter(device, table, startX, endX);
