@@ -141,7 +141,9 @@ public class SFormattedTextField extends STextField {
                             break;
                     }
                 }
+                getDocument().setDelayEvents(true); 
                 setText(newText);
+                getDocument().setDelayEvents(false);
                 if (newText == null)
                     newText = "";
                 if ( !newText.equals(values[0]) && orgText.equals( newText ) ) {
