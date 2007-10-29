@@ -924,6 +924,7 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
      * @deprecated This method is deprecated and should not be used because 
      * expandPath(TreePath) is the proper method with the same functionality.
      */
+    @Deprecated
     public void expandRow(TreePath p) {
         expandPath(p);
     }
@@ -953,7 +954,21 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
         expandPath(getPathForRow(row));
     }
 
+    /**
+     * Collapse this tree row.
+     * If tree is inside a {@link SScrollPane} try to
+     * adjust pane, so that as much as possible new
+     * nodes are visible.
+     * @param p the TreePath to expand
+     * @deprecated This method is deprecated and should not be used because
+     * collapsePath(TreePath) is the proper method with the same functionality.
+     */
+    @Deprecated
     public void collapseRow(TreePath p) {
+        collapsePath(p);
+    }
+
+    public void collapsePath(TreePath p) {
         treeState.setExpandedState(p, false);
 
         fireTreeCollapsed(p);

@@ -765,7 +765,7 @@ td.DivisionTitle {
 
 td.DivisionContent {
     padding-top: 6px;
-    padding-bottom: 6px;
+    padding-bottom: 0px;
 }
 
 table.DivisionContent {
