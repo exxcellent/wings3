@@ -95,22 +95,22 @@ public class MenuBarCG extends AbstractComponentCG<SMenuBar>
         writeTableSuffix(device, menuBar);
     }
 
-    /* Renders the DIV representing a top SMenu item inside the menu bar. */
+    /* Renders the anchor representing a top SMenu item inside the menu bar. */
     protected void renderSMenu(final Device device, final SMenu menu, boolean rightAligned) throws IOException {
         if (menu.isEnabled()) {
-            device.print("<div class=\"SMenu\" onMouseDown=\"wpm_menu(event,'");
+            device.print("<a class=\"SMenu\" onmousedown=\"wpm_menu(event,'");
             device.print(menu.getName());
-            device.print("_pop');\" onMouseOver=\"if (wpm_changeMenu) {wpm_changeMenu(event,'");
+            device.print("_pop');\" onmouseover=\"if (wpm_changeMenu) {wpm_changeMenu(event,'");
             device.print(menu.getName());
             device.print("_pop');}\"");
         } else {
-            device.print("<div class=\"SMenu_Disabled\"");
+            device.print("<a class=\"SMenu_Disabled\"");
         }
         if (rightAligned)
             device.print(" style=\"float:right\"");
         device.print(">");
         Utils.write(device, menu.getText());
-        device.print("</div>");
+        device.print("</a>");
     }
 
     /**

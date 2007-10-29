@@ -28,6 +28,10 @@ public final class MenuCG extends org.wings.plaf.css.MenuItemCG implements
     {
         arrowIcon.getId();
     }
+    private SResourceIcon arrowIconDisabled = new SResourceIcon("org/wings/icons/MenuArrowRight_Disabled.gif");
+    {
+        arrowIconDisabled.getId();
+    }
 
     public void installCG(final SComponent comp) {
         super.installCG(comp);

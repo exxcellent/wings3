@@ -282,7 +282,7 @@ function wpm_openMenu(event, id, parentId) {
         if (totalWidth > document.body.clientWidth) {
             node.style.left = -node.offsetWidth + "px";
         } else {
-            node.style.left = (node.parentNode.offsetWidth - 2) + "px";
+            node.style.left = (node.parentNode.offsetWidth) + "px";
         }
 
         wpm_openMenus[wpm_openMenus.length] = id;
