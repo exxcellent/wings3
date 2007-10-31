@@ -94,18 +94,6 @@ wingS.request.submitForm = function(target, async, eventName, eventValue, script
             // Uncomment this to debug the name/value pairs being sent
             // var debug = "Elements before: " + form.elements.length;
 
-            // Always encode the current event epoch
-            var epochNode = document.getElementById(epochNodeId);
-            if (epochNode == null) {
-                // Append this node only once, then reuse it
-                epochNode = document.createElement("input");
-                epochNode.setAttribute("type", "hidden");
-                epochNode.setAttribute("name", "event_epoch");
-                epochNode.setAttribute("id", epochNodeId);
-                form.appendChild(epochNode);
-            }
-            epochNode.setAttribute("value", wingS.global.eventEpoch);
-
             // Encode the event trigger if available
             var triggerNode = document.getElementById(triggerNodeId);
             if (eventName != null) {
@@ -115,7 +103,13 @@ wingS.request.submitForm = function(target, async, eventName, eventValue, script
                     triggerNode.setAttribute("type", "hidden");
                     triggerNode.setAttribute("name", "event_trigger");
                     triggerNode.setAttribute("id", triggerNodeId);
-                    form.appendChild(triggerNode);
+                    // Insert trigger node as first child of form.
+                    // This guarantees that if a multipart request
+                    // (in case of a file upload) is aborted, at
+                    // least the application events of the trigger
+                    // component is fired and therefore able to
+                    // handle the according upload exception.
+                    form.insertBefore(triggerNode, form.firstChild);
                 }
                 triggerNode.setAttribute("value", eventName + "|" + eventValue);
             } else if (triggerNode != null) {
@@ -124,6 +118,19 @@ wingS.request.submitForm = function(target, async, eventName, eventValue, script
                 // are deleted. Otherwise they get fired again!
                 form.removeChild(triggerNode);
             }
+            
+            // Always encode the current event epoch
+            var epochNode = document.getElementById(epochNodeId);
+            if (epochNode == null) {
+                // Append this node only once, then reuse it
+                epochNode = document.createElement("input");
+                epochNode.setAttribute("type", "hidden");
+                epochNode.setAttribute("name", "event_epoch");
+                epochNode.setAttribute("id", epochNodeId);
+                // Insert epoch node as first child of form.
+                form.insertBefore(epochNode, form.firstChild);
+            }
+            epochNode.setAttribute("value", wingS.global.eventEpoch);
 
             // Uncomment this to debug the name/value pairs being sent
             // debug += "\nElements after: " + form.elements.length;

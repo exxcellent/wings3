@@ -223,7 +223,24 @@ public final class MultipartRequest extends HttpServletRequestWrapper {
      */
     protected void setException(String param, Exception ex) {
         if (!urlencodedRequest) {
-            parameters.clear();
+            // I'm not 100% sure if it's ok to comment out the following line!
+            // However, if we delete all parameters that have been set before
+            // the occurence of the exception, the only component that will get
+            // triggered during event processing is the filechooser. But since
+            // a filechooser provides no ability to register any listeners, the
+            // developer has no chance to get informed about the exception in
+            // the application code. There is only one reason I can imaging why
+            // someone set this line: if other components have been placed below
+            // the filechooser on the GUI, their parts won't get processed by
+            // the MultipartRequest, the according parameters won't be set and
+            // therefore no event processing of such components is done. If we
+            // process components above the exception raising filechooser but
+            // not components below it, we might end up in an inconsitent state.
+            // Anyway, I think it's the better solution to leave it out here!!!
+            //
+            // -- stephan
+            //
+            // parameters.clear();
             files.clear();
         }
         putParameter(param, "exception");
