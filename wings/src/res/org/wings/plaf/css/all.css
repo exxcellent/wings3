@@ -75,7 +75,6 @@ input, select, textarea {
 }
 
 TABLE.SButton,
-TABLE.SButton_disabled,
 TABLE.SToggleButton,
 TABLE.SToggleButton_selected {
     cursor: pointer;
