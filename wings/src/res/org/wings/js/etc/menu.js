@@ -215,7 +215,7 @@ function wpm_showMenu(menuId, coord, eventCoord) {
     elStyle.top = coord.y + 'px';
     elStyle.left = coord.x + 'px';
     elStyle.display = 'block';
-    elStyle.zIndex = 100000;
+    elStyle.zIndex = 500;
 
     /* Workaround for right aligned menues: Refer to wpm_findPosX(obj) */
     if (coord.x < 0) {
