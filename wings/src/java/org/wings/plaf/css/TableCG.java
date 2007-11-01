@@ -328,11 +328,11 @@ public final class TableCG
             SStringBuilder oddArea, SStringBuilder evenArea) throws IOException {
         if (rowIndex >= emptyIndex) {
             int colspan = endX - startX;
-            device.print("<tr class=\"empty\">\n");
+            device.print("<tr>\n");
             if (isSelectionColumnVisible(table)) {
                 device.print("  <td></td>\n");
             }
-            device.print("  <td colspan=\"" + colspan + "\">&nbsp;</td>\n");
+            device.print("  <td class=\"empty\" colspan=\"" + colspan + "\">&nbsp;</td>\n");
             device.print("</tr>\n");
             return;
         }

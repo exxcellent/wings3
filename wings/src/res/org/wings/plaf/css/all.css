@@ -453,9 +453,8 @@ ul.SMenu li.SMenu_Disabled a.y, ul.SMenu li.SMenu_Disabled a.y:visited, ul.SMenu
     background-color: #ffbbbb !important;
 }
 
-.STable tr.empty {
-    padding-top: 3px;
-    padding-bottom: 3px;
+.STable td.empty {
+    padding: 2px 8px 3px 8px;
 }
 
 .XTable {
