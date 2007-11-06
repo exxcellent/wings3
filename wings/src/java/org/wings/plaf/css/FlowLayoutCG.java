@@ -59,6 +59,10 @@ public class FlowLayoutCG extends AbstractLayoutCG {
         } else {
             alignmentStyle = "";
         }
+        
+        if ( alignment == SConstants.CENTER ) {
+            d.print("<table><tr><td>");
+        }
 
         if (components.size() > 1) {
             /* We need two spacer divs (end/beginning) so that the sourrounding flow layout takes up
@@ -66,16 +70,8 @@ public class FlowLayoutCG extends AbstractLayoutCG {
                The nbsp's are only needed for firefox... */
             d.print("<div class=\"spacer\"></div>");
 
-            for (Iterator componentIterator = components.iterator(); componentIterator.hasNext();) {
-                final SComponent component = (SComponent) componentIterator.next();
-                if (component.isVisible()) {
-                    Utils.printNewline(d, component);
-                    d.print("<div");
-                    Utils.optAttribute(d, "style", Utils.createInlineStylesForInsets(new SStringBuilder(alignmentStyle), insets));
-                    d.print(">");
-                    component.write(d); // Render contained component
-                    d.print("</div>");
-                }
+            for ( int x = 0, y = components.size() ; x < y ; x++ ) {
+                printComponent( d, (SComponent)components.get(x), alignmentStyle, insets );
             }
 
             /* Second spacer. See upper. */
@@ -97,19 +93,28 @@ public class FlowLayoutCG extends AbstractLayoutCG {
             //      <DIV class=spacer></DIV>
             //     </div>
             //    </td></tr></table>
-            final SComponent component = (SComponent) components.get(0);
+            printComponent( d, (SComponent)components.get(0), "", insets );
+        }
+        
+        if ( alignment == SConstants.CENTER ) {
+            d.print( "</td></tr></table>" );
+        }
+        
+        d.print("</td></tr><tr style=\"height:100%;\"></tr>");
+        closeLayouterBody(d, layout);
+    }
+    
+    private void printComponent( Device d, SComponent component, String alignmentStlye, Insets insets ) 
+    throws IOException {
             if (component.isVisible()) {
                 Utils.printNewline(d, component);
                 d.print("<div");
-                Utils.optAttribute(d, "style", Utils.createInlineStylesForInsets(new SStringBuilder(), insets));
+                Utils.optAttribute(d, "style", Utils.createInlineStylesForInsets(new SStringBuilder(alignmentStlye), insets));
                 d.print(">");
                 component.write(d); // Render contained component
                 Utils.printNewline(d, component);
                 d.print("</div>");
             }
-        }
-        d.print("</td></tr>");
-        closeLayouterBody(d, layout);
     }
 
     protected int getLayoutHGap(SLayoutManager layout) {
@@ -140,5 +145,3 @@ public class FlowLayoutCG extends AbstractLayoutCG {
     }
 
 }
-
-
