@@ -58,6 +58,17 @@ public class SBoxLayout
     public SBoxLayout(int orientation) {
         setOrientation(orientation);
     }
+    
+    /**
+     * creates a new box layout with the given orientation
+     *
+     * @param c - the container that needs to be laid out
+     * @param orientation either {@link <code>SConstants#VERTICAL</code>} or {@link <code>SConstants#HORIZONTAL</code>}
+     *
+     */
+    public SBoxLayout( SContainer c, int orientation ) {
+        setOrientation(orientation);
+    }
 
     public void addComponent(SComponent c, Object constraint, int index) {
         components.add(index, c);
