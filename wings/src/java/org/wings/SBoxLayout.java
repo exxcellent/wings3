@@ -52,8 +52,8 @@ public class SBoxLayout
 
     /**
      * creates a new box layout with the given orientation
-     * 
      * @param orientation either {@link <code>SConstants#VERTICAL</code>} or {@link <code>SConstants#HORIZONTAL</code>}
+     * @deprecated This constructor mismatch the swing api. Better use SBoxLayout( SContainer c, int orientation )
      */
     public SBoxLayout(int orientation) {
         setOrientation(orientation);
