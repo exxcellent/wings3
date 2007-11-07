@@ -307,6 +307,27 @@ wingS.update.value = function(componentId, value, exception) {
 };
 
 /**
+ * Updates the class of the component with the given ID.
+ * @param {String} componentId - the ID of the component
+ * @param {String} value - the new class of the component
+ * @param {String} exception - the server exception (optional)
+ */
+wingS.update.className = function(componentId, className, exception) {
+    // Exception handling
+    if (exception != null) {
+        var update = "ClassNameUpdate for '" + componentId + "'";
+        wingS.update.alertException(exception, update);
+        return;
+    }
+
+    var component = document.getElementById(componentId);
+    if (component.nodeName == "NOBR")
+        component.innerHTML = className;
+    else
+        component.className = className;
+};
+
+/**
  * Updates the text of the component with the given ID.
  * @param {String} componentId - the ID of the component
  * @param {String} text - the new text of the component
