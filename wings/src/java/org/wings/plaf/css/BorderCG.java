@@ -13,10 +13,8 @@ import java.io.IOException;
 public class BorderCG {
 
     public void writeComponentBorderPrefix(final Device device, final SComponent component) throws IOException {
-        System.out.println("prefix");
     }
 
     public void writeComponentBorderSufix(final Device device, final SComponent component) throws IOException {
-        System.out.println("sufix");
     }
 }
