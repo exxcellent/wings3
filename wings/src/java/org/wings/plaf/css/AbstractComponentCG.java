@@ -354,10 +354,17 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
         component.fireRenderEvent(SComponent.START_RENDERING);
 
         try {
-            BorderCG.writeComponentBorderPrefix(device, component);
+            org.wings.border.SBorder border = component.getBorder();
+            if ( border != null ) {
+                border.getCG().writeComponentBorderPrefix(device, component);
+            }
+            
             writeInternal(device, component);
             ScriptManager.getInstance().addScriptListeners(component.getScriptListeners());
-            BorderCG.writeComponentBorderSufix(device, component);
+            
+            if ( border != null ) {
+                border.getCG().writeComponentBorderSufix(device, component);
+            }
         } catch (RuntimeException e) {
             log.fatal("Runtime exception during rendering of " + component.getName(), e);
             device.print("<blink>" + e.getClass().getName() + " during code generation of "

@@ -19,6 +19,7 @@ import java.util.Map;
 import org.wings.SConstants;
 import org.wings.style.CSSAttributeSet;
 import org.wings.style.Selector;
+import org.wings.plaf.css.TitleBorderCG;
 
 /**
  * Adds a border with a title to a component.
@@ -170,7 +171,7 @@ public class STitledBorder extends SAbstractBorder {
         setTitleFont(titleFont);   
         setTitleColor(titleColor);
         setTitleJustification(titleJustification);
-        
+        setCG( new TitleBorderCG() );
     }
 
     /**

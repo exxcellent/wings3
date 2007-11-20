@@ -17,6 +17,7 @@ import org.wings.SConstants;
 import org.wings.style.CSSAttributeSet;
 import org.wings.style.CSSProperty;
 import org.wings.style.CSSStyleSheet;
+import org.wings.plaf.css.BorderCG;
 
 import java.awt.*;
 
@@ -42,6 +43,7 @@ public abstract class SAbstractBorder
 
     private CSSAttributeSet attributes = new CSSAttributeSet();
     protected SComponent component;
+    private BorderCG borderCG;
 
     public SAbstractBorder() {
         this(null, -1, null);
@@ -51,6 +53,7 @@ public abstract class SAbstractBorder
         setInsets(insets);
         setColor(c);
         setThickness(thickness);
+        setCG( new BorderCG() );
     }
 
     public SAbstractBorder(Insets insets) {
@@ -182,7 +185,15 @@ public abstract class SAbstractBorder
     public String getStyle(int position) {
         return specs[position].style;
     }
+    
+    protected void setCG( BorderCG borderCG ) {
+        this.borderCG = borderCG;
+    }
 
+    public BorderCG getCG() {
+        return this.borderCG;
+    }
+    
     public CSSAttributeSet getAttributes() {
         if (attributes == null) {
             attributes = new CSSAttributeSet();

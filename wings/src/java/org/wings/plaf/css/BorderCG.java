@@ -11,12 +11,12 @@ import java.io.IOException;
 
 /** This is not a 'real' CG class but a class collection rendering code for variois borders. */
 public class BorderCG {
-    private BorderCG() {
+
+    public void writeComponentBorderPrefix(final Device device, final SComponent component) throws IOException {
+        System.out.println("prefix");
     }
 
-    public static void writeComponentBorderPrefix(final Device device, final SComponent component) throws IOException {
-    }
-
-    public static void writeComponentBorderSufix(final Device device, final SComponent component) throws IOException {
+    public void writeComponentBorderSufix(final Device device, final SComponent component) throws IOException {
+        System.out.println("sufix");
     }
 }

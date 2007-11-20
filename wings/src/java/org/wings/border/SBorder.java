@@ -17,6 +17,7 @@ import org.wings.style.CSSAttributeSet;
 
 import java.awt.*;
 import java.io.Serializable;
+import org.wings.plaf.css.BorderCG;
 
 /**
  * This is the interface for Borders.
@@ -120,4 +121,6 @@ public interface SBorder extends Serializable, Cloneable {
      * @return the style
      */
     String getStyle(int position);
+
+    BorderCG getCG();
 }

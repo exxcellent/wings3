@@ -10,12 +10,10 @@ import org.wings.style.*;
 import java.io.IOException;
 
 /** This is not a 'real' CG class but a class collection rendering code for variois borders. */
-public class TitleBorderCG
+public class TitleBorderCG extends BorderCG
 {
-    private TitleBorderCG() {
-    }
 
-    public static void writeComponentBorderPrefix(final Device device, final SComponent component) throws IOException {
+    public void writeComponentBorderPrefix(final Device device, final SComponent component) throws IOException {
         if (component != null && component.getBorder() instanceof STitledBorder) {
             STitledBorder titledBorder = (STitledBorder)component.getBorder();
             device.print("<fieldset ");
@@ -44,7 +42,7 @@ public class TitleBorderCG
         }
     }
 
-    public static void writeComponentBorderSufix(final Device device, final SComponent component) throws IOException {
+    public void writeComponentBorderSufix(final Device device, final SComponent component) throws IOException {
         if (component != null && component.getBorder() instanceof STitledBorder ) {
             device.print("</fieldset>");
         }
