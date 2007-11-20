@@ -810,4 +810,25 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         }
 
     }
+    
+    public Update getCloseDialogUpdate(final SFrame container, String dialogName) {
+        return new CloseDialogUpdate(container, dialogName);
+    }
+
+    protected class CloseDialogUpdate extends AbstractUpdate {
+
+        private String dialogName = null;
+        
+        public CloseDialogUpdate(final SContainer container, String dialogName ) {
+            super(container);
+            this.dialogName = dialogName;
+        }
+
+        public Handler getHandler() {
+            UpdateHandler handler = new UpdateHandler("closeDialog");
+            handler.addParameter(component.getName());
+            handler.addParameter(dialogName);
+            return handler;
+        }
+    }
 }

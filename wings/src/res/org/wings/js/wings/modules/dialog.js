@@ -340,7 +340,10 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Panel, {
      * @method hideMask
      */
     hideMask: function () {
-        // override this function to avoid default behavior -> display:none;
+        if (this.cfg.getProperty("modal") && this.mask) {
+            this.mask.style.display = "none";
+            this.hideMaskEvent.fire();
+        }
     },
 
     /**

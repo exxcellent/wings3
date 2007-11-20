@@ -15,6 +15,7 @@ package org.wings;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.plaf.DialogCG;
+import org.wings.plaf.FrameCG;
 
 /**
  * Top-level window with a title and a border that is typically
@@ -154,7 +155,7 @@ public class SDialog extends SWindow {
         }
     }
 
-
+    
     public SIcon getIcon() {
         return icon;
     }
@@ -173,6 +174,13 @@ public class SDialog extends SWindow {
 
     public void setDraggable(boolean draggable) {
         this.draggable = draggable;
+    }
+    
+    public void hide() {
+        if ( owner != null ) {
+            update( ((FrameCG)getParentFrame().getCG()).getCloseDialogUpdate( getParentFrame(), this.getName() ) );
+        }
+        super.hide();
     }
 
     /*
