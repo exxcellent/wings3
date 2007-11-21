@@ -73,6 +73,9 @@
             <fileset dir="build/web"/>
         </copy>
         <touch file="${deploy.desktop}/WEB-INF/web.xml"/>
+
+        <copy todir="${tomcat.home}/lib" file="../servlet-prefs/build/server/lib/servlet-prefs.jar"/>
+        <copy todir="${jboss.server}/deploy/jbossweb-tomcat55.sar" file="../servlet-prefs/build/server/lib/servlet-prefs.jar"/>
     </target>
 
     <target name="clean">

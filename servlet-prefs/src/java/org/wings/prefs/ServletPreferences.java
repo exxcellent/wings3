@@ -5,15 +5,12 @@
  * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
-package desktop;
+package org.wings.prefs;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.wings.session.SessionManager;
-import org.wings.session.Session;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -27,7 +24,7 @@ import java.util.prefs.*;
 
 
 /**
- * Preferences implementation for Unix.  Preferences are stored in the file
+ * ClientPreferences implementation for Servlets.  ClientPreferences are stored in the file
  * system, with one directory per preferences node.  All of the preferences
  * at each node are stored in a single file.  Atomic file system operations
  * (e.g. File.renameTo) are used to ensure integrity.  An in-memory cache of
@@ -36,12 +33,12 @@ import java.util.prefs.*;
  * reasonable behavior when multiple VMs are running at the same time.
  * (The file lock is obtained only for sync(), flush() and removeNode().)
  *
- * @author Josh Bloch
+ * @author Christian
  * @version 1.21, 11/17/05
  * @see Preferences
  * @since 1.4
  */
-public class CustomPreferences
+public class ServletPreferences
     extends java.util.prefs.AbstractPreferences
 {
 
@@ -51,11 +48,13 @@ public class CustomPreferences
     private static String COOKIE_NAME = "PreferencesCookie";
     
     /**
-     * Key for the next unused User ID in the System Preferences
+     * Key for the next unused User ID in the System ClientPreferences
      */
     private static String NEXT_FREE_USER_ID = "nextFreeUserID";
-    
-    
+    static final ThreadLocal<HttpServletRequest> requests = new ThreadLocal<HttpServletRequest>();
+    static final ThreadLocal<HttpServletResponse> responses = new ThreadLocal<HttpServletResponse>();
+
+
     /**
      * Returns logger for error messages. Backing store exceptions are logged at
      * WARNING level.
@@ -77,7 +76,7 @@ public class CustomPreferences
     /**
      * the user roots
      */
-    private static Map<String, CustomPreferences> userRoots = new HashMap<String, CustomPreferences>();
+    private static Map<String, ServletPreferences> userRoots = new HashMap<String, ServletPreferences>();
  
     static synchronized Preferences getUserRoot() {
         String userName = resolveUserName();
@@ -85,7 +84,7 @@ public class CustomPreferences
         if(userRoots.containsKey(userName))
             return userRoots.get(userName);
         
-        CustomPreferences userRoot = new CustomPreferences(true);
+        ServletPreferences userRoot = new ServletPreferences(true);
         userRoots.put(userName, userRoot);
         return userRoot;
         
@@ -95,9 +94,7 @@ public class CustomPreferences
     private static synchronized String resolveUserName(){
         String userName = "user/";
 
-        Session session = SessionManager.getSession();
-        HttpServletRequest request = session.getServletRequest();
-        
+        HttpServletRequest request = requests.get();
         //if authorized user, use this name
         if(request.getUserPrincipal()!= null && request.getUserPrincipal().getName()!= null){
            userName = request.getUserPrincipal().getName();
@@ -112,7 +109,7 @@ public class CustomPreferences
                 if(cookies != null){
                     for(int i=0; i< cookies.length; i++){
                         if(cookies[i].getName().equals(COOKIE_NAME)){
-                            //pref = Preferences.userRoot().node(cookies[i].getValue());
+                            //pref = ClientPreferences.userRoot().node(cookies[i].getValue());
                             userName = cookies[i].getValue();
                             request.getSession().setAttribute(COOKIE_NAME, userName);
                             isAlreadyKnown = true;
@@ -124,14 +121,14 @@ public class CustomPreferences
 
             
             if(!isAlreadyKnown) {
-                //pref = Preferences.userRoot().node(userID.toString());
+                //pref = ClientPreferences.userRoot().node(userID.toString());
                 int userID = getSystemRoot().getInt(NEXT_FREE_USER_ID, 0);
                 userName = ((Integer)userID).toString();
                 
                 //Set the cookie
                 Cookie cookie= new Cookie(COOKIE_NAME, userName);
                 cookie.setMaxAge(1000000000);
-                org.wings.session.SessionManager.getSession().getServletResponse().addCookie(cookie);
+                responses.get().addCookie(cookie);
                 request.getSession().setAttribute(COOKIE_NAME, userName);
 
                 userID++;
@@ -191,7 +188,7 @@ public class CustomPreferences
     static synchronized Preferences getSystemRoot() {
         if (systemRoot == null) {
             setupSystemRoot();
-            systemRoot = new CustomPreferences(false);
+            systemRoot = new ServletPreferences(false);
         }
         return systemRoot;
     }
@@ -344,6 +341,16 @@ public class CustomPreferences
      */
     final List<Change> changeLog = new ArrayList<Change>();
 
+    public static void set(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+        requests.set(servletRequest);
+        responses.set(servletResponse);
+    }
+
+    public static void unset() {
+        requests.set(null);
+        responses.set(null);
+    }
+
     /**
      * Represents a change to a preference.
      */
@@ -426,7 +433,7 @@ public class CustomPreferences
      * Special constructor for roots (both user and system).  This constructor
      * will only be called twice, by the static initializer.
      */
-    private CustomPreferences(boolean user) {
+    private ServletPreferences(boolean user) {
         super(null, "");
         isUserNode = user;
                 
@@ -449,7 +456,7 @@ public class CustomPreferences
      * parent node and name.  This constructor, called from childSpi,
      * is used to make every node except for the two //roots.
      */
-    private CustomPreferences(CustomPreferences parent, String name) {
+    private ServletPreferences(ServletPreferences parent, String name) {
         super(parent, name);
         isUserNode = parent.isUserNode;
         dir = new File(parent.dir, name);
@@ -652,7 +659,7 @@ public class CustomPreferences
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     protected AbstractPreferences childSpi(String name) {
-        return new CustomPreferences(this, name);
+        return new ServletPreferences(this, name);
     }
 
     public void removeNode() throws BackingStoreException {

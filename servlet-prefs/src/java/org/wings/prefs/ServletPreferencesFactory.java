@@ -1,18 +1,16 @@
-package desktop;
+package org.wings.prefs;
 
 import java.util.prefs.Preferences;
 import java.util.prefs.PreferencesFactory;
 
-public class CustomPreferencesFactory
+public class ServletPreferencesFactory
     implements PreferencesFactory
 {
-
     public Preferences systemRoot() {
-        return CustomPreferences.getSystemRoot();
+        return ServletPreferences.getSystemRoot();
     }
 
     public Preferences userRoot() {
-        return CustomPreferences.getUserRoot();
+        return ServletPreferences.getUserRoot();
     }
-
 }

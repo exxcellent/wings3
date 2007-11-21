@@ -501,7 +501,7 @@ final class SessionServlet
                     } else {
                         // redirect to a fresh session.
                         redirectAddress = req.getRequestURL().toString();
-                    }
+                }
                     req.getSession().invalidate(); // calls destroy implicitly
                     response.sendRedirect(redirectAddress);
                     exitSessionWorkaround = redirectAddress;

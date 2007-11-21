@@ -36,10 +36,6 @@ import java.util.prefs.Preferences;
 public class Desktop
     implements SConstants
 {
-    static {
-        System.setProperty("java.util.prefs.PreferencesFactory", CustomPreferencesFactory.class.getName());
-    }
-
     SFrame frame;
     Map<String, DesktopPane> panes = new HashMap<String, DesktopPane>();
     SMenu windowMenu;
