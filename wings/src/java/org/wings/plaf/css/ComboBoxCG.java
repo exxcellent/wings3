@@ -14,13 +14,13 @@ package org.wings.plaf.css;
 
 
 import org.wings.*;
-import org.wings.script.JavaScriptEvent;
-import org.wings.script.JavaScriptListener;
-import org.wings.util.SStringBuilder;
 import org.wings.io.Device;
 import org.wings.io.StringBuilderDevice;
 import org.wings.plaf.CGManager;
 import org.wings.plaf.Update;
+import org.wings.plaf.css.script.OnPageRenderedScript;
+import org.wings.script.*;
+import org.wings.util.SStringBuilder;
 
 import java.io.IOException;
 
@@ -128,6 +128,10 @@ public final class ComboBoxCG extends AbstractComponentCG implements org.wings.p
         Utils.optAttribute(device, "name", Utils.event(component));
         Utils.optAttribute(device, "value", -1);
         device.print("/></span>");
+        if (selected == -1) {
+            component.getSession().getScriptManager().addScriptListener(
+                new OnPageRenderedScript("document.getElementById(\"" + component.getName() + "\").selectedIndex = -1;"));
+        }
     }
 
     public void writeInternal(final Device device, final SComponent _c) throws IOException {
