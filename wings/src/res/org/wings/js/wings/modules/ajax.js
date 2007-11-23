@@ -274,12 +274,9 @@ wingS.ajax.updateDebugView = function(request) {
     var debugArea = document.getElementById("ajaxDebugView");
     if (debugArea == null) {
         var debugHtmlCode =
-            '<div align="center" style="margin-top:50px; padding-bottom:3px;">\n' +
-            '  <strong>AJAX DEBUG VIEW:</strong> &nbsp;XML RESPONSE\n' +
-            '  &nbsp;<span style="font:11px monospace"></span></div>\n' +
-            '<textarea readonly="readonly" style="width:100%; height:190px;\n' +
-            '  border-top:1px dashed #000000; border-bottom:1px dashed #000000;\n' +
-            '  font:11px monospace; padding:10px;"></textarea>\n';
+            '<div><strong>AJAX DEBUG VIEW:</strong>&nbsp;' +
+            '<a href="#" onclick="wingS.ajax.toggleDebugConsole()">HIDE</a></div>\n' +
+            '<textarea readonly="readonly"></textarea>\n';
         debugArea = document.createElement("div");
         debugArea.id = "ajaxDebugView";
         debugArea.style.display = "none";
@@ -300,7 +297,7 @@ wingS.ajax.updateDebugView = function(request) {
             }
             output += response;
         }
-        debugArea.getElementsByTagName("SPAN")[0].innerHTML = "| " + response.length + " chars";
+        output += "\n\nPayload: " + response.length + " chars";
     } else {
         output += "Currently there is no XML response available..." +
                   "\nProbably no asynchronous request has been sent.";
@@ -348,5 +345,23 @@ wingS.ajax.toggleDebugView = function() {
     if (wingS.ajax.isDebugViewVisible())
         wingS.ajax.setDebugViewVisible(false);
     else wingS.ajax.setDebugViewVisible(true);
+};
+
+/**
+ * Toggles the visibility of the debug console.
+ */
+wingS.ajax.toggleDebugConsole = function() {
+    if (wingS.ajax.isDebugViewVisible()) {
+        var debugArea = document.getElementById("ajaxDebugView");
+        var debugToggle = debugArea.getElementsByTagName("A")[0];
+        var debugConsole = debugArea.getElementsByTagName("TEXTAREA")[0];
+        if (debugConsole.style.display != "none") {
+            debugConsole.style.display = "none";
+            debugToggle.firstChild.data = "SHOW";
+        } else {
+            debugConsole.style.display = "block";
+            debugToggle.firstChild.data = "HIDE";
+        }
+    }
 };
 
