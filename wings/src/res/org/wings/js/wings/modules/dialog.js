@@ -96,6 +96,10 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Panel, {
 
     center: function() {
 
+        // hack for ie7 - avoids toggeling width of dialog
+        // todo: works but it's still a hack :(
+        this.element.style.width = this.element.offsetWidth + "px";
+
         var viewportelementId = this.cfg.getProperty("viewportelement");
 
         if (typeof viewportelementId == 'undefined') {
