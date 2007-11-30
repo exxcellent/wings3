@@ -18,7 +18,10 @@ import org.wings.plaf.css.AbstractUpdate;
 import org.wings.plaf.css.UpdateHandler;
 import org.wings.plaf.css.Utils;
 import org.wings.plaf.css.script.OnHeadersLoadedScript;
+import org.wings.session.Browser;
+import org.wings.session.BrowserType;
 import org.wings.session.ScriptManager;
+import org.wings.session.SessionManager;
 import org.wings.util.SStringBuilder;
 import org.wingx.XCalendar;
 
@@ -42,20 +45,17 @@ public class CalendarCG extends AbstractComponentCG implements org.wingx.plaf.Ca
 
     static {
         String[] images = new String [] {
-            "org/wings/js/yui/calendar/assets/callt.gif",
-            "org/wings/js/yui/calendar/assets/calrt.gif",
-            "org/wings/js/yui/calendar/assets/calx.gif",
+            "org/wingx/calendar/calcd.gif",
             "org/wingx/calendar/cally.gif",
             "org/wingx/calendar/calry.gif"
         };
 
         for ( int x = 0, y = images.length ; x < y ; x++ ) {
-            SIcon icon = new SResourceIcon(images[x]);
-            icon.getURL(); // hack to externalize
+            new SResourceIcon(images[x]).getId(); // hack to externalize
         }
 
         List<Header> headerList = new ArrayList<Header>();
-        headerList.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_CALENDAR));   
+        headerList.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_CALENDAR));   
         headerList.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CALENDAR));
         headerList.add(Utils.createExternalizedJSHeader("org/wingx/calendar/xcalendar.js"));
         headers = Collections.unmodifiableList(headerList);
@@ -64,9 +64,14 @@ public class CalendarCG extends AbstractComponentCG implements org.wingx.plaf.Ca
     public CalendarCG() {
     }
        
-    public void installCG(final SComponent comp) {
-        super.installCG(comp);
+    public void installCG(final SComponent component) {
+        super.installCG(component);
         SessionHeaders.getInstance().registerHeaders(headers);
+    }
+    
+    public void uninstallCG(SComponent component) {
+        super.uninstallCG(component);
+        SessionHeaders.getInstance().deregisterHeaders(headers);
     }
 
     public void writeInternal(org.wings.io.Device device, org.wings.SComponent _c )
@@ -112,9 +117,15 @@ public class CalendarCG extends AbstractComponentCG implements org.wingx.plaf.Ca
         device.print("<img class=\"XCalendarButton\" id=\"").print(id_button)
               .print("\" src=\"").print( component.getEditIcon().getURL() )
               .print("\" />\n");
+        
+        String position = "fixed";
+        Browser browser = SessionManager.getSession().getUserAgent();
+        if (browser.getBrowserType() == BrowserType.IE && browser.getMajorVersion() < 7) {
+            position = "absolute";
+        }
      
-        device.print("<div style=\"display:none;position:fixed;z-index:1001\" id=\"").print(id_cal)
-              .print("\"></div>");
+        device.print("<div style=\"display:none;position:").print(position)
+              .print(";z-index:1001\" id=\"").print(id_cal).print("\"></div>");
 
         writeTableSuffix(device, component);
 

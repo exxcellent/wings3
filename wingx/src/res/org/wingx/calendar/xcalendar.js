@@ -61,8 +61,22 @@ YAHOO.widget.XCalendar.prototype.handleSelect = function(type,args,obj) {
 }
 
 /**
-    Ueberschreibt die Methode renderHeader aus YAHOO.widget.Calendar
-*/
+ * Overwrites createTitleBar in YAHOO.widget.Calendar
+ */
+YAHOO.widget.XCalendar.prototype.createTitleBar = function(strTitle) {
+	var tDiv = YAHOO.util.Dom.getElementsByClassName(YAHOO.widget.CalendarGroup.CSS_2UPTITLE, "div", this.oDomContainer)[0] || document.createElement("div");
+	tDiv.className = YAHOO.widget.CalendarGroup.CSS_2UPTITLE;
+	tDiv.innerHTML = this.buildMonthLabel();
+	this.oDomContainer.insertBefore(tDiv, this.oDomContainer.firstChild);
+
+	YAHOO.util.Dom.addClass(this.oDomContainer, "withtitle");
+
+	return tDiv;
+};
+
+/**
+ * Overwrites renderHeader in YAHOO.widget.Calendar
+ */
 YAHOO.widget.XCalendar.prototype.renderHeader = function(html) {
         var colSpan = 7;
 
@@ -100,9 +114,8 @@ YAHOO.widget.XCalendar.prototype.renderHeader = function(html) {
         var cal = this.parent || this;
 
         // <previousYear>
-        var leftYearStyle = 'style="position:absolute;cursor:pointer;top:2px;bottom:0;width:15px;height:12px;left:1px;z-index:1;background:url(\'-org/wingx/calendar/cally.gif\') no-repeat;"';
-        html[html.length] = '<a class="classNavLeftYear" ' + leftYearStyle + ' >&#160;</a>';
-        // </previousYear>      
+        html[html.length] = '<a class="calnavleftYear">&#160;</a>';
+        // </previousYear>
 
         if (renderLeft) {
                 var leftArrow = this.cfg.getProperty(defCfg.NAV_ARROW_LEFT.key);
@@ -111,16 +124,13 @@ YAHOO.widget.XCalendar.prototype.renderHeader = function(html) {
                         leftArrow = YAHOO.widget.Calendar.IMG_ROOT + DEPR_NAV_LEFT;
                 }
                 //var leftStyle = (leftArrow === null) ? "" : ' style="background-image:url(' + leftArrow + ')"';
-                var leftStyle = ' style="left:17px;"'
+                var leftStyle = '';
                 html[html.length] = '<a class="' + this.Style.CSS_NAV_LEFT + '"' + leftStyle + ' >&#160;</a>';
         }
 
-        html[html.length] = this.buildMonthLabel();
-
-        // <nextYear>
-        var rightYearStyle = 'style="position:absolute;cursor:pointer;top:2px;bottom:0;width:15px;height:12px;right:1px;z-index:1;background:url(\'-org/wingx/calendar/calry.gif\') no-repeat;"';
-        html[html.length] = '<a class="classNavRightYear" ' + rightYearStyle + ' >&#160;</a>';
-        // </nextYear>
+        // <clearDate>
+        html[html.length] = '<a class="calnavclearDate">&#160;</a>';
+        // </clearDate>
 
         if (renderRight) {
                 var rightArrow = this.cfg.getProperty(defCfg.NAV_ARROW_RIGHT.key);
@@ -128,9 +138,13 @@ YAHOO.widget.XCalendar.prototype.renderHeader = function(html) {
                         rightArrow = YAHOO.widget.Calendar.IMG_ROOT + DEPR_NAV_RIGHT;
                 }
                 var rightStyle = (rightArrow === null) ? "" : ' style="background-image:url(' + rightArrow + ')"';
-                var rightStyle = ' style="right:17px;"';
+                var rightStyle = '';
                 html[html.length] = '<a class="' + this.Style.CSS_NAV_RIGHT + '"' + rightStyle + ' >&#160;</a>';
         }
+        
+        // <nextYear>
+        html[html.length] = '<a class="calnavrightYear">&#160;</a>';
+        // </nextYear>
 
         html[html.length] =     '</div>\n</th>\n</tr>';
 
@@ -156,21 +170,9 @@ YAHOO.widget.XCalendar.prototype.applyListeners = function() {
 
         var linkLeft = YAHOO.util.Dom.getElementsByClassName(this.Style.CSS_NAV_LEFT, anchor, root);
         var linkRight = YAHOO.util.Dom.getElementsByClassName(this.Style.CSS_NAV_RIGHT, anchor, root);
-
-        // <previousYear> <nextYear>    
-        var linkLeftYear = YAHOO.util.Dom.getElementsByClassName("classNavLeftYear", anchor, root);
-        var linkRightYear = YAHOO.util.Dom.getElementsByClassName("classNavRightYear", anchor, root);
-
-        if (linkLeftYear && linkLeftYear.length > 0) {
-                this.linkLeftYear = linkLeftYear[0];
-                YAHOO.util.Event.addListener(this.linkLeftYear, mousedown, cal.previousYear, cal, true);
-        }
-
-        if (linkRightYear && linkRightYear.length > 0) {
-                this.linkRightYear = linkRightYear[0];
-                YAHOO.util.Event.addListener(this.linkRightYear, mousedown, cal.nextYear, cal, true);
-        }
-        // </previousYear> </nextYear>
+        var linkLeftYear = YAHOO.util.Dom.getElementsByClassName("calnavleftYear", anchor, root);
+        var linkRightYear = YAHOO.util.Dom.getElementsByClassName("calnavrightYear", anchor, root);
+        var linkClearDate = YAHOO.util.Dom.getElementsByClassName("calnavclearDate", anchor, root);
 
         if (linkLeft && linkLeft.length > 0) {
                 this.linkLeft = linkLeft[0];
@@ -180,6 +182,21 @@ YAHOO.widget.XCalendar.prototype.applyListeners = function() {
         if (linkRight && linkRight.length > 0) {
                 this.linkRight = linkRight[0];
                 YAHOO.util.Event.addListener(this.linkRight, mousedown, cal.nextMonth, cal, true);
+        }
+        
+        if (linkLeftYear && linkLeftYear.length > 0) {
+                this.linkLeftYear = linkLeftYear[0];
+                YAHOO.util.Event.addListener(this.linkLeftYear, mousedown, cal.previousYear, cal, true);
+        }
+
+        if (linkRightYear && linkRightYear.length > 0) {
+                this.linkRightYear = linkRightYear[0];
+                YAHOO.util.Event.addListener(this.linkRightYear, mousedown, cal.nextYear, cal, true);
+        }
+        
+        if (linkClearDate && linkClearDate.length > 0) {
+                this.linkClearDate = linkClearDate[0];
+                YAHOO.util.Event.addListener(this.linkClearDate, mousedown, cal.clear, cal, true);
         }
 
         if (this.domEventMap) {
