@@ -41,6 +41,7 @@ public class FlowLayoutCG extends AbstractLayoutCG {
         openLayouterBody(d, layout);
         d.print("<tr><td");
         Utils.printDivHorizontalAlignment(d, alignment != SConstants.NO_ALIGN ? alignment : SConstants.LEFT_ALIGN);
+        Utils.printDivVerticalAlignment(d, SConstants.TOP_ALIGN);
         if (alignment == SConstants.CENTER) {
             // Cheat -- margin left/right to simulate center float. Will not wrap
             d.print(" style=\"margin-left:auto; margin-right:auto\"");
@@ -100,7 +101,7 @@ public class FlowLayoutCG extends AbstractLayoutCG {
             d.print( "</td></tr></table>" );
         }
         
-        d.print("</td></tr><tr style=\"height:100%;\"></tr>");
+        d.print("</td></tr>");
         closeLayouterBody(d, layout);
     }
     

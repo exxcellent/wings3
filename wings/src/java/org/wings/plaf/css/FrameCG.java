@@ -75,8 +75,6 @@ public class FrameCG implements org.wings.plaf.FrameCG {
     private static final String PROPERTY_STYLESHEET = "Stylesheet.";
     private static final String BROWSER_DEFAULT = "default";
 
-    private ClassPathResource formbutton;
-
     private String documentType = STRICT_DOCTYPE;
 
     protected final List<Header> headers = new ArrayList<Header>();
@@ -94,6 +92,9 @@ public class FrameCG implements org.wings.plaf.FrameCG {
 
     private boolean debugJs = false;
     
+    // TODO: use Utils.JS_YUI_UTILITIES instead of Utils.JS_YUI_YAHOO_DOM_EVENT_DEBUG+X
+    // as soon as connection-manager has been fixed --> probably with YUI version 2.3.2
+    // JS_YUI_UTILITIES = aggregate: yahoo, dom, event, connection, animation, dragdrop
     final Script yuiYahooDomEvent = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_YAHOO_DOM_EVENT);
     final Script yuiConnection = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONNECTION);
     final Script yuiAnimation = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_ANIMATION);
@@ -140,7 +141,6 @@ public class FrameCG implements org.wings.plaf.FrameCG {
             String classPath = (String) ResourceManager.getObject(firebugResources[i], String.class);
             ClassPathResource res = new ClassPathResource(classPath);
             String string = extMgr.externalize(res, AbstractExternalizeManager.GLOBAL);
-
         }
     }
 
@@ -159,17 +159,19 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         if (userRenderXmlDecl != null) {
             setRenderXmlDeclaration(userRenderXmlDecl);
         }
-
-        // Externalize JavaScript headers
-        // JS_YUI_UTILITIES = aggregate: yahoo, dom, event, connection, animation, dragdrop
-        // headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_UTILITIES));
-
+        
+        // Add CSS headers of YUI components which should be included in every frames by default
+        // (DO use files under "yui/assets" and DO NOT use those under "yui/<component>/assets")
+        headers.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_CONTAINER));
+        // Common hack to externalize YUI's 'sprite.png' which contains most (if not all) images of the SAM skin
+        new SResourceIcon((String) ResourceManager.getObject(Utils.IMG_YUI_ASSETS_SPRITE, String.class)).getId();
+        
+        // Add DWR headers
         headers.add(new JavaScriptHeader("../dwr/engine.js"));
         headers.add(new JavaScriptHeader("../dwr/util.js"));
-        headers.add(Utils.createExternalizedCSSHeaderFromProperty("CSS.yuiAssetsContainer"));
-
-        formbutton = new ClassPathResource("org/wings/plaf/css/formbutton.htc", "text/x-component");
-        formbutton.getId(); // externalize
+        
+        // Common hack to externalize the ugly .htc-file for dealing with form buttons in IE 
+        new ClassPathResource("org/wings/plaf/css/formbutton.htc", "text/x-component").getId();
     }
 
     public void installCG(final SComponent comp) {
@@ -411,9 +413,9 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         /* Insert version and compile time. Since the Version Class is generated on compile time,
          * build errors in SDK's are quite normal. Just run the Version.java ant task.
          */
-        device.print("<meta http-equiv=\"Generator\" content=\"wingS (http://wingsframework.org) v");
+        device.print("<meta http-equiv=\"Generator\" content=\"wingS v");
         device.print(Version.getVersion());
-        device.print(" built on: ");
+        device.print(" (http://wingsframework.org) - built on: ");
         device.print(Version.getCompileTime());
         device.print("\" />\n");
 

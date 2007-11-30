@@ -194,7 +194,7 @@ public final class Utils {
     }
 
     /**
-     * HTML allows 4 values for align property of a div element.
+     * HTML allows 4 values for the horizontal align property of a div element.
      *
      * @param d     Output
      * @param align Please refer {@link SConstants}
@@ -224,6 +224,17 @@ public final class Utils {
         else if (align == SConstants.JUSTIFY) {
             d.print(" align=\"justify\"");
         }
+    }
+    
+    /**
+     * HTML allows 4 values for the vertical align property of a div element.
+     *
+     * @param d     Output
+     * @param align Please refer {@link SConstants}
+     * @throws IOException
+     */
+    public static void printDivVerticalAlignment(Device d, int align) throws IOException {
+        printTableVerticalAlignment(d, align);
     }
 
     /**
@@ -1308,12 +1319,14 @@ public final class Utils {
      * Lookup keys for yui resources
      */
     public static final String JS_YUI_ANIMATION = "JS.yuiAnimation";
-    // [CSS???]: public static final String CSS_YUI_ASSETS = "CSS.yuiAssets";
+    // CSS: public static final String CSS_YUI_ASSETS_... = "CSS.yuiAssets...";
+    public static final String CSS_YUI_ASSETS_CALENDAR = "CSS.yuiAssetsCalendar";
+    public static final String CSS_YUI_ASSETS_CONTAINER = "CSS.yuiAssetsContainer";
+    public static final String IMG_YUI_ASSETS_SPRITE = "IMG.yuiAssetsSprite";
     public static final String JS_YUI_AUTOCOMPLETE = "JS.yuiAutocomplete";
     // CSS: public static final String CSS_YUI_BASE = "CSS.yuiBase";
     // Beta: public static final String JS_YUI_BUTTON = "JS.yuiButton";
     public static final String JS_YUI_CALENDAR = "JS.yuiCalendar";
-    public static final String CSS_YUI_CALENDAR = "CSS.yuiCalendar";
     // Beta: public static final String JS_YUI_COLORPICKER = "JS.yuiColorpicker";
     public static final String JS_YUI_CONNECTION = "JS.yuiConnection";
     public static final String JS_YUI_CONTAINER = "JS.yuiContainer";

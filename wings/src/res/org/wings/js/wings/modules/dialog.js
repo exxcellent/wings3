@@ -51,7 +51,7 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Panel, {
 
         this.beforeInitEvent.fire(wingS.dialog.SDialog);
 
-        //YAHOO.util.Dom.addClass(this.element, wingS.dialog.SDialog.CSS_DIALOG);
+        YAHOO.util.Dom.addClass(this.element, wingS.dialog.SDialog.CSS_DIALOG);
 
         if (userConfig) {
             this.cfg.applyConfig(userConfig, true);
@@ -59,7 +59,7 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Panel, {
 
         function onBeforeShow() {
             if (typeof console != 'undefined')
-                console.log("onBeforeShow");
+                //console.log("onBeforeShow");
 
             this.unsubscribe("beforeShow", onBeforeShow);
 
@@ -95,10 +95,19 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Panel, {
     },
 
     center: function() {
-
-        // hack for ie7 - avoids toggeling width of dialog
-        // todo: works but it's still a hack :(
-        this.element.style.width = this.element.offsetWidth + "px";
+    	
+    	// Workarounds for IE:
+    	//  - avoid toggeling dialog width (e.g. while dragging) in IE 7
+    	//  - resize to correct width regarding border-box-issues in IE 6/7
+    	//  - TODO: it works but it's still a hack - reevaluate with YUI 2.3.2
+        if (YAHOO.env.ua.ie > 6) { // IE 7
+        	this.element.style.width = (this.element.offsetWidth - 6) + "px";
+        	// Why subtract 6 ? --> 6 = 3 (padding-left) + 3 (padding-right) of surrounding div
+        } else if (YAHOO.env.ua.ie > 0) { // IE 6 and below
+        	this.element.firstChild.style.width = (this.element.firstChild.offsetWidth - 8) + "px";
+        	this.element.lastChild.style.width = (this.element.lastChild.offsetWidth - 8) + "px";
+        	// Why subtract 8 ? --> 8 = 3 (padding-left) + 5 (padding-right) of surrounding div
+        }
 
         var viewportelementId = this.cfg.getProperty("viewportelement");
 

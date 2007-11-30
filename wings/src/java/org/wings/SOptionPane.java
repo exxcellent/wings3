@@ -1,29 +1,11 @@
-/*
- * Copyright 2000,2005 wingS development team.
- *
- * This file is part of wingS (http://wingsframework.org).
- *
- * wingS is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License
- * as published by the Free Software Foundation; either version 2.1
- * of the License, or (at your option) any later version.
- *
- * Please see COPYING for the complete licence.
- */
 package org.wings;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wings.border.SBorder;
-import org.wings.border.SEmptyBorder;
 import org.wings.plaf.OptionPaneCG;
 import org.wings.resource.ResourceManager;
-import org.wings.script.JavaScriptEvent;
-import org.wings.script.JavaScriptListener;
-
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.StringTokenizer;
@@ -38,7 +20,7 @@ public class SOptionPane extends SDialog implements ActionListener {
     private final transient static Log log = LogFactory.getLog(SOptionPane.class);
 
     /**
-     * Actionb Performed Value if Yes is Choosen
+     * Action Performed Value if Yes is Choosen
      */
     public static final String YES_ACTION = "YES";
 
@@ -151,19 +133,14 @@ public class SOptionPane extends SDialog implements ActionListener {
     private final SContainer contents = new SPanel(new SBorderLayout());
 
     /**
-     * Die Message des OptionPanes wird hier rein getan.
+     * Panel with Option Messages
      */
-    private final SContainer optionData = new SPanel(new SFlowDownLayout());
-
-    /**
-     * Die Message des OptionPanes wird hier rein getan.
-     */
-    private final SContainer images = new SPanel();
+    private final SContainer optionData = new SPanel(new SFlowDownLayout(SConstants.LEFT, 0, 0));
 
     /**
      * Panel with Option Buttons
      */
-    protected final SContainer optionButtons = new SPanel(new SFlowLayout(SConstants.RIGHT));
+    protected final SContainer optionButtons = new SPanel(new SFlowLayout(SConstants.RIGHT, 0, 0));
 
     /**
      * OK Button
@@ -184,8 +161,6 @@ public class SOptionPane extends SDialog implements ActionListener {
      * No Button
      */
     protected final SButton optionNo = createButton(UIManager.getString("OptionPane.noButtonText", SessionManager.getSession().getLocale()));
-
-    final SBorder empty = new SEmptyBorder(new Insets(6, 24, 6, 24));
 
     /**
      * Icon for Inform Dialog
@@ -211,7 +186,7 @@ public class SOptionPane extends SDialog implements ActionListener {
      * Icon for Error Dialog
      */
     private static final SIcon ERROR_IMAGE = (SIcon) ResourceManager.getObject("SOptionPane.errorIcon", SIcon.class);
-
+    
     // The label that contains the option pane image.
     protected final SLabel imageLabel = new SLabel();
 
@@ -371,18 +346,6 @@ public class SOptionPane extends SDialog implements ActionListener {
         setOptionType(optionType);
         setMessageType(messageType);
         setModal(true);
-        // value = UNINITIALIZED_VALUE;
-        // inputValue = UNINITIALIZED_VALUE;
-
-        // Actually we should not delete all resize listeners, but only the desired one --> TODO!
-        // Also to do --> move JS to CG, somehow!?!
-        //String code = "YAHOO.util.Event.removeListener(window, 'resize');";
-        //JavaScriptListener listener = new JavaScriptListener(JavaScriptEvent.ON_CLICK, code);
-
-        //optionOK.addScriptListener(listener);
-        //optionCancel.addScriptListener(listener);
-        //optionYes.addScriptListener(listener);
-        //optionNo.addScriptListener(listener);
     }
 
     public void setCG(OptionPaneCG cg) {
@@ -391,40 +354,35 @@ public class SOptionPane extends SDialog implements ActionListener {
 
     /*
      * The chosen option.
-     * @see #OK_OPTIONhttp://localhost:8080/RLSAdmin/Admin/mP1
+     * @see #OK_OPTION
      * @see #YES_OPTION
-     * @see #CANCEL_OPTION
      * @see #NO_OPTION
+     * @see #CANCEL_OPTION
      */
     public final Object getValue() {
         return selected;
     }
-
+    
     public Object getInputValue() {
         return inputValue;
     }
 
     private void initPanel() {
-        //setHorizontalAlignment(SConstants.LEFT);
-        ((SFlowLayout) optionButtons.getLayout()).setHgap(8);
-        optionButtons.add(optionOK, "OK");
-        optionButtons.add(optionYes, "YES");
-        optionButtons.add(optionCancel, "CANCEL");
-        optionButtons.add(optionNo, "NO");
-        optionButtons.setPreferredSize(SDimension.FULLWIDTH);
-        optionButtons.setBorder(new SEmptyBorder(8, 0, 0, 0));
-
-        imageLabel.setBorder(new SEmptyBorder(0, 0, 0, 8));
         imageLabel.setVerticalAlignment(SConstants.TOP_ALIGN);
-        images.add(imageLabel);
-        images.setVerticalAlignment(SConstants.TOP_ALIGN);
+        imageLabel.setStyle("SOptionPaneImage");
         imageLabel.setToolTipText(null);
+        
+        optionButtons.add(optionNo, "NO");
+        optionButtons.add(optionCancel, "CANCEL");
+        optionButtons.add(optionYes, "YES");
+        optionButtons.add(optionOK, "OK");        
+        optionButtons.setPreferredSize(SDimension.FULLWIDTH);
+        optionButtons.setStyle("SOptionPaneButtons");
 
         optionData.setPreferredSize(SDimension.FULLWIDTH);
-        //((SFlowLayout) optionData.getLayout()).setVgap(8);
 
+        contents.add(imageLabel, SBorderLayout.WEST);
         contents.add(optionData, SBorderLayout.CENTER);
-        contents.add(images, SBorderLayout.WEST);
         contents.setPreferredSize(SDimension.FULLWIDTH);
 
         add(contents);
@@ -433,8 +391,6 @@ public class SOptionPane extends SDialog implements ActionListener {
 
     /**
      * Generic Button creation
-     *
-     * @param label the <code>String</code> to display on the button
      */
     protected final SButton createButton(String label) {
         SButton b = new SButton(label);
@@ -454,11 +410,11 @@ public class SOptionPane extends SDialog implements ActionListener {
         else if (e.getSource() == optionYes) {
             fireActionPerformed(YES_ACTION);
         }
-        else if (e.getSource() == optionCancel) {
-            fireActionPerformed(CANCEL_ACTION);
-        }
         else if (e.getSource() == optionNo) {
             fireActionPerformed(NO_ACTION);
+        }
+        else if (e.getSource() == optionCancel) {
+            fireActionPerformed(CANCEL_ACTION);
         }
         else {
             fireActionPerformed(UNKNOWN_ACTION);
@@ -473,8 +429,8 @@ public class SOptionPane extends SDialog implements ActionListener {
     protected void resetOptions() {
         optionOK.setVisible(false);
         optionYes.setVisible(false);
-        optionCancel.setVisible(false);
         optionNo.setVisible(false);
+        optionCancel.setVisible(false);
     }
 
     SContainer customButtons = null;
@@ -515,28 +471,23 @@ public class SOptionPane extends SDialog implements ActionListener {
         switch (newType) {
             case ERROR_MESSAGE: {
                 imageLabel.setIcon(ERROR_IMAGE);
-                imageLabel.setToolTipText("Error");
                 break;
             }
             case INFORMATION_MESSAGE: {
                 imageLabel.setIcon(MESSAGE_IMAGE);
-                imageLabel.setToolTipText("Information");
                 break;
             }
             case WARNING_MESSAGE: {
                 imageLabel.setIcon(WARNING_IMAGE);
-                imageLabel.setToolTipText("Warning");
                 break;
             }
             case QUESTION_MESSAGE: {
                 imageLabel.setIcon(QUESTION_IMAGE);
-                imageLabel.setToolTipText("Question");
                 break;
             }
             case PLAIN_MESSAGE:
             default: {
                 imageLabel.setIcon(null);
-                imageLabel.setToolTipText(null);
             }
         }
 

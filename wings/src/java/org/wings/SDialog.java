@@ -49,7 +49,7 @@ public class SDialog extends SWindow {
 
     protected boolean modal = false;
 
-    protected boolean draggable;
+    protected boolean draggable = true;
 
     private boolean closable = true;
     private boolean closed = false;

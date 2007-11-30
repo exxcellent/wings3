@@ -143,3 +143,41 @@ TABLE.formbutton_hover {
 .DivisionTitle {
     width: 100%;
 }
+
+/* --- YUI-CONTAINER (DIALOGS AND OPTIONPANES) ----------------------------- */
+
+.yui-skin-sam .yui-panel .hd {
+	height:25px !important;
+}
+
+/* --- YUI-CALENDAR -------------------------------------------------------- */
+
+.yui-skin-sam .yui-calcontainer {
+	width: 133px !important;
+}
+
+.yui-skin-sam .yui-calcontainer .title {
+	height:25px !important;
+}
+
+.yui-skin-sam .yui-calendar .calheader .calnavleftYear {
+	left:0px !important;
+}
+
+.yui-skin-sam .yui-calendar .calheader .calnavleft {
+	left:23px !important;
+}
+
+.yui-skin-sam .yui-calendar .calheader .calnavclearDate {
+	left:54px !important;
+}
+
+.yui-skin-sam .yui-calendar .calheader .calnavright {
+	right:23px !important
+}
+
+.yui-skin-sam .yui-calendar .calheader .calnavrightYear {
+	right:0px !important;
+}
+
+/* ------------------------------------------------------------------------- */

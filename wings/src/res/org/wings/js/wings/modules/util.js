@@ -284,10 +284,6 @@ wingS.util.setCookie = function(name, value, days, path) {
             + (path ? 'path=' + path : '');
 };
 
-wingS.util.checkUserAgent = function(string) {
-    return navigator.userAgent.toLowerCase().indexOf(string) + 1;
-};
-
 wingS.util.handleBodyClick = function(event) {
     if (window.wpm_handleBodyClicks != undefined) {
         wpm_handleBodyClicks(event);
@@ -369,13 +365,3 @@ wingS.util.printAllFields = function(obj) {
     }
 };
 
-// firebug API support for safari
-if (wingS.util.checkUserAgent('safari')) {
-    var wc = window.console;
-    if (wc) {
-        wc.debug = wc.log;
-        wc.info = wc.log
-        wc.warn = wc.log;
-        wc.error = wc.log;
-    }
-}

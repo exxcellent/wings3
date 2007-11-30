@@ -155,6 +155,8 @@ public class SFrame
         autoAdjustLayout.put("enabled", true);
         autoAdjustLayout.put("delay", 250);
         setAutoAdjustLayout(autoAdjustLayout);
+        
+        addStyle("yui-skin-sam");
     }
 
     /**

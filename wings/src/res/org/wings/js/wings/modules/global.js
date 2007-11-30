@@ -192,6 +192,36 @@ wingS.global.dequeueNextHeader = function() {
 };
 
 /**
+ * Enables client debugging at a certain level
+ */
+wingS.global.setClientDebug = function(loglevel) {
+   if (loglevel === undefined || loglevel === null || loglevel === "") {
+       loglevel = "off";
+   }
+   
+   wingS.util.setCookie("DEBUG", "javascript;loglevel="+loglevel,365,"/");
+  
+   window.location.reload();
+};
+
+
+//**************************************************************************************************
+
+
+/**
+ * Enables Firebug API support for Safari
+ */
+if (YAHOO.env.ua.webkit) {
+    var wc = window.console;
+    if (wc) {
+        wc.debug = wc.log;
+        wc.info = wc.log
+        wc.warn = wc.log;
+        wc.error = wc.log;
+    }
+}
+
+/**
  * Moves the execution context of the function used upon to the given object. Useful when using
  * setTimeout or event handling, e.g.: setTimeout(func1.bind(someObject), 1); The function func1
  * will be called within the context of someObject. NB: Function object is extended by bind()!
@@ -205,14 +235,4 @@ Function.prototype.bind = function(obj) {
     };
 
     return temp;
-};
-
-wingS.global.setClientDebug = function(loglevel) {
-   if (loglevel === undefined || loglevel === null || loglevel === "") {
-       loglevel = "off";
-   }
-   
-   wingS.util.setCookie("DEBUG", "javascript;loglevel="+loglevel,365,"/");
-  
-   window.location.reload();
 };

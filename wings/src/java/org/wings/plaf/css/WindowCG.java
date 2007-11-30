@@ -14,10 +14,8 @@ package org.wings.plaf.css;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wings.SComponent;
 import org.wings.SWindow;
 import org.wings.header.Header;
-import org.wings.header.SessionHeaders;
 import org.wings.io.StringBuilderDevice;
 import org.wings.plaf.Update;
 
@@ -38,20 +36,6 @@ public class WindowCG extends FormCG implements org.wings.plaf.WindowCG {
     private final static Log log = LogFactory.getLog(WindowCG.class);
 
     protected final List<Header> headers = new ArrayList<Header>();
-
-    public WindowCG() {
-        headers.add(Utils.createExternalizedCSSHeader("org/wings/js/yui/container/assets/container.css"));
-    }
-
-    public void installCG(SComponent component) {
-        SessionHeaders.getInstance().registerHeaders(headers);
-        super.installCG(component);
-    }
-
-    public void uninstallCG(SComponent component) {
-        super.uninstallCG(component);
-        SessionHeaders.getInstance().deregisterHeaders(headers);
-    }
 
     public Update getWindowAddedUpdate(final SWindow window) {
         return new WindowAddedUpdate(window);

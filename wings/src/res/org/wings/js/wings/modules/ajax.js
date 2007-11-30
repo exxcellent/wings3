@@ -242,7 +242,7 @@ wingS.ajax.ActivityCursor.prototype.followMouse = function(event) {
         posX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
         posY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
     }
-    if (target.nodeName == "OPTION" && !wingS.util.checkUserAgent('msie')) {
+    if (target.nodeName == "OPTION" && !YAHOO.env.ua.ie) {
         posX += wingS.util.absLeft(target);
         posY += wingS.util.absTop(target.parentNode) + 18;
     }

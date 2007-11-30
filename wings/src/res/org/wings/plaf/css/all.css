@@ -412,7 +412,6 @@ ul.SMenu li.SMenu_Disabled a.y, ul.SMenu li.SMenu_Disabled a.y:visited, ul.SMenu
 
 .SPanel {
     border-collapse: collapse;
-    border-collapse: collapse;
 }
 
 .STable {
@@ -613,17 +612,6 @@ table.XPageScroller table.pages td:hover {
     overflow-y: hidden;
 }
 
-
-
-
-
-
-
-
-
-
-
-
 /* ----------- SINTERNAL FRAME ----------- */
 
 .SInternalFrame {
@@ -656,53 +644,6 @@ table.XPageScroller table.pages td:hover {
     padding: .2em;
 }
 
-
-/* ----------- SOPTIONPANE AND SDIALOG ----------- */
-
-/*
-.SOptionPane,
-.SDialog {
-    border: 1px solid #a6a6a6;
-    border-bottom-width: 2px;
-    border-right-width: 2px;
-}
-
-form.SOptionPane,
-form.SDialog {
-    border: none;
-}
-
-.SOptionPane div.WindowBar,
-.SDialog div.WindowBar {
-    padding:.2em;
-    background-color: #1f1faa;
-    border-bottom: 1px solid #a6a6a6;
-}
-
-.SOptionPane div.WindowBar div.WindowBar_title,
-.SDialog div.WindowBar div.WindowBar_title {
-    color: #ffffff;
-    font-weight: bold;
-}
-
-.SOptionPane div.WindowBar a.WindowButton,
-.SDialog div.WindowBar a.WindowButton {
-    float: right;
-}
-
-.SOptionPane div.WindowBar a.DeiconifyButton,
-.SDialog div.WindowBar a.DeiconifyButton {
-    display: inline;
-}
-
-.SOptionPane div.WindowContent,
-.SDialog div.WindowContent {
-    padding: .8em;
-    background-color: #e6e6e6;
-}
-*/
-
-
 table.SProgressBar {
     border-spacing: 0;
     border-collapse: collapse;
@@ -716,8 +657,6 @@ table.SProgressBar tr.text td {
     text-align: center;
     padding: 0px;
 }
-
-
 
 .SSeparator {
     height: 0px; /* evtl. 2px für IE */
@@ -764,7 +703,7 @@ table.DivisionContent {
     background-color: gray;
 }
 
-/* ----------- SWINDOWSPANE ----------- */
+/* --- SWINDOWPANE --------------------------------------------------------- */
 
 .SWindowsPane {
     border-collapse:collapse;
@@ -773,7 +712,7 @@ table.DivisionContent {
     display:block;
 }
 
-/* ----------- DEBUG CONSOLE ---------- */
+/* --- DEBUGCONSOLE -------------------------------------------------------- */
 
 #ajaxDebugView {
 	  width: 100%;
@@ -811,3 +750,95 @@ table.DivisionContent {
 	  background-color: #ffffff;
 	  border-bottom: 1px dashed #000000;
 }
+
+/* --- YUI-CONTAINER (DIALOGS AND OPTIONPANES) ----------------------------- */
+
+.yui-skin-sam .mask {
+    -moz-opacity:0.1;
+    background-color:#000000;
+    filter:alpha(opacity=10);
+}
+
+.yui-skin-sam .yui-panel .hd {
+    border-bottom-color:#808080 !important;
+	font-size:93% !important;
+	height:26px !important;
+    padding:0 10px !important;
+    line-height:25px !important;
+}
+
+.SOptionPaneImage img {
+    margin-right:10px;
+}
+
+.SOptionPaneButtons .SButton_form {
+    margin-left:5px;
+    margin-top:20px;
+}
+
+/* --- YUI-CALENDAR -------------------------------------------------------- */
+
+.yui-skin-sam .yui-calcontainer {
+	width: 153px !important;
+}
+
+.yui-skin-sam .yui-calcontainer .title {
+    border-bottom-color:#808080 !important;
+	font-size:93% !important;
+	height:26px !important;
+    padding:0 10px !important;
+    line-height:25px !important;
+}
+
+.yui-skin-sam .yui-calcontainer .calclose {
+	right:10px !important;
+}
+
+.yui-skin-sam .yui-calendar {
+    font-size:7pt !important;
+    width: 100%!important;
+}
+
+.yui-skin-sam .yui-calendar .calheader {
+	height:15px !important;
+	padding:0 !important;
+}
+
+.yui-skin-sam .yui-calendar .calheader .calnavleftYear,
+.yui-skin-sam .yui-calendar .calheader .calnavleft,
+.yui-skin-sam .yui-calendar .calheader .calnavclearDate,
+.yui-skin-sam .yui-calendar .calheader .calnavright,
+.yui-skin-sam .yui-calendar .calheader .calnavrightYear {
+	bottom:0 !important;
+	cursor:pointer !important;
+	height:15px !important;
+	position:absolute !important;
+	top:0 !important;
+	width:25px !important;	
+	z-index:1 !important;
+}
+
+.yui-skin-sam .yui-calendar .calheader .calnavleftYear {
+	background:url("../../../../-org/wingx/calendar/cally.gif") no-repeat !important;
+	left:-1px !important;
+}
+
+.yui-skin-sam .yui-calendar .calheader .calnavleft {
+	left:22px !important;
+}
+
+.yui-skin-sam .yui-calendar .calheader .calnavclearDate {
+	background:url("../../../../-org/wingx/calendar/calcd.gif") no-repeat !important;
+	left:53px !important;
+}
+
+.yui-skin-sam .yui-calendar .calheader .calnavright {
+	right:23px !important
+}
+
+.yui-skin-sam .yui-calendar .calheader .calnavrightYear {
+	background:url("../../../../-org/wingx/calendar/calry.gif") no-repeat !important;
+	right:0px !important;
+}
+
+/* ------------------------------------------------------------------------- */

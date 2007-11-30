@@ -3,14 +3,6 @@
    typical js namespace clutter.
 */
 
-var wu_dom = document.getElementById?1:0;
-var wu_ns4 = (document.layers && !wu_dom)?1:0;
-var wu_ns6 = (wu_dom && !document.all)?1:0;
-var wu_ie5 = (wu_dom && document.all)?1:0;
-var wu_konqueror = wingS.util.checkUserAgent('konqueror')?1:0;
-var wu_opera = wingS.util.checkUserAgent('opera')?1:0;
-var wu_safari = wingS.util.checkUserAgent('safari')?1:0;
-
 var wpm_menuOpen = 0;
 // is a menu open
 var wpm_activeMenu;
@@ -47,7 +39,7 @@ function wpm_point(x, y) {
 
 function wpm_getCoordinates(event) {
     var coord;
-    if (wu_ie5) {
+    if (YAHOO.env.ua.ie) {
         coord = new wpm_point(event.x, event.y);
     }
     else {
@@ -58,7 +50,7 @@ function wpm_getCoordinates(event) {
 
 function wpm_getMenuPosition(event) {
     var el;
-    if (wu_ie5) {
+    if (YAHOO.env.ua.ie) {
         el = event.srcElement;
     }
     else {
@@ -169,7 +161,7 @@ function wpm_menuPopup(event, menu) {
     var coord = wpm_getCoordinates(event);
     if (!wpm_isValidEvent(coord)) return false;
     if (event.type == 'mousedown') {
-        if (wu_konqueror || wu_opera || wu_safari) {
+        if (YAHOO.env.ua.opera || YAHOO.env.ua.webkit) {
             if (event.ctrlKey && (event.button == 2)) {
                 // ctrl right click
                 wpm_hideActiveMenu();
@@ -314,7 +306,7 @@ function wpm_closeMenu(event, id, parentId) {
 }
 
 function wpm_toggleFormElements(elementBounds) {
-    if (wu_ie5) {
+    if (YAHOO.env.ua.ie) {
         var selects = document.getElementsByTagName('select');
         if (!elementBounds) {
             for (var i = 0; i < selects.length; i++) {
@@ -340,7 +332,7 @@ function wpm_toggleFormElements(elementBounds) {
             // rof
         }
         // fi !elementBounds
-    }  // fi wu_ie5
+    }
 }
 
 function wpm_Bounds(object) {
