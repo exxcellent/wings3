@@ -32,7 +32,6 @@ public class XCalendarExample extends WingSetPane {
         final DateFormat nullableDateFormat = new NullableDateFormatter();
         panel.add(new SLabel("Calendar: ", SConstants.RIGHT_ALIGN));
         final XCalendar nullablXCalendar = new XCalendar(new SDateFormatter(nullableDateFormat));
-        nullablXCalendar.setPreferredSize(SDimension.FULLWIDTH);
         nullablXCalendar.setNullable(true);
         nullablXCalendar.setDate(null);
         panel.add(nullablXCalendar);
