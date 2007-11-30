@@ -689,16 +689,6 @@ table.DivisionContent {
     width: 100%;
 }
 
-.XCalendarButton {
-    margin-left: 2px;
-    cursor: pointer;
-}
-
-.XCalendarClearButton {
-    margin-left: 2px;
-    cursor: pointer;
-}
-
 .splitter {
     background-color: gray;
 }
@@ -776,7 +766,7 @@ table.DivisionContent {
     margin-top:20px;
 }
 
-/* --- YUI-CALENDAR -------------------------------------------------------- */
+/* --- YUI-CALENDAR (XCALENDAR) -------------------------------------------- */
 
 .yui-skin-sam .yui-calcontainer {
 	width: 153px !important;
@@ -839,6 +829,10 @@ table.DivisionContent {
 .yui-skin-sam .yui-calendar .calheader .calnavrightYear {
 	background:url("../../../../-org/wingx/calendar/calry.gif") no-repeat !important;
 	right:0px !important;
+}
+
+.XCalendar .b img {
+    cursor: pointer;
 }
 
 /* ------------------------------------------------------------------------- */
