@@ -23,24 +23,30 @@ YAHOO.widget.XCalendar.prototype.showCalendar = function() {
     }
     this.render();
     this.show();
-
-    var pos = YAHOO.util.Dom.getXY( "r"+this.calId )
+    
     var cal = document.getElementById(this.calId);
-    cal.style.left = pos[0] + "px";
-    cal.style.top = pos[1] + "px";
-
-    var regionCalendar = new YAHOO.util.Region(pos[1], pos[0] + cal.offsetWidth, pos[1] + cal.offsetHeight, pos[0]);
-    var viewportWidth  = YAHOO.util.Dom.getViewportWidth();
-    var viewportHeight = YAHOO.util.Dom.getViewportHeight();
-
-    var overlabRight = regionCalendar.right - ( viewportWidth + YAHOO.util.Dom.getDocumentScrollLeft() );
-    if ( overlabRight > 0 ) {
-        cal.style.left = (regionCalendar.left - ( overlabRight + 8 ) ) + "px";
-    }
-    var overlabBottom = regionCalendar.bottom - ( viewportHeight + YAHOO.util.Dom.getDocumentScrollTop() );
-    if ( overlabBottom > 0 ) {
-        cal.style.top = (regionCalendar.top - ( overlabBottom + 8 ) ) + "px";
-    }
+    if (!YAHOO.env.ua.ie || YAHOO.env.ua.ie > 6) {
+	    var pos = YAHOO.util.Dom.getXY( "r"+this.calId )
+	    cal.style.left = pos[0] + "px";
+	    cal.style.top = pos[1] + "px";
+	
+	    var regionCalendar = new YAHOO.util.Region(pos[1], pos[0] + cal.offsetWidth, pos[1] + cal.offsetHeight, pos[0]);
+	    var viewportWidth  = YAHOO.util.Dom.getViewportWidth();
+	    var viewportHeight = YAHOO.util.Dom.getViewportHeight();
+	
+	    var overlabRight = regionCalendar.right - ( viewportWidth + YAHOO.util.Dom.getDocumentScrollLeft() );
+	    if ( overlabRight > 0 ) {
+	        cal.style.left = (regionCalendar.left - ( overlabRight + 8 ) ) + "px";
+	    }
+	    var overlabBottom = regionCalendar.bottom - ( viewportHeight + YAHOO.util.Dom.getDocumentScrollTop() );
+	    if ( overlabBottom > 0 ) {
+	        cal.style.top = (regionCalendar.top - ( overlabBottom + 8 ) ) + "px";
+	    }
+	} else {
+		cal.style.left = "0px";
+	    cal.style.top = "0px";
+	    cal.parentNode.style.position = "relative";
+	}
 }
 
 YAHOO.widget.XCalendar.prototype.handleSelect = function(type,args,obj) {

@@ -114,7 +114,7 @@ public class CalendarCG extends AbstractComponentCG implements org.wingx.plaf.Ca
         device.print("<div style=\"display:inline;position:absolute;\" id=\"r").print(id_cal)
               .print("\"></div>");
 
-        device.print("<img class=\"XCalendarButton\" id=\"").print(id_button)
+        device.print("<img id=\"").print(id_button)
               .print("\" src=\"").print( component.getEditIcon().getURL() )
               .print("\" />\n");
         
