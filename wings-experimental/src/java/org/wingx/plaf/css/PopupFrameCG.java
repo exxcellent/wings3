@@ -15,7 +15,6 @@ package org.wingx.plaf.css;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import org.wings.SComponent;
 import org.wings.event.SParentFrameEvent;
@@ -39,7 +38,6 @@ public class PopupFrameCG extends AbstractComponentCG implements org.wingx.plaf.
     protected final List headers = new ArrayList();
 
     public PopupFrameCG() {
-        headers.add(Utils.createExternalizedCSSHeader("org/wings/js/yui/container/assets/container.css")); // TODO
         headers.add(Utils.createExternalizedJSHeader("org/wingx/popupframe/popupframe.js"));
     }
 
