@@ -1,6 +1,5 @@
 package wingscms;
 
-import org.wings.CmsFrame;
 import org.wingx.XTable;
 import org.wingx.table.EditableTableCellRenderer;
 import org.wings.*;
@@ -26,7 +25,7 @@ import java.awt.*;
  */
 public class JoomlaExample {
 
-    private CmsFrame rootFrame = new CmsFrame();
+    private SFrame rootFrame = new SFrame();
 
     public JoomlaExample() {
         // Shoppingcart contents (Key = product index in PLCONTENT, Value = amount)
