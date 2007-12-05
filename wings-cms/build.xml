@@ -10,6 +10,9 @@
         <fileset dir="../wings/build/web/WEB-INF/lib">
             <include name="*.jar"/>
         </fileset>
+        <fileset dir="../wingx/build/web/WEB-INF/lib">
+            <include name="*.jar"/>
+        </fileset>
         <fileset dir="lib">
             <include name="*.jar"/>
         </fileset>
@@ -35,7 +38,7 @@
     <target name="build" depends="compile" description="builds all wings-wingscms artefacts">
         <mkdir dir="build/web/WEB-INF/lib"/>
         <jar jarfile="build/web/WEB-INF/lib/wings-wingscms.jar">
-            <fileset dir="build/class" />
+            <fileset dir="build/class"/>
             <fileset dir="src/res" />
         </jar>
     </target>
