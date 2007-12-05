@@ -1,15 +1,6 @@
 package wingscms;
 
-import java.util.*;
-import java.awt.event.*;
-import javax.swing.table.DefaultTableModel;
-
 import org.wings.*;
-import org.wings.session.*;
-
-import java.awt.Color;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
 
 /**
  * Wiki integration example
@@ -268,7 +259,7 @@ public class WikiIntegration {
 ////                    templateString = contentMap.get(url);
 ////                } else {
 ////                    templateString = method.getResponseBodyAsString();
-////                    templateString = process(templateString);
+////                    templateString = processDocument(templateString);
 ////
 ////                    // Add template to cache
 ////                    contentMap.put(url, templateString);
@@ -287,7 +278,7 @@ public class WikiIntegration {
 ////            }
 ////        }
 //
-////        private String process(String templateString) {
+////        private String processDocument(String templateString) {
 ////            String path = getPath();
 ////
 ////            Source source = new Source(templateString);

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <cms-detail adapter="org.wings.adapter.JoomlaAdapter">
+    <cms-detail adapter="org.wings.adapter.Joomla10Adapter">
         <protocol>http</protocol>
         <server>localhost</server>
         <port>80</port>
-        <base-path>joomla-1-5</base-path>
+        <base-path>joomla10</base-path>
     </cms-detail>
 
     <template-detail processor="org.wings.macro.MacroProcessor">
