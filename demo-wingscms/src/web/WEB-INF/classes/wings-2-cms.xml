@@ -3,9 +3,9 @@
 
     <cms-detail adapter="org.wings.adapter.Joomla10Adapter">
         <protocol>http</protocol>
-        <server>localhost</server>
+        <server>www.wingsframework.org</server>
         <port>80</port>
-        <base-path>joomla10</base-path>
+        <base-path>joomla</base-path>
     </cms-detail>
 
     <template-detail processor="org.wings.macro.MacroProcessor">
