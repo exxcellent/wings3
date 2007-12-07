@@ -48,7 +48,7 @@ public class SFlowLayout
     
     /**
      * Creates a new <code>SFlowLayout</code> with horizontal orientation,
-     * center alignment and a default 0-unit horizontal and vertical gap.
+     * center alignment and a default 5-unit horizontal and vertical gap.
      */
     public SFlowLayout() {
         this( SConstants.CENTER_ALIGN );
@@ -56,13 +56,12 @@ public class SFlowLayout
 
     /**
      * Creates a new <code>SFlowLayout</code> with horizonal orientation and the 
-     * given alignment and a default 0-unit horizontal and vertical gap.
+     * given alignment and a default 5-unit horizontal and vertical gap.
      *
      * @param alignment the alignment
      */
     public SFlowLayout(int alignment) {
-        this( alignment, 0, 0 );
-        // Swing's default gap is 5 units. However, 0 units seem to be more practical for webapps.
+        this( alignment, 5, 5 );
     }
     
     /**
