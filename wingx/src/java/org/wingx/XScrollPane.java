@@ -1,12 +1,13 @@
 package org.wingx;
 
-import java.awt.event.*;
+import org.wings.*;
+import org.wingx.table.TruncatableModel;
+
+import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.*;
 import java.text.MessageFormat;
 import java.util.*;
-import java.util.List;
-
-import org.wings.*;
 
 
 /**
@@ -224,12 +225,14 @@ public class XScrollPane extends SScrollPane {
 
         String text;
         if (endRow > 0) {
-            int rowCount = tableComponent.getModel().getRowCount();
-            text = MessageFormat.format(visibleSectionLabel, new Object[] {Integer.valueOf(startRow + 1), Integer.valueOf(endRow), Integer.valueOf(rowCount)});
+            TableModel tableModel = tableComponent.getModel();
+            int rowCount = tableModel.getRowCount();
+            text = MessageFormat.format(visibleSectionLabel, startRow + 1, endRow, rowCount);
 
-            boolean moreRecordsAvailable = endRow >= 100;
-            if (moreRecordsAvailable)
-                text += "  (+)";
+            if (tableModel instanceof TruncatableModel) {
+                if (((TruncatableModel)tableModel).isTruncated())
+                    text += "  (+)";
+            }
         }
         else {
             text = null;

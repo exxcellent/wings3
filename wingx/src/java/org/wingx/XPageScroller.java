@@ -22,7 +22,6 @@ public class XPageScroller
         setBorder(border);
         setPreferredSize(SDimension.FULLWIDTH);
 
-        c.insets = new Insets(2, 5, 0, 5);
         c.anchor = GridBagConstraints.EAST;
         add(pageScroller);
 
@@ -34,6 +33,7 @@ public class XPageScroller
 
     public SComponent add(SComponent component) {
         c.weightx = 0d;
+        component.setVerticalAlignment(SConstants.CENTER_ALIGN);
         return super.addComponent(component, c);
     }
 

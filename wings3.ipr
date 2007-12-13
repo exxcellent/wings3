@@ -558,7 +558,6 @@
       <module fileurl="file://$PROJECT_DIR$/demo-wingset/demo-wingscms.iml" filepath="$PROJECT_DIR$/demo-wingset/demo-wingscms.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo-wingset/demo-wingset.iml" filepath="$PROJECT_DIR$/demo-wingset/demo-wingset.iml" />
       <module fileurl="file://$PROJECT_DIR$/global.iml" filepath="$PROJECT_DIR$/global.iml" />
-      <module fileurl="file://$PROJECT_DIR$/servlet-preferences/servlet-prefs.iml" filepath="$PROJECT_DIR$/servlet-preferences/servlet-prefs.iml" />
       <module fileurl="file://$PROJECT_DIR$/wings/wings.iml" filepath="$PROJECT_DIR$/wings/wings.iml" />
       <module fileurl="file://$PROJECT_DIR$/wings-cms/wings-cms.iml" filepath="$PROJECT_DIR$/wings-cms/wings-cms.iml" />
       <module fileurl="file://$PROJECT_DIR$/wings-experimental/wings-experimental.iml" filepath="$PROJECT_DIR$/wings-experimental/wings-experimental.iml" />

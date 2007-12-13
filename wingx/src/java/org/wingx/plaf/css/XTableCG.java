@@ -318,30 +318,7 @@ public class XTableCG
     }
 
     private boolean isModelFiltered(TableModel model) {
-        if (model instanceof FilterableTableModel) {
-            FilterableTableModel filterableModel = (FilterableTableModel) model;
-            for (int i = 0; i < filterableModel.getColumnCount(); ++i) {
-                if (isModelFiltered(filterableModel.getFilter(i)))
-                    return true;
-            }
-        }
-        return false;
-    }
-    
-    private boolean isModelFiltered(Object filter) {
-        if (filter == null)
-            return false;
-        if (filter instanceof String && ((String) filter).trim().equals(""))
-            return false;
-        if (filter instanceof Object[]) {
-            Object[] filterArray = (Object[]) filter;
-            for (Object f : filterArray) {
-                if (isModelFiltered(f))
-                    return true;
-            }
-            return false;
-        }
-        return true;
+        return model instanceof FilterableTableModel;
     }
 
     private void writeTableAttributes(Device device, XTable table) throws IOException {

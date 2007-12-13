@@ -571,16 +571,22 @@ table.SPageScroller table.pages td {
     cursor: pointer;
 }
 
-table.SPageScroller table.pages td:hover {
+table.SPageScroller table.pages td:hover, table.SPageScroller table.buttons td:hover {
     background-color: #ECECEC;
 }
 
-table.SPageScroller table.buttons td:hover {
-    border: 1px outset #cccccc;
+/*table.SPageScroller table.buttons td:hover {
+    border: none;
+}*/
+
+table.XPageScroller td {
+    padding-left: 4px;
+    padding-right: 4px;
 }
 
 table.XPageScroller table.buttons td {
     cursor: pointer;
+    border: none;
 }
 
 table.XPageScroller table.pages td {

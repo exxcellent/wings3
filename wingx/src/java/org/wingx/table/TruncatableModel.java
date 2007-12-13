@@ -2,8 +2,8 @@ package org.wingx.table;
 
 import javax.swing.table.TableModel;
 
-public interface RefreshableModel
+public interface TruncatableModel
     extends TableModel
 {
-    void refresh();
+    boolean isTruncated();
 }
