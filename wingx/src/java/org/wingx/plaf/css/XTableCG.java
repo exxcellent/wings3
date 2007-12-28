@@ -300,7 +300,7 @@ public class XTableCG
         writeColumnWidths(device, table, startX, endX);
         writeHeader(device, table, startX, endX);
         
-        if (filtered)
+        if (!empty || filtered)
             writeFilter(device, table, startX, endX);
 
         device.print("</thead>");
