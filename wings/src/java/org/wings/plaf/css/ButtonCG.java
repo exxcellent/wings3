@@ -15,7 +15,6 @@ package org.wings.plaf.css;
 
 import org.wings.*;
 import org.wings.plaf.Update;
-import org.wings.plaf.css.PaddingVoodoo;
 import org.wings.util.SStringBuilder;
 import org.wings.io.Device;
 
@@ -45,7 +44,7 @@ public class ButtonCG extends AbstractLabelCG implements org.wings.plaf.ButtonCG
             device.print("><tr><td");
             PaddingVoodoo.doSimpleTablePaddingWorkaround(device, button);
             device.print(">");
-            writeText(device, text, false);
+            writeText(device, text, button.isWordWrap());
             device.print("</td></tr></table>");
         }
         else if (text == null) {
@@ -60,7 +59,7 @@ public class ButtonCG extends AbstractLabelCG implements org.wings.plaf.ButtonCG
         else {
             new IconTextCompound() {
                 protected void text(Device d) throws IOException {
-                    writeText(d, ftext, false);
+                    writeText(d, ftext, button.isWordWrap());
                 }
 
                 protected void icon(Device d) throws IOException {
