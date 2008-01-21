@@ -615,7 +615,6 @@ public class XTableCG
     public Update getRenderCellUpdate(STable table, int row, int column) {
         return new RenderCellUpdate((XTable)table, row, column);
     }
-
     protected class TableScrollUpdate
         extends AbstractUpdate {
 
@@ -700,6 +699,12 @@ public class XTableCG
             column = columnInView(table, column);
             column = isSelectionColumnVisible(table) ? column + 1 : column;
 
+            Rectangle currentViewport = table.getViewportSize();
+            if (currentViewport != null) {
+                row -= currentViewport.y;
+                column -= currentViewport.x;
+            }
+
             UpdateHandler handler = new UpdateHandler("tableCell");
             handler.addParameter(table.getName());
             handler.addParameter(row);
@@ -750,6 +755,12 @@ public class XTableCG
             row = table.isFilterVisible() ? this.row + 1 : this.row;
             column = columnInView(table, column);
             column = isSelectionColumnVisible(table) ? column + 1 : column;
+
+            Rectangle currentViewport = table.getViewportSize();
+            if (currentViewport != null) {
+                row -= currentViewport.y;
+                column -= currentViewport.x;
+            }
 
             UpdateHandler handler = new UpdateHandler("tableCell");
             handler.addParameter(table.getName());

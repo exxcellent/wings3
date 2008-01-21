@@ -544,6 +544,12 @@ public final class TableCG
             column = columnInView(table, column);
             column = isSelectionColumnVisible(table) ? column + 1 : column;
 
+            Rectangle currentViewport = table.getViewportSize();
+            if (currentViewport != null) {
+                row -= currentViewport.y;
+                column -= currentViewport.x;
+            }
+
             UpdateHandler handler = new UpdateHandler("tableCell");
             handler.addParameter(table.getName());
             handler.addParameter(row);
@@ -593,6 +599,12 @@ public final class TableCG
             row = table.isHeaderVisible() ? this.row + 1 : this.row;
             column = columnInView(table, column);
             column = isSelectionColumnVisible(table) ? column + 1 : column;
+
+            Rectangle currentViewport = table.getViewportSize();
+            if (currentViewport != null) {
+                row -= currentViewport.y;
+                column -= currentViewport.x;
+            }
 
             UpdateHandler handler = new UpdateHandler("tableCell");
             handler.addParameter(table.getName());
