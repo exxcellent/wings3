@@ -753,6 +753,7 @@ table.DivisionContent {
     -moz-opacity:0.1;
     background-color:#000000;
     filter:alpha(opacity=10);
+    overflow:hidden;
 }
 
 .yui-skin-sam .yui-panel .hd {
@@ -810,7 +811,7 @@ table.DivisionContent {
 	height:15px !important;
 	position:absolute !important;
 	top:0 !important;
-	width:25px !important;	
+	width:25px !important;
 	z-index:1 !important;
 }
 

@@ -155,7 +155,7 @@ public class SDialog extends SWindow {
         }
     }
 
-    
+
     public SIcon getIcon() {
         return icon;
     }
@@ -175,10 +175,10 @@ public class SDialog extends SWindow {
     public void setDraggable(boolean draggable) {
         this.draggable = draggable;
     }
-    
+
     public void hide() {
-        if ( owner != null ) {
-            update( ((FrameCG)getParentFrame().getCG()).getCloseDialogUpdate( getParentFrame(), this.getName() ) );
+        if (owner != null) {
+            update(((FrameCG) getParentFrame().getCG()).getCloseDialogUpdate(getParentFrame(), this.getName()));
         }
         super.hide();
     }

@@ -328,7 +328,7 @@ wingS.update.className = function(componentId, className, exception) {
 };
 
 /**
- * Hides the mask of the given Dialog
+ * Hides the mask of the given Dialog.
  * @param {String} componentId - the ID of the component
  * @param {String} dialogName - the name of the dialog
  * @param {String} exception - the server exception (optional)
@@ -336,16 +336,15 @@ wingS.update.className = function(componentId, className, exception) {
 wingS.update.closeDialog = function(componentId, dialogName, exception ) {
     // Exception handling
     if (exception != null) {
-        var update = "closeDialogUpdate for '" + componentId + "'";
+        var update = "CloseDialogUpdate for '" + componentId + "'";
         wingS.update.alertException(exception, update);
         return;
-    }    
-
-    var dialog = window[dialogName];
-    if ( dialog != null ) {
-        dialog.hideMask();
     }
 
+    var dialog = window["dialog_" + dialogName];
+    if (dialog != null) {
+        dialog.hideMask();
+    }
 };
 
 /**

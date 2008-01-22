@@ -95,7 +95,7 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Panel, {
     },
 
     center: function() {
-    	
+
     	// Workarounds for IE:
     	//  - avoid toggeling dialog width (e.g. while dragging) in IE 7
     	//  - resize to correct width regarding border-box-issues in IE 6/7

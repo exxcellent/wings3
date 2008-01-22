@@ -40,7 +40,7 @@ public class DialogCG extends WindowCG implements org.wings.plaf.DialogCG {
                 "</div>\n");
 
         StringBuilder sb = new StringBuilder();
-        sb.append("var _").append(name).append(" = new wingS.dialog.SDialog(\"").append(name).append("\"")
+        sb.append("var dialog_").append(name).append(" = new wingS.dialog.SDialog(\"").append(name).append("\"")
                 .append(", {")
                 .append("visible:").append(dialog.isVisible()).append(",")
                 .append("modal:").append(dialog.isModal()).append(",")
@@ -51,7 +51,7 @@ public class DialogCG extends WindowCG implements org.wings.plaf.DialogCG {
         if (!(owner instanceof SFrame))
             sb.append("viewportelement:\"").append(owner.getName()).append("\",");
 
-        sb.append("fixedcenter:true").append("}); _").append(name).append(".render();");
+        sb.append("fixedcenter:true").append("}); dialog_").append(name).append(".render();");
 
 // todo: use overlay manager if required to manage multiple dialogs. -> uncomment definition of overlay manager in FrameCG and InternalFrameCG
 //        sb.append(owner.getName() + "_overlay_manager.register(" + name + ");\n\n");

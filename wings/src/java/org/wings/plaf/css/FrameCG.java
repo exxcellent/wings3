@@ -84,14 +84,14 @@ public class FrameCG implements org.wings.plaf.FrameCG {
      * This has effects which rendering mode the browsers will choose (quirks/strict)
      */
     private Boolean renderXmlDeclaration = Boolean.FALSE;
-    
+
     private final List<Script> compressedHeaders = new ArrayList<Script>();
     private final Map<Script, Script> debugReplacementJsHeaders = new HashMap<Script, Script>();
     private final List<Script> debugAddonJsHeaders = new ArrayList<Script>();
     private final String[] firebugResources = new String[] {Utils.HTML_DEBUG_FIREBUGLITE, Utils.CSS_DEBUG_FIREBUGLITE, Utils.IMG_DEBUG_FIREBUGLITE_ERROR, Utils.IMG_DEBUG_FIREBUGLITE_WARN, Utils.IMG_DEBUG_FIREBUGLITE_INFO};
 
     private boolean debugJs = false;
-    
+
     // TODO: use Utils.JS_YUI_UTILITIES instead of Utils.JS_YUI_YAHOO_DOM_EVENT_DEBUG+X
     // as soon as connection-manager has been fixed --> probably with YUI version 2.3.2
     // JS_YUI_UTILITIES = aggregate: yahoo, dom, event, connection, animation, dragdrop
@@ -110,30 +110,30 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         compressedHeaders.add(yuiContainer);
         compressedHeaders.add(wingsAll);
         debugReplacementJsHeaders.put(
-                yuiYahooDomEvent, 
+                yuiYahooDomEvent,
                 Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_YAHOO_DOM_EVENT_DEBUG)
         );
         debugReplacementJsHeaders.put(
-                yuiConnection, 
+                yuiConnection,
                 Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONNECTION_DEBUG)
         );
         debugReplacementJsHeaders.put(
-                yuiAnimation, 
+                yuiAnimation,
                 Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_ANIMATION_DEBUG)
         );
         debugReplacementJsHeaders.put(
-                yuiDragDrop, 
+                yuiDragDrop,
                 Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DRAGDROP_DEBUG)
         );
         debugReplacementJsHeaders.put(
-                yuiContainer, 
+                yuiContainer,
                 Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONTAINER_DEBUG)
         );
         debugReplacementJsHeaders.put(
-                wingsAll, 
+                wingsAll,
                 Utils.createExternalizedJSHeaderFromProperty(Utils.JS_WINGS_ALL_DEBUG)
         );
-        
+
         debugAddonJsHeaders.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_DEBUG_FIREBUGLITE));
         // HTML, CSS and Images for firebuglite
         ExternalizeManager extMgr = SessionManager.getSession().getExternalizeManager();
@@ -159,18 +159,18 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         if (userRenderXmlDecl != null) {
             setRenderXmlDeclaration(userRenderXmlDecl);
         }
-        
+
         // Add CSS headers of YUI components which should be included in every frames by default
         // (DO use files under "yui/assets" and DO NOT use those under "yui/<component>/assets")
         headers.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_CONTAINER));
         // Common hack to externalize YUI's 'sprite.png' which contains most (if not all) images of the SAM skin
         new SResourceIcon((String) ResourceManager.getObject(Utils.IMG_YUI_ASSETS_SPRITE, String.class)).getId();
-        
+
         // Add DWR headers
         headers.add(new JavaScriptHeader("../dwr/engine.js"));
         headers.add(new JavaScriptHeader("../dwr/util.js"));
-        
-        // Common hack to externalize the ugly .htc-file for dealing with form buttons in IE 
+
+        // Common hack to externalize the ugly .htc-file for dealing with form buttons in IE
         new ClassPathResource("org/wings/plaf/css/formbutton.htc", "text/x-component").getId();
     }
 
@@ -535,13 +535,13 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         if (logLevel != null && !"".equals(logLevel)) {
             initConfig.put("loglevel", logLevel);
         }
-        
+
         out.print("wingS.global.init(");
         Utils.mapToJsObject(initConfig).write(out);
         out.print(");");
     }
-    
-    private void writeTooltipInitScript(Device out, SToolTipManager tooltipManager) throws IOException {        
+
+    private void writeTooltipInitScript(Device out, SToolTipManager tooltipManager) throws IOException {
         out.print("wingS.tooltip.init(");
         out.print(tooltipManager.getInitialDelay()).print(",");
         out.print(tooltipManager.getDismissDelay()).print(",");
@@ -812,7 +812,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         }
 
     }
-    
+
     public Update getCloseDialogUpdate(final SFrame container, String dialogName) {
         return new CloseDialogUpdate(container, dialogName);
     }
@@ -820,8 +820,8 @@ public class FrameCG implements org.wings.plaf.FrameCG {
     protected class CloseDialogUpdate extends AbstractUpdate {
 
         private String dialogName = null;
-        
-        public CloseDialogUpdate(final SContainer container, String dialogName ) {
+
+        public CloseDialogUpdate(final SContainer container, String dialogName) {
             super(container);
             this.dialogName = dialogName;
         }
