@@ -341,7 +341,7 @@ public class CmsFrameCG implements org.wings.plaf.FrameCG {
         while (tokenizer.hasMoreTokens()) {
             browserStylesheets.add(Utils.createExternalizedCSSHeader(tokenizer.nextToken()));
         }
-        
+
         return browserStylesheets;
 //        return new ArrayList<Header>();
     }
@@ -825,7 +825,7 @@ public class CmsFrameCG implements org.wings.plaf.FrameCG {
 
         private String dialogName = null;
 
-        public CloseDialogUpdate(final SContainer container, String dialogName ) {
+        public CloseDialogUpdate(final SContainer container, String dialogName) {
             super(container);
             this.dialogName = dialogName;
         }
