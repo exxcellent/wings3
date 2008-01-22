@@ -225,7 +225,7 @@ public final class Utils {
             d.print(" align=\"justify\"");
         }
     }
-    
+
     /**
      * HTML allows 4 values for the vertical align property of a div element.
      *
@@ -1314,6 +1314,7 @@ public final class Utils {
      * Lookup keys for wings resources
      */
     public static final String JS_WINGS_ALL= "JS.wingsAll";
+    public static final String JS_WINGS_ALL_DEBUG = "JS.wingsAllDebug";
 
     /**
      * Lookup keys for yui resources
@@ -1325,8 +1326,9 @@ public final class Utils {
     public static final String IMG_YUI_ASSETS_SPRITE = "IMG.yuiAssetsSprite";
     public static final String JS_YUI_AUTOCOMPLETE = "JS.yuiAutocomplete";
     // CSS: public static final String CSS_YUI_BASE = "CSS.yuiBase";
-    // Beta: public static final String JS_YUI_BUTTON = "JS.yuiButton";
+    public static final String JS_YUI_BUTTON = "JS.yuiButton";
     public static final String JS_YUI_CALENDAR = "JS.yuiCalendar";
+    // Experimental: public static final String JS_YUI_CHARTS = "JS.yuiCharts";
     // Beta: public static final String JS_YUI_COLORPICKER = "JS.yuiColorpicker";
     public static final String JS_YUI_CONNECTION = "JS.yuiConnection";
     public static final String JS_YUI_CONTAINER = "JS.yuiContainer";
@@ -1335,16 +1337,22 @@ public final class Utils {
     public static final String JS_YUI_DOM = "JS.yuiDom";
     public static final String JS_YUI_DRAGDROP = "JS.yuiDragdrop";
     // Beta: public static final String JS_YUI_EDITOR = "JS.yuiEditor";
+    // Beta: public static final String JS_YUI_EDITORSIMPLE = "JS.yuiEditorSimple";
     // Beta: public static final String JS_YUI_ELEMENT = "JS.yuiElement";
     public static final String JS_YUI_EVENT = "JS.yuiEvent";
     // CSS: public static final String CSS_YUI_FONTS = "CSS.yuiFonts";
+    // Beta: public static final String JS_YUI_GET = "JS.yuiGet";
     // CSS: public static final String CSS_YUI_GRIDS = "CSS.yuiGrids";
-    // Beta: public static final String JS_YUI_HISTORY = "JS.yuiHistory";
-    // Experimental: public static final String JS_YUI_IMAGELOADER = "JS.yuiImageloader";
+    public static final String JS_YUI_HISTORY = "JS.yuiHistory";
+    // Beta: public static final String JS_YUI_IMAGELOADER = "JS.yuiImageloader";
+    // Beta: public static final String JS_YUI_JSON = "JS.yuiJson";
     public static final String JS_YUI_LOGGER = "JS.yuiLogger";
     public static final String JS_YUI_MENU = "JS.yuiMenu";
+    // Beta: public static final String JS_YUI_PROFILER = "JS.yuiProfiler";
     // CSS: public static final String CSS_YUI_RESET = "CSS.yuiReset";
+    // CSS: public static final String CSS_YUI_RESET_FONTS = "CSS.yuiResetFonts";
     // CSS: public static final String CSS_YUI_RESET_FONTS_GRIDS = "CSS.yuiResetFontsGrids";
+    // Beta: public static final String JS_YUI_SELECTOR = "JS.yuiSelector";
     public static final String JS_YUI_SLIDER = "JS.yuiSlider";
     public static final String JS_YUI_TABVIEW = "JS.yuiTabview";
     public static final String JS_YUI_TREEVIEW = "JS.yuiTreeview";
@@ -1357,9 +1365,11 @@ public final class Utils {
     public static final String JS_YUI_ANIMATION_DEBUG = "JS.yuiAnimationDebug";
     public static final String JS_YUI_CONNECTION_DEBUG = "JS.yuiConnectionDebug";
     public static final String JS_YUI_CONTAINER_DEBUG = "JS.yuiContainerDebug";
+    public static final String JS_YUI_DOM_DEBUG = "JS.yuiDomDebug";
     public static final String JS_YUI_DRAGDROP_DEBUG = "JS.yuiDragdropDebug";
-    public static final String JS_YUI_YAHOO_DOM_EVENT_DEBUG = "JS.yuiYahooDomEventDebug";
-    public static final String JS_WINGS_ALL_DEBUG = "JS.wingsAllDebug";
+    public static final String JS_YUI_EVENT_DEBUG = "JS.yuiEventDebug";
+    public static final String JS_YUI_ELEMENT_DEBUG = "JS.yuiElementDebug";
+    public static final String JS_YUI_YAHOO_DEBUG = "JS.yuiYahooDebug";
 
     /**
      * Lookup keys for other resources

@@ -43,10 +43,13 @@ wingS.ajax.sendRequest = function(method, uri, postData) {
     	if (!responded) {
     		wingS.ajax.setActivityIndicatorsVisible(true);
     	}}, 500);
-  
+
     // Since some browsers cache GET requests via the XMLHttpRequest
     // object, an additional parameter called "_xhrID" will be added
-    // to the request URI with a unique numeric value.
+    // to the request URI with a unique numeric value. We could also
+    // add a property "cache : false" to the callbackProxy below and
+    // let YUI do this job. However, the additional parameter would
+    // then be named "rnd" which is more likely to conflict with ids.
     if (method.toUpperCase() == "GET") {
         uri += ((uri.indexOf("?")>-1) ? "&" : "?");
         uri += "_xhrID=" + new Date().getTime();
@@ -57,7 +60,7 @@ wingS.ajax.sendRequest = function(method, uri, postData) {
         failure : function(request) { responded = true; wingS.ajax.callbackObject.failure(request); },
         upload  : function(request) { responded = true; wingS.ajax.callbackObject.upload(request); }
     }
-        
+
     wingS.ajax.connectionObject =
         YAHOO.util.Connect.asyncRequest(method, uri, callbackProxy, postData);
 };
