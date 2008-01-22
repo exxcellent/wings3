@@ -12,34 +12,35 @@
  */
 package org.wings.plaf.css;
 
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wings.resource.*;
-import org.wings.plaf.CGManager;
 import org.wings.plaf.Update;
-import org.wings.plaf.css.script.OnPageRenderedScript;
-import org.wings.session.SessionManager;
-import org.wings.session.Session;
-import org.wings.session.ScriptManager;
-import org.wings.header.*;
 import org.wings.*;
-import org.wings.externalizer.ExternalizeManager;
-import org.wings.externalizer.AbstractExternalizeManager;
-import org.wings.dnd.DragAndDropManager;
-import org.wings.io.Device;
-import org.wings.io.StringBuilderDevice;
 import org.wings.event.SRequestListener;
 import org.wings.event.SRequestEvent;
-import org.wings.script.JavaScriptDOMListener;
-import org.wings.script.JavaScriptEvent;
-import org.wings.script.JavaScriptListener;
-import org.wings.script.ScriptListener;
+import org.wings.externalizer.AbstractExternalizeManager;
+import org.wings.externalizer.ExternalizeManager;
+import org.wings.dnd.DragAndDropManager;
+import org.wings.header.*;
+import org.wings.io.Device;
+import org.wings.io.StringBuilderDevice;
+import org.wings.plaf.CGManager;
+import org.wings.plaf.css.script.OnPageRenderedScript;
+import org.wings.resource.ClassPathResource;
+import org.wings.resource.ReloadResource;
+import org.wings.resource.ResourceManager;
+import org.wings.resource.UpdateResource;
+import org.wings.resource.ResourceNotFoundException;
+import org.wings.script.*;
+import org.wings.session.*;
 
 import javax.swing.*;
+
+import java.io.IOException;
 import java.util.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
-import java.io.IOException;
 
 /**
  * <code>CmsFrameCG<code>.
@@ -89,52 +90,47 @@ public class CmsFrameCG implements org.wings.plaf.FrameCG {
     private Boolean renderXmlDeclaration = Boolean.FALSE;
 
     private final List<Script> compressedHeaders = new ArrayList<Script>();
-    private final Map<Script, Script> debugReplacementJsHeaders = new HashMap<Script, Script>();
+    private final Map<Script, Script[]> debugReplacementJsHeaders = new HashMap<Script, Script[]>();
     private final List<Script> debugAddonJsHeaders = new ArrayList<Script>();
-    private final String[] firebugResources = new String[] {Utils.HTML_DEBUG_FIREBUGLITE, Utils.CSS_DEBUG_FIREBUGLITE, Utils.IMG_DEBUG_FIREBUGLITE_ERROR, Utils.IMG_DEBUG_FIREBUGLITE_WARN, Utils.IMG_DEBUG_FIREBUGLITE_INFO};
+    private final String[] firebugResources = new String[] {
+            Utils.HTML_DEBUG_FIREBUGLITE,
+            Utils.CSS_DEBUG_FIREBUGLITE,
+            Utils.IMG_DEBUG_FIREBUGLITE_ERROR,
+            Utils.IMG_DEBUG_FIREBUGLITE_WARN,
+            Utils.IMG_DEBUG_FIREBUGLITE_INFO
+    };
 
     private boolean debugJs = false;
 
-    // TODO: use Utils.JS_YUI_UTILITIES instead of Utils.JS_YUI_YAHOO_DOM_EVENT_DEBUG+X
-    // as soon as connection-manager has been fixed --> probably with YUI version 2.3.2
-    // JS_YUI_UTILITIES = aggregate: yahoo, dom, event, connection, animation, dragdrop
-    final Script yuiYahooDomEvent = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_YAHOO_DOM_EVENT);
-    final Script yuiConnection = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONNECTION);
-    final Script yuiAnimation = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_ANIMATION);
-    final Script yuiDragDrop = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DRAGDROP);
+    // JS_YUI_UTILITIES = aggregate: yahoo, dom, event, connection, animation, dragdrop, element
+    final Script yuiUtilities = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_UTILITIES);
     final Script yuiContainer = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONTAINER);
     final Script wingsAll = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_WINGS_ALL);
 
     {
-        compressedHeaders.add(yuiYahooDomEvent);
-        compressedHeaders.add(yuiConnection);
-        compressedHeaders.add(yuiAnimation);
-        compressedHeaders.add(yuiDragDrop);
+        compressedHeaders.add(yuiUtilities);
         compressedHeaders.add(yuiContainer);
         compressedHeaders.add(wingsAll);
         debugReplacementJsHeaders.put(
-                yuiYahooDomEvent,
-                Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_YAHOO_DOM_EVENT_DEBUG)
+                yuiUtilities, new Script[] {
+                    Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_YAHOO_DEBUG),
+                    Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DOM_DEBUG),
+                    Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_EVENT_DEBUG),
+                    Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONNECTION_DEBUG),
+                    Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_ANIMATION_DEBUG),
+                    Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DRAGDROP_DEBUG),
+                    Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_ELEMENT_DEBUG)
+                }
         );
         debugReplacementJsHeaders.put(
-                yuiConnection,
-                Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONNECTION_DEBUG)
+                yuiContainer, new Script[] {
+                    Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONTAINER_DEBUG)
+                }
         );
         debugReplacementJsHeaders.put(
-                yuiAnimation,
-                Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_ANIMATION_DEBUG)
-        );
-        debugReplacementJsHeaders.put(
-                yuiDragDrop,
-                Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DRAGDROP_DEBUG)
-        );
-        debugReplacementJsHeaders.put(
-                yuiContainer,
-                Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONTAINER_DEBUG)
-        );
-        debugReplacementJsHeaders.put(
-                wingsAll,
-                Utils.createExternalizedJSHeaderFromProperty(Utils.JS_WINGS_ALL_DEBUG)
+                wingsAll, new Script[] {
+                    Utils.createExternalizedJSHeaderFromProperty(Utils.JS_WINGS_ALL_DEBUG)
+                }
         );
 
         debugAddonJsHeaders.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_DEBUG_FIREBUGLITE));
@@ -343,7 +339,6 @@ public class CmsFrameCG implements org.wings.plaf.FrameCG {
         }
 
         return browserStylesheets;
-//        return new ArrayList<Header>();
     }
 
     /**
@@ -433,11 +428,21 @@ public class CmsFrameCG implements org.wings.plaf.FrameCG {
         }
         for (Object next : frame.getHeaders()) {
             if (next instanceof Renderable) {
-                if (isDebug) {
-                    next = getPotentialReplacementFor(next);
-                }
                 try {
-                    ((Renderable) next).write(device);
+                    if (isDebug && getDebugHeaders(next) != null) {
+                        // Render uncompressed headers
+                        Script[] debugHeaders = getDebugHeaders(next);
+                        for (Script debugHeader : debugHeaders) {
+                            if (debugHeader instanceof Renderable) {
+                                ((Renderable) debugHeader).write(device);
+                            } else {
+                                Utils.write(device, debugHeader.toString());
+                            }
+                        }
+                    } else {
+                        // Render compressed headers
+                        ((Renderable) next).write(device);
+                    }
                 } catch (ResourceNotFoundException e) {
                     log.error("Unable to deliver inlined renderable", e);
                 }
@@ -493,11 +498,11 @@ public class CmsFrameCG implements org.wings.plaf.FrameCG {
      * @param next
      * @return
      */
-    private Object getPotentialReplacementFor(Object next) {
+    private Script[] getDebugHeaders(Object next) {
         if (debugReplacementJsHeaders.containsKey(next)) {
             return debugReplacementJsHeaders.get(next);
         } else {
-            return next;
+            return null;
         }
     }
 
