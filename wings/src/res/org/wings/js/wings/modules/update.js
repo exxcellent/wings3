@@ -150,6 +150,9 @@ wingS.update.component = function(componentId, html, exception) {
 
     // Search DOM for according component
     var component = document.getElementById(componentId);
+    if (component == null) {
+        throw {message: "Could not find component with id '" + componentId + "'"};
+    }
 
     // Handle layout workaround for IE (if necessary)
     var wrapping = component.getAttribute("wrapping");
@@ -190,78 +193,6 @@ wingS.update.component = function(componentId, html, exception) {
         }
     }
 };
-
-/**
- * Removes the component with the given id.
- *
- * @param {String} componentId - The id of the component that will be removed.
- *
-wingS.update.remove = function(componentId) {
-    var element = document.getElementById(componentId);
-    element.parentNode.removeChild(element);
-}
-
-/**
- * Adds the html to the component with the given id as inner html.
- *
- * @param {String} parentId - the ID of the parent component
- * @param {String} childHtml - the new HTML code of the component
- * @param {String} exception - the server exception (optional)
- *
-wingS.update.addChildComponent = function(parentId, childHTML, exception) {
-    // Exception handling
-    if (exception != null) {
-        var update = "ComponentUpdate for '" + componentId + "'";
-        wingS.update.alertException(exception, update);
-        return;
-    }
-
-    // Search DOM for according component
-    var component = document.getElementById(componentId);
-
-    // Handle layout workaround for IE (if necessary)
-    var wrapping = component.getAttribute("wrapping");
-    if (wrapping != null && !isNaN(wrapping)) {
-        for (var i = 0; i < parseInt(wrapping); i++) {
-            component = component.parentNode;
-        }
-    }
-
-    if (typeof component.innerHTML != "undefined") {
-        // Use innerHTML if available
-        component.innerHTML = component.innerHTML + childHTML;
-    } else {
-        alert("Unexpected error!");
-        /*
-        var parent = component.parentNode;
-        if (parent == null) return;
-
-        var nrOfChildElements = 0;
-        for (var i = 0; i < parent.childNodes.length; i++) {
-            // We have to filter everything except element nodes
-            // since browsers treat whitespace nodes differently
-            if (parent.childNodes[i].nodeType == 1) {
-                nrOfChildElements++;
-            }
-        }
-
-        if (nrOfChildElements == 1) {
-            // If there is only one child it must be our component
-            parent.innerHTML = html;
-        } else {
-            var range;
-            // If there is no other way we have to use proprietary methods
-            if (document.createRange && (range = document.createRange()) &&
-                range.createContextualFragment) {
-                range.selectNode(component);
-                var newComponent = range.createContextualFragment(html);
-                parent.replaceChild(newComponent, component);
-            }
-        }
-        *
-    }
-};
-*/
 
 /**
  * Adds or replaces the HTML code of the menu with the given ID.
@@ -307,6 +238,64 @@ wingS.update.value = function(componentId, value, exception) {
 };
 
 /**
+ * Updates the text of the component with the given ID.
+ * @param {String} componentId - the ID of the component
+ * @param {String} text - the new text of the component
+ * @param {String} exception - the server exception (optional)
+ */
+wingS.update.text = function(componentId, text, exception) {
+    // Exception handling
+    if (exception != null) {
+        var update = "TextUpdate for '" + componentId + "'";
+        wingS.update.alertException(exception, update);
+        return;
+    }
+
+    var component = document.getElementById(componentId);
+    var textNode = component.getElementsByTagName("SPAN")[0];
+    textNode.parentNode.innerHTML = text;
+};
+
+/**
+ * Updates the icon of the component with the given ID.
+ * @param {String} componentId - the ID of the component
+ * @param {String} icon - the new icon of the component
+ * @param {String} exception - the server exception (optional)
+ */
+wingS.update.icon = function(componentId, icon, exception) {
+    // Exception handling
+    if (exception != null) {
+        var update = "IconUpdate for '" + componentId + "'";
+        wingS.update.alertException(exception, update);
+        return;
+    }
+
+    var component = document.getElementById(componentId);
+    var iconNode = component.getElementsByTagName("IMG")[0];
+    iconNode.parentNode.innerHTML = icon;
+};
+
+/**
+ * Updates the encoding of the form with the given ID.
+ * @param {String} formId - the ID of the form to update
+ * @param {int} encoding - the encoding to be set
+ */
+wingS.update.encoding = function(formId, encoding) {
+    var form = document.getElementById(formId);
+    form.enctype = encoding;
+};
+
+/**
+ * Updates the method of the form with the given ID.
+ * @param {String} formId - the ID of the form to update
+ * @param {int} method - the method to be set
+ */
+wingS.update.method = function(formId, method) {
+    var form = document.getElementById(formId);
+    form.method = method;
+};
+
+/**
  * Updates the class of the component with the given ID.
  * @param {String} componentId - the ID of the component
  * @param {String} value - the new class of the component
@@ -348,99 +337,50 @@ wingS.update.closeDialog = function(componentId, dialogName, exception ) {
 };
 
 /**
- * Updates the text of the component with the given ID.
- * @param {String} componentId - the ID of the component
- * @param {String} text - the new text of the component
- * @param {String} exception - the server exception (optional)
- */
-wingS.update.text = function(componentId, text, exception) {
-    // Exception handling
-    if (exception != null) {
-        var update = "TextUpdate for '" + componentId + "'";
-        wingS.update.alertException(exception, update);
-        return;
-    }
-
-    var component = document.getElementById(componentId);
-    var textNode = component.getElementsByTagName("SPAN")[0];
-    textNode.parentNode.innerHTML = text;
-};
-
-/**
- * Updates the icon of the component with the given ID.
- * @param {String} componentId - the ID of the component
- * @param {String} icon - the new icon of the component
- * @param {String} exception - the server exception (optional)
- */
-wingS.update.icon = function(componentId, icon, exception) {
-    // Exception handling
-    if (exception != null) {
-        var update = "IconUpdate for '" + componentId + "'";
-        wingS.update.alertException(exception, update);
-        return;
-    }
-
-    var component = document.getElementById(componentId);
-    var iconNode = component.getElementsByTagName("IMG")[0];
-    iconNode.parentNode.innerHTML = icon;
-};
-
-/**
- * Scrolls the table.
+ * This update scrolls the table with the given ID.
  * @param {String} tableId - the ID of the table to scroll
- * @param {String} body - the html code for the body
+ * @param {int} oldmin - the old minimum index
+ * @param {int} min - the new minumum index
+ * @param {int} max - the new maximum index
+ * @param {Array} tabledata - the new data to show
  */
 wingS.update.tableScroll = function(tableId, oldmin, min, max, tabledata) {
-console.info("tableScroll:");
-console.info(tableId);
-console.info(oldmin);
-console.info(min);
-console.info(max);
-console.info(tabledata);
-
     var table = document.getElementById(tableId);
     for (rownumber in tabledata) {
         var rowindex = rownumber - oldmin;
-console.info("rownumber" + rownumber + ": " + rowindex);
         var row = table.rows[rowindex];
         if (row == null || row == undefined) {
-console.info("existiert nicht. fuege ein");
             row = table.insertRow(rowindex);
         }
 
-console.info("row" + row);
         var rowdata = tabledata[rownumber];
         if (rowdata == null) {
-console.info("keine daten. loesche");
             table.deleteRow(rowindex);
         } else {
-            // creating a domnode for our new cell
+            // creating a dom node for our new cell
             var celldiv = document.createElement("div");
-console.info("celldiv" + celldiv);
 
             for (cellnumber in rowdata) {
                 var cell = row.cells[cellnumber];
-console.info("cell %o",cell);
 
-                // convert data into domnode and replace old child
+                // convert data into dom node and replace old child
                 celldiv.innerHTML = rowdata[cellnumber];
                 var cellnode = celldiv.firstChild();
-//console.info("cellnode: %o",cellnode);
                 row.replaceChild(cell, cellnode);
 
                 var cell = row.cells[cellnumber];
-console.info("cell %o",cell);
             }
         }
     }
 };
 
 /**
- * Replace cell content.
- * @param {String} tableId - the ID of the table
- * @param {String} row - the row to be replaced
- * @param {String} column - the column to be replaced
- * @param {String} body - the html code for the cell
+ * An update which replaces the cell content of the table with the given ID.
+ * @param {String} tableId - the ID of the table which has to be updated
+ * @param {int} r - the row index of the cell to be replaced
+ * @param {int} c - the column index of the cell to be replaced
+ * @param {String} editing - the editing attribute for the cell
+ * @param {String} html - the html code for the cell
  */
 wingS.update.tableCell = function(tableId, r, c, editing, html) {
     var table = document.getElementById(tableId);
@@ -521,25 +461,5 @@ wingS.update.alertException = function(exception, details) {
                    "Failed Update: " + details + "\n\n" +
                    "Please examine your server's log file for further details...";
     alert(errorMsg);
-};
-
-/**
- * Updates the encoding of the form with the given ID.
- * @param {String} formId - the ID of the form to update
- * @param {int} encoding - the encoding to be set
- */
-wingS.update.encoding = function(formId, encoding) {
-    var form = document.getElementById(formId);
-    form.enctype = encoding;
-};
-
-/**
- * Updates the method of the form with the given ID.
- * @param {String} formId - the ID of the form to update
- * @param {int} method - the method to be set
- */
-wingS.update.method = function(formId, method) {
-    var form = document.getElementById(formId);
-    form.method = method;
 };
 

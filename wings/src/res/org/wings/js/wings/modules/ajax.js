@@ -147,8 +147,10 @@ wingS.ajax.processRequestSuccess = function(request) {
                                "The error occurred while evaluating the following JS code:\n" +
                                updates[i].firstChild.data;
 
-                if ("console" in window && window.console)
-                    console.error("message: %o\nexception: %o\nupdate: %o", e.message, e, updates[i].firstChild.data);
+                if ("console" in window && window.console) {
+                    console.error("Failure while processing the reponse of an AJAX request!\n" +
+                    "- message: %o!\n- exception: %o\n- update: %o", e.message, e, updates[i].firstChild.data);
+                }
                 alert(errorMsg);
             }
         }

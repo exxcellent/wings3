@@ -73,22 +73,22 @@ public class FormCG extends AbstractComponentCG implements org.wings.plaf.FormCG
             device.print("'); return false;\">");
 
             writeCapture(device, form);
-        }
 
-        // This code is needed to trigger form events
-        device.print("<input type=\"hidden\" name=\"");
-        Utils.write(device, Utils.event(form));
-        device.print("\" value=\"");
-        Utils.write(device, form.getName());
-        device.print(SConstants.UID_DIVIDER);
-        device.print("\" />");
+            // This code is needed to trigger form events
+            device.print("<input type=\"hidden\" name=\"");
+            Utils.write(device, Utils.event(form));
+            device.print("\" value=\"");
+            Utils.write(device, form.getName());
+            device.print(SConstants.UID_DIVIDER);
+            device.print("\" />");
+        }
 
         SDimension preferredSize = form.getPreferredSize();
         String height = preferredSize != null ? preferredSize.getHeight() : null;
         boolean clientLayout = isMSIE(form) && height != null && !"auto".equals(height)
             && (layout instanceof SBorderLayout || layout instanceof SGridBagLayout);
 
-        String tableName = form.getName() + "_table";
+        String tableName = form.getName() + (formTagRequired ? "_table" : "");
         device.print("<table id=\"");
         device.print(tableName);
         device.print("\"");
