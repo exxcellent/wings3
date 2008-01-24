@@ -209,12 +209,16 @@ public class XTableExample extends WingSetPane{
                     Object filter = getFilter(i);
                     if (filter != null) {
                         if (getColumnClass(i) == String.class) {
-                            if (r[i] == null || !(((String)r[i]).indexOf((String) filter) > 0))
+                            if (r[i] == null || !(((String)r[i]).indexOf((String) filter) > -1)) {
                                 iterator.remove();
+                                break;
+                            }
                         }
                         else if (getColumnClass(i) == Boolean.class) {
-                            if (!filter.equals(r[i]))
+                            if (!filter.equals(r[i])) {
                                 iterator.remove();
+                                break;
+                            }
                         }
                     }
                 }
@@ -517,5 +521,5 @@ public class XTableExample extends WingSetPane{
 
         return colorstr;
     }
-    
+
 }
