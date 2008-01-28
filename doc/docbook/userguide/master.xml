@@ -3847,6 +3847,7 @@ frame.setLayout(new SRootLayout(url));</programlisting></para>
           element will be replaced with the frame's content. <programlisting>&lt;div id="title"&gt;Application Title&lt;/div&gt;
 &lt;hr /&gt;
 <emphasis role="bold">&lt;object name="frame"&gt;&lt;/object&gt;</emphasis>
+<emphasis role="bold">&lt;object name="windows"&gt;&lt;/object&gt;</emphasis>
 &lt;hr /&gt;
 &lt;div id="footer"&gt;company, copyright, license notice&lt;/div&gt;</programlisting>
           This is a convenient way to define XHTML like a border or title
