@@ -55,6 +55,7 @@ wingS.global.init =  function(configObject) {
                 var currentSize = wingS.global.windowSize();
                 var lastSize = window.lastSize;
                 if (currentSize[0] != lastSize[0] || currentSize[1] != lastSize[1]) {
+                    wingS.request.sendEvent(null,true,false);
                     wingS.request.reloadFrame();
                 }
             },
