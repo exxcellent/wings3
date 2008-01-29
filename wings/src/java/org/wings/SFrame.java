@@ -52,7 +52,7 @@ public class SFrame
     /**
      * The Title of the Frame.
      */
-    protected String title;
+    protected String title = "Untitled";
 
     /**
      * A list of all header used by this frame.
@@ -367,17 +367,23 @@ public class SFrame
 
     /**
      * Sets the title of this HTML page. Typically shown in the browsers window title.
-     *
+     * 
      * @param title The window title.
      */
     public void setTitle(String title) {
-        this.title = title;
+        if ( title == null ) { 
+            title = "";
+        }
+        if ( !title.equals(this.title) ) {
+            this.title = title;
+            reload();
+        }
     }
 
     /**
      * Title of this HTML page. Typically shown in the browsers window title.
      *
-     * @return Current page title
+     * @return the current page title or an empty string if this page doesn't have a title.
      */
     public String getTitle() {
         return title;
