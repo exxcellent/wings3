@@ -3,6 +3,7 @@ package org.wingx;
 import org.wings.*;
 import org.wingx.table.TruncatableModel;
 
+import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.*;
@@ -17,14 +18,12 @@ import java.util.*;
  */
 public class XScrollPane extends SScrollPane {
 
-    private Vector<Integer> extents = new Vector<Integer>(Arrays.asList(
-        Integer.valueOf(8), Integer.valueOf(10), Integer.valueOf(12), Integer.valueOf(14),
-        Integer.valueOf(16), Integer.valueOf(18), Integer.valueOf(20), Integer.valueOf(22),
-        Integer.valueOf(24), Integer.valueOf(26), Integer.valueOf(28), Integer.valueOf(30),
-        Integer.valueOf(32)
-    ));
+	private ExtentComboModel extentModel = new ExtentComboModel(
+			new Vector<Integer>(Arrays.asList(8, 10, 12, 14, 16, 18, 20, 22,
+					24, 26, 28, 30, 32)
+            ));
 
-    protected SComboBox extentCombo = new SComboBox(extents);
+    protected SComboBox extentCombo = new SComboBox(extentModel);
     protected final XPageScroller pageScroller = new XPageScroller();
     protected final SLabel extentComboLabel = new SLabel();
     protected final SLabel totalLabel = new SLabel();
@@ -44,12 +43,6 @@ public class XScrollPane extends SScrollPane {
         setVerticalAlignment(SConstants.TOP_ALIGN);
 
         extentCombo.addActionListener(new ExtentComboActionListener());
-
-        if (extents.indexOf(verticalExtent) == -1) {
-            extents.add(verticalExtent);
-            Collections.sort(extents);
-        }
-        extentCombo.setSelectedItem(Integer.valueOf(verticalExtent));
 
         pageScroller.add(totalLabel);
         pageScroller.add(extentComboLabel);
@@ -195,9 +188,15 @@ public class XScrollPane extends SScrollPane {
         refresh();
     }
 
-    public void setVerticalExtent(int ext) {
-        super.setVerticalExtent(ext);
-        extentCombo.setSelectedItem(Integer.valueOf(ext));
+    public void setExtents(Integer[] extents) {
+        extentModel.setExtents(extents);
+        reload();
+    }
+
+    public void setVerticalExtent(int extent) {
+        super.setVerticalExtent(extent);
+        extentModel.addExtent(extent);
+        extentCombo.setSelectedItem(extent);
     }
 
     public void addAdjustmentListener(AdjustmentListener al) {
@@ -257,6 +256,34 @@ public class XScrollPane extends SScrollPane {
             setVerticalExtent(extent.intValue());
         }
     }
+
+	class ExtentComboModel extends DefaultComboBoxModel
+    {
+		private Vector<Integer> extents;
+
+		public ExtentComboModel(Vector<Integer> extents) {
+			super(extents);
+			this.extents = extents;
+		}
+
+		public void setExtents(Integer[] extents) {
+			this.extents.removeAllElements();
+			this.extents.addAll(Arrays.asList(extents));
+			if(!addExtent((Integer) getSelectedItem())) {;
+				fireContentsChanged(this, -1, -1);
+			}
+		}
+
+		public boolean addExtent(int extent) {
+			if (!extents.contains(extent)) {
+				extents.add(extent);
+				Collections.sort(extents);
+				fireContentsChanged(this, -1, -1);
+				return true;
+			}
+			return false;
+		}
+	}
 
     public XPageScroller getPageScroller() {
         return pageScroller;
