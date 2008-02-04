@@ -47,7 +47,7 @@ public class BrowserType implements Serializable {
     /**
      * Internet Explorere variant.
      */
-    public static final BrowserType IE = new BrowserType(BrowserID.IE, "msie", "Internet Exploder");
+    public static final BrowserType IE = new BrowserType(BrowserID.IE, "msie", "Internet Explorer");
 
     /**
      * Opera browser type on Linux/KDE.
