@@ -214,7 +214,7 @@ public class XTableExample extends WingSetPane{
         }
 
         public void refresh() {
-            List<Object[]> list = Arrays.asList((Object[][]) origData.clone());
+            List<Object[]> list = new ArrayList<Object[]>(Arrays.asList(origData));
             for (Iterator<Object[]> iterator = list.iterator(); iterator.hasNext();) {
                 final Object[] rowData = iterator.next();
                 boolean remove = false;
