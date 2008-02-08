@@ -34,7 +34,7 @@ public abstract class AbstractLabelCG extends AbstractComponentCG {
         // white-space:nowrap seems to work in all major browser.
         // Except leading and trailing spaces!
         device.print("<span").print(wordWrap ? ">" : " style=\"white-space:nowrap\">");
-        if ((text.length() > 5) && (text.startsWith("<html>"))) {
+        if ((text.length() > 5) && (text.substring(0,6).equalsIgnoreCase("<html>"))) {
             Utils.writeRaw(device, text.substring(6));
         } else {
             // Only quote leading/trailing whitespace
