@@ -71,28 +71,31 @@ public class XTableExample extends WingSetPane{
         table.setEditable(false);
         controls.addControllable(table);
 
-        ((XTableColumn)table.getColumnModel().getColumn(0)).setSortable(true);
-        ((XTableColumn)table.getColumnModel().getColumn(1)).setSortable(true);
-        ((XTableColumn)table.getColumnModel().getColumn(5)).setSortable(true);
-        ((XTableColumn)table.getColumnModel().getColumn(6)).setSortable(true);
+        getColumn(0).setSortable(true);
+        getColumn(1).setSortable(true);
+        getColumn(5).setSortable(true);
+        getColumn(6).setSortable(true);
 
-        ((XTableColumn)table.getColumnModel().getColumn(0)).setFilterRenderer(new StringFilterRenderer());
-        ((XTableColumn)table.getColumnModel().getColumn(0)).setFilterable(true);
+        getColumn(0).setFilterRenderer(new StringFilterRenderer());
+        getColumn(0).setFilterable(true);
 
-        ((XTableColumn)table.getColumnModel().getColumn(4)).setFilterRenderer(new BooleanFilterRenderer());
-        ((XTableColumn)table.getColumnModel().getColumn(4)).setCellRenderer(new BooleanEditableCellRenderer());
-        ((XTableColumn)table.getColumnModel().getColumn(4)).setFilterable(true);
+        getColumn(4).setFilterRenderer(new BooleanFilterRenderer());
+        getColumn(4).setCellRenderer(new BooleanEditableCellRenderer());
+        getColumn(4).setFilterable(true);
 
-        ((XTableColumn)table.getColumnModel().getColumn(6)).setCellRenderer(new DateEditableCellRenderer());
-        ((XTableColumn)table.getColumnModel().getColumn(6)).setFilterable(true);
+        getColumn(5).setFilterRenderer(new StringFilterRenderer());
+        getColumn(5).setFilterable(true);
 
-        table.getColumnModel().getColumn(0).setWidth("200px");
-        table.getColumnModel().getColumn(1).setWidth("*");
-        table.getColumnModel().getColumn(2).setWidth("100px");
-        table.getColumnModel().getColumn(3).setWidth("50px");
-        table.getColumnModel().getColumn(4).setWidth("50px");
-        table.getColumnModel().getColumn(5).setWidth("50px");
-        table.getColumnModel().getColumn(6).setWidth("100px");
+        getColumn(6).setCellRenderer(new DateEditableCellRenderer());
+        getColumn(6).setFilterable(true);
+
+        getColumn(0).setWidth("200px");
+        getColumn(1).setWidth("*");
+        getColumn(2).setWidth("100px");
+        getColumn(3).setWidth("50px");
+        getColumn(4).setWidth("50px");
+        getColumn(5).setWidth("50px");
+        getColumn(6).setWidth("100px");
 
         table.addMouseListener(new SMouseListener() {
             public void mouseClicked(SMouseEvent e) {
@@ -108,6 +111,10 @@ public class XTableExample extends WingSetPane{
         panel.add(clicks, SBorderLayout.SOUTH);
         panel.setVerticalAlignment(SConstants.TOP_ALIGN);
         return panel;
+    }
+
+    private XTableColumn getColumn(final int column) {
+        return ((XTableColumn)table.getColumnModel().getColumn(column));
     }
 
 
@@ -187,10 +194,7 @@ public class XTableExample extends WingSetPane{
         }
 
         public Boolean createBoolean(int row) {
-            if (row % 2 == 1)
-                return new Boolean(false);
-            else
-                return new Boolean(true);
+            return row % 2 == 1 ? Boolean.FALSE : Boolean.TRUE;
         }
 
         public Integer createInteger(int row) {
@@ -201,31 +205,56 @@ public class XTableExample extends WingSetPane{
             return new Date(System.currentTimeMillis() + row * 1000 * 60 * 60 * 24);
         }
 
+        public int toInt(String numberString, int startPos) {
+            try {
+                return Integer.parseInt(numberString.substring(startPos).trim());
+            } catch (NumberFormatException ex) {
+                return Integer.MIN_VALUE;
+            }
+        }
+
         public void refresh() {
-            List list = new ArrayList(Arrays.asList((Object[][])origData.clone()));
-            for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-                Object[] r = (Object[])iterator.next();
-                for (int i=0; i < getColumnCount(); i++) {
+            List<Object[]> list = Arrays.asList((Object[][]) origData.clone());
+            for (Iterator<Object[]> iterator = list.iterator(); iterator.hasNext();) {
+                final Object[] rowData = iterator.next();
+                boolean remove = false;
+                for (int i = 0; i < getColumnCount(); i++) {
                     Object filter = getFilter(i);
                     if (filter != null) {
                         if (getColumnClass(i) == String.class) {
-                            if (r[i] == null || !(((String)r[i]).indexOf((String) filter) > -1)) {
-                                iterator.remove();
-                                break;
-                            }
-                        }
-                        else if (getColumnClass(i) == Boolean.class) {
-                            if (!filter.equals(r[i])) {
-                                iterator.remove();
-                                break;
-                            }
+                            String s = (String) rowData[i];
+                            String f = ((String) filter).toUpperCase();
+                            if (s == null || s.toUpperCase().indexOf(f) == -1)
+                                remove |= true;
+                        } else if (getColumnClass(i) == Boolean.class) {
+                            if (!filter.equals(rowData[i]))
+                                remove |= true;
+                        } else if (getColumnClass(i) == Integer.class) {
+                            final int intValue = ((Integer) rowData[i]).intValue();
+                            final String filterString = ((String) filter).trim();
+                            if (filterString.startsWith(">="))
+                                remove |= !(intValue >= toInt(filterString, 2));
+                            else if (filterString.startsWith("<="))
+                                remove |= !(intValue <= toInt(filterString, 2));
+                            else if (filterString.startsWith("=="))
+                                remove |= !(intValue == toInt(filterString, 2));
+                            else if (filterString.startsWith(">"))
+                                remove |= !(intValue > toInt(filterString, 1));
+                            else if (filterString.startsWith("<"))
+                                remove |= !(intValue < toInt(filterString, 1));
+                            else if (filterString.startsWith("="))
+                                remove |= !(intValue == toInt(filterString, 1));
+                            else
+                                remove |= !(intValue == toInt(filterString, 0));
                         }
                     }
                 }
+                if (remove)
+                    iterator.remove();
             }
-            data = (Object[][])list.toArray(new Object[0][0]);
+            data = list.toArray(new Object[0][0]);
 
-            Arrays.sort(data, new Comparator() {
+            Arrays.sort(data, new Comparator<Object>() {
                 public int compare(Object o1, Object o2) {
                     for (int i=0; i < getColumnCount(); i++) {
                         Object[] r1 = (Object[])o1;
