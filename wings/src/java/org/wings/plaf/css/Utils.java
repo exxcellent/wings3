@@ -599,7 +599,7 @@ public final class Utils {
         if (s == null) {
             return;
         }
-        if ((s.length() > 5) && (s.startsWith("<html>"))) {
+        if ((s.length() > 5) && (s.substring(0,6).equalsIgnoreCase("<html>"))) {
             writeRaw(d, s.substring(6));
         }
         else {

@@ -87,7 +87,7 @@ public class DivisionCG
     }
 
     private void writeTitle(Device device, String text) throws IOException {
-        if ((text.length() > 5) && (text.startsWith("<html>")))
+        if ((text.length() > 5) && (text.substring(0,6).equalsIgnoreCase("<html>")))
             Utils.writeRaw(device, text.substring(6));
         else
             Utils.quote(device, text, true, true, false);
