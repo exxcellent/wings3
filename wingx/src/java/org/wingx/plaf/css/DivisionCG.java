@@ -42,12 +42,12 @@ public class DivisionCG
         Utils.writeAllAttributes(device, component);
         Utils.writeEvents(device, component, null);
         device.print("><colgroup><col width=\"0*\"/><col width=\"1*\"></colgroup><tr ");
-        if (division.isTitleClickabel() && division.isEnabled()) {
+        if (division.isTitleClickable() && division.isEnabled()) {
             Utils   .printClickability(device, division, "t", division.isEnabled(), true);
         }
         device.print("><td class=\"DivisionControl\"");
         SIcon icon = division.isShaded() ? closedIcon : openIcon;
-        if (!division.isTitleClickabel() && division.isEnabled()) {
+        if (!division.isTitleClickable() && division.isEnabled()) {
             Utils.printClickability(device, division, "t", division.isEnabled(), true);
         }
 

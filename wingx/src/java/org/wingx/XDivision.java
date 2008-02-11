@@ -122,7 +122,7 @@ public class XDivision
      * Returns true if the title is clickable.
      * @return boolean true if the title is clickable
      */
-    public boolean isTitleClickabel () {
+    public boolean isTitleClickable() {
         return this.isTitleClickable;
     }
 
