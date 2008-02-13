@@ -37,7 +37,8 @@
                  doctitle="wingS ${wings.version}"
                  windowtitle="wingS ${wings.version}"
                  bottom="wingS Swings ;-)"
-                 classpathref="build.classpath">
+                 classpathref="build.classpath"
+                 useexternalfile="true">
             <fileset dir="build/src/java" defaultexcludes="yes">
                 <include name="org/**/*.java"/>
                 <exclude name="com/keypoint/**"/>
