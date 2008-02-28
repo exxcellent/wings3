@@ -191,7 +191,7 @@ public final class LowLevelEventDispatcher
         listeners.clear();
     }
 
-    private List runnables = new LinkedList();
+    private final List<Runnable> runnables = new LinkedList<Runnable>();
 
     public void invokeLater(Runnable runnable) {
         synchronized (this.runnables) {
@@ -214,7 +214,7 @@ public final class LowLevelEventDispatcher
         }
     }
 
-	protected void setEventEpoch(String epoch) {
+    protected void setEventEpoch(String epoch) {
 		this.eventEpoch = epoch;
 	}
 }

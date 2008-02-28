@@ -42,7 +42,7 @@ import java.text.DateFormat;
  */
 public class WingServlet
         extends HttpServlet {
-    private final transient static Log log = LogFactory.getLog(WingServlet.class);
+    protected final transient static Log log = LogFactory.getLog(WingServlet.class);
 
     /**
      * used to init session servlets
@@ -88,7 +88,7 @@ public class WingServlet
      *
      * @throws ServletException
      */
-    public final void init(ServletConfig config) throws ServletException {
+    public void init(ServletConfig config) throws ServletException {
         super.init(config);
         servletConfig = config;
 
@@ -183,6 +183,7 @@ public class WingServlet
             log.debug("--- new SessionServlet()");
 
             SessionServlet sessionServlet = new SessionServlet();
+            sessionServlet.setParent(this);
             sessionServlet.init(servletConfig, request, response);
 
             Session session = sessionServlet.getSession();
@@ -196,8 +197,6 @@ public class WingServlet
             RequestURL requestURL = new RequestURL("", SessionServlet.getSessionEncoding(response));
 
             session.setProperty("request.url", requestURL);
-
-            sessionServlet.setParent(this);
 
             log.debug("--- Time needed to create new session " + (System.currentTimeMillis() - timestamp) + "ms");
 
@@ -366,7 +365,7 @@ public class WingServlet
         }
     }
 
-    public final void doGet(HttpServletRequest req,
+    public void doGet(HttpServletRequest req,
                             HttpServletResponse response)
             throws ServletException {
 

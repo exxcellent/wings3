@@ -27,11 +27,10 @@ import java.io.Writer;
 public final class ServletDevice implements Device {
     private final ServletOutputStream out;
     private final Writer writer;
-    
-    public ServletDevice(ServletOutputStream stream,
-                         String encoding) throws IOException {
-        out = stream;
-        writer = new BufferedWriter(new OutputStreamWriter(stream, encoding));
+
+    public ServletDevice(ServletOutputStream out, String encoding) throws IOException {
+        this.out = out;
+        writer = new BufferedWriter(new OutputStreamWriter(out, encoding));
     }
 
     public boolean isSizePreserving() { return true; }
