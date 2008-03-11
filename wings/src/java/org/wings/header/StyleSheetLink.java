@@ -24,6 +24,12 @@ import org.wings.resource.DefaultURLResource;
  * @author armin
  *         created at 15.01.2004 17:55:28
  * [bsc] why?: deprecated use StyleSheetHeader instead
+ * [sts] just a naming convention:
+ *    JavaScriptHeader, StyleSheetHeader, FaviconHeader
+ *    and not
+ *    JavaScriptScript (or JavaScript), StyleSheetLink,   FaviconLink
+ *
+ * @deprecated use StyleSheetHeader instead
  */
 public class StyleSheetLink extends Link {
 
