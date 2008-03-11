@@ -58,14 +58,15 @@ public class FrameCG implements org.wings.plaf.FrameCG {
      * attribute inheritance does not work correctly on <code>table</code> elements.
      * See i.e. http://www.ericmeyeroncss.com/bonus/render-mode.html
      */
-    public final static String STRICT_DOCTYPE = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" " +
-            "\"http://www.w3.org/TR/REC-html40/strict.dtd\">";
+    public final static String STRICT_DOCTYPE = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" " +
+        "\"http://www.w3.org/TR/2002/REC-xhtml1-20020801/DTD/xhtml1-strict.dtd\">";
 
     /**
      * The HTML DOCTYPE setting all browsers to Quirks mode. We need this to force IE to use the correct box
      * rendering model. It's the only browser you cannot reconfigure via a CSS tag.
      */
-    public final static String QUIRKS_DOCTYPE = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">";
+    public final static String QUIRKS_DOCTYPE = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" " +
+        "\"http://www.w3.org/TR/2002/REC-xhtml1-20020801/DTD/xhtml1-transitional.dtd\">";
 
     /**
      * Lookup for a property Stylesheet.BROWSERNAME to know fitting stylesheets
