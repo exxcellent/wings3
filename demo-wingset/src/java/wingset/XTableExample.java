@@ -165,8 +165,10 @@ public class XTableExample extends WingSetPane{
         }
 
         public void setValueAt(Object value, int row, int col) {
-            data[row][col] = value;
-            fireTableCellUpdated(row, col);
+            if (isDifferent(getValueAt(row, col), value)) {
+                data[row][col] = value;
+                fireTableCellUpdated(row, col);
+            }
         }
 
         public Class getColumnClass(int columnIndex) {
