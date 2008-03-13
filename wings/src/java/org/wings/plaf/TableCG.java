@@ -13,14 +13,18 @@
 package org.wings.plaf;
 
 import java.awt.Rectangle;
+import java.util.List;
 
 import org.wings.STable;
 
 
 public interface TableCG extends ComponentCG {
-    
+
     Update getTableScrollUpdate(STable table, Rectangle newViewport, Rectangle oldViewport);
 
-    Update getEditCellUpdate(STable sTable, int row, int column);
-    Update getRenderCellUpdate(STable sTable, int row, int column);
+    Update getSelectionUpdate(STable table, List deselectedIndices, List selectedIndices);
+
+    Update getEditCellUpdate(STable table, int row, int column);
+
+    Update getRenderCellUpdate(STable table, int row, int column);
 }

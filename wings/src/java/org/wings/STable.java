@@ -15,6 +15,7 @@ package org.wings;
  import org.apache.commons.logging.Log;
  import org.apache.commons.logging.LogFactory;
  import org.wings.event.*;
+import org.wings.plaf.ListCG;
  import org.wings.plaf.TableCG;
  import org.wings.style.*;
  import org.wings.table.*;
@@ -24,7 +25,8 @@ package org.wings;
  import javax.swing.table.DefaultTableModel;
  import javax.swing.table.TableModel;
  import java.awt.*;
- import java.util.*;
+import java.util.*;
+import java.util.List;
 
 
 /**
@@ -235,9 +237,28 @@ public class STable extends SComponent
     /**
      * changes in the selection model should force a reload if possible
      */
-    protected final ListSelectionListener reloadOnSelectionChangeListener = new ListSelectionListener() {
+    protected final ListSelectionListener fwdSelectionEvents = new ListSelectionListener() {
        public void valueChanged(ListSelectionEvent e) {
-           reload();
+           if (isUpdatePossible() && STable.class.isAssignableFrom(STable.this.getClass())) {
+               List deselectedIndices = new ArrayList();
+               List selectedIndices = new ArrayList();
+               for (int index = e.getFirstIndex(); index <= e.getLastIndex(); ++index) {
+                   int visibleIndex = index;
+                   if (getViewportSize() != null) {
+                       visibleIndex = index - getViewportSize().y;
+                       if (visibleIndex < 0 || visibleIndex >= getViewportSize().height)
+                           continue;
+                   }
+                   if (isRowSelected(index)) {
+                       selectedIndices.add(new Integer(visibleIndex));
+                   } else {
+                       deselectedIndices.add(new Integer(visibleIndex));
+                   }
+               }
+               update(((TableCG) getCG()).getSelectionUpdate(STable.this, deselectedIndices, selectedIndices));
+           } else {
+               reload();
+           }
        }
     };
 
@@ -1050,12 +1071,12 @@ public class STable extends SComponent
         }
 
         if (getSelectionModel() != null) {
-            removeSelectionListener(reloadOnSelectionChangeListener);
+            removeSelectionListener(fwdSelectionEvents);
         }
 
         selectionModel = model;
 
-        addSelectionListener(reloadOnSelectionChangeListener);
+        addSelectionListener(fwdSelectionEvents);
     }
 
 

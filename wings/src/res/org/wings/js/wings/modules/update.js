@@ -423,10 +423,10 @@ wingS.update.selectionList = function(listId, deselectedIndices, selectedIndices
     } else {
         var listItems = list.getElementsByTagName("LI");
         for (var i = 0; i < deselectedIndices.length; i++) {
-            listItems[deselectedIndices[i]].className = "clickable";
+            YAHOO.util.Dom.removeClass(listItems[deselectedIndices[i]], "selected");
         }
         for (var i = 0; i < selectedIndices.length; i++) {
-            listItems[selectedIndices[i]].className = "selected clickable";
+            YAHOO.util.Dom.addClass(listItems[selectedIndices[i]], "selected");
         }
     }
 };
@@ -442,10 +442,29 @@ wingS.update.selectionTree = function(treeId, deselectedRows, selectedRows) {
     var rows = wingS.util.getElementsByAttribute(tree, "td", "row");
 
     for (var i = 0; i < deselectedRows.length; i++) {
-        rows[deselectedRows[i]].className = "norm";
+        YAHOO.util.Dom.replaceClass(rows[deselectedRows[i]], "selected", "norm");
     }
     for (var i = 0; i < selectedRows.length; i++) {
-        rows[selectedRows[i]].className = "selected";
+        YAHOO.util.Dom.replaceClass(rows[selectedRows[i]], "norm", "selected");
+    }
+};
+
+/**
+ * Updates the selection of the table with the given ID.
+ * @param {String} tableId - the ID of the table to update
+ * @param {int} indexOffset - the index offset of the first row
+ * @param {Array} deselectedIndices - the indices to deselect
+ * @param {Array} selectedIndices - the indices to select
+ */
+wingS.update.selectionTable = function(tableId, indexOffset, deselectedIndices, selectedIndices) {
+    var table = document.getElementById(tableId);
+    var rows = table.rows;
+
+    for (var i = 0; i < deselectedIndices.length; i++) {
+        YAHOO.util.Dom.removeClass(rows[deselectedIndices[i] + indexOffset], "selected");
+    }
+    for (var i = 0; i < selectedIndices.length; i++) {
+        YAHOO.util.Dom.addClass(rows[selectedIndices[i] + indexOffset], "selected");
     }
 };
 

@@ -24,6 +24,7 @@ import org.wings.util.SStringBuilder;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.List;
 
 // Please do NOT reformat this class!
 public final class TableCG
@@ -453,6 +454,10 @@ public final class TableCG
         return new ComponentUpdate(this, table);
     }
 
+    public Update getSelectionUpdate(STable table, List deselectedIndices, List selectedIndices) {
+        return new SelectionUpdate(table, deselectedIndices, selectedIndices);
+    }
+
     public Update getEditCellUpdate(STable table, int row, int column) {
         return new EditCellUpdate(table, row, column);
     }
@@ -503,6 +508,30 @@ public final class TableCG
             if (exception != null) {
                 handler.addParameter(exception);
             }
+            return handler;
+        }
+    }
+
+    protected static class SelectionUpdate extends AbstractUpdate<STable> {
+        private List deselectedIndices;
+        private List selectedIndices;
+
+        public SelectionUpdate(STable component, List deselectedIndices, List selectedIndices) {
+            super(component);
+            this.deselectedIndices = deselectedIndices;
+            this.selectedIndices = selectedIndices;
+        }
+
+        public Handler getHandler() {
+            int indexOffset = 0;
+            if (component.isHeaderVisible()) {
+                ++indexOffset;
+            }
+            UpdateHandler handler = new UpdateHandler("selectionTable");
+            handler.addParameter(component.getName());
+            handler.addParameter(new Integer(indexOffset));
+            handler.addParameter(Utils.listToJsArray(deselectedIndices));
+            handler.addParameter(Utils.listToJsArray(selectedIndices));
             return handler;
         }
     }
