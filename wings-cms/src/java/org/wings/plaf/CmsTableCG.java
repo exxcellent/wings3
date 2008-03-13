@@ -21,6 +21,7 @@ import org.wings.macro.MacroContainer;
 import org.wings.macro.MacroTag;
 
 import java.io.IOException;
+import java.util.List;
 import java.awt.*;
 
 /**
@@ -133,6 +134,10 @@ public class CmsTableCG implements TableCG, CmsCG {
     }
 
     public Update getTableScrollUpdate(STable table, Rectangle newViewport, Rectangle oldViewport) {
+        return null;
+    }
+
+    public Update getSelectionUpdate(STable table, List deselectedIndices, List selectedIndices) {
         return null;
     }
 
