@@ -24,8 +24,9 @@ import org.wings.table.*;
 import org.wingx.XTable;
 import org.wingx.table.*;
 
+import java.awt.Rectangle;
 import java.io.IOException;
-import java.awt.*;
+import java.util.List;
 
 import javax.swing.table.TableModel;
 
@@ -608,6 +609,10 @@ public class XTableCG
         return new ComponentUpdate(this, table);
     }
 
+    public Update getSelectionUpdate(STable table, List deselectedIndices, List selectedIndices) {
+        return new SelectionUpdate((XTable) table, deselectedIndices, selectedIndices);
+    }
+
     public Update getEditCellUpdate(STable table, int row, int column) {
         return new EditCellUpdate((XTable)table, row, column);
     }
@@ -615,6 +620,7 @@ public class XTableCG
     public Update getRenderCellUpdate(STable table, int row, int column) {
         return new RenderCellUpdate((XTable)table, row, column);
     }
+
     protected class TableScrollUpdate
         extends AbstractUpdate {
 
@@ -661,6 +667,33 @@ public class XTableCG
         }
     }
 
+    protected static class SelectionUpdate extends AbstractUpdate<XTable> {
+        private List deselectedIndices;
+        private List selectedIndices;
+
+        public SelectionUpdate(XTable component, List deselectedIndices, List selectedIndices) {
+            super(component);
+            this.deselectedIndices = deselectedIndices;
+            this.selectedIndices = selectedIndices;
+        }
+
+        public Handler getHandler() {
+            int indexOffset = 0;
+            if (component.isHeaderVisible()) {
+                ++indexOffset;
+            }
+            if (component.isFilterVisible() && component.getModel() instanceof FilterableTableModel) {
+                ++indexOffset;
+            }
+            UpdateHandler handler = new UpdateHandler("selectionTable");
+            handler.addParameter(component.getName());
+            handler.addParameter(new Integer(indexOffset));
+            handler.addParameter(Utils.listToJsArray(deselectedIndices));
+            handler.addParameter(Utils.listToJsArray(selectedIndices));
+            return handler;
+        }
+    }
+
     private class EditCellUpdate
         extends AbstractUpdate<XTable>
     {
@@ -695,7 +728,7 @@ public class XTableCG
             }
 
             row = table.isHeaderVisible() ? this.row + 1 : this.row;
-            row = table.isFilterVisible() ? this.row + 1 : this.row;
+            row = (table.isFilterVisible() && table.getModel() instanceof FilterableTableModel) ? this.row + 1 : this.row;
             column = columnInView(table, column);
             column = isSelectionColumnVisible(table) ? column + 1 : column;
 
@@ -752,7 +785,7 @@ public class XTableCG
             }
 
             row = table.isHeaderVisible() ? this.row + 1 : this.row;
-            row = table.isFilterVisible() ? this.row + 1 : this.row;
+            row = (table.isFilterVisible() && table.getModel() instanceof FilterableTableModel) ? this.row + 1 : this.row;
             column = columnInView(table, column);
             column = isSelectionColumnVisible(table) ? column + 1 : column;
 
