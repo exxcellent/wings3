@@ -39,8 +39,7 @@
       <include name="**/*Test.class" />
     </fileset>
 
-    <filelist dir="src/res/org/wings/js/wings/modules"
-        id="wings.js.modules">
+    <filelist id="wings.js.modules" dir="src/res/org/wings/js/wings/modules">
     	<file name="namespace.js"/>
         <file name="global.js"/>
         <file name="event.js"/>
@@ -57,6 +56,23 @@
     	<file name="splitpane.js"/>
         <file name="dialog.js"/>
     </filelist>
+
+	<fileset id="yui.js.modules" dir="src/res" >
+		<include name="org/wings/js/yui/animation/**"/>
+        <include name="org/wings/js/yui/assets/**"/>
+		<include name="org/wings/js/yui/autocomplete/**"/>
+		<include name="org/wings/js/yui/calendar/**"/>
+		<include name="org/wings/js/yui/connection/**"/>
+		<include name="org/wings/js/yui/container/**"/>
+		<include name="org/wings/js/yui/datasource/**"/>
+		<include name="org/wings/js/yui/dom/**"/>
+		<include name="org/wings/js/yui/dragdrop/**"/>
+		<include name="org/wings/js/yui/event/**"/>
+		<include name="org/wings/js/yui/slider/**"/>
+		<include name="org/wings/js/yui/utilities/**"/>
+		<include name="org/wings/js/yui/yahoo/**"/>
+		<include name="org/wings/js/yui/yahoo-dom-event/**"/>
+    </fileset>
 
     <target name="prepare">
         <mkdir dir="build/class"/>
@@ -151,7 +167,9 @@
             <fileset dir="build/class"/>
             <fileset dir="src/res">
                 <exclude name="**/*.java.in"/>
+
             </fileset>
+        	<fileset refid="yui.js.modules"/>
             <manifest>
                 <attribute name="framework" value="wingS framework"/>
                 <attribute name="version" value="${wings.version}"/>
