@@ -59,7 +59,7 @@ wingS.suggest.SuggestDS.prototype.wingSInit = function(id, popupid) {
  * @param oParent {Object} The object instance that has requested data.
  */
 wingS.suggest.SuggestDS.prototype.doQuery = function(oCallbackFn, sQuery, oParent) {
-    wingS.request.sendEvent(null, false, true, oParent._oTextbox.id, "q:" + sQuery);
+    wingS.request.sendEvent(null, false, true, oParent._elTextbox.id, "q:" + sQuery);
     wingS.suggest.SuggestDS.ac = oParent;
 };
 
