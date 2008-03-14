@@ -71,7 +71,7 @@ public class XSuggestExample extends WingSetPane {
         currentCountryField.setSuggestBoxWidth(new SDimension(SDimension.INHERIT, SDimension.INHERIT));
         panel.add(currentCountryField);        
         
-        panel.add(new SLabel("State (slow answer, only German: try 'b'): "));
+        panel.add(new SLabel("State (only German: try 'b'): "));
         XSuggest stateSuggestionField = new XSuggest();
         stateSuggestionField.setDataSource(new StatesOfGermany());                        
         panel.add(stateSuggestionField);        
@@ -451,13 +451,6 @@ public class XSuggestExample extends WingSetPane {
                         returning.add(new Entry(state.name, state.iso + " " + state.name));
                     }
                 }
-            }
-            
-            // simulate slow answer
-            try {                
-                Thread.sleep(2000);
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
             }
             
             return returning;
