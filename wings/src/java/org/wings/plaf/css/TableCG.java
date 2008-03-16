@@ -24,6 +24,7 @@ import org.wings.util.SStringBuilder;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 // Please do NOT reformat this class!
@@ -512,11 +513,11 @@ public final class TableCG
         }
     }
 
-    protected static class SelectionUpdate extends AbstractUpdate<STable> {
-        private List deselectedIndices;
-        private List selectedIndices;
+    protected class SelectionUpdate extends AbstractUpdate<STable> {
+        private List<Integer> deselectedIndices;
+        private List<Integer> selectedIndices;
 
-        public SelectionUpdate(STable component, List deselectedIndices, List selectedIndices) {
+        public SelectionUpdate(STable component, List<Integer> deselectedIndices, List<Integer> selectedIndices) {
             super(component);
             this.deselectedIndices = deselectedIndices;
             this.selectedIndices = selectedIndices;
@@ -527,12 +528,40 @@ public final class TableCG
             if (component.isHeaderVisible()) {
                 ++indexOffset;
             }
+
             UpdateHandler handler = new UpdateHandler("selectionTable");
             handler.addParameter(component.getName());
             handler.addParameter(new Integer(indexOffset));
             handler.addParameter(Utils.listToJsArray(deselectedIndices));
             handler.addParameter(Utils.listToJsArray(selectedIndices));
+            if (isSelectionColumnVisible(component)) {
+                String exception = null;
+                List<String> deselectedBodies = new ArrayList<String>();
+                List<String> selectedBodies = new ArrayList<String>();
+                exception = writeSelectionBodies(deselectedIndices, deselectedBodies);
+                exception = writeSelectionBodies(selectedIndices, selectedBodies);
+                handler.addParameter(Utils.listToJsArray(deselectedBodies));
+                handler.addParameter(Utils.listToJsArray(selectedBodies));
+                if (exception != null) {
+                    handler.addParameter(exception);
+                }
+            }
             return handler;
+        }
+
+        private String writeSelectionBodies(List<Integer> indices, List<String> bodies) {
+            try {
+                final StringBuilderDevice htmlDevice = new StringBuilderDevice(512);
+                final SCellRendererPane rendererPane = component.getCellRendererPane();
+                for (Integer index : indices) {
+                    writeSelectionBody(htmlDevice, component, rendererPane, index);
+                    bodies.add(htmlDevice.toString());
+                    htmlDevice.reset();
+                }
+            } catch (Throwable t) {
+                return t.getClass().getName();
+            }
+            return null;
         }
     }
 

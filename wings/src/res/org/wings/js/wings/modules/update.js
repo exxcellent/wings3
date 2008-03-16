@@ -162,11 +162,21 @@ wingS.update.component = function(componentId, html, exception) {
         }
     }
 
-    if (typeof component.outerHTML != "undefined") {
+    // Replace the actual JavaScript element
+    wingS.update.element(component, html);
+};
+
+/**
+ * Replaces the HTML code of the given JavaScript element.
+ * @param {String} element - the JavaScript element to replace
+ * @param {String} html - the new HTML code of the component
+ */
+wingS.update.element = function(element, html) {
+    if (typeof element.outerHTML != "undefined") {
         // Use outerHTML if available
-        component.outerHTML = html;
+        element.outerHTML = html;
     } else {
-        var parent = component.parentNode;
+        var parent = element.parentNode;
         if (parent == null) return;
 
         var nrOfChildElements = 0;
@@ -179,16 +189,16 @@ wingS.update.component = function(componentId, html, exception) {
         }
 
         if (nrOfChildElements == 1) {
-            // If there is only one child it must be our component
+            // If there is only one child it must be our element
             parent.innerHTML = html;
         } else {
             var range;
             // If there is no other way we have to use proprietary methods
             if (document.createRange && (range = document.createRange()) &&
                 range.createContextualFragment) {
-                range.selectNode(component);
-                var newComponent = range.createContextualFragment(html);
-                parent.replaceChild(newComponent, component);
+                range.selectNode(element);
+                var newElement = range.createContextualFragment(html);
+                parent.replaceChild(newElement, element);
             }
         }
     }
@@ -452,19 +462,38 @@ wingS.update.selectionTree = function(treeId, deselectedRows, selectedRows) {
 /**
  * Updates the selection of the table with the given ID.
  * @param {String} tableId - the ID of the table to update
- * @param {int} indexOffset - the index offset of the first row
- * @param {Array} deselectedIndices - the indices to deselect
- * @param {Array} selectedIndices - the indices to select
+ * @param {int} indexOffset - the index offset for each row
+ * @param {Array} deselectedIndices - the rows to deselect
+ * @param {Array} selectedIndices - the rows to select
+ * @param {Array} deselectedBodies - the deselected cell bodies
+ * @param {Array} selectedBodies - the selected cell bodies
+ * @param {String} exception - the server exception (optional)
  */
-wingS.update.selectionTable = function(tableId, indexOffset, deselectedIndices, selectedIndices) {
+wingS.update.selectionTable = function(tableId, indexOffset, deselectedIndices,
+        selectedIndices, deselectedBodies, selectedBodies, exception) {
+    // Exception handling
+    if (exception != null) {
+        var update = "SelectionUpdate for '" + tableId + "'";
+        wingS.update.alertException(exception, update);
+        return;
+    }
+
     var table = document.getElementById(tableId);
     var rows = table.rows;
 
     for (var i = 0; i < deselectedIndices.length; i++) {
-        YAHOO.util.Dom.removeClass(rows[deselectedIndices[i] + indexOffset], "selected");
+        var tr = rows[deselectedIndices[i] + indexOffset];
+        YAHOO.util.Dom.removeClass(tr, "selected");
+        if (deselectedBodies != null) {
+            wingS.update.element(tr.cells[0], deselectedBodies[i]);
+        }
     }
     for (var i = 0; i < selectedIndices.length; i++) {
-        YAHOO.util.Dom.addClass(rows[selectedIndices[i] + indexOffset], "selected");
+        var tr = rows[selectedIndices[i] + indexOffset];
+        YAHOO.util.Dom.addClass(tr, "selected");
+        if (selectedBodies != null) {
+            wingS.update.element(tr.cells[0], selectedBodies[i]);
+        }
     }
 };
 

@@ -15,7 +15,6 @@ package org.wings;
  import org.apache.commons.logging.Log;
  import org.apache.commons.logging.LogFactory;
  import org.wings.event.*;
-import org.wings.plaf.ListCG;
  import org.wings.plaf.TableCG;
  import org.wings.style.*;
  import org.wings.table.*;
@@ -101,7 +100,7 @@ public class STable extends SComponent
     protected final HashMap renderer = new HashMap();
 
     /**
-     * If this table is editable, clicks on table cells will be catched and interpreted as 
+     * If this table is editable, clicks on table cells will be catched and interpreted as
      * editor calls. Otherwise they may result in a selection event if {@link #isSelectable()}
      */
     protected boolean editable = true;
@@ -238,28 +237,41 @@ public class STable extends SComponent
      * changes in the selection model should force a reload if possible
      */
     protected final ListSelectionListener fwdSelectionEvents = new ListSelectionListener() {
-       public void valueChanged(ListSelectionEvent e) {
-           if (isUpdatePossible() && STable.class.isAssignableFrom(STable.this.getClass())) {
-               List deselectedIndices = new ArrayList();
-               List selectedIndices = new ArrayList();
-               for (int index = e.getFirstIndex(); index <= e.getLastIndex(); ++index) {
-                   int visibleIndex = index;
-                   if (getViewportSize() != null) {
-                       visibleIndex = index - getViewportSize().y;
-                       if (visibleIndex < 0 || visibleIndex >= getViewportSize().height)
-                           continue;
-                   }
-                   if (isRowSelected(index)) {
-                       selectedIndices.add(new Integer(visibleIndex));
-                   } else {
-                       deselectedIndices.add(new Integer(visibleIndex));
-                   }
-               }
-               update(((TableCG) getCG()).getSelectionUpdate(STable.this, deselectedIndices, selectedIndices));
-           } else {
-               reload();
-           }
-       }
+
+        List<Integer> deselectedIndices;
+        List<Integer> selectedIndices;
+
+        public void valueChanged(ListSelectionEvent e) {
+            if (isUpdatePossible() && STable.class.isAssignableFrom(STable.this.getClass())) {
+                deselectedIndices = new ArrayList<Integer>();
+                selectedIndices = new ArrayList<Integer>();
+                if (getSelectionMode() == SINGLE_SELECTION) {
+                    addIndex(e.getFirstIndex());
+                    addIndex(e.getLastIndex());
+                } else {
+                    for (int index = e.getFirstIndex(); index <= e.getLastIndex(); ++index) {
+                        addIndex(index);
+                    }
+                }
+                update(((TableCG) getCG()).getSelectionUpdate(STable.this, deselectedIndices, selectedIndices));
+            } else {
+                reload();
+            }
+        }
+
+        private void addIndex(int index) {
+            int visibleIndex = index;
+            if (getViewportSize() != null) {
+                visibleIndex = index - getViewportSize().y;
+                if (visibleIndex < 0 || visibleIndex >= getViewportSize().height)
+                    return;
+            }
+            if (isRowSelected(index)) {
+                selectedIndices.add(new Integer(visibleIndex));
+            } else {
+                deselectedIndices.add(new Integer(visibleIndex));
+            }
+        }
     };
 
     /**
@@ -695,7 +707,7 @@ public class STable extends SComponent
      * @param selectable <code>true</code> if table cell should catch clicks on non-editable tables.
      * @see #isEditable()
      * @see #processLowLevelEvent(String, String[])
-     * @see #fireIntermediateEvents() 
+     * @see #fireIntermediateEvents()
      */
     public void setSelectable(boolean selectable) {
         reloadIfChange(this.selectable, selectable);
@@ -1220,7 +1232,7 @@ public class STable extends SComponent
         for (int i = 0; i < lastReceivedLowLevelEvents.length; i++) {
             String value = lastReceivedLowLevelEvents[i];
             if (value.length() > 1) {
-                
+
                 char modus = value.charAt(0);
                 value = value.substring(1);
                 if (value.indexOf(':') == -1)
@@ -1329,7 +1341,7 @@ public class STable extends SComponent
         this.epochCheckEnabled = epochCheckEnabled;
     }
 
-    public void tableChanged(TableModelEvent e) {        
+    public void tableChanged(TableModelEvent e) {
         // kill active editors
         editingCanceled(null);
 
