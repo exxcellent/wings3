@@ -1,89 +1,77 @@
-YAHOO.widget.XCalendar = function(containerId, config, xcalId, buttonId, hiddenId ) {
-    YAHOO.widget.XCalendar.superclass.constructor.call(this, containerId+"ID", containerId, config );
+/***************************************************************************************************
+ * WINGS.XCALENDAR  --  contains: functions related to the XCalendar class
+ **************************************************************************************************/
 
-    this.xcalId     = xcalId;
-    this.calId      = containerId;
-    this.buttonId   = buttonId;
-    this.hiddenField = document.getElementById( hiddenId );
+// Create module namespace
+wingS.namespace("xcalendar");
 
-    this.selectEvent.subscribe( this.handleSelect, this, true );
-    YAHOO.util.Event.addListener(this.buttonId, "click", this.showCalendar, this, true); 
+wingS.xcalendar.XCalendar = function(componentId, config) {
+    this.componentId = componentId;
+    this.valueId = componentId + "val";
+    this.buttonId = componentId + "btn";
+    this.containerId = componentId + "con";
+    this.calendarId = componentId + "cal";
+    
+    this.valueField = document.getElementById(this.valueId);
+    
+    this.calendarWidget = new wingS.xcalendar.Calendar(this.calendarId, config);
+    this.calendarWidget.selectEvent.subscribe(this.handleSelectEvent, this, true);
+    this.calendarWidget.clearEvent.subscribe(this.updateContainerTitle, this, true);
+    this.calendarWidget.changePageEvent.subscribe(this.updateContainerTitle, this, true);
+    
+    this.containerWidget = new YAHOO.widget.Dialog(this.containerId, {context:[this.buttonId, "tl", "tl"],
+         constraintoviewport:true, draggable:true, close:true, underlay:"none", zIndex:1001});
+    
+    YAHOO.util.Event.addListener(this.buttonId, "click", this.showPopup, this, true);
 }
 
-YAHOO.lang.extend( YAHOO.widget.XCalendar, YAHOO.widget.Calendar );
-
-YAHOO.widget.XCalendar.prototype.showCalendar = function() {
-    if (this.hiddenField.value != "") {
-        this.select(this.hiddenField.value); 
-        var selectedDates = this.getSelectedDates(); 
-        if (selectedDates.length > 0) { 
-            var firstDate = selectedDates[0]; 
-            this.cfg.setProperty("pagedate", (firstDate.getMonth()+1) + "/" + firstDate.getFullYear());  
+wingS.xcalendar.XCalendar.prototype.showPopup = function() {
+    if (this.valueField.value != "") {
+        this.calendarWidget.select(this.valueField.value);
+        var selectedDates = this.calendarWidget.getSelectedDates();
+        if (selectedDates.length > 0) {
+            var selectedDate = selectedDates[0];
+            this.calendarWidget.cfg.setProperty("pagedate",
+                (selectedDate.getMonth() + 1) + "/" + selectedDate.getFullYear());
         }
     }
-    this.render();
-    this.show();
-    
-    var cal = document.getElementById(this.calId);
-    if (!YAHOO.env.ua.ie || YAHOO.env.ua.ie > 6) {
-	    var pos = YAHOO.util.Dom.getXY( "r"+this.calId )
-	    cal.style.left = pos[0] + "px";
-	    cal.style.top = pos[1] + "px";
-	
-	    var regionCalendar = new YAHOO.util.Region(pos[1], pos[0] + cal.offsetWidth, pos[1] + cal.offsetHeight, pos[0]);
-	    var viewportWidth  = YAHOO.util.Dom.getViewportWidth();
-	    var viewportHeight = YAHOO.util.Dom.getViewportHeight();
-	
-	    var overlabRight = regionCalendar.right - ( viewportWidth + YAHOO.util.Dom.getDocumentScrollLeft() );
-	    if ( overlabRight > 0 ) {
-	        cal.style.left = (regionCalendar.left - ( overlabRight + 8 ) ) + "px";
-	    }
-	    var overlabBottom = regionCalendar.bottom - ( viewportHeight + YAHOO.util.Dom.getDocumentScrollTop() );
-	    if ( overlabBottom > 0 ) {
-	        cal.style.top = (regionCalendar.top - ( overlabBottom + 8 ) ) + "px";
-	    }
-	} else {
-		cal.style.left = "0px";
-	    cal.style.top = "0px";
-	    cal.parentNode.style.position = "relative";
-	}
+    this.updateContainerTitle();
+    this.calendarWidget.render();
+    this.containerWidget.render();
+    this.containerWidget.show();
+    this.containerWidget.align("tl", "tl");
 }
 
-YAHOO.widget.XCalendar.prototype.handleSelect = function(type,args,obj) {
-    var dates = args[0]; 
-    var date = dates[0]; 
+wingS.xcalendar.XCalendar.prototype.handleSelectEvent = function(type, args, obj) {
+    var dates = args[0];
+    var date = dates[0];
     var year = date[0];
     var month = date[1];
     var day = date[2];
-    if ( day < 10 ) { day = '0'+day; }
-    if ( month < 10 ) { month = '0'+month; }
-    
+    if (day < 10) { day = '0' + day; }
+    if (month < 10) { month = '0' + month; }
     var value = month + "/" + day + "/" + year;
-    
-    if ( this.hiddenField.value != value ) {
-        wingS.request.sendEvent(null, false, true, this.xcalId, value );
+
+    if (this.valueField.value != value) {
+        wingS.request.sendEvent(null, false, true, this.componentId, value);
     }
-    this.hide();
+    this.containerWidget.hide();
 }
 
-/**
- * Overwrites createTitleBar in YAHOO.widget.Calendar
- */
-YAHOO.widget.XCalendar.prototype.createTitleBar = function(strTitle) {
-	var tDiv = YAHOO.util.Dom.getElementsByClassName(YAHOO.widget.CalendarGroup.CSS_2UPTITLE, "div", this.oDomContainer)[0] || document.createElement("div");
-	tDiv.className = YAHOO.widget.CalendarGroup.CSS_2UPTITLE;
-	tDiv.innerHTML = this.buildMonthLabel();
-	this.oDomContainer.insertBefore(tDiv, this.oDomContainer.firstChild);
+wingS.xcalendar.XCalendar.prototype.updateContainerTitle = function(type, args, obj) {
+    this.containerWidget.setHeader(this.calendarWidget.buildMonthLabel());
+}
 
-	YAHOO.util.Dom.addClass(this.oDomContainer, "withtitle");
+wingS.xcalendar.Calendar = function(calendarId, config) {
+    wingS.xcalendar.Calendar.superclass.constructor.call(this, calendarId, config);
+}
 
-	return tDiv;
-};
+YAHOO.lang.extend(wingS.xcalendar.Calendar, YAHOO.widget.Calendar);
 
 /**
  * Overwrites renderHeader in YAHOO.widget.Calendar
  */
-YAHOO.widget.XCalendar.prototype.renderHeader = function(html) {
+wingS.xcalendar.Calendar.prototype.renderHeader = function(html) {
         var colSpan = 7;
 
         var DEPR_NAV_LEFT = "us/tr/callt.gif";
@@ -91,30 +79,30 @@ YAHOO.widget.XCalendar.prototype.renderHeader = function(html) {
         var defCfg = YAHOO.widget.Calendar._DEFAULT_CONFIG;
 
         if (this.cfg.getProperty(defCfg.SHOW_WEEK_HEADER.key)) {
-                colSpan += 1;
+            colSpan += 1;
         }
 
         if (this.cfg.getProperty(defCfg.SHOW_WEEK_FOOTER.key)) {
-                colSpan += 1;
+            colSpan += 1;
         }
 
         html[html.length] = "<thead>";
-        html[html.length] =             "<tr>";
-        html[html.length] =                     '<th colspan="' + colSpan + '" class="' + this.Style.CSS_HEADER_TEXT + '">';
-        html[html.length] =                             '<div class="' + this.Style.CSS_HEADER + '">';
+        html[html.length] = "<tr>";
+        html[html.length] = '<th colspan="' + colSpan + '" class="' + this.Style.CSS_HEADER_TEXT + '">';
+        html[html.length] = '<div class="' + this.Style.CSS_HEADER + '">';
 
         var renderLeft, renderRight = false;
 
         if (this.parent) {
-                if (this.index === 0) {
-                        renderLeft = true;
-                }
-                if (this.index == (this.parent.cfg.getProperty("pages") -1)) {
-                        renderRight = true;
-                }
-        } else {
+            if (this.index === 0) {
                 renderLeft = true;
+            }
+            if (this.index == (this.parent.cfg.getProperty("pages") -1)) {
                 renderRight = true;
+            }
+        } else {
+            renderLeft = true;
+            renderRight = true;
         }
 
         var cal = this.parent || this;
@@ -127,7 +115,7 @@ YAHOO.widget.XCalendar.prototype.renderHeader = function(html) {
                 var leftArrow = this.cfg.getProperty(defCfg.NAV_ARROW_LEFT.key);
                 // Check for deprecated customization - If someone set IMG_ROOT, but didn't set NAV_ARROW_LEFT, then set NAV_ARROW_LEFT to the old deprecated value
                 if (leftArrow === null && YAHOO.widget.Calendar.IMG_ROOT !== null) {
-                        leftArrow = YAHOO.widget.Calendar.IMG_ROOT + DEPR_NAV_LEFT;
+                    leftArrow = YAHOO.widget.Calendar.IMG_ROOT + DEPR_NAV_LEFT;
                 }
                 //var leftStyle = (leftArrow === null) ? "" : ' style="background-image:url(' + leftArrow + ')"';
                 var leftStyle = '';
@@ -139,23 +127,23 @@ YAHOO.widget.XCalendar.prototype.renderHeader = function(html) {
         // </clearDate>
 
         if (renderRight) {
-                var rightArrow = this.cfg.getProperty(defCfg.NAV_ARROW_RIGHT.key);
-                if (rightArrow === null && YAHOO.widget.Calendar.IMG_ROOT !== null) {
-                        rightArrow = YAHOO.widget.Calendar.IMG_ROOT + DEPR_NAV_RIGHT;
-                }
-                var rightStyle = (rightArrow === null) ? "" : ' style="background-image:url(' + rightArrow + ')"';
-                var rightStyle = '';
-                html[html.length] = '<a class="' + this.Style.CSS_NAV_RIGHT + '"' + rightStyle + ' >&#160;</a>';
+            var rightArrow = this.cfg.getProperty(defCfg.NAV_ARROW_RIGHT.key);
+            if (rightArrow === null && YAHOO.widget.Calendar.IMG_ROOT !== null) {
+                rightArrow = YAHOO.widget.Calendar.IMG_ROOT + DEPR_NAV_RIGHT;
+            }
+            var rightStyle = (rightArrow === null) ? "" : ' style="background-image:url(' + rightArrow + ')"';
+            var rightStyle = '';
+            html[html.length] = '<a class="' + this.Style.CSS_NAV_RIGHT + '"' + rightStyle + '>&#160;</a>';
         }
-        
+
         // <nextYear>
         html[html.length] = '<a class="calnavrightYear">&#160;</a>';
         // </nextYear>
 
-        html[html.length] =     '</div>\n</th>\n</tr>';
+        html[html.length] = '</div>\n</th>\n</tr>';
 
         if (this.cfg.getProperty(defCfg.SHOW_WEEKDAYS.key)) {
-                html = this.buildWeekdays(html);
+            html = this.buildWeekdays(html);
         }
 
         html[html.length] = '</thead>';
@@ -164,71 +152,70 @@ YAHOO.widget.XCalendar.prototype.renderHeader = function(html) {
 };
 
 /**
-    Ueberschreibt die Methode applyListeners aus YAHOO.widget.Calendar
-*/
-YAHOO.widget.XCalendar.prototype.applyListeners = function() {
+ * Overwrites applyListeners in YAHOO.widget.Calendar
+ */
+wingS.xcalendar.Calendar.prototype.applyListeners = function() {
+    var root = this.oDomContainer;
+    var cal = this.parent || this;
 
-        var root = this.oDomContainer;
-        var cal = this.parent || this;
+    var anchor = "a";
+    var mousedown = "mousedown";
 
-        var anchor = "a";
-        var mousedown = "mousedown";
+    var linkLeft = YAHOO.util.Dom.getElementsByClassName(this.Style.CSS_NAV_LEFT, anchor, root);
+    var linkRight = YAHOO.util.Dom.getElementsByClassName(this.Style.CSS_NAV_RIGHT, anchor, root);
+    var linkLeftYear = YAHOO.util.Dom.getElementsByClassName("calnavleftYear", anchor, root);
+    var linkRightYear = YAHOO.util.Dom.getElementsByClassName("calnavrightYear", anchor, root);
+    var linkClearDate = YAHOO.util.Dom.getElementsByClassName("calnavclearDate", anchor, root);
 
-        var linkLeft = YAHOO.util.Dom.getElementsByClassName(this.Style.CSS_NAV_LEFT, anchor, root);
-        var linkRight = YAHOO.util.Dom.getElementsByClassName(this.Style.CSS_NAV_RIGHT, anchor, root);
-        var linkLeftYear = YAHOO.util.Dom.getElementsByClassName("calnavleftYear", anchor, root);
-        var linkRightYear = YAHOO.util.Dom.getElementsByClassName("calnavrightYear", anchor, root);
-        var linkClearDate = YAHOO.util.Dom.getElementsByClassName("calnavclearDate", anchor, root);
+    if (linkLeft && linkLeft.length > 0) {
+        this.linkLeft = linkLeft[0];
+        YAHOO.util.Event.addListener(this.linkLeft, mousedown, cal.previousMonth, cal, true);
+    }
 
-        if (linkLeft && linkLeft.length > 0) {
-                this.linkLeft = linkLeft[0];
-                YAHOO.util.Event.addListener(this.linkLeft, mousedown, cal.previousMonth, cal, true);
-        }
+    if (linkRight && linkRight.length > 0) {
+        this.linkRight = linkRight[0];
+        YAHOO.util.Event.addListener(this.linkRight, mousedown, cal.nextMonth, cal, true);
+    }
 
-        if (linkRight && linkRight.length > 0) {
-                this.linkRight = linkRight[0];
-                YAHOO.util.Event.addListener(this.linkRight, mousedown, cal.nextMonth, cal, true);
-        }
-        
-        if (linkLeftYear && linkLeftYear.length > 0) {
-                this.linkLeftYear = linkLeftYear[0];
-                YAHOO.util.Event.addListener(this.linkLeftYear, mousedown, cal.previousYear, cal, true);
-        }
+    if (linkLeftYear && linkLeftYear.length > 0) {
+        this.linkLeftYear = linkLeftYear[0];
+        YAHOO.util.Event.addListener(this.linkLeftYear, mousedown, cal.previousYear, cal, true);
+    }
 
-        if (linkRightYear && linkRightYear.length > 0) {
-                this.linkRightYear = linkRightYear[0];
-                YAHOO.util.Event.addListener(this.linkRightYear, mousedown, cal.nextYear, cal, true);
-        }
-        
-        if (linkClearDate && linkClearDate.length > 0) {
-                this.linkClearDate = linkClearDate[0];
-                YAHOO.util.Event.addListener(this.linkClearDate, mousedown, cal.clear, cal, true);
-        }
+    if (linkRightYear && linkRightYear.length > 0) {
+        this.linkRightYear = linkRightYear[0];
+        YAHOO.util.Event.addListener(this.linkRightYear, mousedown, cal.nextYear, cal, true);
+    }
 
-        if (this.domEventMap) {
-                var el,elements;
-                for (var cls in this.domEventMap) {
-                        if (YAHOO.lang.hasOwnProperty(this.domEventMap, cls)) {
-                                var items = this.domEventMap[cls];
+    if (linkClearDate && linkClearDate.length > 0) {
+        this.linkClearDate = linkClearDate[0];
+        YAHOO.util.Event.addListener(this.linkClearDate, mousedown, cal.clear, cal, true);
+    }
 
-                                if (! (items instanceof Array)) {
-                                        items = [items];
-                                }
+    if (this.domEventMap) {
+        var el,elements;
+        for (var cls in this.domEventMap) {
+            if (YAHOO.lang.hasOwnProperty(this.domEventMap, cls)) {
+                var items = this.domEventMap[cls];
 
-                                for (var i=0;i<items.length;i++)        {
-                                        var item = items[i];
-                                        elements = YAHOO.util.Dom.getElementsByClassName(cls, item.tag, this.oDomContainer);
-
-                                        for (var c=0;c<elements.length;c++) {
-                                                el = elements[c];
-                                                 YAHOO.util.Event.addListener(el, item.event, item.handler, item.scope, item.correct );
-                                        }
-                                }
-                        }
+                if (! (items instanceof Array)) {
+                    items = [items];
                 }
-        }
 
-        YAHOO.util.Event.addListener(this.oDomContainer, "click", this.doSelectCell, this); 
-        YAHOO.util.Event.addListener(this.oDomContainer, "mouseover", this.doCellMouseOver, this);
-        YAHOO.util.Event.addListener(this.oDomContainer, "mouseout", this.doCellMouseOut, this);
+                for (var i=0;i<items.length;i++)        {
+                    var item = items[i];
+                    elements = YAHOO.util.Dom.getElementsByClassName(cls, item.tag, this.oDomContainer);
+
+                    for (var c=0;c<elements.length;c++) {
+                        el = elements[c];
+                        YAHOO.util.Event.addListener(el, item.event, item.handler, item.scope, item.correct );
+                    }
+                }
+            }
+        }
+    }
+
+    YAHOO.util.Event.addListener(this.oDomContainer, "click", this.doSelectCell, this);
+    YAHOO.util.Event.addListener(this.oDomContainer, "mouseover", this.doCellMouseOver, this);
+    YAHOO.util.Event.addListener(this.oDomContainer, "mouseout", this.doCellMouseOut, this);
 };

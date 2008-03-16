@@ -14,7 +14,6 @@ import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
@@ -33,7 +32,7 @@ import org.wings.text.SInternationalFormatter;
 import org.wingx.plaf.css.CalendarCG;
 
 /**
- * @author <a href="mailto:e.habich@@thiesen.com">Erik Habicht</a>
+ * @author <a href="mailto:e.habicht@thiesen.com">Erik Habicht</a>
  */
 public class XCalendar extends SContainer implements LowLevelEventListener, SDocumentListener {
     
