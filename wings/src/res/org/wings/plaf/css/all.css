@@ -23,7 +23,7 @@ body {
     font-style:normal;
     font-size:0.8em;
     height:100%;
-}
+} 
 
 form {
     margin: 0px;
@@ -775,37 +775,49 @@ table.DivisionContent {
 
 /* --- YUI-CALENDAR (XCALENDAR) -------------------------------------------- */
 
-.yui-skin-sam .yui-calcontainer {
-	width: 153px !important;
+.yui-skin-sam .XCalendar .bu img {
+    cursor:pointer;
 }
 
-.yui-skin-sam .yui-calcontainer .title {
-    border-bottom-color:#808080 !important;
-	font-size:93% !important;
-	height:26px !important;
-    padding:0 10px !important;
-    line-height:25px !important;
+.yui-skin-sam .XCalendar .container {
+    width: 153px !important;
 }
 
-.yui-skin-sam .yui-calcontainer .calclose {
-	right:10px !important;
+.yui-skin-sam .XCalendar .container .bd {
+    padding:0;
 }
 
-.yui-skin-sam .yui-calendar {
+.yui-skin-sam .XCalendar .container .bd:after {
+    content:".";
+    display:block;
+    clear:left;
+    height:0;
+    visibility:hidden;
+}
+
+.yui-skin-sam .XCalendar .container-close {
+    right:10px !important;
+}
+
+.yui-skin-sam .XCalendar .calendar {
+    border:none;
+}
+
+.yui-skin-sam .XCalendar .yui-calendar {
     font-size:7pt !important;
     width: 100%!important;
 }
 
-.yui-skin-sam .yui-calendar .calheader {
+.yui-skin-sam .XCalendar .yui-calendar .calheader {
 	height:15px !important;
 	padding:0 !important;
 }
 
-.yui-skin-sam .yui-calendar .calheader .calnavleftYear,
-.yui-skin-sam .yui-calendar .calheader .calnavleft,
-.yui-skin-sam .yui-calendar .calheader .calnavclearDate,
-.yui-skin-sam .yui-calendar .calheader .calnavright,
-.yui-skin-sam .yui-calendar .calheader .calnavrightYear {
+.yui-skin-sam .XCalendar .yui-calendar .calheader .calnavleftYear,
+.yui-skin-sam .XCalendar .yui-calendar .calheader .calnavleft,
+.yui-skin-sam .XCalendar .yui-calendar .calheader .calnavclearDate,
+.yui-skin-sam .XCalendar .yui-calendar .calheader .calnavright,
+.yui-skin-sam .XCalendar .yui-calendar .calheader .calnavrightYear {
 	bottom:0 !important;
 	cursor:pointer !important;
 	height:15px !important;
@@ -815,31 +827,27 @@ table.DivisionContent {
 	z-index:1 !important;
 }
 
-.yui-skin-sam .yui-calendar .calheader .calnavleftYear {
+.yui-skin-sam .XCalendar .yui-calendar .calheader .calnavleftYear {
 	background:url("../../../../-org/wingx/calendar/cally.gif") no-repeat !important;
 	left:-1px !important;
 }
 
-.yui-skin-sam .yui-calendar .calheader .calnavleft {
+.yui-skin-sam .XCalendar .yui-calendar .calheader .calnavleft {
 	left:22px !important;
 }
 
-.yui-skin-sam .yui-calendar .calheader .calnavclearDate {
+.yui-skin-sam .XCalendar .yui-calendar .calheader .calnavclearDate {
 	background:url("../../../../-org/wingx/calendar/calcd.gif") no-repeat !important;
 	left:53px !important;
 }
 
-.yui-skin-sam .yui-calendar .calheader .calnavright {
+.yui-skin-sam .XCalendar .yui-calendar .calheader .calnavright {
 	right:23px !important
 }
 
-.yui-skin-sam .yui-calendar .calheader .calnavrightYear {
+.yui-skin-sam .XCalendar .yui-calendar .calheader .calnavrightYear {
 	background:url("../../../../-org/wingx/calendar/calry.gif") no-repeat !important;
 	right:0px !important;
-}
-
-.XCalendar .b img {
-    cursor: pointer;
 }
 
 /* ------------------------------------------------------------------------- */
