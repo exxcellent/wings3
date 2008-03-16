@@ -12,6 +12,7 @@
  */
 package org.wingx.plaf.css;
 
+import org.wings.plaf.Update.Handler;
 import org.wings.plaf.css.*;
 import org.wings.plaf.CGManager;
 import org.wings.plaf.Update;
@@ -26,6 +27,7 @@ import org.wingx.table.*;
 
 import java.awt.Rectangle;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.TableModel;
@@ -270,7 +272,7 @@ public class XTableCG
 
     public final void writeInternal(final Device device, final SComponent _c) throws IOException {
         final XTable table = (XTable)_c;
-        
+
         TableModel model = table.getModel();
         boolean empty = model.getRowCount() == 0;
         boolean filtered = isModelFiltered(model);
@@ -300,7 +302,7 @@ public class XTableCG
 
         writeColumnWidths(device, table, startX, endX);
         writeHeader(device, table, startX, endX);
-        
+
         if (!empty || filtered)
             writeFilter(device, table, startX, endX);
 
@@ -414,16 +416,16 @@ public class XTableCG
         STableColumnModel columnModel = table.getColumnModel();
 
         for (int r = startY; r < endY; ++r) {
-            writeTableRow(device, table, columnModel, selectionModel, rendererPane, r, 
+            writeTableRow(device, table, columnModel, selectionModel, rendererPane, r,
                     startX, endX, emptyIndex, selectedArea, oddArea, evenArea);
         }
     }
 
     protected void writeTableRow(
-            Device device, XTable table, STableColumnModel columnModel, 
+            Device device, XTable table, STableColumnModel columnModel,
             SListSelectionModel selectionModel, SCellRendererPane rendererPane,
-            final int rowIndex, int startX, int endX, 
-            int emptyIndex, SStringBuilder selectedArea, 
+            final int rowIndex, int startX, int endX,
+            int emptyIndex, SStringBuilder selectedArea,
             SStringBuilder oddArea, SStringBuilder evenArea) throws IOException {
         if (rowIndex >= emptyIndex) {
             int colspan = endX - startX;
@@ -435,7 +437,7 @@ public class XTableCG
             device.print("</tr>\n");
             return;
         }
-        
+
         String rowStyle = table.getRowStyle(rowIndex);
         SStringBuilder rowClass = new SStringBuilder(rowStyle != null ? rowStyle + " " : "");
         device.print("<tr");
@@ -453,7 +455,7 @@ public class XTableCG
         device.print(">");
 
         writeSelectionBody(device, table, rendererPane, rowIndex);
-        
+
         for (int c = startX; c < endX; ++c) {
             STableColumn column = columnModel.getColumn(c);
             if (!column.isHidden())
@@ -461,7 +463,7 @@ public class XTableCG
             else
                 ++endX;
         }
-        
+
         device.print("</tr>");
         Utils.printNewline(device, table);
     }
@@ -487,12 +489,12 @@ public class XTableCG
         if (isSelectionColumnVisible(table)) {
             device.print("<th valign=\"middle\"");
             Utils.optAttribute(device, "width", selectionColumnWidth);
-    
+
             if (table.getModel() instanceof RefreshableModel) {
                 String parameter = table.getRefreshParameter();
                 Utils.printClickability(device, table, parameter, true, table.getShowAsFormComponent());
                 device.print(" class=\"num clickable\">");
-    
+
                 refreshLabel.write(device);
             }
             else {
@@ -584,7 +586,7 @@ public class XTableCG
             device.print("</td>");
         }
     }
-    
+
     public static void printClickability(final Device device, final SComponent component, final String eventValue,
                                          final boolean formComponent) throws IOException {
         device.print(" onclick=\"return wingS.table.cellClick(");
@@ -603,7 +605,7 @@ public class XTableCG
             return true;
         return false;
     }
-    
+
 
     public Update getTableScrollUpdate(STable table, Rectangle newViewport, Rectangle oldViewport) {
         return new ComponentUpdate(this, table);
@@ -667,11 +669,11 @@ public class XTableCG
         }
     }
 
-    protected static class SelectionUpdate extends AbstractUpdate<XTable> {
-        private List deselectedIndices;
-        private List selectedIndices;
+    protected class SelectionUpdate extends AbstractUpdate<XTable> {
+        private List<Integer> deselectedIndices;
+        private List<Integer> selectedIndices;
 
-        public SelectionUpdate(XTable component, List deselectedIndices, List selectedIndices) {
+        public SelectionUpdate(XTable component, List<Integer> deselectedIndices, List<Integer> selectedIndices) {
             super(component);
             this.deselectedIndices = deselectedIndices;
             this.selectedIndices = selectedIndices;
@@ -685,12 +687,40 @@ public class XTableCG
             if (component.isFilterVisible() && component.getModel() instanceof FilterableTableModel) {
                 ++indexOffset;
             }
+
             UpdateHandler handler = new UpdateHandler("selectionTable");
             handler.addParameter(component.getName());
             handler.addParameter(new Integer(indexOffset));
             handler.addParameter(Utils.listToJsArray(deselectedIndices));
             handler.addParameter(Utils.listToJsArray(selectedIndices));
+            if (isSelectionColumnVisible(component)) {
+                String exception = null;
+                List<String> deselectedBodies = new ArrayList<String>();
+                List<String> selectedBodies = new ArrayList<String>();
+                exception = writeSelectionBodies(deselectedIndices, deselectedBodies);
+                exception = writeSelectionBodies(selectedIndices, selectedBodies);
+                handler.addParameter(Utils.listToJsArray(deselectedBodies));
+                handler.addParameter(Utils.listToJsArray(selectedBodies));
+                if (exception != null) {
+                    handler.addParameter(exception);
+                }
+            }
             return handler;
+        }
+
+        private String writeSelectionBodies(List<Integer> indices, List<String> bodies) {
+            try {
+                final StringBuilderDevice htmlDevice = new StringBuilderDevice(512);
+                final SCellRendererPane rendererPane = component.getCellRendererPane();
+                for (Integer index : indices) {
+                    writeSelectionBody(htmlDevice, component, rendererPane, index);
+                    bodies.add(htmlDevice.toString());
+                    htmlDevice.reset();
+                }
+            } catch (Throwable t) {
+                return t.getClass().getName();
+            }
+            return null;
         }
     }
 
