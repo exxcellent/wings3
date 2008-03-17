@@ -26,11 +26,15 @@ import org.wings.util.SStringBuilder;
  */
 public class DefaultReloadManager implements ReloadManager {
 
+    private static final long serialVersionUID = 2951486214657704539L;
+
     private final transient static Log log = LogFactory.getLog(DefaultReloadManager.class);
 
     private int updateCount = 0;
 
     private boolean updateMode = false;
+    
+    private boolean suppressMode = false;
 
     private boolean acceptChanges = true;
 
@@ -44,8 +48,12 @@ public class DefaultReloadManager implements ReloadManager {
     private final Set<SComponent> componentsToReload = new LinkedHashSet<SComponent>();
     
     public void reload(SComponent component) {
+        if (suppressMode) {
+            return;
+        }
+        
         if (component == null)
-            throw new IllegalArgumentException("Component must not be null!");
+            throw new IllegalArgumentException("Component must not be null!");        
 
         if (updateMode) {
             addUpdate(component, null);
@@ -162,6 +170,14 @@ public class DefaultReloadManager implements ReloadManager {
 
     public void setUpdateMode(boolean updateMode) {
         this.updateMode = updateMode;
+    }
+
+    public boolean isSuppressMode() {
+        return suppressMode;
+    }
+
+    public void setSuppressMode(boolean suppressMode) {
+        this.suppressMode = suppressMode;
     }
 
     public boolean isReloadRequired(SFrame frame) {

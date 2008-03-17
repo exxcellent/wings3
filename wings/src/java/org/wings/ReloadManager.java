@@ -72,6 +72,18 @@ public interface ReloadManager extends Serializable {
      * @param enabled  true to enable update mode
      */
     void setUpdateMode(boolean enabled);
+    
+    /**
+     * Returns the current suppress mode.
+     * @return true if in all reloads are suppressed
+     */
+    boolean isSuppressMode();
+    
+    /**
+     * Sets the current suppress mode.
+     * @param enabled  true to suppress all reloads
+     */
+    void setSuppressMode(boolean enabled);
 
     /**
      * Returns a reload suggestion.
