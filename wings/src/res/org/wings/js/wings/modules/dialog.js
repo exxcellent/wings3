@@ -17,6 +17,8 @@ wingS.namespace("dialog");
  */
 wingS.dialog.SDialog = function(el, userConfig) {
     wingS.dialog.SDialog.superclass.constructor.call(this, el, userConfig);
+    wingS.global.overlayManager.register(this);
+    this.focus();
 };
 
 /**
@@ -44,7 +46,7 @@ wingS.dialog.SDialog._DEFAULT_CONFIG = {
     }
 };
 
-YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Panel, {
+YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
 
     init: function(el, userConfig) {
         wingS.dialog.SDialog.superclass.init.call(this, el);

@@ -32,6 +32,7 @@ wingS.global.init =  function(configObject) {
     wingS.global.updateEnabled = configObject.updateEnabled;
     wingS.global.updateCursor = configObject.updateCursor;
     wingS.global.autoAdjustLayout = configObject.autoAdjustLayout;
+    wingS.global.overlayManager = new YAHOO.widget.OverlayManager();
 
     // Initialize -wingS.ajax-
     wingS.ajax.requestIsActive = false;

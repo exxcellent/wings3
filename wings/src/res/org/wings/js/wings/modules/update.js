@@ -358,16 +358,15 @@ wingS.update.removeWindow = function(componentId) {
 	if (component == null) {
         throw {message: "Could not find component with id '" + componentId + "'"};
     }
-	
+
+    var tr = component.parentNode.parentNode.parentNode;
+    var table = tr.parentNode;
+
 	// Hide dialog mask if available.
 	var dialog = window["dialog_" + componentId];
     if (dialog != null) {
-        dialog.hideMask();
+        dialog.destroy();
     }
-	
-	var td = component.parentNode;
-	var tr = td.parentNode;
-	var table = tr.parentNode;
 	
 	table.removeChild(tr);
 };
