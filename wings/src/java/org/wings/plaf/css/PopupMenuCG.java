@@ -74,12 +74,13 @@ public final class PopupMenuCG extends AbstractComponentCG implements
                         }
                         if (!menuItem.isEnabled()) {
                             device.print("_Disabled");
-                        }                        
+                        }
+                        device.print("\"");
                         printScriptHandlers(device, menuItem, "onmouseover");
                     } else {
-                        device.print("SMenuComponent");
+                        device.print("SMenuComponent\"");
                     }
-                    device.print("\">");
+                    device.print(">");
                     if (menuItem instanceof SMenuItem) {
                         device.print("<a href=\"#\"");
                         if (menuItem instanceof SMenu) {
