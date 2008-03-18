@@ -28,7 +28,5 @@ public interface FrameCG extends RootContainerCG {
     public Update getFocusUpdate(SFrame frame, SComponent focus);
 
     public Update getUpdateEnabledUpdate(SFrame frame, boolean enabled);
-
-    public Update getCloseDialogUpdate(SFrame frame, String dialogName);
     
 }

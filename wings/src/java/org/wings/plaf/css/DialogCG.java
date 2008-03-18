@@ -54,7 +54,9 @@ public class DialogCG extends WindowCG implements org.wings.plaf.DialogCG {
         sb.append("fixedcenter:true").append("}); dialog_").append(name).append(".render();");
 
 // todo: use overlay manager if required to manage multiple dialogs. -> uncomment definition of overlay manager in FrameCG and InternalFrameCG
-//        sb.append(owner.getName() + "_overlay_manager.register(" + name + ");\n\n");
+//        sb.append(dialog.getParentFrame().getName() + "_overlay_manager.register(dialog_" + name + ");\n\n");
+//        sb.append(owner.getSession().getRootFrame().getName() + "_overlay_manager.register(dialog_" + name + ");\n\n");
+        sb.append(owner.getName() + "_overlay_manager.register(dialog_" + name + ");\n\n");
 
         ScriptManager.getInstance().addScriptListener(new OnPageRenderedScript(sb.toString()));
     }

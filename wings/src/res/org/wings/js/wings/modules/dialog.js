@@ -57,17 +57,6 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Panel, {
             this.cfg.applyConfig(userConfig, true);
         }
 
-        function onBeforeShow() {
-            if (typeof console != 'undefined')
-                //console.log("onBeforeShow");
-
-            this.unsubscribe("beforeShow", onBeforeShow);
-
-            //alert("width: " + this.element.offsetWidth);
-        }
-
-        this.subscribe("beforeShow", onBeforeShow);
-
         this.initEvent.fire(wingS.dialog.SDialog);
     },
 
@@ -96,16 +85,17 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Panel, {
 
     center: function() {
 
-    	// Workarounds for IE:
-    	//  - avoid toggeling dialog width (e.g. while dragging) in IE 7
-    	//  - resize to correct width regarding border-box-issues in IE 6/7
-    	//  - TODO: it works but it's still a hack - reevaluate with YUI 2.3.2
+        // Workarounds for IE:
+        //  - avoid toggeling dialog width (e.g. while dragging) in IE 7
+        //  - resize to correct width regarding border-box-issues in IE 6/7
+        //  - TODO: it works but it's still a hack - reevaluate with YUI 2.3.2
         if (YAHOO.env.ua.ie > 6) { // IE 7
-        	this.element.style.width = (this.element.offsetWidth - 6) + "px";
+            this.element.style.width = (this.element.offsetWidth - 6) + "px";
         	// Why subtract 6 ? --> 6 = 3 (padding-left) + 3 (padding-right) of surrounding div
-        } else if (YAHOO.env.ua.ie > 0) { // IE 6 and below
-        	this.element.firstChild.style.width = (this.element.firstChild.offsetWidth - 8) + "px";
-        	this.element.lastChild.style.width = (this.element.lastChild.offsetWidth - 8) + "px";
+        }
+        else if (YAHOO.env.ua.ie > 0) { // IE 6 and below
+            this.element.firstChild.style.width = (this.element.firstChild.offsetWidth - 8) + "px";
+            this.element.lastChild.style.width = (this.element.lastChild.offsetWidth - 8) + "px";
         	// Why subtract 8 ? --> 8 = 3 (padding-left) + 5 (padding-right) of surrounding div
         }
 
@@ -167,13 +157,15 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Panel, {
 
         if (x < leftConstraint) {
             x = leftConstraint;
-        } else if (x > rightConstraint) {
+        }
+        else if (x > rightConstraint) {
             x = rightConstraint;
         }
 
         if (y < topConstraint) {
             y = topConstraint;
-        } else if (y > bottomConstraint) {
+        }
+        else if (y > bottomConstraint) {
             y = bottomConstraint;
         }
 
@@ -192,7 +184,8 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Panel, {
                 this.showMask();
                 this.sizeMask();
             }
-        } else {
+        }
+        else {
             if (this._hasModalityEventListeners) {
 
                 if (this.cfg.getProperty("visible")) {
@@ -287,7 +280,8 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Panel, {
                     this.maxY = bottomConstraint;
                     this.constrainY = true;
 
-                } else {
+                }
+                else {
 
                     this.constrainX = false;
                     this.constrainY = false;
@@ -388,11 +382,22 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Panel, {
         var viewportelement = document.getElementById(viewportelementId);
 
         if (this.mask) {
-            this.element.style.zIndex = "2";
-            this.mask.style.top = YAHOO.util.Dom.getY(viewportelement) + "px";
-            this.mask.style.left = YAHOO.util.Dom.getX(viewportelement) + "px";
-            this.mask.style.height = viewportelement.offsetHeight + "px";
-            this.mask.style.width = viewportelement.offsetWidth + "px";
+            var zIndex = "2";
+            var top = YAHOO.util.Dom.getY(viewportelement) + "px";
+            var left = YAHOO.util.Dom.getX(viewportelement) + "px";
+            var height = viewportelement.offsetHeight + "px";
+            var width = viewportelement.offsetWidth + "px";
+
+            if (YAHOO.env.ua.ie == 7) {
+                top = (YAHOO.util.Dom.getY(viewportelement) - 2) + "px";
+                left = (YAHOO.util.Dom.getX(viewportelement) - 2) + "px";
+            }
+
+            this.element.style.zIndex = zIndex;
+            this.mask.style.top = top;
+            this.mask.style.left = left;
+            this.mask.style.height = height;
+            this.mask.style.width = width;
         }
     },
 

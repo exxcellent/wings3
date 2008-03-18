@@ -1107,7 +1107,7 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * Marks this component as subject to reload.
      * The component will be registered with the ReloadManager.
      */
-    public final void reload() {
+    public void reload() {
         getSession().getReloadManager().reload(this);
     }
 
@@ -1115,7 +1115,7 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * Hands the given update to the Reload Manager.
      * @param update  the update for this component
      */
-    public final void update(Update update) {
+    public void update(Update update) {
         getSession().getReloadManager().addUpdate(this, update);
     }
 

@@ -33,41 +33,86 @@ public class OptionPaneExample
     protected SComponent createExample() {
         SDesktopPane desktopPane = new SDesktopPane();
 
-        final SInternalFrame iFrame1 = new SInternalFrame();
-        iFrame1.getContentPane().setLayout(new SFlowDownLayout());
-
-        SButton button1 = new SButton("Show OptionPane within this InternalFrame");
-        button1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                SOptionPane.showMessageDialog(iFrame1, "Any message.", "Any title.");
-            }
-        });
-        iFrame1.getContentPane().add(button1);
-
-        for (int i = 0; i < 12; i++) {
-            iFrame1.getContentPane().add(new SLabel("Label " + i));
-        }
-
-        desktopPane.add(iFrame1);
-
-        final SInternalFrame iFrame2 = new SInternalFrame();
-        iFrame2.getContentPane().setLayout(new SFlowDownLayout());
-
-        SButton button2 = new SButton("Show Error Message within this InternalFrame");
-        button2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                SOptionPane.showMessageDialog(iFrame2, "Oops! Don't you worry! ;)", "Error Message", SOptionPane.ERROR_MESSAGE);
-            }
-        });
-        iFrame2.getContentPane().add(button2);
-
-        for (int i = 0; i < 12; i++) {
-            iFrame2.getContentPane().add(new SLabel("Label " + i));
-        }
-
-        desktopPane.add(iFrame2);
+        desktopPane.add(createPersonalDataFrame());
+        desktopPane.add(createBusinessDataFrame());
 
         return desktopPane;
+    }
+
+    private SInternalFrame createPersonalDataFrame() {
+
+        final SInternalFrame personalData = new SInternalFrame();
+        SContainer pane = personalData.getContentPane();
+        pane.setLayout(new SGridLayout(5, 2, 5, 5));
+
+        pane.add(new SLabel("Firstname"));
+        pane.add(new STextField());
+        pane.add(new SLabel("Lastname"));
+        pane.add(new STextField());
+        pane.add(new SLabel("Street"));
+        pane.add(new STextField());
+        pane.add(new SLabel("Zip"));
+        pane.add(new STextField());
+        pane.add(new SLabel("City"));
+        pane.add(new STextField());
+        pane.add(new SLabel("E-Mail"));
+        pane.add(new STextField());
+
+        SButton save = new SButton("Save");
+        save.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SOptionPane.showMessageDialog(personalData, "As for demo reasons the data isn't really persisted.", "Data Saved");
+            }
+        });
+        pane.add(save);
+
+        SButton cancel = new SButton("Cancel");
+        cancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SOptionPane.showMessageDialog(personalData, "No action defined.", "No Action");
+            }
+        });
+        pane.add(cancel);
+
+        return personalData;
+    }
+
+    private SInternalFrame createBusinessDataFrame() {
+
+        final SInternalFrame businessData = new SInternalFrame();
+        SContainer pane = businessData.getContentPane();
+        pane.setLayout(new SGridLayout(5, 2, 5, 5));
+
+        pane.add(new SLabel("Company"));
+        pane.add(new STextField());
+        pane.add(new SLabel("Street"));
+        pane.add(new STextField());
+        pane.add(new SLabel("Zip"));
+        pane.add(new STextField());
+        pane.add(new SLabel("City"));
+        pane.add(new STextField());
+        pane.add(new SLabel("Department"));
+        pane.add(new STextField());
+        pane.add(new SLabel("Profession"));
+        pane.add(new STextField());
+
+        SButton save = new SButton("Save");
+        save.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SOptionPane.showMessageDialog(businessData, "As for demo reasons the data isn't really persisted.", "Data Saved");
+            }
+        });
+        pane.add(save);
+
+        SButton cancel = new SButton("Cancel");
+        cancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SOptionPane.showMessageDialog(businessData, "No action defined.", "No Action");
+            }
+        });
+        pane.add(cancel);
+
+        return businessData;
     }
 
     class OptionPaneControls

@@ -327,23 +327,49 @@ wingS.update.className = function(componentId, className, exception) {
 };
 
 /**
- * Hides the mask of the given Dialog.
- * @param {String} componentId - the ID of the component
- * @param {String} dialogName - the name of the dialog
- * @param {String} exception - the server exception (optional)
+ * Adds a window to the window stack of a SRootContainer.
+ * @param {String} componentId - the ID of the window stack
+ * @param {String} html - the new HTML code of the window
  */
-wingS.update.closeDialog = function(componentId, dialogName, exception ) {
-    // Exception handling
-    if (exception != null) {
-        var update = "CloseDialogUpdate for '" + componentId + "'";
-        wingS.update.alertException(exception, update);
-        return;
-    }
+wingS.update.addWindow = function(componentId, skeleton) {
 
-    var dialog = window["dialog_" + dialogName];
+	// Search DOM for according component	
+	var component = document.getElementById(componentId);
+	if (component == null) {
+        throw {message: "Could not find component with id '" + componentId + "'"};
+    }
+	
+	// Create wrapping tr and td for container table.
+	var tr = component.tBodies[0].insertRow(-1);
+	var td = document.createElement("td");
+	
+	tr.appendChild(td);
+	wingS.util.appendHTML(td, skeleton);
+};
+
+/**
+ * Removes a window of the window stack.
+ * @param {String} componentId - the ID of the window
+ */
+wingS.update.removeWindow = function(componentId) {
+
+	// Search DOM for according component	
+	var component = document.getElementById(componentId);
+	if (component == null) {
+        throw {message: "Could not find component with id '" + componentId + "'"};
+    }
+	
+	// Hide dialog mask if available.
+	var dialog = window["dialog_" + componentId];
     if (dialog != null) {
         dialog.hideMask();
     }
+	
+	var td = component.parentNode;
+	var tr = td.parentNode;
+	var table = tr.parentNode;
+	
+	table.removeChild(tr);
 };
 
 /**

@@ -18,6 +18,9 @@ import org.wings.*;
 import org.wings.event.SInternalFrameEvent;
 import org.wings.io.Device;
 import org.wings.io.StringBuilderDevice;
+import org.wings.plaf.Update.Handler;
+import org.wings.plaf.css.FrameCG.AddWindowUpdate;
+import org.wings.plaf.css.FrameCG.RemoveWindowUpdate;
 import org.wings.plaf.css.script.OnPageRenderedScript;
 import org.wings.plaf.Update;
 import org.wings.resource.ResourceManager;
@@ -83,11 +86,6 @@ public class InternalFrameCG extends AbstractComponentCG implements
             throws IOException {
 
         SInternalFrame frame = (SInternalFrame)_c;
-
-        // Create a new OverlayManager for each SInternalFrame to handly overlay like SDialog, etc.
-        StringBuilder sb = new StringBuilder();
-        sb.append("var ").append(frame.getName()).append("_overlay_manager = new YAHOO.widget.OverlayManager();");
-        ScriptManager.getInstance().addScriptListener(new OnPageRenderedScript(sb.toString()));
 
         // Optional attribute to identify the internal frame for
         // SDialog and SOptionPane usage.
@@ -208,37 +206,49 @@ public class InternalFrameCG extends AbstractComponentCG implements
     /**
      * {@inheritDoc}
      */
-    public Update getWindowsUpdate(SRootContainer container) {
-        return new WindowsUpdate(container.getWindowsPane());
+    public Update getAddWindowUpdate(SContainer container, SWindow window) {
+        return new AddWindowUpdate(container, window);
+    }
+    
+    protected class AddWindowUpdate extends AbstractUpdate {
+
+    	private SWindow window;
+    	
+    	public AddWindowUpdate(SContainer container, SWindow window) {
+            super(container);
+            this.window = window;
+        }
+    	
+    	@Override
+		public int getPriority() {
+			return Integer.MAX_VALUE;
+		}
+
+		public Handler getHandler() {
+            UpdateHandler handler = new UpdateHandler("addWindow");
+            handler.addParameter(component.getName());
+            handler.addParameter("<div id=\"" + window.getName() + "\"/>");
+			return handler;
+        }
     }
 
-    protected class WindowsUpdate extends AbstractUpdate {
+    public Update getRemoveWindowUpdate(final SContainer container, final SWindow window) {
+        return new RemoveWindowUpdate(container, window);
+    }
 
-        public WindowsUpdate(SContainer container) {
+    protected class RemoveWindowUpdate extends AbstractUpdate {
+
+    	private SWindow window;
+    	
+        public RemoveWindowUpdate(final SContainer container, final SWindow window) {
             super(container);
+            this.window = window;
         }
 
         public Handler getHandler() {
-            String htmlCode = "";
-            String exception = null;
-
-            try {
-                StringBuilderDevice htmlDevice = new StringBuilderDevice();
-                write(htmlDevice, component);
-                htmlCode = htmlDevice.toString();
-            } catch (Throwable t) {
-                log.fatal("An error occured during rendering", t);
-                exception = t.getClass().getName();
-            }
-
-            UpdateHandler handler = new UpdateHandler("component");
-            handler.addParameter(component.getName());
-            handler.addParameter(htmlCode);
-            if (exception != null) {
-                handler.addParameter(exception);
-            }
+            UpdateHandler handler = new UpdateHandler("removeWindow");
+            handler.addParameter(window.getName());
 			return handler;
         }
-
     }
 }

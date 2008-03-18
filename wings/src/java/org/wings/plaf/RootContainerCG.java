@@ -12,6 +12,10 @@
  */
 package org.wings.plaf;
 
+import org.wings.SContainer;
+import org.wings.SRootContainer;
+import org.wings.SWindow;
+
 /**
  * <code>RootContainerCG</code>.
  * <p/>
@@ -23,5 +27,6 @@ package org.wings.plaf;
  * @version $Id
  */
 public interface RootContainerCG extends ContainerCG {
-    //public Update getWindowsUpdate(SRootContainer container);
+    public Update getAddWindowUpdate(SContainer container, SWindow window);
+    public Update getRemoveWindowUpdate(SContainer container, SWindow window);
 }

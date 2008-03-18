@@ -66,18 +66,23 @@ public abstract class SRootContainer extends SContainer {
     }
 
     /**
-     * Push a new window on top of the stack. If this RootContainer is rendered, then only this window is shown.
+     * Push a new window on top of the stack.
      *
      * @param window the SDialog that is to be shown on top.
      */
     public void pushWindow(SWindow window) {
+    	
+    	getSession().getReloadManager().setSuppressMode(true);
         windowsPane.addComponent(window);
+        getSession().getReloadManager().setSuppressMode(false);
 
-        /*
         if (isUpdatePossible() && SRootContainer.class.isAssignableFrom(getClass())) {
-            update(((RootContainerCG) getCG()).getWindowsUpdate(this));
+            update(((RootContainerCG) getCG()).getAddWindowUpdate(windowsPane, window));
         }
-        */
+        else {
+        	windowsPane.reload();
+        }
+        
         LOG.debug("push window = " + window.getName());
     }
 
@@ -96,22 +101,22 @@ public abstract class SRootContainer extends SContainer {
         SWindow window = (SWindow) windowsPane.getComponent(count - 1);
         removeWindow(window);
 
-        /*
-        if (isUpdatePossible() && SRootContainer.class.isAssignableFrom(getClass()))
-            update(((RootContainerCG) getCG()).getWindowsUpdate(this));
-        */
-
         LOG.debug("pop window = " + window.getName());
         return window;
     }
 
     public void removeWindow(SWindow window) {
+    	
+    	getSession().getReloadManager().setSuppressMode(true);
         windowsPane.remove(window);
+        getSession().getReloadManager().setSuppressMode(false);
 
-        /*
-        if (isUpdatePossible() && SRootContainer.class.isAssignableFrom(getClass()))
-            update(((RootContainerCG) getCG()).getWindowsUpdate(this));
-        */
+        if (isUpdatePossible() && SRootContainer.class.isAssignableFrom(getClass())) {
+            update(((RootContainerCG) getCG()).getRemoveWindowUpdate(windowsPane, window));
+        }
+        else {
+        	windowsPane.reload();
+        }
     }
 
     /**

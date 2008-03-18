@@ -25,6 +25,5 @@ import org.wings.SWindow;
  * @version $Id
  */
 public interface WindowCG extends ComponentCG {
-    public Update getWindowAddedUpdate(SWindow window);
-    public Update getWindowClosedUpdate(SWindow window);
+    
 }

@@ -177,9 +177,6 @@ public class SDialog extends SWindow {
     }
 
     public void hide() {
-        if (owner != null) {
-            update(((FrameCG) getParentFrame().getCG()).getCloseDialogUpdate(getParentFrame(), this.getName()));
-        }
         super.hide();
     }
 

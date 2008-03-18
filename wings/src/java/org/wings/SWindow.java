@@ -14,6 +14,9 @@ package org.wings;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wings.border.SBorder;
+import org.wings.plaf.ComponentCG;
+import org.wings.plaf.FormCG;
 import org.wings.plaf.WindowCG;
 
 /**
@@ -43,17 +46,7 @@ public class SWindow extends SForm implements LowLevelEventListener {
 
     protected SRootContainer owner;
 
-    /**
-     * Sets the root container in which this dialog is to be displayed.
-     *
-     * @param owner The root container in which this dialog is to be displayed.
-     * @see this#setParent()
-    protected void setOwner(SRootContainer owner) {
-    this.owner = owner;
-    }
-     */
-
-    /**
+	/**
      * Returns the root container in which this dialog is to be displayed.
      *
      * @return The root container in which this dialog is to be displayed.
@@ -120,12 +113,6 @@ public class SWindow extends SForm implements LowLevelEventListener {
     public void hide() {
         LOG.debug("hide window");
         if (owner != null) {
-            /*
-            if (isUpdatePossible() && SWindow.class.isAssignableFrom(getClass())) {
-                update(((WindowCG) getCG()).getWindowClosedUpdate(this));
-            }
-            */
-            
             owner.removeWindow(this);
         }
     }

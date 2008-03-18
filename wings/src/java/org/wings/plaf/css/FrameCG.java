@@ -26,6 +26,9 @@ import org.wings.header.*;
 import org.wings.io.Device;
 import org.wings.io.StringBuilderDevice;
 import org.wings.plaf.CGManager;
+import org.wings.plaf.Update.Handler;
+import org.wings.plaf.css.InternalFrameCG.AddWindowUpdate;
+import org.wings.plaf.css.InternalFrameCG.RemoveWindowUpdate;
 import org.wings.plaf.css.script.OnPageRenderedScript;
 import org.wings.resource.ClassPathResource;
 import org.wings.resource.ReloadResource;
@@ -780,61 +783,53 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         }
 
     }
+    
     /**
      * {@inheritDoc}
      */
-    public Update getWindowsUpdate(SRootContainer container) {
-        return new WindowsUpdate(container.getWindowsPane());
+    public Update getAddWindowUpdate(SContainer container, SWindow window) {
+        return new AddWindowUpdate(container, window);
     }
+    
+    protected class AddWindowUpdate extends AbstractUpdate<SContainer> {
 
-    protected class WindowsUpdate extends AbstractUpdate {
-
-        public WindowsUpdate(SContainer container) {
+    	private SWindow window;
+    	
+    	public AddWindowUpdate(SContainer container, SWindow window) {
             super(container);
+            this.window = window;
         }
+    	
+    	@Override
+		public int getPriority() {
+			return Integer.MAX_VALUE;
+		}
 
-        public Handler getHandler() {
-            String htmlCode = "";
-            String exception = null;
-
-            try {
-                StringBuilderDevice htmlDevice = new StringBuilderDevice();
-                write(htmlDevice, component);
-                htmlCode = htmlDevice.toString();
-            } catch (Throwable t) {
-                log.fatal("An error occured during rendering", t);
-                exception = t.getClass().getName();
-            }
-
-            UpdateHandler handler = new UpdateHandler("component");
+		public Handler getHandler() {
+            UpdateHandler handler = new UpdateHandler("addWindow");
             handler.addParameter(component.getName());
-            handler.addParameter(htmlCode);
-            if (exception != null) {
-                handler.addParameter(exception);
-            }
+            handler.addParameter("<div id=\"" + window.getName() + "\"/>");
 			return handler;
         }
-
     }
 
-    public Update getCloseDialogUpdate(final SFrame container, String dialogName) {
-        return new CloseDialogUpdate(container, dialogName);
+    public Update getRemoveWindowUpdate(final SContainer container, final SWindow window) {
+        return new RemoveWindowUpdate(container, window);
     }
 
-    protected class CloseDialogUpdate extends AbstractUpdate {
+    protected class RemoveWindowUpdate extends AbstractUpdate<SContainer> {
 
-        private String dialogName = null;
-
-        public CloseDialogUpdate(final SContainer container, String dialogName) {
+    	private SWindow window;
+    	
+        public RemoveWindowUpdate(final SContainer container, final SWindow window) {
             super(container);
-            this.dialogName = dialogName;
+            this.window = window;
         }
 
         public Handler getHandler() {
-            UpdateHandler handler = new UpdateHandler("closeDialog");
-            handler.addParameter(component.getName());
-            handler.addParameter(dialogName);
-            return handler;
+            UpdateHandler handler = new UpdateHandler("removeWindow");
+            handler.addParameter(window.getName());
+			return handler;
         }
     }
 }

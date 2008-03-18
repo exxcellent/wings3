@@ -29,7 +29,7 @@ import java.awt.event.ActionEvent;
  */
 public class DialogExample extends WingSetPane {
 
-    protected static final Boolean[] TRUE_FALSE = new Boolean[] { Boolean.TRUE, Boolean.FALSE };
+    protected static final Boolean[] TRUE_FALSE = new Boolean[]{Boolean.TRUE, Boolean.FALSE};
 
     private ComponentControls controls;
 
@@ -43,6 +43,10 @@ public class DialogExample extends WingSetPane {
     }
 
     class DialogControls extends ComponentControls {
+
+        private STextField firstname;
+        private STextField lastname;
+        private STextField email;
 
         DialogControls() {
             globalControls.setVisible(false);
@@ -60,29 +64,66 @@ public class DialogExample extends WingSetPane {
 
             createDialog.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                	
                     Boolean modal = (Boolean) modality.getSelectedItem();
                     Boolean draggable = (Boolean) draggability.getSelectedItem();
 
-                    final SDialog dialog = new SDialog(getParentFrame(), "SDialog", modal);
+                    final SDialog dialog = new SDialog(getParentFrame(), "Contact Dialog", modal);
                     dialog.setLayout(new SFlowDownLayout());
                     dialog.setDraggable(draggable);
+                    dialog.add(createContent());
 
-                    if (draggable) {
-                        dialog.add(new SLabel("I am draggable. Drag me!"));
-                    }
+                    SPanel buttonPanel = new SPanel(new SGridLayout(1, 2, 5, 5));
+                    SButton okButton = new SButton("OK");
+                    buttonPanel.add(okButton);
+                    okButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
 
-                    SButton close = new SButton("Close");
-                    dialog.add(close);
+                            if (!"".equals(firstname.getText()) && firstname.getText() != null &&
+                                    !"".equals(lastname.getText()) && lastname.getText() != null &&
+                                    !"".equals(email.getText()) && email.getText() != null) {
+                                SOptionPane.showMessageDialog(DialogExample.this, "Hi " + firstname.getText() + " " + lastname.getText() + ", your email address is " + email.getText() + ".", "Your Information", SOptionPane.INFORMATION_MESSAGE);
+                                dialog.setVisible(false);
+                            }
+                            else {
+                            	SOptionPane.showMessageDialog(DialogExample.this, "Please fill out the form.", "Information incomplete", SOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    });
 
-                    close.addActionListener(new ActionListener() {
+                    SButton cancelButton = new SButton("Cancel");
+                    buttonPanel.add(cancelButton);
+                    cancelButton.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
                             dialog.setVisible(false);
                         }
                     });
 
+                    dialog.add(buttonPanel);
+
                     dialog.setVisible(true);
                 }
             });
+        }
+
+        private SPanel createContent() {
+
+            firstname = new STextField();
+            lastname = new STextField();
+            email = new STextField();
+            SLabel image = new SLabel(new SURLIcon("../icons/cowSmall.gif"));
+
+            SPanel content = new SPanel(new SGridLayout(4, 2, 5, 5));
+            content.add(new SLabel("Firstname:"));
+            content.add(firstname);
+            content.add(new SLabel("Lastname:"));
+            content.add(lastname);
+            content.add(new SLabel("E-Mail:"));
+            content.add(email);
+            content.add(new SLabel("Image:"));
+            content.add(image);
+
+            return content;
         }
     }
 }
