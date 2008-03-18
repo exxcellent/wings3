@@ -362,11 +362,6 @@ public class CmsFrameCG implements org.wings.plaf.FrameCG {
     public void write(final Device device, final SComponent component) throws IOException {
         final SFrame frame = (SFrame) component;
 
-        // Create a new OverlayManager for each SFrame to handly overlay like SDialog, etc.
-        StringBuilder sb = new StringBuilder();
-        sb.append("var ").append(frame.getName()).append("_overlay_manager = new YAHOO.widget.OverlayManager();");
-        ScriptManager.getInstance().addScriptListener(new OnPageRenderedScript(sb.toString()));
-
         String strokes = strokes(frame.getGlobalInputMapComponents());
         if (strokes != null)
             component.getSession().getScriptManager().addScriptListener(new JavaScriptListener(null, null, strokes));
