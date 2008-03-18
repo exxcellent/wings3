@@ -5,7 +5,7 @@
 // Create module namespace
 wingS.namespace("xcalendar");
 
-wingS.xcalendar.XCalendar = function(componentId, config) {
+wingS.xcalendar.XCalendar = function(componentId, ownerName, config) {
     this.componentId = componentId;
     this.valueId = componentId + "val";
     this.buttonId = componentId + "btn";
@@ -19,8 +19,8 @@ wingS.xcalendar.XCalendar = function(componentId, config) {
     this.calendarWidget.clearEvent.subscribe(this.updateContainerTitle, this, true);
     this.calendarWidget.changePageEvent.subscribe(this.updateContainerTitle, this, true);
     
-    this.containerWidget = new YAHOO.widget.Dialog(this.containerId, {context:[this.buttonId, "tl", "tl"],
-         constraintoviewport:true, draggable:true, close:true, underlay:"none", zIndex:1001});
+    this.containerWidget = new wingS.dialog.SDialog(this.containerId, {context:[this.buttonId, "tl", "tl"],
+         constraintoviewport:true, draggable:true, close:true, underlay:"shadow", zIndex:1001});
     
     YAHOO.util.Event.addListener(this.buttonId, "click", this.showPopup, this, true);
 }

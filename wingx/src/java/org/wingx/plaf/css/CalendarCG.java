@@ -113,15 +113,15 @@ public class CalendarCG extends AbstractComponentCG<XCalendar> implements org.wi
             SimpleDateFormat format_weekdays_short = new SimpleDateFormat("EE");
             format_weekdays_short.setTimeZone(component.getTimeZone());
             
-            SStringBuilder newXCalendar = new SStringBuilder("new wingS.xcalendar.XCalendar(");
-            newXCalendar.append('"').append(component.getName()).append("\",");
-            newXCalendar.append("{iframe:false,");
-            newXCalendar.append("months_long:").append(createMonthsString( format_months_long)).append(',');
-            newXCalendar.append("weekdays_short:").append(createWeekdaysString( format_weekdays_short)).append(',');
-            newXCalendar.append("start_weekday:").append((Calendar.getInstance().getFirstDayOfWeek() - 1)).append("}");
-            newXCalendar.append(");");
+            SStringBuilder script = new SStringBuilder("new wingS.xcalendar.XCalendar(")
+                .append('"').append(component.getName()).append("\",\"")
+                .append(component.getParentFrame().getName()).append("\", {iframe:false,")
+                .append("months_long:").append(createMonthsString( format_months_long)).append(',')
+                .append("weekdays_short:").append(createWeekdaysString( format_weekdays_short)).append(',')
+                .append("start_weekday:").append((Calendar.getInstance().getFirstDayOfWeek() - 1)).append("}")
+                .append(");");
             
-            ScriptManager.getInstance().addScriptListener(new OnHeadersLoadedScript(newXCalendar.toString(), true));
+            ScriptManager.getInstance().addScriptListener(new OnHeadersLoadedScript(script.toString(), true));
         }
             
     }
