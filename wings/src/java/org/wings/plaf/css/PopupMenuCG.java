@@ -65,22 +65,21 @@ public final class PopupMenuCG extends AbstractComponentCG implements
                 SComponent menuItem = menu.getMenuComponent(i);
 
                 if (menuItem.isVisible()) {
-                    device.print("\n <li");
-                    if (menuItem instanceof SMenu) {
-                        if (menuItem.isEnabled()) {
-                            device.print(" class=\"SMenu\"");
+                    device.print("\n <li class=\"");
+                    if (menuItem instanceof SMenuItem) {
+                        if (menuItem instanceof SMenu) {
+                            device.print("SMenu");
                         } else {
-                            device.print(" class=\"SMenu_Disabled\"");
+                            device.print("SMenuItem");
                         }
+                        if (!menuItem.isEnabled()) {
+                            device.print("_Disabled");
+                        }                        
+                        printScriptHandlers(device, menuItem, "onmouseover");
                     } else {
-                        if (menuItem.isEnabled()) {
-                            device.print(" class=\"SMenuItem\"");
-                        } else {
-                            device.print(" class=\"SMenuItem_Disabled\"");
-                        }
+                        device.print("SMenuComponent");
                     }
-                    printScriptHandlers(device, menuItem, "onmouseover");
-                    device.print(">");
+                    device.print("\">");
                     if (menuItem instanceof SMenuItem) {
                         device.print("<a href=\"#\"");
                         if (menuItem instanceof SMenu) {

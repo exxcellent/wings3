@@ -26,27 +26,32 @@ public class SMenuItem extends SButton {
     private KeyStroke accelerator;
 
     public SMenuItem() {
-        setShowAsFormComponent(false);
+        init();
     }
 
     public SMenuItem(Action action) {
         super(action);
-        setShowAsFormComponent(false);
+        init();
     }
 
     public SMenuItem(String text) {
         super(text);
-        setShowAsFormComponent(false);
+        init();
     }
 
     public SMenuItem(SIcon icon) {
         super(icon);
-        setShowAsFormComponent(false);
+        init();
     }
 
     public SMenuItem(String text, SIcon icon) {
         super(text, icon);
+        init();
+    }
+    
+    private void init() {
         setShowAsFormComponent(false);
+        putClientProperty("drm:realParentComponent", "drm:null");
     }
 
     final void setParentMenu(SComponent menuParent) {

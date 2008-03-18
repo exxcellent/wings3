@@ -664,15 +664,30 @@ table.SProgressBar tr.text td {
     padding: 0px;
 }
 
+li.SMenuComponent {
+    line-height:0px;
+    font-size:0px;
+}
+
 .SSeparator {
-    height: 0px; /* evtl. 2px für IE */
-    white-space: nowrap;
-    margin: 0px;
-    padding: 0px;
-    border-style: solid;
-    border-width: 0px;
-    border-top-width: 1px;
-    border-color: #000;
+    background-color:#cccccc;
+    padding:0px;
+    margin:0px;
+    line-height:0px;
+    font-size:0px;
+    -moz-box-sizing: content-box;
+}
+
+.SSeparator.horizontal {
+    margin:1px 0px;
+    border-top:1px solid #f7f7f7;
+    border-bottom:1px solid #f7f7f7;
+}
+
+.SSeparator.vertical {
+    margin:0px 1px;
+    border-left:1px solid #f7f7f7;
+    border-right:1px solid #f7f7f7;
 }
 
 td.DivisionControl {

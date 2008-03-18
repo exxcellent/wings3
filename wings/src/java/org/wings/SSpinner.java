@@ -183,6 +183,7 @@ public class SSpinner extends SComponent implements LowLevelEventListener {
 	    super(null);
             
             this.spinner = spinner;
+            putClientProperty("drm:realParentComponent", spinner);
 
             ftf = new SFormattedTextField( spinner.getValue() ) {
                 public void processLowLevelEvent(String action, String[] values) {

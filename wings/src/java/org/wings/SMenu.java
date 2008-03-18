@@ -55,6 +55,7 @@ public class SMenu extends SMenuItem {
     public void add(SMenuItem menuItem) {
         menuItems.add(menuItem);
         menuItem.setParentMenu(this);
+        menuItem.putClientProperty("drm:realParentComponent", this);
         reload();
     }
 
@@ -64,7 +65,15 @@ public class SMenu extends SMenuItem {
     public void add(SComponent menuItem) {
         menuItems.add(menuItem);
         menuItem.setParentFrame(getParentFrame());
+        menuItem.putClientProperty("drm:realParentComponent", this);
         reload();
+    }
+    
+    /**
+     * Add a separator to this menu.
+     */
+    public void addSeparator() {
+       add(new SSeparator());
     }
 
     public void setParentFrame(SFrame f) {
@@ -121,6 +130,7 @@ public class SMenu extends SMenuItem {
             reload();
         }
         comp.setParentFrame(null);
+        comp.putClientProperty("drm:realParentComponent", "drm:null");
     }
 
     public void setCG(MenuBarCG cg) {

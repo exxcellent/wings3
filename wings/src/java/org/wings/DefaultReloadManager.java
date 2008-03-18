@@ -243,12 +243,10 @@ public class DefaultReloadManager implements ReloadManager {
     private SStringBuilder getPath(SStringBuilder builder, SComponent component) {
         if (component == null)
             return builder;
-        if (component instanceof SMenuItem) {
-            SMenuItem menuItem = (SMenuItem) component;
-            return getPath(builder, menuItem.getParentMenu()).append("/").append(component.getName());
-        } else if (component instanceof SSpinner.DefaultEditor) {
-            SSpinner.DefaultEditor defaultEditor = (SSpinner.DefaultEditor) component;
-            return getPath(builder, defaultEditor.getSpinner()).append("/").append(component.getName());
+        if (component.getClientProperty("drm:realParentComponent") != null) {
+            Object parent = component.getClientProperty("drm:realParentComponent");
+            if (!(parent instanceof SComponent)) parent = null;
+            return getPath(builder, (SComponent) parent).append("/").append(component.getName());
         } else {
             builder.setCharAt(0, (char) (builder.charAt(0) + 1)); // increase depth
             return getPath(builder, component.getParent()).append("/").append(component.getName());

@@ -35,6 +35,7 @@ public class SPopupMenu
     public void add(SMenuItem menuItem) {
         menuItems.add(menuItem);
         menuItem.setParentMenu(this);
+        menuItem.putClientProperty("drm:realParentComponent", this);
     }
 
     /**
@@ -43,6 +44,14 @@ public class SPopupMenu
     public void add(SComponent menuItem) {
         menuItems.add(menuItem);
         menuItem.setParentFrame(getParentFrame());
+        menuItem.putClientProperty("drm:realParentComponent", this);
+    }
+    
+    /**
+     * Add a separator to this menu.
+     */
+    public void addSeparator() {
+       add(new SSeparator());
     }
 
     public void setParentFrame(SFrame f) {
@@ -97,6 +106,7 @@ public class SPopupMenu
     public void remove(SComponent comp) {
         menuItems.remove(comp);
         comp.setParentFrame(null);
+        comp.putClientProperty("drm:realParentComponent", "drm:null");
     }
 
     public void setCG(PopupMenuCG cg) {

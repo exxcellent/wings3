@@ -31,4 +31,8 @@ public class SToolBar extends SPanel {
     public void setCG(ToolBarCG cg) {
         super.setCG(cg);
     }
+    
+    public void addSeparator() {
+        add(new SSeparator(SConstants.VERTICAL));
+    }
 }
