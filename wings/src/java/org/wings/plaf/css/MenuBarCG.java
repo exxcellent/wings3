@@ -36,11 +36,11 @@ import java.util.Collections;
 public class MenuBarCG extends AbstractComponentCG<SMenuBar>
        implements org.wings.plaf.MenuBarCG, SParentFrameListener {
 
-    protected final static List<Header> CALENDAR_MSIE_HEADERS;
+    protected final static List<Header> MENU_HEADERS;
     static {
         ArrayList<Header> tmpHeaders = new ArrayList<Header>();
         tmpHeaders.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_ETC_MENU));
-        CALENDAR_MSIE_HEADERS = Collections.unmodifiableList(tmpHeaders);
+        MENU_HEADERS = Collections.unmodifiableList(tmpHeaders);
     }
 
     public static final JavaScriptListener BODY_ONCLICK_SCRIPT =
@@ -56,12 +56,12 @@ public class MenuBarCG extends AbstractComponentCG<SMenuBar>
     }
 
     public void parentFrameAdded(SParentFrameEvent e) {
-        SessionHeaders.getInstance().registerHeaders(CALENDAR_MSIE_HEADERS);
+        SessionHeaders.getInstance().registerHeaders(MENU_HEADERS);
         //e.getParentFrame().addScriptListener(BODY_ONCLICK_SCRIPT);
     }
 
     public void parentFrameRemoved(SParentFrameEvent e) {
-        SessionHeaders.getInstance().deregisterHeaders(CALENDAR_MSIE_HEADERS);
+        SessionHeaders.getInstance().deregisterHeaders(MENU_HEADERS);
         //e.getParentFrame().removeScriptListener(BODY_ONCLICK_SCRIPT);
     }
 
