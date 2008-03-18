@@ -10,7 +10,7 @@
         <servlet-class>org.wings.session.WingServlet</servlet-class>
         <init-param>
             <param-name>wings.mainclass</param-name>
-            <param-value>wingset.WingSet2</param-value>
+            <param-value>wingset.WingSet</param-value>
         </init-param>
 
         <!-- NOTE: The entries below are optionally. We included them mainly for documentation purpose -->

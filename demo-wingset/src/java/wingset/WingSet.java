@@ -37,14 +37,14 @@ import java.util.Map;
  *
  * @author holger engels
  */
-public class WingSet2 {
+public class WingSet {
     /**
      * If true then use {@link wingset.StatisticsTimerTask} to log statistics on a regular basis to a logging file. (Typically a file named
      * wings-statisticsxxxlog placed in jakarta-tomcat/temp directory)
      */
     private static final boolean LOG_STATISTICS_TO_FILE = false;
 
-    private final static Log log = LogFactory.getLog(WingSet2.class);
+    private final static Log log = LogFactory.getLog(WingSet.class);
 
     static {
         if (LOG_STATISTICS_TO_FILE) {
@@ -71,7 +71,7 @@ public class WingSet2 {
      * <p>This class is referenced in the <code>web.xml</code> as root entry point for the wingS application. For every new client an new
      * {@link org.wings.session.Session} is created which constructs a new instance of this class.
      */
-    public WingSet2() {
+    public WingSet() {
         wingsImage = new WingsImage();
 
         WingSetTreeModel treeModel = new WingSetTreeModel();
@@ -107,6 +107,7 @@ public class WingSet2 {
                 return super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
             }
         });
+        expandAllTreeNodes(tree);
 
         SScrollPane scrollPane = new SScrollPane(tree);
         scrollPane.setMode(SScrollPane.MODE_COMPLETE);
@@ -163,6 +164,12 @@ public class WingSet2 {
                 return frame.getDynamicResource(ReloadResource.class);
             }
         });
+    }
+    
+    public final void expandAllTreeNodes(STree tree) {
+        for (int i = 0; i < tree.getRowCount(); ++i) {
+            tree.expandRow(i);
+        }
     }
 
     private void show(SComponent component) {
