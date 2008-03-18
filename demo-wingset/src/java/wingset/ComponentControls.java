@@ -150,21 +150,17 @@ public class ComponentControls  extends SPanel {
         globalControls.add(widthTextField);
         globalControls.add(new SLabel("height"));
         globalControls.add(heightTextField);
-        globalControls.addSeparator();
         globalControls.add(new SLabel("border"));
         globalControls.add(borderThicknessTextField);
         globalControls.add(borderStyleComboBox);
         globalControls.add(borderColorComboBox);
         globalControls.add(new SLabel("insets"));
         globalControls.add(insetsTextField);
-        globalControls.addSeparator();
         globalControls.add(new SLabel("color"));
         globalControls.add(foregroundComboBox);
         globalControls.add(backgroundComboBox);
-        globalControls.addSeparator();
         globalControls.add(new SLabel("font"));
         globalControls.add(fontComboBox);
-        globalControls.addSeparator();
         globalControls.add(new SLabel(""));
         globalControls.add(formComponentCheckBox);
 
