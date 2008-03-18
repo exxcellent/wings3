@@ -218,6 +218,18 @@ public class MenuExample extends WingSetPane {
                 menuBar.add(createMenu(node));
             }
         }
+        
+        // Test menu separators
+        SMenu groupsMenu = new SMenu("Groups");
+        groupsMenu.add(new SMenuItem(new MenuItemAction("Item 1 of group 1")));
+        groupsMenu.addSeparator();
+        groupsMenu.add(new SMenuItem(new MenuItemAction("Item 1 of group 2")));
+        groupsMenu.add(new SMenuItem(new MenuItemAction("Item 2 of group 2")));
+        groupsMenu.addSeparator();
+        groupsMenu.add(new SMenuItem(new MenuItemAction("Item 1 of group 3")));
+        groupsMenu.add(new SMenuItem(new MenuItemAction("Item 2 of group 3")));
+        groupsMenu.add(new SMenuItem(new MenuItemAction("Item 3 of group 3")));
+        menuBar.add(groupsMenu);
 
         // Test right aligned menu
         SMenu helpMenu = new SMenu("Help");

@@ -79,7 +79,7 @@ public class ComponentControls  extends SPanel {
     protected final SToolBar globalControls = new SToolBar();
     protected final SToolBar localControls = new SToolBar();
 
-    protected final SCheckBox ajaxCheckBox = new SCheckBox("<html>AJAX&nbsp;");
+    protected final SCheckBox ajaxCheckBox = new SCheckBox("AJAX");
 
     protected final STextField widthTextField = new STextField();
     protected final STextField heightTextField = new STextField();
@@ -108,7 +108,7 @@ public class ComponentControls  extends SPanel {
         border.setColor(new Color(190, 190, 190), SConstants.BOTTOM);
         globalControls.setBorder(border);
         globalControls.setHorizontalAlignment(SConstants.LEFT_ALIGN);
-        ((SBoxLayout)globalControls.getLayout()).setHgap(6);
+        ((SBoxLayout)globalControls.getLayout()).setHgap(3);
         ((SBoxLayout)globalControls.getLayout()).setVgap(4);
 
         border = new SLineBorder(1, new Insets(0, 3, 0, 6));
@@ -145,21 +145,26 @@ public class ComponentControls  extends SPanel {
         formComponentCheckBox.setToolTipText("show as form component .. i.e. trigger form submission");
 
         globalControls.add(ajaxCheckBox);
+        globalControls.addSeparator();
         globalControls.add(new SLabel("width"));
         globalControls.add(widthTextField);
-        globalControls.add(new SLabel(" height"));
+        globalControls.add(new SLabel("height"));
         globalControls.add(heightTextField);
-        globalControls.add(new SLabel(" border"));
+        globalControls.addSeparator();
+        globalControls.add(new SLabel("border"));
         globalControls.add(borderThicknessTextField);
         globalControls.add(borderStyleComboBox);
         globalControls.add(borderColorComboBox);
         globalControls.add(new SLabel("insets"));
         globalControls.add(insetsTextField);
-        globalControls.add(new SLabel(" color"));
+        globalControls.addSeparator();
+        globalControls.add(new SLabel("color"));
         globalControls.add(foregroundComboBox);
         globalControls.add(backgroundComboBox);
-        globalControls.add(new SLabel(" font"));
+        globalControls.addSeparator();
+        globalControls.add(new SLabel("font"));
         globalControls.add(fontComboBox);
+        globalControls.addSeparator();
         globalControls.add(new SLabel(""));
         globalControls.add(formComponentCheckBox);
 

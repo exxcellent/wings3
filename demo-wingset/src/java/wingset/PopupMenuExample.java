@@ -56,6 +56,7 @@ public class PopupMenuExample extends WingSetPane {
         menu.add(cutMenuItem);
         menu.add(createMenuItem("Copy"));
         menu.add(createMenuItem("Paste"));
+        menu.addSeparator();
 
         SMenu subMenu = new SMenu("Help");
         subMenu.add(createMenuItem("About"));
