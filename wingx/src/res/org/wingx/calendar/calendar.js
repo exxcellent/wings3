@@ -47,6 +47,14 @@ wingS.calendar.XCalendar.prototype.showPopup = function() {
         }
     }
     
+    if (YAHOO.env.ua.gecko) {
+        // Workaround for Firefox which might
+        // render superfluous scrollbars after
+        // setting {style.display = "block"}.
+        this.outerContainer.style.top = "0px";
+        this.outerContainer.style.left = "0px";
+    }
+    
     this.outerContainer.style.display = "block";
     this.updateContainerTitle();
     if (!this.rendered) {
