@@ -14,6 +14,10 @@ wingS.global.asyncHeaderCount = 0;   // Count of headers which are currently loa
 wingS.global.asyncHeaderQueue = [];  // Queue of functions each of which downloads an async header
 wingS.global.asyncHeaderCalls = [];  // Callbacks which are invoked when all headers are available
 
+wingS.global.config = {                   // This variable stores the global configuration object
+    calendar_viewportelementId : null     // The ID of the viewport all XCalendars should stay in
+};
+
 /**
  * Callback method which initializes the current frame. This method is called upon each reload.
  * @param {Object} configObject - an object representing the desired initial configuration, i.e:
@@ -238,3 +242,4 @@ Function.prototype.bind = function(obj) {
 
     return temp;
 };
+
