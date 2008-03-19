@@ -129,17 +129,17 @@ public final class LowLevelEventDispatcher
      */
     public boolean dispatch(String name, String[] values) {
         boolean result = false;
-
-        // does name contain underscores? Then use the part before the
-        // underscore for identification of the low level event listener
-        String id;
+        String id = null;
         String suffix = null;
+        // Does name contain underscores?
         int dividerIndex = name.indexOf('_');
-        if (dividerIndex > -1) {
+        if (dividerIndex > 0) {
+            // Use the part before the first '_' as the
+            // ID to detect the low level event listener
             id = name.substring(0, dividerIndex);
             suffix = name.substring(dividerIndex + 1);
         } else {
-            id = name;
+            id = name; // ID equals name in case of no '_'
         }
 
         final List l = (List) listeners.get(id);

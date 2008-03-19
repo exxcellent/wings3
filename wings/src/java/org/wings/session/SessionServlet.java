@@ -436,8 +436,10 @@ final class SessionServlet
                     String paramName = (String) en.nextElement();
                     String[] values = req.getParameterValues(paramName);
 
-                    // We do not need to dispatch the event epoch and the XHR request ID
-                    if (paramName.equals("event_epoch") || paramName.equals("_xhrID")) {
+                    // We do not need to dispatch the event epoch since it is already
+                    // handled a few lines above. Furthermore we will not dispatch any
+                    // names that start with an '_' (e.g. _xhrId or parts of XCalendar).
+                    if (paramName.equals("event_epoch") || paramName.startsWith("_")) {
                         continue;
                     }
 
