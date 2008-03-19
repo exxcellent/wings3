@@ -61,9 +61,6 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
     },
 	
 	moveHandler: function(type, args, obj) {
-		
-		console.log(type);
-		
 		wingS.request.sendEvent(null, false, true, this.id + "_xy", args);
 	},
 
