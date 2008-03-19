@@ -365,6 +365,7 @@ wingS.update.removeWindow = function(componentId) {
 	// Hide dialog mask if available.
 	var dialog = window["dialog_" + componentId];
     if (dialog != null) {
+		dialog.hideMask();
         dialog.destroy();
     }
 	
@@ -528,11 +529,13 @@ wingS.update.selectionTable = function(tableId, indexOffset, deselectedIndices,
  * @param {String} details - details about the failed update
  */
 wingS.update.alertException = function(exception, details) {
-    var errorMsg = "Couldn't apply update due to an exception on server side!\n" +
-                   "**********************************************\n\n" +
-                   "Exception: " + exception + "\n" +
-                   "Failed Update: " + details + "\n\n" +
-                   "Please examine your server's log file for further details...";
-    alert(errorMsg);
+	var e = {
+		message: "Couldn't apply update due to an exception on server side!",
+		detail: "Exception: " + exception + "\n" +
+                "Failed Update: " + details + "\n\n" +
+                "Please examine your server's log file for further details..."
+		}
+	
+	wingS.dialog.showExceptionDialog(e);
 };
 

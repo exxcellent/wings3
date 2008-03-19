@@ -49,6 +49,9 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
         this.beforeHideEvent.subscribe(this.blurButtons, this, true);
         this.subscribe("changeBody", this.registerForm);
         this.initEvent.fire(wingS.dialog.SDialog);
+		
+		// Handles move events and sends x-y-coordinates
+		this.moveEvent.subscribe(this.moveHandler, this, true);
         
         if (this.cfg.getProperty("underlay") == "shadow") {
             // Actually the default shadow width is 3px,
@@ -56,6 +59,13 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
             this.shadowWidth = 5;
         };
     },
+	
+	moveHandler: function(type, args, obj) {
+		
+		console.log(type);
+		
+		wingS.request.sendEvent(null, false, true, this.id + "_xy", args);
+	},
 
     initDefaultConfig : function() {
         wingS.dialog.SDialog.superclass.initDefaultConfig.call(this);
@@ -277,6 +287,16 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
             this.dd.addInvalidHandleType("TEXTAREA");
         }
     },
+	
+	/*
+	moveEvent: function(x, y) {
+		// Call moveEvent of superclass.
+		wingS.dialog.SDialog.superclass.moveEvent.call(this, x, y);
+		
+		var xy = this.cfg.getProperty("xy");
+		wingS.request.sendEvent(null, false, true, this.id + "_xy", xy);
+	},
+	*/
 
     buildMask: function () {
         var oMask = this.mask;
@@ -343,3 +363,156 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
     }
 });
 
+/**
+ * Creates the markup for a dialog with the given container id and returns
+ * the container element.
+ * @param {Object} containerId The id that will be set for the container.
+ */
+wingS.dialog.createDialogMarkup = function(containerId, cfg){
+    var container = document.createElement("div");
+    container.id = containerId;
+	
+	var hd = wingS.dialog.createConfiguredElement("hd", cfg);
+	var bd = wingS.dialog.createConfiguredElement("bd", cfg);
+	var ft = wingS.dialog.createConfiguredElement("ft", cfg);
+	
+    container.appendChild(hd);
+	container.appendChild(bd);
+	container.appendChild(ft);
+	
+    return container;
+}
+
+wingS.dialog.createConfiguredElement = function(className, cfg) {
+	var el = document.createElement("div");
+	el.className = className;
+	
+	if (cfg == null || cfg == 'undefined') {
+		return el;
+	}
+	
+	el.className = el.className + (cfg.className != 'undefined' ? " " + cfg.className : "");
+	
+	return el;
+}
+
+wingS.dialog.showExceptionDialog = function(exception){
+	
+	// Initialize exception dialog count if not already done.
+    if (!wingS.dialog.exceptionDialogCount) {
+        wingS.dialog.exceptionDialogCount = 0;
+    }
+    
+	// Count of currently available exception dialogs.
+    var count = wingS.dialog.exceptionDialogCount;
+
+	// Ids for exception message and exception detail container.    
+    var exceptionMessageId = "exceptionMessage" + count;
+    var exceptionDetailId = "exceptionDetail" + count;
+    
+	// Create exception dialog markup containing exception message
+	// container and exception detail container.
+    var exceptionMarkup = wingS.dialog.createExceptionDialogMarkup(exceptionMessageId, exceptionDetailId)
+	document.body.appendChild(exceptionMarkup);	
+    
+    // Define various event handlers for Dialog
+    var handleClose = function(){
+		this.hideMask();
+        this.destroy();
+        wingS.request.reloadFrame();
+    };
+    var toggleDetails = function(){
+		var visible = detail.cfg.getProperty("visible");
+		detail.cfg.setProperty("visible", !visible);
+    };
+    
+	// Instantiate the Dialog
+    var dialog = new YAHOO.widget.SimpleDialog(exceptionMessageId, {
+        width: "400px",
+        fixedcenter: true,
+        visible: false,
+        draggable: true,
+        modal: true,
+        close: true,
+        icon: YAHOO.widget.SimpleDialog.ICON_BLOCK,
+        constraintoviewport: true,
+        buttons: [{
+            text: "Close",
+            handler: handleClose,
+            isDefault: true
+        }, {
+            text: "Details",
+            handler: toggleDetails
+        }]
+    });
+	
+	// Instantiate the Module
+    var detail = new YAHOO.widget.Module(exceptionDetailId, {
+		width: "400px",
+		visible: false
+	});
+    
+    dialog.setHeader("Error message");
+    dialog.setBody(exception.message);
+    dialog.render();
+    
+	// Prepares the message.
+    var detailedMessage = wingS.dialog.prepareDetailedMessage(exception.message + "\n" + exception.detail);
+    
+	detail.setHeader("Detailed Message:");
+    detail.setBody(detailedMessage);
+    detail.render();
+    
+    dialog.show();
+};
+
+/**
+ * Creates the markup for the exception dialog.
+ * 
+ * @param {Object} exceptionMessageId The id for the exception message container.
+ * @param {Object} exceptionDetailId The id for the exception detail container.
+ */
+wingS.dialog.createExceptionDialogMarkup = function(exceptionMessageId, exceptionDetailId){
+
+    var exceptionMessage = wingS.dialog.createDialogMarkup(exceptionMessageId);
+	
+    var exceptionDetail = document.createElement("div");
+	exceptionDetail.id = exceptionDetailId;
+	
+	exceptionMessage.appendChild(exceptionDetail);
+	
+	return exceptionMessage;
+}
+
+/**
+ * Uses a message and converts each '\n' into a '<br/>' element and wraps the rest
+ * of the message into text nodes.
+ * @param {Object} msg The message to be prepared.
+ * @return {HTMLElement} The prepared message wrapped into a '<pre>' element.
+ */
+wingS.dialog.prepareDetailedMessage = function(msg) {
+	var parts = msg.split("\\n");
+
+	var detailedMessage = document.createElement("textarea");
+/*
+	for (var i = 0; i < parts.length; i++) {
+		var textNode = document.createTextNode(parts[i]);
+		detailedMessage.appendChild(textNode);
+		
+		if ((i + 1) < parts.length) {
+			var br = document.createElement("br");
+			detailedMessage.appendChild(br);
+		}
+	}
+*/
+    detailedMessage.value = msg;
+	
+//	detailedMessage.style.overflow = "auto";
+    detailedMessage.style.width = "100%";
+	detailedMessage.style.height = "120px";
+	detailedMessage.style.border = "1px solid black";
+	detailedMessage.readOnly = true;
+//	detailedMessage.style.backgroundColor = "white";
+	
+	return detailedMessage;
+}

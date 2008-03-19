@@ -291,56 +291,6 @@ wingS.util.handleBodyClick = function(event) {
 };
 
 /**
- * Shows the modal dialog at the center of the component. (SFrame or SInternalFrame)
- */
-wingS.util.showModalDialog = function(dialogId, modalId) {
-    var positionX = (document.all) ? document.body.offsetWidth : window.innerWidth;
-    var positionY = (document.all) ? document.body.offsetHeight : window.innerHeight;
-    positionX = positionX / 2;
-    positionY = positionY / 2;
-    var dialog = document.getElementById(dialogId);
-    var modalDialog = document.getElementById(modalId);
-    for (var parent = dialog.parentNode; parent != null; parent = parent.parentNode) {
-        if (parent.nodeType != 1) {
-            if (document.all) {
-                modalDialog.style.width = document.body.offsetWidth + 'px';
-                modalDialog.style.height = document.body.offsetHeight + 'px';
-            }
-            else {
-                modalDialog.style.width = window.innerWidth;
-                modalDialog.style.height = window.innerHeight;
-            }
-            break;
-        }
-        if (parent.getAttribute('SComponentClass') == 'org.wings.SInternalFrame') {
-            positionX = parent.offsetWidth / 2;
-            positionY = parent.offsetHeight / 2;
-            positionX += wingS.util.absLeft(parent);
-            positionY += wingS.util.absTop(parent);
-            modalDialog.style.left = wingS.util.absLeft(parent) + 'px';
-            modalDialog.style.top = wingS.util.absTop(parent) + 'px';
-            modalDialog.style.width = parent.offsetWidth + 'px';
-            modalDialog.style.height = parent.offsetHeight + 'px';
-            break;
-        }
-    }
-    var dialogWidth = dialog.offsetWidth;
-    var dialogHeight = dialog.offsetHeight;
-    if (dialogWidth > window.innerWidth) {
-        dialog.style.left = '0px';
-    } else {
-        dialog.style.left = (positionX - (dialogWidth / 2)) + 'px';
-    }
-
-    if (dialogHeight > window.innerHeight) {
-        dialog.style.top = '0px';
-    } else {
-        dialog.style.top = (positionY - (dialogHeight / 2)) + 'px';
-    }
-    dialog.style.zIndex = 1000;
-};
-
-/**
  * Calculates the absolute position of the element to the left.
  */
 wingS.util.absLeft = function(el) {

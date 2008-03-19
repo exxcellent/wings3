@@ -18,220 +18,257 @@ import org.wings.plaf.DialogCG;
 import org.wings.plaf.FrameCG;
 
 /**
- * Top-level window with a title and a border that is typically
- * used to take some form of input from the user.
- * <p/>
- * As opposed to Swing, wingS dialogs are non modal. However, the dismission of
- * the dialog is propagated by means of ActionEvents. The action command of the
- * event tells, what kind of user activity caused the dialog to dismiss.
- *
+ * Top-level window with a title and a border that is typically used to take
+ * some form of input from the user. <p/> As opposed to Swing, wingS dialogs are
+ * non modal. However, the dismission of the dialog is propagated by means of
+ * ActionEvents. The action command of the event tells, what kind of user
+ * activity caused the dialog to dismiss.
+ * 
  * @author <a href="mailto:engels@mercatis.de">Holger Engels</a>
+ * @author <a href="mailto:Roman.Raedle@uni-konstanz.de">Roman R&auml;dle</a>
  */
 public class SDialog extends SWindow {
-    private final transient static Log log = LogFactory.getLog(SDialog.class);
+	private final transient static Log log = LogFactory.getLog(SDialog.class);
 
-    /**
-     * Action command if dialog window was closed
-     */
-    public static final String CLOSE_ACTION = "CLOSE";
+	/**
+	 * Action command if dialog window was closed
+	 */
+	public static final String CLOSE_ACTION = "CLOSE";
 
-    /**
-     * Action command if user hit return
-     */
-    public static final String DEFAULT_ACTION = "DEFAULT";
+	/**
+	 * Action command if user hit return
+	 */
+	public static final String DEFAULT_ACTION = "DEFAULT";
 
-    /**
-     * The Title of the Dialog Frame
-     */
-    protected String title;
+	/**
+	 * The Title of the Dialog Frame
+	 */
+	protected String title;
 
-    protected SIcon icon = null;
+	protected SIcon icon = null;
 
-    protected boolean modal = false;
+	protected boolean modal = false;
 
-    protected boolean draggable = true;
+	protected boolean draggable = true;
 
-    private boolean closable = true;
-    private boolean closed = false;
+	protected int x = -1;
+	protected int y = -1;
 
-    /**
-     * Creates a Dialog without parent <code>SFrame</code> or <code>SDialog</code>
-     * and without Title
-     */
-    public SDialog() {
-    }
+	private boolean closable = true;
+	private boolean closed = false;
 
+	/**
+	 * Creates a Dialog without parent <code>SFrame</code> or
+	 * <code>SDialog</code> and without Title
+	 */
+	public SDialog() {
+	}
 
-    /**
-     * Creates a dialog with the specifed parent <code>SFrame</code> as its owner.
-     *
-     * @param owner the parent <code>SFrame</code>
-     */
-    public SDialog(SFrame owner) {
-        this(owner, null, false);
-    }
+	/**
+	 * Creates a dialog with the specifed parent <code>SFrame</code> as its
+	 * owner.
+	 * 
+	 * @param owner
+	 *            the parent <code>SFrame</code>
+	 */
+	public SDialog(SFrame owner) {
+		this(owner, null, false);
+	}
 
-    /**
-     * Creates a modal or non-modal dialog without a title and
-     * with the specified owner <code>Frame</code>.  If <code>owner</code>
-     * is <code>null</code>, a shared, hidden frame will be set as the
-     * owner of the dialog.
-     * <p>
-     * This constructor sets the component's locale property to the value
-     * returned by <code>JComponent.getDefaultLocale</code>.
-     *
-     * @param owner the <code>Frame</code> from which the dialog is displayed
-     * @param modal  true for a modal dialog, false for one that allows
-     *               others windows to be active at the same time
-     * returns true.
-     */
-    public SDialog(SFrame owner, boolean modal) {
-        this(owner, null, modal);
-    }
+	/**
+	 * Creates a modal or non-modal dialog without a title and with the
+	 * specified owner <code>Frame</code>. If <code>owner</code> is
+	 * <code>null</code>, a shared, hidden frame will be set as the owner of
+	 * the dialog.
+	 * <p>
+	 * This constructor sets the component's locale property to the value
+	 * returned by <code>JComponent.getDefaultLocale</code>.
+	 * 
+	 * @param owner
+	 *            the <code>Frame</code> from which the dialog is displayed
+	 * @param modal
+	 *            true for a modal dialog, false for one that allows others
+	 *            windows to be active at the same time returns true.
+	 */
+	public SDialog(SFrame owner, boolean modal) {
+		this(owner, null, modal);
+	}
 
-    /**
-     * Creates a dialog with the specified title and the specified owner frame.
-     *
-     * @param owner the parent <code>SFrame</code>
-     * @param title the <code>String</code> to display as titke
-     */
-    public SDialog(SFrame owner, String title) {
-        this(owner, title, false);
-    }
+	/**
+	 * Creates a dialog with the specified title and the specified owner frame.
+	 * 
+	 * @param owner
+	 *            the parent <code>SFrame</code>
+	 * @param title
+	 *            the <code>String</code> to display as titke
+	 */
+	public SDialog(SFrame owner, String title) {
+		this(owner, title, false);
+	}
 
-    /**
-     * Creates a modal or non-modal dialog with the specified title
-     * and the specified owner <code>Frame</code>.  If <code>owner</code>
-     * is <code>null</code>, a shared, hidden frame will be set as the
-     * owner of this dialog.  All constructors defer to this one.
-     * <p>
-     * NOTE: Any popup components (<code>JComboBox</code>,
-     * <code>JPopupMenu</code>, <code>JMenuBar</code>)
-     * created within a modal dialog will be forced to be lightweight.
-     * <p>
-     * This constructor sets the component's locale property to the value
-     * returned by <code>JComponent.getDefaultLocale</code>.
-     *
-     * @param owner the <code>Frame</code> from which the dialog is displayed
-     * @param title  the <code>String</code> to display in the dialog's
-     *			title bar
-     * @param modal  true for a modal dialog, false for one that allows
-     *               other windows to be active at the same time
-     * returns true.
-     */
-    public SDialog(SFrame owner, String title, boolean modal)  {
-        this.owner = owner;
-        this.title = title;
-        this.modal = modal;
-    }
+	/**
+	 * Creates a modal or non-modal dialog with the specified title and the
+	 * specified owner <code>Frame</code>. If <code>owner</code> is
+	 * <code>null</code>, a shared, hidden frame will be set as the owner of
+	 * this dialog. All constructors defer to this one.
+	 * <p>
+	 * NOTE: Any popup components (<code>JComboBox</code>,
+	 * <code>JPopupMenu</code>, <code>JMenuBar</code>) created within a
+	 * modal dialog will be forced to be lightweight.
+	 * <p>
+	 * This constructor sets the component's locale property to the value
+	 * returned by <code>JComponent.getDefaultLocale</code>.
+	 * 
+	 * @param owner
+	 *            the <code>Frame</code> from which the dialog is displayed
+	 * @param title
+	 *            the <code>String</code> to display in the dialog's title bar
+	 * @param modal
+	 *            true for a modal dialog, false for one that allows other
+	 *            windows to be active at the same time returns true.
+	 */
+	public SDialog(SFrame owner, String title, boolean modal) {
+		this.owner = owner;
+		this.title = title;
+		this.modal = modal;
+	}
 
-    /**
-     * Sets the title of the dialog.
-     *
-     * @param t the title displayed in the dialog's border; a null value results in an empty title
-     */
-    public void setTitle(String t) {
-        String oldTitle = title;
-        title = t;
-        if ((title == null && oldTitle != null) ||
-                (title != null && !title.equals(oldTitle)))
-            reload();
-    }
+	public int getX() {
+		return x;
+	}
 
-    /**
-     * Gets the title of the dialog. The title is displayed in the dialog's border.
-     *
-     * @return the title of this dialog window. The title may be null.
-     */
-    public String getTitle() {
-        return title;
-    }
+	public void setX(int x) {
+		int oldX = x;
+		this.x = x;
+		if (oldX != x)
+			reload();
+	}
 
+	public int getY() {
+		return y;
+	}
 
-    public void setIcon(SIcon i) {
-        if (i != icon || i != null && !i.equals(icon)) {
-            icon = i;
-            reload();
-        }
-    }
+	public void setY(int y) {
+		int oldY = y;
+		this.y = y;
+		if (oldY != y)
+			reload();
+	}
 
+	/**
+	 * Sets the title of the dialog.
+	 * 
+	 * @param t
+	 *            the title displayed in the dialog's border; a null value
+	 *            results in an empty title
+	 */
+	public void setTitle(String t) {
+		String oldTitle = title;
+		title = t;
+		if ((title == null && oldTitle != null)
+				|| (title != null && !title.equals(oldTitle)))
+			reload();
+	}
 
-    public SIcon getIcon() {
-        return icon;
-    }
+	/**
+	 * Gets the title of the dialog. The title is displayed in the dialog's
+	 * border.
+	 * 
+	 * @return the title of this dialog window. The title may be null.
+	 */
+	public String getTitle() {
+		return title;
+	}
 
-    public boolean isModal() {
-        return modal;
-    }
+	public void setIcon(SIcon i) {
+		if (i != icon || i != null && !i.equals(icon)) {
+			icon = i;
+			reload();
+		}
+	}
 
-    public void setModal(boolean modal) {
-        this.modal = modal;
-    }
+	public SIcon getIcon() {
+		return icon;
+	}
 
-    public boolean isDraggable() {
-        return draggable;
-    }
+	public boolean isModal() {
+		return modal;
+	}
 
-    public void setDraggable(boolean draggable) {
-        this.draggable = draggable;
-    }
+	public void setModal(boolean modal) {
+		this.modal = modal;
+	}
 
-    public void hide() {
-        super.hide();
-    }
+	public boolean isDraggable() {
+		return draggable;
+	}
 
-    /*
-    public void setClosable(boolean v) {
-        boolean old = closable;
-        closable = v;
-        if (old != closable)
-            reload();
-    }
+	public void setDraggable(boolean draggable) {
+		this.draggable = draggable;
+	}
 
-    public boolean isClosable() {
-        return closable;
-    }
+	public void hide() {
+		super.hide();
+	}
 
-    public void setClosed(boolean v) {
-        v &= isClosable();
-        boolean old = closed;
-        closed = v;
-        if (old != closed)
-            reload();
-    }
+	public void setClosable(boolean v) {
+		boolean old = closable;
+		closable = v;
+		if (old != closable)
+			reload();
+	}
 
-    public boolean isClosed() {
-        return closed;
-    }
-    */
+	public boolean isClosable() {
+		return closable;
+	}
 
-    // LowLevelEventListener interface. Handle own events.
-    /*
-    public void processLowLevelEvent(String action, String[] values) {
-        processKeyEvents(values);
-        if (action.endsWith("_keystroke"))
-            return;
+	// public void setClosed(boolean v) {
+	// v &= isClosable();
+	// boolean old = closed;
+	// closed = v;
+	// if (old != closed)
+	// reload();
+	// }
+	//
+	// public boolean isClosed() {
+	// return closed;
+	// }
 
-        // is this a window event?
-        try {
-            switch (new Integer(values[0]).intValue()) {
-                case org.wings.event.SInternalFrameEvent.INTERNAL_FRAME_CLOSED:
-                    setClosed(true);
-                    actionCommand = CLOSE_ACTION;
-                    break;
+	// LowLevelEventListener interface. Handle own events.
+	public void processLowLevelEvent(String action, String[] values) {
+		processKeyEvents(values);
+		if (action.endsWith("_keystroke"))
+			return;
 
-                default:
-                    // form event
-                    actionCommand = DEFAULT_ACTION;
-            }
-        } catch (NumberFormatException ex) {
-            // no window event...
-        }
-        SForm.addArmedComponent(this); // trigger later invocation of fire*()
-    }
-    */
+		if (action.indexOf("_") > -1) {
+			String[] actions = action.split("_");
+			if ("xy".equals(actions[1])) {
+				String[] coords = values[0].split(",");
 
-    public void setCG(DialogCG cg) {
-        super.setCG(cg);
-    }
+				x = Integer.parseInt(coords[0]);
+				y = Integer.parseInt(coords[1]);
+				return;
+			}
+		}
+
+		// is this a window event?
+		try {
+			switch (new Integer(values[0]).intValue()) {
+			case org.wings.event.SInternalFrameEvent.INTERNAL_FRAME_CLOSED:
+				hide();
+				actionCommand = CLOSE_ACTION;
+				break;
+			default:
+				// form event
+				actionCommand = DEFAULT_ACTION;
+			}
+		} catch (NumberFormatException ex) {
+			// no window event...
+		}
+		SForm.addArmedComponent(this); // trigger later invocation of fire*()
+	}
+
+	public void setCG(DialogCG cg) {
+		super.setCG(cg);
+	}
 }

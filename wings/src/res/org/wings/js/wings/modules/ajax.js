@@ -132,6 +132,7 @@ wingS.ajax.processRequestSuccess = function(request) {
         return;
     }
 
+    var exception = null;
     // Process each incremental update
     var updates = xmlRoot.getElementsByTagName("update");
     if (updates.length > 0) {
@@ -140,21 +141,17 @@ wingS.ajax.processRequestSuccess = function(request) {
                 // Dispatch update to the corresponding
                 // handler function simply by evaluation
                 window.eval(updates[i].firstChild.data);
-            } catch(e) {
-                var errorMsg = "Failure while processing the reponse of an AJAX request!\n" +
-                               "**********************************************\n\n" +
-                               "Error Message: " + e.message + "!\n\n" +
-                               "The error occurred while evaluating the following JS code:\n" +
-                               updates[i].firstChild.data;
-
-                if ("console" in window && window.console) {
-                    console.error("Failure while processing the reponse of an AJAX request!\n" +
-                    "- message: %o!\n- exception: %o\n- update: %o", e.message, e, updates[i].firstChild.data);
-                }
-                alert(errorMsg);
+            } 
+            catch (e) {
+				if (exception == null) exception = {message: e.message, detail: updates[i].firstChild.data};
             }
         }
     }
+	
+	// Show exception.
+	if (exception != null) {
+		wingS.dialog.showExceptionDialog(exception);
+	}
 
     // So far we applied all updates. If there are
     // no headers downloaded asynchronously at this

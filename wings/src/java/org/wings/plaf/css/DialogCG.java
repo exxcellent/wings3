@@ -41,15 +41,32 @@ public class DialogCG extends WindowCG implements org.wings.plaf.DialogCG {
 
         StringBuilder sb = new StringBuilder();
         sb.append("var dialog_").append(name).append(" = new wingS.dialog.SDialog(\"").append(name).append("\"")
-                .append(", {")
-                .append("visible:").append(dialog.isVisible()).append(",")
-                .append("modal:").append(dialog.isModal()).append(",")
-                .append("draggable:").append(dialog.isDraggable()).append(",")
-                .append("close:false,")
-                .append("constraintoviewport:true,");
+                .append(", {");
+        
+        if (dialog.getX() > -1 && dialog.getY() > -1) {
+        	sb.append("x:").append(dialog.getX()).append(",")
+        	  .append("y:").append(dialog.getY()).append(",");
+        }
+        else {
+        	sb.append("fixedcenter:true").append(",");
+        }
+                
         if (!(owner instanceof SFrame))
             sb.append("viewportelement:\"").append(owner.getName()).append("\",");
-        sb.append("fixedcenter:true").append("}); dialog_").append(name).append(".render();\n");
+        
+              sb.append("visible:").append(dialog.isVisible()).append(",")
+                .append("modal:").append(dialog.isModal()).append(",")
+                .append("draggable:").append(dialog.isDraggable()).append(",")
+                .append("close:").append(dialog.isClosable()).append(",")
+                .append("constraintoviewport:true").append("}); dialog_").append(name).append(".render();\n");
+        
+//        sb.append("var resize = new YAHOO.util.Resize(\"").append("dialog_").append(name).append("\", {")
+//            .append("handles: ['br'],")
+//            .append("autoRatio: false,")
+//       		.append("minWidth: 300,")
+//			.append("minHeight: 100,")
+//			.append("status: true")
+//            .append("});");
 
         ScriptManager.getInstance().addScriptListener(new OnPageRenderedScript(sb.toString()));
     }
