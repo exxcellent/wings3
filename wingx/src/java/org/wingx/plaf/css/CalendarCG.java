@@ -50,7 +50,7 @@ public class CalendarCG extends AbstractComponentCG<XCalendar> implements org.wi
         List<Header> headerList = new ArrayList<Header>();
         headerList.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_CALENDAR));   
         headerList.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CALENDAR));
-        headerList.add(Utils.createExternalizedJSHeader("org/wingx/calendar/xcalendar.js"));
+        headerList.add(Utils.createExternalizedJSHeader("org/wingx/calendar/calendar.js"));
         headers = Collections.unmodifiableList(headerList);
     }
 
@@ -113,7 +113,7 @@ public class CalendarCG extends AbstractComponentCG<XCalendar> implements org.wi
             SimpleDateFormat format_weekdays_short = new SimpleDateFormat("EE");
             format_weekdays_short.setTimeZone(component.getTimeZone());
             
-            SStringBuilder script = new SStringBuilder("new wingS.xcalendar.XCalendar(")
+            SStringBuilder script = new SStringBuilder("new wingS.calendar.XCalendar(")
                 .append('"').append(component.getName()).append("\",\"")
                 .append(component.getParentFrame().getName()).append("\", {iframe:false,")
                 .append("months_long:").append(createMonthsString( format_months_long)).append(',')

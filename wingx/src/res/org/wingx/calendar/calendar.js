@@ -3,9 +3,10 @@
  **************************************************************************************************/
 
 // Create module namespace
-wingS.namespace("xcalendar");
+wingS.namespace("calendar");
 
-wingS.xcalendar.XCalendar = function(componentId, ownerName, config) {
+
+wingS.calendar.XCalendar = function(componentId, ownerName, config) {
     this.componentId = componentId;
     this.valueId = componentId + "val";
     this.buttonId = componentId + "btn";
@@ -14,18 +15,28 @@ wingS.xcalendar.XCalendar = function(componentId, ownerName, config) {
     
     this.valueField = document.getElementById(this.valueId);
     
-    this.calendarWidget = new wingS.xcalendar.Calendar(this.calendarId, config);
+    this.calendarWidget = new wingS.calendar.Calendar(this.calendarId, config);
     this.calendarWidget.selectEvent.subscribe(this.handleSelectEvent, this, true);
     this.calendarWidget.clearEvent.subscribe(this.updateContainerTitle, this, true);
     this.calendarWidget.changePageEvent.subscribe(this.updateContainerTitle, this, true);
     
-    this.containerWidget = new wingS.dialog.SDialog(this.containerId, {context:[this.buttonId, "tl", "tl"],
-         constraintoviewport:true, draggable:true, close:true, underlay:"shadow", zIndex:1001});
+    this.containerWidget = new wingS.dialog.SDialog(this.containerId,
+        {context:[this.buttonId, "tl", "tl"], constraintoviewport:true,
+         draggable:true, close:true, zIndex:1001, width:"153px"});
+    this.outerContainer = document.getElementById(this.containerId + "_c");
+    this.outerContainer.style.display = "none";
+
+    this.viewportelementId = wingS.global.config.calendar_viewportelementId;
+    if (this.viewportelementId != null) {
+        this.containerWidget.cfg.setProperty("viewportelement", this.viewportelementId, true);
+    }
+    
+    this.rendered = false;
     
     YAHOO.util.Event.addListener(this.buttonId, "click", this.showPopup, this, true);
 }
 
-wingS.xcalendar.XCalendar.prototype.showPopup = function() {
+wingS.calendar.XCalendar.prototype.showPopup = function() {
     if (this.valueField.value != "") {
         this.calendarWidget.select(this.valueField.value);
         var selectedDates = this.calendarWidget.getSelectedDates();
@@ -35,14 +46,19 @@ wingS.xcalendar.XCalendar.prototype.showPopup = function() {
                 (selectedDate.getMonth() + 1) + "/" + selectedDate.getFullYear());
         }
     }
+    
+    this.outerContainer.style.display = "block";
     this.updateContainerTitle();
-    this.calendarWidget.render();
-    this.containerWidget.render();
+    if (!this.rendered) {
+        this.calendarWidget.render();
+        this.containerWidget.render();
+        this.rendered = true;
+    }
     this.containerWidget.show();
     this.containerWidget.align("tl", "tl");
 }
 
-wingS.xcalendar.XCalendar.prototype.handleSelectEvent = function(type, args, obj) {
+wingS.calendar.XCalendar.prototype.handleSelectEvent = function(type, args, obj) {
     var dates = args[0];
     var date = dates[0];
     var year = date[0];
@@ -56,22 +72,23 @@ wingS.xcalendar.XCalendar.prototype.handleSelectEvent = function(type, args, obj
         wingS.request.sendEvent(null, false, true, this.componentId, value);
     }
     this.containerWidget.hide();
+    this.outerContainer.style.display = "none";
 }
 
-wingS.xcalendar.XCalendar.prototype.updateContainerTitle = function(type, args, obj) {
+wingS.calendar.XCalendar.prototype.updateContainerTitle = function(type, args, obj) {
     this.containerWidget.setHeader(this.calendarWidget.buildMonthLabel());
 }
 
-wingS.xcalendar.Calendar = function(calendarId, config) {
-    wingS.xcalendar.Calendar.superclass.constructor.call(this, calendarId, config);
+wingS.calendar.Calendar = function(calendarId, config) {
+    wingS.calendar.Calendar.superclass.constructor.call(this, calendarId, config);
 }
 
-YAHOO.lang.extend(wingS.xcalendar.Calendar, YAHOO.widget.Calendar);
+YAHOO.lang.extend(wingS.calendar.Calendar, YAHOO.widget.Calendar);
 
 /**
  * Overwrites renderHeader in YAHOO.widget.Calendar
  */
-wingS.xcalendar.Calendar.prototype.renderHeader = function(html) {
+wingS.calendar.Calendar.prototype.renderHeader = function(html) {
         var colSpan = 7;
 
         var DEPR_NAV_LEFT = "us/tr/callt.gif";
@@ -154,7 +171,7 @@ wingS.xcalendar.Calendar.prototype.renderHeader = function(html) {
 /**
  * Overwrites applyListeners in YAHOO.widget.Calendar
  */
-wingS.xcalendar.Calendar.prototype.applyListeners = function() {
+wingS.calendar.Calendar.prototype.applyListeners = function() {
     var root = this.oDomContainer;
     var cal = this.parent || this;
 

@@ -39,10 +39,10 @@ public class XCalendar extends SContainer implements LowLevelEventListener, SDoc
     /**
      * The <code>XCalendar</code> default <code>SIcon</code> for editing.
      */
-    public static final SIcon DEFAULT_EDIT_ICON = new SResourceIcon("org/wingx/calendar/calendar_edit.gif");
+    public static final SIcon DEFAULT_EDIT_ICON = new SResourceIcon("org/wingx/calendar/calbu.gif");
     
     /**
-     * The current <code>XCalendar</code>'s icon to choos a new date.
+     * The current <code>XCalendar</code>'s icon to choose a new date.
      */
     private SIcon editIcon = DEFAULT_EDIT_ICON;
 
