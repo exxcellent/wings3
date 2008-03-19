@@ -7,11 +7,12 @@ wingS.namespace("calendar");
 
 
 wingS.calendar.XCalendar = function(componentId, ownerName, config) {
+    var idPrefix = "_cal_";
     this.componentId = componentId;
-    this.valueId = componentId + "val";
-    this.buttonId = componentId + "btn";
-    this.containerId = componentId + "con";
-    this.calendarId = componentId + "cal";
+    this.valueId = idPrefix + componentId + "_val";
+    this.buttonId = idPrefix + componentId + "_btn";
+    this.containerId = idPrefix + componentId + "_con";
+    this.calendarId = idPrefix + componentId + "_cal";
     
     this.valueField = document.getElementById(this.valueId);
     

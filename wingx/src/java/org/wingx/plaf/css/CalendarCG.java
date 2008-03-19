@@ -68,11 +68,12 @@ public class CalendarCG extends AbstractComponentCG<XCalendar> implements org.wi
     }
 
     public void writeInternal(Device device, XCalendar component) throws java.io.IOException {
+        final String idPrefix = "_cal_";
         final String idComponent = component.getName();
-        final String idValue = idComponent + "val";
-        final String idButton = idComponent + "btn";
-        final String idContainer = idComponent + "con";
-        final String idCalendar = idComponent + "cal";
+        final String idValue = idPrefix + idComponent + "_val";
+        final String idButton = idPrefix + idComponent + "_btn";
+        final String idContainer = idPrefix + idComponent + "_con";
+        final String idCalendar = idPrefix + idComponent + "_cal";
 
         SFormattedTextField fTextField = component.getFormattedTextField();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
