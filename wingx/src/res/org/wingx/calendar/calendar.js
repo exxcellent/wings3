@@ -23,7 +23,7 @@ wingS.calendar.XCalendar = function(componentId, ownerName, config) {
     
     this.containerWidget = new wingS.dialog.SDialog(this.containerId,
         {context:[this.buttonId, "tl", "tl"], constraintoviewport:true,
-         draggable:true, close:true, zIndex:1001, width:"153px"});
+         draggable:true, close:true, zIndex:1001, width:"153px", propagateMoveEvent:false});
     this.outerContainer = document.getElementById(this.containerId + "_c");
     this.outerContainer.style.display = "none";
 
@@ -65,6 +65,7 @@ wingS.calendar.XCalendar.prototype.showPopup = function() {
     }
     this.containerWidget.show();
     this.containerWidget.align("tl", "tl");
+    this.containerWidget.focus();
 }
 
 wingS.calendar.XCalendar.prototype.handleSelectEvent = function(type, args, obj) {
