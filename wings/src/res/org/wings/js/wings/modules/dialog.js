@@ -30,6 +30,11 @@ wingS.dialog.SDialog._DEFAULT_CONFIG = {
     "VIEWPORTELEMENT": {
         key: "viewportelement",
         suppressEvent:true
+    },
+	
+	"PROPAGATE_MOVE_EVENT": {
+        key: "propagateMoveEvent",
+        value:true
     }
 };
 
@@ -50,8 +55,10 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
         this.subscribe("changeBody", this.registerForm);
         this.initEvent.fire(wingS.dialog.SDialog);
 		
-		// Handles move events and sends x-y-coordinates
-		this.moveEvent.subscribe(this.moveHandler, this, true);
+		if (this.cfg.getProperty("propagateMoveEvent")) {
+			// Handles move events and sends x-y-coordinates
+			this.moveEvent.subscribe(this.moveHandler, this, true);
+		}
         
         if (this.cfg.getProperty("underlay") == "shadow") {
             // Actually the default shadow width is 3px,
@@ -74,6 +81,12 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
         {
             handler: this.configContext,
             suppressEvent: DEFAULT_CONFIG.VIEWPORTELEMENT.suppressEvent
+        });
+		
+		this.cfg.addProperty(DEFAULT_CONFIG.PROPAGATE_MOVE_EVENT.key,
+        {
+            handler: this.configContext,
+            value: DEFAULT_CONFIG.PROPAGATE_MOVE_EVENT.value
         });
     },
 
