@@ -191,52 +191,6 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
     private final ListSelectionListener fwdSelectionEvents = new ListSelectionListener() {
         public void valueChanged(ListSelectionEvent e) {
             fireSelectionValueChanged(e.getFirstIndex(), e.getLastIndex(), e.getValueIsAdjusting());
-            //int oldVal = getLeadSelectionIndex();
-            /*List oldVal = new ArrayList();
-            for (int index = e.getFirstIndex(); index <= e.getLastIndex(); ++index) {
-                int visibleIndex = index;
-                    if (getViewportSize() != null) {
-                        visibleIndex = index - getViewportSize().y;
-                        if (visibleIndex < 0 || visibleIndex >= getViewportSize().height)
-                            continue;
-                    }
-                System.out.println("first: "+e.getFirstIndex());
-                System.out.println("last: "+e.getLastIndex());
-                if (isSelectedIndex(visibleIndex)) {
-                    oldVal.add(new Integer(index));
-                }
-            } */
-
-           /* if(getSelectedIndices() != null){
-                int[] oldVal = getSelectedIndices();
-                for(int i=0; i<oldVal.length;i++){
-                    System.out.println(oldVal[i]);
-                }
-            }
-
-            List oldSelectedIndices = new ArrayList();
-            for (int index = e.getFirstIndex(); index <= e.getLastIndex(); ++index) {
-                int visibleIndex = index;
-                if (getViewportSize() != null) {
-                    visibleIndex = index - getViewportSize().y;
-                    if (visibleIndex < 0 || visibleIndex >= getViewportSize().height)
-                        continue;
-                }
-
-                if (isSelectedIndex(index)) {
-                    // selectedIndices.add(new Integer(visibleIndex));
-                } else {
-                    oldSelectedIndices.add(new Integer(visibleIndex));
-                }
-
-            }
-            if(oldSelectedIndices.size() != 0){
-                for(int i=0; i<oldSelectedIndices.size(); i++)
-                    System.out.println("old: "+oldSelectedIndices.get(i));
-            }  */
-
-
-
             if (isUpdatePossible() && SList.class.isAssignableFrom(SList.this.getClass())) {
                 List deselectedIndices = new ArrayList();
                 List selectedIndices = new ArrayList();
@@ -254,10 +208,6 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
                     }
                 }
                 update(((ListCG) getCG()).getSelectionUpdate(SList.this, deselectedIndices, selectedIndices));
-
-                 //propertyChangeSupport.firePropertyChange("selection", oldVal, e.getLastIndex() );
-
-
             } else {
                 reload();
             }
