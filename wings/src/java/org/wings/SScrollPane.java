@@ -107,6 +107,7 @@ public class SScrollPane
      * @param c the element which should be scrolled.
      */
     protected void setScrollable(SComponent c) {
+        Scrollable oldVal = this.scrollable;
         if (scrollable != null) {
             // reset the scrollable's viewport to the one
             // it had before adding it to this scrollpane
@@ -129,6 +130,7 @@ public class SScrollPane
         }
 
         reload();
+        propertyChangeSupport.firePropertyChange("scrollable", oldVal, this.scrollable);
     }
 
     /**
@@ -147,9 +149,12 @@ public class SScrollPane
      * @param view the component to add to the viewport
      */
     public void setViewportView(SComponent view) {
+        //SComponent oldVal = t.b.d.;
+        String oldVal = "oldValue";
         add(view, SScrollPaneLayout.VIEWPORT);
+        propertyChangeSupport.firePropertyChange("viewportView", oldVal , view);
     }
-
+      
     /**
      * Only {@link Scrollable scrollables} are allowed here!
      */
@@ -172,9 +177,11 @@ public class SScrollPane
     }
 
     public void setMode(int mode) {
+        int oldVal = this.mode;
         reloadIfChange(this.mode, mode);
         this.mode = mode;
         setInitialViewportSize();
+        propertyChangeSupport.firePropertyChange("mode", oldVal, this.mode);
     }
 
     public void setCG(ScrollPaneCG cg) {
@@ -207,6 +214,7 @@ public class SScrollPane
      *                   The {@link LayoutManager} is per default {@link SScrollPaneLayout}.
      */
     public void setHorizontalScrollBar(Adjustable sb, String constraint) {
+        Adjustable oldVal = this.horizontalScrollBar;
         if (horizontalScrollBar != null) {
             if (horizontalScrollBar instanceof SAbstractAdjustable)
                 ((SAbstractAdjustable) horizontalScrollBar).setModel(new SDefaultBoundedRangeModel());
@@ -233,6 +241,7 @@ public class SScrollPane
         }
 
         reload();
+        propertyChangeSupport.firePropertyChange("horizontalScrollBar", oldVal, this.horizontalScrollBar);
     }
 
     /**
@@ -271,6 +280,7 @@ public class SScrollPane
      *                   The {@link LayoutManager} is per default {@link SScrollPaneLayout}.
      */
     public void setVerticalScrollBar(Adjustable sb, String constraint) {
+        Adjustable oldVal = this.verticalScrollBar;
         if (verticalScrollBar != null) {
             if (verticalScrollBar instanceof SAbstractAdjustable)
                 ((SAbstractAdjustable) verticalScrollBar).setModel(new SDefaultBoundedRangeModel());
@@ -297,6 +307,7 @@ public class SScrollPane
         }
 
         reload();
+        propertyChangeSupport.firePropertyChange("verticalScrollBar", oldVal, this.verticalScrollBar);
     }
 
     /**
@@ -318,9 +329,11 @@ public class SScrollPane
      */
     public void setHorizontalScrollBarPolicy(int policy) {
         if (policy != horizontalScrollBarPolicy) {
+            int oldVal = this.horizontalScrollBarPolicy;
             horizontalScrollBarPolicy = policy;
             adoptScrollBarVisibility(horizontalScrollBar, policy);
             reload();
+            propertyChangeSupport.firePropertyChange("horizontalScrollBar", oldVal, this.horizontalScrollBarPolicy);
         }
     }
 
@@ -333,15 +346,19 @@ public class SScrollPane
      */
     public void setVerticalScrollBarPolicy(int policy) {
         if (policy != verticalScrollBarPolicy) {
+            int oldVal = this.verticalScrollBarPolicy;
             verticalScrollBarPolicy = policy;
             adoptScrollBarVisibility(verticalScrollBar, policy);
             reload();
+            propertyChangeSupport.firePropertyChange("verticalScrollBarPolicy", oldVal, this.verticalScrollBarPolicy);
         }
     }
 
     public void setHorizontalExtent(int horizontalExtent) {
+        int oldVal = this.horizontalExtent;
         reloadIfChange(this.horizontalExtent, horizontalExtent);
         this.horizontalExtent = horizontalExtent;
+        propertyChangeSupport.firePropertyChange("horizontalExtent", oldVal, this.horizontalExtent);
         horizontalModel.setExtent(horizontalExtent);
     }
 
@@ -350,9 +367,11 @@ public class SScrollPane
     }
 
     public void setVerticalExtent(int verticalExtent) {
+        int oldVal = this.verticalExtent;
         reloadIfChange(this.verticalExtent, verticalExtent);
         this.verticalExtent = verticalExtent;
         verticalModel.setExtent(verticalExtent);
+        propertyChangeSupport.firePropertyChange("verticalExtent", oldVal, this.verticalExtent);
     }
 
     public final int getVerticalExtent() {
@@ -427,6 +446,7 @@ public class SScrollPane
     private void setInitialViewportSize() {
         if (scrollable == null) return;
 
+        Rectangle oldVal = scrollable.getViewportSize();
         if (mode == MODE_COMPLETE){
             scrollable.setViewportSize(scrollable.getScrollableViewportSize());
         } else {
@@ -434,6 +454,7 @@ public class SScrollPane
             adoptScrollBarVisibility(horizontalScrollBar, horizontalScrollBarPolicy);
             adoptScrollBarVisibility(verticalScrollBar, verticalScrollBarPolicy);
         }
+        propertyChangeSupport.firePropertyChange("initialViewportSize", oldVal, scrollable.getViewportSize());
     }
 
     protected void adoptScrollBarVisibility(Adjustable scrollbar, int policy) {

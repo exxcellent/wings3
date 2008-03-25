@@ -57,7 +57,7 @@ public class SFrame
      * A list of all header used by this frame.
      */
     protected List headers = new ArrayList();
-    
+
     /**
      * the style sheet used in certain look and feels.
      */
@@ -88,7 +88,7 @@ public class SFrame
     private boolean updateEnabled;
 
     private Map<String, Object> updateCursor;
-    
+
     private Map<String, Object> autoAdjustLayout;
 
     private SComponent focusComponent = null; // Component which requests the focus
@@ -139,7 +139,7 @@ public class SFrame
         this.visible = false; // Frames are invisible originally.
 
         setUpdateEnabled(true);
-        
+
         Map<String, Object> updateCursor = new HashMap<String, Object>();
         SIcon cursorImage = new SResourceIcon("org/wings/icons/AjaxActivityCursor.gif");
         updateCursor.put("enabled", true);
@@ -149,12 +149,12 @@ public class SFrame
         updateCursor.put("dx", 15);
         updateCursor.put("dy", 0);
         setUpdateCursor(updateCursor);
-        
+
         Map<String, Object> autoAdjustLayout = new HashMap<String, Object>();
         autoAdjustLayout.put("enabled", true);
         autoAdjustLayout.put("delay", 250);
         setAutoAdjustLayout(autoAdjustLayout);
-        
+
         addStyle("yui-skin-sam");
     }
 
@@ -249,7 +249,9 @@ public class SFrame
      * Set server address.
      */
     public final void setRequestURL(RequestURL requestURL) {
+        RequestURL oldVal = this.requestURL;
         this.requestURL = requestURL;
+        propertyChangeSupport.firePropertyChange("requestURL", oldVal, this.requestURL);
     }
 
     /**
@@ -275,7 +277,9 @@ public class SFrame
      * Set the target resource
      */
     public void setTargetResource(String targetResource) {
+        String oldVal = this.targetResource;
         this.targetResource = targetResource;
+        propertyChangeSupport.firePropertyChange("targetResource", oldVal, this.targetResource);
     }
 
     /**
@@ -366,17 +370,19 @@ public class SFrame
 
     /**
      * Sets the title of this HTML page. Typically shown in the browsers window title.
-     * 
+     *
      * @param title The window title.
      */
     public void setTitle(String title) {
-        if ( title == null ) { 
+        String oldVal = this.title;
+        if ( title == null ) {
             title = "";
         }
         if ( !title.equals(this.title) ) {
             this.title = title;
             reload();
         }
+        propertyChangeSupport.firePropertyChange("title", oldVal, this.title);
     }
 
     /**
@@ -389,7 +395,9 @@ public class SFrame
     }
 
     public void setStatusLine(String s) {
+        String oldVal = this.statusLine;
         statusLine = s;
+        propertyChangeSupport.firePropertyChange("statusLine", oldVal, this.statusLine);
     }
 
     /**
@@ -424,7 +432,9 @@ public class SFrame
      * @see org.wings.session.LowLevelEventDispatcher
      */
     public void setNoCaching(boolean noCaching) {
+        boolean oldVal = this.noCaching;
         this.noCaching = noCaching;
+        propertyChangeSupport.firePropertyChange("noCaching", oldVal, this.noCaching);
     }
 
     /**
@@ -538,10 +548,10 @@ public class SFrame
          */
         if (name.endsWith("_debug")) {
             log.info("input "+name+values);
-            String newLogLevel = (values.length == 1) 
-                    ? values[0] != null 
-                    ? values[0] 
-                    : "off" 
+            String newLogLevel = (values.length == 1)
+                    ? values[0] != null
+                    ? values[0]
+                    : "off"
                     : "off";
             logLevel = newLogLevel;
         }
@@ -734,18 +744,20 @@ public class SFrame
 		return updateCursor;
 	}
 
-	public void setUpdateCursor(Map<String, Object> updateCursor) {        
+	public void setUpdateCursor(Map<String, Object> updateCursor) {
 		if (isDifferent(this.updateCursor, updateCursor)) {
-			this.updateCursor = updateCursor;
+            Map<String, Object> oldVal = this.updateCursor;
+            this.updateCursor = updateCursor;
 			reload();
-		}
+            propertyChangeSupport.firePropertyChange("updateCursor", oldVal, this.updateCursor);
+        }
 	}
-    
+
     public Map<String, Object> getAutoAdjustLayout() {
         return autoAdjustLayout;
     }
 
-    public void setAutoAdjustLayout(Map<String, Object> autoAdjustLayout) {        
+    public void setAutoAdjustLayout(Map<String, Object> autoAdjustLayout) {
         if (isDifferent(this.autoAdjustLayout, autoAdjustLayout)) {
             this.autoAdjustLayout = autoAdjustLayout;
             reload();

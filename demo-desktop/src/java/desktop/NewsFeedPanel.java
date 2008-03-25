@@ -44,7 +44,9 @@ public class NewsFeedPanel
     }
 
     public void setFeed(String feed) {
+        String oldVal = this.feed;
         this.feed = feed;
+        propertyChangeSupport.firePropertyChange("feed", oldVal, this.feed);
 
         if (poller == null)
             poller = new Poller();

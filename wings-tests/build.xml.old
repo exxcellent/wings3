@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." name="wingS tests" default="compile">
+    <!-- read properties from file -->
+    <property file="../etc/custom-build.properties"/>
+    <property file="../etc/build.properties"/>
+
+    <path id="build.classpath">
+        <fileset dir="../thirdparty/lib">
+           <include name="jetty-6.1.6rc0.jar"/>
+           <include name="jetty-util-6.1.6rc0.jar"/>
+           <include name="selenium-server-0.9.2.jar"/>
+        </fileset>
+    </path>
+
+    <target name="prepare">
+        <mkdir dir="build/class"/>
+    </target>
+
+    <target name="compile" depends="prepare">
+        <javac debug="${build.debug}" deprecation="${build.deprecation}"
+               encoding="utf-8" source="1.5" target="1.5"
+	       srcdir="src/java" destdir="build/class">
+            <classpath refid="build.classpath"/>
+        </javac>
+    </target>
+
+    <target name="run-demo-wingset" depends="compile">
+        <java classname="wings.test.JettyRunner" fork="true">
+          <jvmarg value="-enableassertions"/>
+          <arg value="../demo-wingset/build/web"/>
+          <arg value="8989"/>
+          <classpath>
+            <pathelement path="build/class"/>
+          </classpath>
+          <classpath refid="build.classpath"/>
+       </java>
+    </target>
+
+    <target name="run-demo-desktop" depends="compile">
+        <java classname="wings.test.JettyRunner" fork="true">
+          <jvmarg value="-enableassertions"/>
+          <arg value="../demo-desktop/build/web"/>
+          <arg value="8989"/>
+          <classpath path="build/class"/>
+          <classpath refid="build.classpath"/>
+       </java>
+    </target>
+
+    <target description="cleanup build results" name="clean">
+        <delete dir="build"/>
+        <delete dir="dist"/>
+        <delete>
+            <fileset dir="src">
+                <include name="**/*.class"/>
+                <include name="**/*.u"/>
+                <include name="**/*.bak"/>
+                <include name="**/*~"/>
+                <include name="**/.#*"/>
+            </fileset>
+        </delete>
+    </target>
+
+    <target depends="clean,compile" description="rebuild all" name="all"/>
+</project>

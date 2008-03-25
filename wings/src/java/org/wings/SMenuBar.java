@@ -69,7 +69,9 @@ public class SMenuBar extends SContainer {
      * @see SingleSelectionModel
      */
     public void setSelectionModel(SingleSelectionModel model) {
+        SingleSelectionModel oldVal = this.selectionModel;
         this.selectionModel = model;
+        propertyChangeSupport.firePropertyChange("selectionModel", oldVal, this.selectionModel);
     }
 
     /**
@@ -142,7 +144,9 @@ public class SMenuBar extends SContainer {
     public void setSelected(SComponent sel) {
         SingleSelectionModel model = getSelectionModel();
         int index = getComponentIndex(sel);
+        SComponent oldVal = this.getComponent(index);
         model.setSelectedIndex(index);
+        propertyChangeSupport.firePropertyChange("selected", oldVal, this.getComponent(index));
     }
 
     /**
@@ -172,7 +176,9 @@ public class SMenuBar extends SContainer {
      * @see #isBorderPainted
      */
     public void setBorderPainted(boolean b) {
+        boolean oldVal = this.paintBorder;
         paintBorder = b;
+        propertyChangeSupport.firePropertyChange("borderPainted", oldVal, this.paintBorder);
     }
 
     /**
@@ -186,7 +192,9 @@ public class SMenuBar extends SContainer {
      * @see Insets
      */
     public void setMargin(Insets m) {
+        Insets oldVal = this.margin;
         this.margin = m;
+        propertyChangeSupport.firePropertyChange("margin", oldVal, this.margin);
     }
 
     /**

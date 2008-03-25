@@ -102,6 +102,7 @@ public class SAnchor extends SContainer {
                 || (url != null && !url.equals(oldURL))) {
             reload();
         }
+        propertyChangeSupport.firePropertyChange("URL", oldURL, this.url);
     }
 
     /**
@@ -117,7 +118,9 @@ public class SAnchor extends SContainer {
      * set the name of the target frame/window.
      */
     public void setTarget(String t) {
+        String oldVal = this.target;
         target = t;
+        propertyChangeSupport.firePropertyChange("target", oldVal, this.target);
     }
 
     /**

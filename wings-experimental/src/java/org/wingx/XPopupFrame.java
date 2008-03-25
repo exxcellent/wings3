@@ -27,11 +27,15 @@ public class XPopupFrame extends SComponent {
     }
 
     public void setHeight(int height) {
+        int oldVal = this.height;
         this.height = height;
+        propertyChangeSupport.firePropertyChange("height", oldVal, this.height);
     }
 
     public void setWidth(int width) {
+        int oldVal = this.width;
         this.width = width;
+        propertyChangeSupport.firePropertyChange("width", oldVal, this.width);
     }
 
     public int getHeight() {

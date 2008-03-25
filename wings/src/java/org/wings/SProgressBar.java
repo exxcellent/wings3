@@ -262,6 +262,7 @@ public class SProgressBar extends SComponent {
      * @see #getOrientation
      */
     public void setOrientation(int newOrientation) {
+        int oldVal = this.orientation;
         if (orientation != newOrientation) {
             switch (newOrientation) {
                 case SConstants.VERTICAL:
@@ -274,6 +275,7 @@ public class SProgressBar extends SComponent {
                     throw new IllegalArgumentException(newOrientation +
                             " is not a legal orientation");
             }
+            propertyChangeSupport.firePropertyChange("orientation", oldVal, this.orientation);
         }
     }
 
@@ -309,6 +311,7 @@ public class SProgressBar extends SComponent {
         boolean oldValue = paintString;
         paintString = b;
         reloadIfChange(oldValue, paintString);
+        propertyChangeSupport.firePropertyChange("stringPainted", oldValue, this.paintString);
     }
 
 
@@ -354,6 +357,7 @@ public class SProgressBar extends SComponent {
         String oldValue = progressString;
         progressString = s;
         reloadIfChange(oldValue, progressString);
+        propertyChangeSupport.firePropertyChange("string", oldValue, this.progressString);
     }
 
     /**
@@ -374,7 +378,9 @@ public class SProgressBar extends SComponent {
      * @param c a <code>Color</code> value
      */
     public void setFilledColor(Color c) {
+        Color oldVal = this.filledColor;
         filledColor = c;
+        propertyChangeSupport.firePropertyChange("filledColor", oldVal, this.filledColor);
     }
 
     /**
@@ -390,7 +396,9 @@ public class SProgressBar extends SComponent {
      * @param c a <code>Color</code> value
      */
     public void setUnfilledColor(Color c) {
+        Color oldVal = this.unfilledColor;
         unfilledColor = c;
+        propertyChangeSupport.firePropertyChange("unfilledColor", oldVal, this.unfilledColor);
     }
 
     /**
@@ -532,6 +540,7 @@ public class SProgressBar extends SComponent {
                 model.setExtent(0);
             }
             reload();
+            propertyChangeSupport.firePropertyChange("model", oldModel, this.model);
         }
     }
 
@@ -590,7 +599,9 @@ public class SProgressBar extends SComponent {
      */
     public void setValue(int n) {
         BoundedRangeModel brm = getModel();
+        int oldVal = brm.getValue();
         brm.setValue(n);
+        propertyChangeSupport.firePropertyChange("value", oldVal, brm.getValue());
     }
 
     /**
@@ -609,7 +620,11 @@ public class SProgressBar extends SComponent {
      * @see #addChangeListener
      * @see BoundedRangeModel#setMinimum
      */
-    public void setMinimum(int n) { getModel().setMinimum(n); }
+    public void setMinimum(int n) {
+        int oldVal = getModel().getMinimum();
+        getModel().setMinimum(n);
+        propertyChangeSupport.firePropertyChange("minimum", oldVal, getModel().getMinimum());
+    }
 
     /**
      * Sets the progress bar's maximum value
@@ -626,7 +641,11 @@ public class SProgressBar extends SComponent {
      * @see #addChangeListener
      * @see BoundedRangeModel#setMaximum
      */
-    public void setMaximum(int n) { getModel().setMaximum(n); }
+    public void setMaximum(int n) {
+        int oldVal = getModel().getMaximum();
+        getModel().setMaximum(n);
+        propertyChangeSupport.firePropertyChange("maximum", oldVal, getModel().getMaximum());
+    }
 
     /**
      * Sets the <code>indeterminate</code> property of the progress bar,
@@ -643,7 +662,9 @@ public class SProgressBar extends SComponent {
      * @see #isIndeterminate()
      */
     public void setIndeterminate(boolean newValue) {
+        boolean oldVal = this.indeterminate;
         indeterminate = newValue;
+        propertyChangeSupport.firePropertyChange("indeterminate", oldVal, this.indeterminate);
     }
 
     /**
@@ -661,7 +682,9 @@ public class SProgressBar extends SComponent {
      * @param dimension the size as dimension
      */
     public void setProgressBarDimension(SDimension dimension) {
+        SDimension oldVal = this.progressBarDimension;
         progressBarDimension = dimension;
+        propertyChangeSupport.firePropertyChange("progressBarDimension", oldVal, this.progressBarDimension);
         
     }
 

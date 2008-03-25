@@ -54,22 +54,28 @@ public class SInternalFrame
     }
 
     public void setIconifyable(boolean v) {
+        boolean oldVal = this.iconifyable;
         iconifyable = v;
         reloadIfChange(iconifyable, v);
+        propertyChangeSupport.firePropertyChange("iconifyable", oldVal, this.iconifyable);
     }
 
     public boolean isIconifyable() { return iconifyable; }
 
     public void setMaximizable(boolean v) {
+        boolean oldVal = this.maximizable;
         maximizable = v;
         reloadIfChange(maximizable, v);
+        propertyChangeSupport.firePropertyChange("maximizable", oldVal, this.maximizable);
     }
 
     public boolean isMaximizable() { return maximizable; }
 
     public void setClosable(boolean v) {
+        boolean oldVal = this.closable;
         closable = v;
         reloadIfChange(closable, v);
+        propertyChangeSupport.firePropertyChange("closable", oldVal, this.closable);
     }
 
     public boolean isClosable() { return closable; }
@@ -77,12 +83,14 @@ public class SInternalFrame
     public void setIconified(boolean v) {
         v &= isIconifyable();
         boolean old = iconified;
+        boolean oldVal = this.iconified;
         iconified = v;
         if (old != iconified) {
             reload();
             if (iconified)
                 setMaximized(false);
         }
+        propertyChangeSupport.firePropertyChange("iconified", oldVal, this.iconified);
     }
 
     public boolean isIconified() { return iconified; }
@@ -96,6 +104,7 @@ public class SInternalFrame
             if (maximized)
                 setIconified(false);
         }
+        propertyChangeSupport.firePropertyChange("maximized", old, this.maximized);
     }
 
     public boolean isMaximized() { return maximized; }
@@ -106,15 +115,19 @@ public class SInternalFrame
             hide();
         else
             reloadIfChange(this.closed, closed);
+        boolean oldVal = this.closed;
         this.closed = closed;
+        propertyChangeSupport.firePropertyChange("closed", oldVal, this.closed);
     }
 
     public boolean isClosed() { return closed; }
 
     public void setIcon(SIcon i) {
         if (i != icon || i != null && !i.equals(icon)) {
+            SIcon oldVal = this.icon;
             icon = i;
             reload();
+            propertyChangeSupport.firePropertyChange("icon", oldVal, this.icon);
         }
     }
 
@@ -128,6 +141,7 @@ public class SInternalFrame
         if ((title == null && oldTitle != null) ||
                 (title != null && !title.equals(oldTitle)))
             reload();
+        propertyChangeSupport.firePropertyChange("title", oldTitle, this.title);
     }
 
     public String getTitle() {

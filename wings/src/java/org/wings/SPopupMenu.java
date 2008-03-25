@@ -133,7 +133,9 @@ public class SPopupMenu
      * @param widthScaleFactor The widthScaleFactor to set.
      */
     public void setWidthScaleFactor(double widthScaleFactor) {
+        double oldVal = this.widthScaleFactor;
         this.widthScaleFactor = widthScaleFactor;
+        propertyChangeSupport.firePropertyChange("widthScaleFactor", oldVal, this.widthScaleFactor);
     }
 
     public void setEnabled(boolean enabled) {

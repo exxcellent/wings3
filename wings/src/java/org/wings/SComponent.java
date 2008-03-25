@@ -16,12 +16,7 @@ package org.wings;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.border.SBorder;
-import org.wings.event.SComponentEvent;
-import org.wings.event.SComponentListener;
-import org.wings.event.SParentFrameEvent;
-import org.wings.event.SParentFrameListener;
-import org.wings.event.SRenderEvent;
-import org.wings.event.SRenderListener;
+import org.wings.event.*;
 import org.wings.io.Device;
 import org.wings.plaf.ComponentCG;
 import org.wings.plaf.Update;
@@ -29,40 +24,23 @@ import org.wings.script.JavaScriptListener;
 import org.wings.script.ScriptListener;
 import org.wings.session.Session;
 import org.wings.session.SessionManager;
-import org.wings.style.CSSAttributeSet;
-import org.wings.style.CSSProperty;
-import org.wings.style.CSSStyle;
-import org.wings.style.CSSStyleSheet;
-import org.wings.style.Selector;
-import org.wings.style.Style;
+import org.wings.style.*;
 import org.wings.util.ComponentVisitor;
 import org.wings.util.SStringBuilder;
 
-import javax.swing.Action;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
+import javax.swing.*;
 import javax.swing.event.EventListenerList;
-import java.awt.Color;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.beans.BeanInfo;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
+import java.beans.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EventListener;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Object having a graphical representation that can be displayed on the
@@ -238,6 +216,10 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      */
     private static final ScriptListener[] EMPTY_SCRIPTLISTENERLIST = new ScriptListener[0];
 
+    /**
+     *  PropertyChangeSupport
+     */
+    protected final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     /**
      * Default empty constructor.
@@ -263,12 +245,14 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * @param border the border to be set for the component
      */
     public void setBorder(SBorder border) {
+        SBorder oldVal = this.getBorder();
         reloadIfChange(this.border, border);
         if (this.border != null)
             this.border.setComponent(null);
         this.border = border;
         if (this.border != null)
             this.border.setComponent(this);
+        propertyChangeSupport.firePropertyChange("border", oldVal, this.border);
     }
 
     /**
@@ -286,11 +270,13 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * @param parent the container
      */
     public void setParent(SContainer parent) {
+        SContainer oldVal = this.parent;
         this.parent = parent;
         if (parent != null)
             setParentFrame(parent.getParentFrame());
         else
             setParentFrame(null);
+        propertyChangeSupport.firePropertyChange("parent", oldVal, this.parent);
     }
 
     /**
@@ -299,6 +285,7 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * @param parentFrame the frame
      */
     protected void setParentFrame(SFrame parentFrame) {
+        SFrame oldVal = this.parentFrame;
         if (this.parentFrame == parentFrame) {
             return;
         }
@@ -325,6 +312,8 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
             reload();
         if (dynamicStyles != null && dynamicStyles.size() > 0)
             reload();
+
+        propertyChangeSupport.firePropertyChange("parentFrame", oldVal, this.parentFrame);
     }
 
     /*public void setInheritsPopupMenu(boolean inheritsPopupMenu) {
@@ -342,11 +331,13 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
             getSession().getMenuManager().deregisterMenuLink(this.popupMenu, this);
             this.popupMenu.setParentFrame(null);
         }
+        SPopupMenu oldVal = this.popupMenu;
         this.popupMenu = popupMenu;
         if (this.popupMenu != null) {
             getSession().getMenuManager().registerMenuLink(this.popupMenu, this);
             this.popupMenu.setParentFrame(getParentFrame());
         }
+        propertyChangeSupport.firePropertyChange("componentPopupMenu", oldVal, this.popupMenu);
     }
 
     public SPopupMenu getComponentPopupMenu() {
@@ -403,8 +394,10 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * @see org.wings.SComponent#getPreferredSize
      */
     public void setPreferredSize(SDimension preferredSize) {
+        SDimension oldVal = this.preferredSize;
         reloadIfChange(this.preferredSize, preferredSize);
         this.preferredSize = preferredSize;
+        propertyChangeSupport.firePropertyChange("preferredSize", oldVal, this.preferredSize);
     }
 
     /**
@@ -697,8 +690,10 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * @param uncheckedName String to use as componentn name/identifier.
      */
     public void setNameRaw(String uncheckedName) {
+        String oldVal = this.name;
         reloadIfChange(this.name, uncheckedName);
         this.name = uncheckedName;
+        propertyChangeSupport.firePropertyChange("name", oldVal, this.name);
     }
 
     /**
@@ -766,8 +761,10 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      */
     // <p>Please consider using {@link #addStyle(String)} to avoid disabling of default wingS stylesheet set.
     public void setStyle(String cssClassName) {
+        String oldVal = this.style;
         reloadIfChange(style, cssClassName);
         this.style = cssClassName;
+        propertyChangeSupport.firePropertyChange("style", oldVal, this.style);
     }
 
     /**
@@ -855,6 +852,7 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * @param dynamicStyles A collection collection of {@link Style} definitions.
      */
     public void setDynamicStyles(Collection dynamicStyles) {
+        Map oldVal = this.dynamicStyles;
         if (dynamicStyles == null)
             return;
         if (this.dynamicStyles == null)
@@ -864,6 +862,7 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
             this.dynamicStyles.put(style.getSelector(), style);
         }
         reload();
+        propertyChangeSupport.firePropertyChange("dynamicStyles", oldVal, this.dynamicStyles);
     }
 
     /**
@@ -923,8 +922,11 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
         if (style == null) {
             addDynamicStyle(new CSSStyle(selector, property, propertyValue));
         } else {
+            Map<CSSProperty, String> oldStyle = style.properties();
+            String oldVal = oldStyle.get(property);
             String old = style.put(property, propertyValue);
             reloadIfChange(old, propertyValue);
+            propertyChangeSupport.firePropertyChange("attribute", oldVal, propertyValue);
         }
     }
 
@@ -964,12 +966,14 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
 
     public void setAttributes(Selector selector, CSSAttributeSet attributes) {
         Style style = getDynamicStyle(selector);
+        Map<CSSProperty, String> oldStyleProperties = style.properties();
         if (style == null) {
             addDynamicStyle(new CSSStyle(selector, attributes));
         } else {
             boolean changed = style.putAll(attributes);
             if (changed)
                 reload();
+            propertyChangeSupport.firePropertyChange("attributes", oldStyleProperties, style.properties());
         }
     }
 
@@ -983,13 +987,15 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
     }
 
     /**
-     * Set the components foreground color.
+     * Set the components background color.
      *
-     * @param color the new foreground color or <code>null</code>
+     * @param color the new background color or <code>null</code>
      */
-    public void setBackground(Color color) {
+     public void setBackground(Color color) {
+        Color oldVal = this.getBackground();
         setAttribute(SELECTOR_ALL, CSSProperty.BACKGROUND_COLOR, CSSStyleSheet.getAttribute(color));
-    }
+        propertyChangeSupport.firePropertyChange("background", oldVal, this.getBackground());
+     }
 
     /**
      * Return the components foreground color.
@@ -1006,7 +1012,10 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * @param color the new foreground color or <code>null</code>
      */
     public void setForeground(Color color) {
+        Color oldVal = this.getForeground();
         setAttribute(SELECTOR_ALL, CSSProperty.COLOR, CSSStyleSheet.getAttribute(color));
+
+        propertyChangeSupport.firePropertyChange("foreground", oldVal, this.getForeground());
     }
 
     /**
@@ -1014,7 +1023,9 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      *
      * @param font the new font
      */
+    //TODO: firePropertyChange() in IF
     public void setFont(SFont font) {
+        SFont oldVal = this.getFont();
         CSSAttributeSet attributes = CSSStyleSheet.getAttributes(font);
         Style style = getDynamicStyle(SELECTOR_ALL);
         if (style == null) {
@@ -1028,6 +1039,7 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
             style.remove(CSSProperty.FONT_WEIGHT);
             style.putAll(attributes);
             reload();
+            propertyChangeSupport.firePropertyChange("font", oldVal, this.getFont());
         }
     }
 
@@ -1060,6 +1072,7 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
             } else {
             	reload();
             }
+            propertyChangeSupport.firePropertyChange("visible", old, this.visible);
         }
     }
 
@@ -1090,8 +1103,10 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * @param enabled true if the component is enabled, false otherwise
      */
     public void setEnabled(boolean enabled) {
+        boolean oldVal = this.enabled;
         reloadIfChange(this.enabled, enabled);
         this.enabled = enabled;
+        propertyChangeSupport.firePropertyChange("enabled", oldVal, this.enabled);
     }
 
     /**
@@ -1129,6 +1144,7 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
 
     public void setReloadForced(boolean forced) {
         if (reloadForced != forced) {
+            boolean oldVal = this.reloadForced;
             Object clientProperty = getClientProperty("onChangeSubmitListener");
             if (clientProperty != null && clientProperty instanceof JavaScriptListener) {
                 removeScriptListener((JavaScriptListener) clientProperty);
@@ -1136,12 +1152,15 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
             }
             reloadForced = forced;
             reload();
+            propertyChangeSupport.firePropertyChange("reloadForced", oldVal, this.reloadForced);
         }
     }
 
     /**
      * Mark this component as subject to reload if the property,
      * that is given in its old and new fashion, changed.
+     *
+     * Fires an PropertyChangeEvent with the property name, the old value and the new value
      *
      * @param oldVal the old value of some property
      * @param newVal the new value of some property
@@ -1353,8 +1372,10 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * @param t the new tooltip text
      */
     public void setToolTipText(String t) {
+        String oldVal = this.tooltip;
         reloadIfChange(this.tooltip, t);
         this.tooltip = t;
+        propertyChangeSupport.firePropertyChange("toolTipText", oldVal, this.tooltip);
     }
 
     /**
@@ -1380,8 +1401,10 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      *              Must not be zero.
      */
     public void setFocusTraversalIndex(int index) {
+        int oldVal = this.focusTraversalIndex;
         reloadIfChange(this.focusTraversalIndex, index);
         focusTraversalIndex = index;
+        propertyChangeSupport.firePropertyChange("focusTraversalIndex", oldVal, this.focusTraversalIndex);
     }
 
     /**
@@ -1425,8 +1448,10 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * @see SConstants
      */
     public void setHorizontalAlignment(int alignment) {
+        int oldVal = this.horizontalAlignment;
         reloadIfChange(this.horizontalAlignment, alignment);
         horizontalAlignment = alignment;
+        propertyChangeSupport.firePropertyChange("horizontalAlignment", oldVal, this.horizontalAlignment);
     }
 
     /**
@@ -1436,8 +1461,10 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * @see SConstants
      */
     public void setVerticalAlignment(int alignment) {
+        int oldVal = this.verticalAlignment;
         reloadIfChange(this.verticalAlignment, alignment);
         verticalAlignment = alignment;
+        propertyChangeSupport.firePropertyChange("verticalAlignment", oldVal, this.verticalAlignment);
     }
 
     /**
@@ -1770,8 +1797,10 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      */
     public void setShowAsFormComponent(boolean showAsFormComponent) {
         if (this.showAsFormComponent != showAsFormComponent) {
+            boolean oldVal = this.showAsFormComponent;
             this.showAsFormComponent = showAsFormComponent;
             reload();
+            propertyChangeSupport.firePropertyChange("showAsFormComponent", oldVal, this.showAsFormComponent);
         }
     }
 
@@ -1794,7 +1823,9 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * @see InputMap
      */
     public void setActionMap(ActionMap actionMap) {
+        ActionMap oldVal = this.actionMap;
         this.actionMap = actionMap;
+        propertyChangeSupport.firePropertyChange("actionMap", oldVal, this.actionMap);
     }
 
     /**
@@ -1832,8 +1863,10 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      */
     public void setInputMap(int condition, InputMap inputMap) {
         initInputMaps();
+        InputMap oldVal = inputMaps[condition];
         this.inputMaps[condition] = inputMap;
         registerGlobalInputMapWithFrame();
+        propertyChangeSupport.firePropertyChange("inputMap", oldVal, this.inputMaps[condition]);
     }
 
     /**
@@ -1993,5 +2026,43 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
             if (e.getParentFrame() != null)
                 e.getParentFrame().deregisterGlobalInputMapComponent(me);
         }
+    }
+
+
+    /**
+     * Add a PropertyChangeListener to the listener list. The listener is registered for all properties.
+     *
+     */
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        if(listener == null)
+            return;
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    /**
+     * Remove a PropertyChangeListener from the listener list.
+     *
+     */
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        if(propertyChangeSupport != null)
+            propertyChangeSupport.removePropertyChangeListener(listener);
+    }
+
+    /**
+     * Add a PropertyChangeListener for a specific property.
+     */
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        if(listener == null || propertyName == null)
+            return;
+        propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+    }
+
+
+    /**
+     * Remove a PropertyChangeListener for a specific property.
+     */
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        if(propertyChangeSupport != null || propertyName != null)
+            propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
     }
 }

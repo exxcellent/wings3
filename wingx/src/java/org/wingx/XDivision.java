@@ -62,8 +62,10 @@ public class XDivision
      * @param title the title
      */
     public void setTitle(String title) {
+        String oldVal = this.title;
         reloadIfChange(this.title, title);
         this.title = title;
+        propertyChangeSupport.firePropertyChange("title", oldVal, this.title);
     }
     
     /**
@@ -71,6 +73,7 @@ public class XDivision
      * @param titleFont the font for the title
      */
     public void setTitleFont( org.wings.SFont titleFont) {
+        SFont oldVal = this.getTitleFont();
         CSSAttributeSet attributes = CSSStyleSheet.getAttributes(titleFont);
         Style style = getDynamicStyle(SELECTOR_TITLE);
         if (style == null) {
@@ -84,6 +87,7 @@ public class XDivision
             style.remove(CSSProperty.FONT_WEIGHT);
             style.putAll(attributes);
         }
+        propertyChangeSupport.firePropertyChange("titleFont", oldVal, this.getTitleFont());
     }
     
     /**
@@ -99,7 +103,9 @@ public class XDivision
      * @param titleColor the color for the title
      */
     public void setTitleColor( Color titleColor ) {
+        Color oldVal = this.getTitleColor();
         setAttribute( SELECTOR_TITLE, CSSProperty.COLOR, CSSStyleSheet.getAttribute( titleColor ) );
+        propertyChangeSupport.firePropertyChange("titleColor", oldVal, this.getTitleColor());
     }
     
     /**
@@ -115,7 +121,9 @@ public class XDivision
      * @param clickable true if the title is clickable
      */
     public void setTitleClickable( boolean clickable ) {
+        boolean oldVal = this.isTitleClickable;
         this.isTitleClickable = clickable;
+        propertyChangeSupport.firePropertyChange("titleClickable", oldVal, this.isTitleClickable);
     }
     
     /**
@@ -131,8 +139,10 @@ public class XDivision
     }
 
     public void setIcon(SIcon icon) {
+        SIcon oldVal = this.icon;
         reloadIfChange(this.icon, icon);
         this.icon = icon;
+        propertyChangeSupport.firePropertyChange("icon", oldVal, this.icon);
     }
 
     /**
@@ -148,8 +158,10 @@ public class XDivision
      * @param shaded true if the XDivision is shaded
      */
     public void setShaded(boolean shaded) {
+        boolean oldVal = this.shaded;
         reloadIfChange(this.shaded, shaded);
         this.shaded = shaded;
+        propertyChangeSupport.firePropertyChange("shaded", oldVal, this.shaded);
     }
 
     public void processLowLevelEvent(String name, String[] values) {

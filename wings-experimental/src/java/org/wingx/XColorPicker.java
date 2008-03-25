@@ -109,6 +109,7 @@ public class XColorPicker extends SComponent implements LowLevelEventListener, X
         this.blue  = blue;
 
         Color newColor = this.getSelectedColor();
+        propertyChangeSupport.firePropertyChange("selectedColor", oldColor, newColor);
 
         if (newColor != oldColor) {
             fireStateChanged();
@@ -125,7 +126,9 @@ public class XColorPicker extends SComponent implements LowLevelEventListener, X
      * @see #setSelectedColor(int red, int green, int blue)
      */
     public void setImmediateUpdate(boolean b) {
+        boolean oldVal = this.immediateUpdate;
         this.immediateUpdate = b;
+        propertyChangeSupport.firePropertyChange("immediateUpdate", oldVal, this.immediateUpdate);
     }
 
     /**
@@ -233,6 +236,7 @@ public class XColorPicker extends SComponent implements LowLevelEventListener, X
         int oldTimeout = this.timeout;
         this.timeout = timeout;
         reloadIfChange(oldTimeout, timeout);
+        propertyChangeSupport.firePropertyChange("timeout", oldTimeout, this.timeout);
     }
 
     /**

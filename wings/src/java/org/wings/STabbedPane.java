@@ -161,7 +161,9 @@ public class STabbedPane extends SContainer implements LowLevelEventListener {
      * @param color the new foreground color
      */
     public void setSelectionBackground(Color color) {
+        Color oldVal = this.getSelectionBackground();
         setAttribute(SELECTOR_SELECTED_TAB, CSSProperty.BACKGROUND_COLOR, CSSStyleSheet.getAttribute(color));
+        propertyChangeSupport.firePropertyChange("selectionBackground", oldVal, this.getSelectionBackground());
     }
 
     /**
@@ -179,7 +181,9 @@ public class STabbedPane extends SContainer implements LowLevelEventListener {
      * @param color the new foreground color
      */
     public void setSelectionForeground(Color color) {
+        Color oldVal = this.getSelectionForeground();
         setAttribute(SELECTOR_SELECTED_TAB, CSSProperty.COLOR, CSSStyleSheet.getAttribute(color));
+        propertyChangeSupport.firePropertyChange("selectionForeground", oldVal, this.getSelectionForeground());
     }
 
     /**
@@ -188,7 +192,9 @@ public class STabbedPane extends SContainer implements LowLevelEventListener {
      * @param font the new font
      */
     public void setSelectionFont(SFont font) {
+        SFont oldVal = this.getSelectionFont();
         setAttributes(SELECTOR_SELECTED_TAB, CSSStyleSheet.getAttributes(font));
+        propertyChangeSupport.firePropertyChange("selectionFont", oldVal, this.getSelectionFont());
     }
 
     /**
@@ -268,8 +274,10 @@ public class STabbedPane extends SContainer implements LowLevelEventListener {
         }
 
         if (this.tabPlacement != tabPlacement) {
+            int oldVal = this.tabPlacement;
             this.tabPlacement = tabPlacement;
             reload();
+            propertyChangeSupport.firePropertyChange("tabPlacement", oldVal, this.tabPlacement);
         }
     }
 
@@ -289,6 +297,7 @@ public class STabbedPane extends SContainer implements LowLevelEventListener {
      * @see #getModel
      */
     public void setModel(SingleSelectionModel model) {
+        SingleSelectionModel oldVal = this.model;
         if (this.model != null)
             this.model.removeChangeListener(fwdChangeEvents);
         this.model = model;
@@ -296,6 +305,7 @@ public class STabbedPane extends SContainer implements LowLevelEventListener {
             this.model.addChangeListener(fwdChangeEvents);
         reload();
         reload();
+        propertyChangeSupport.firePropertyChange("model", oldVal, this.model);
     }
 
     /**
@@ -316,7 +326,9 @@ public class STabbedPane extends SContainer implements LowLevelEventListener {
      * @see SingleSelectionModel#setSelectedIndex
      */
     public void setSelectedIndex(int index) {
+        int oldVal = model.getSelectedIndex();
         model.setSelectedIndex(index);
+        propertyChangeSupport.firePropertyChange("selectedIndex", oldVal, this.getSelectedIndex());
     }
 
     /**
@@ -598,8 +610,10 @@ public class STabbedPane extends SContainer implements LowLevelEventListener {
      */
     public void setMaxTabsPerLine(int tabs) {
         if (tabs != maxTabsPerLine) {
+            int oldVal = this.maxTabsPerLine;
             maxTabsPerLine = tabs;
             reload();
+            propertyChangeSupport.firePropertyChange("maxTabsPerLine", oldVal, this.maxTabsPerLine);
         }
     }
 
@@ -693,10 +707,12 @@ public class STabbedPane extends SContainer implements LowLevelEventListener {
      */
     public void setComponentAt(int index, SComponent component) {
         contents.remove(index);
+        SComponent oldVal = ((Page) pages.get(index)).component;
         ((Page) pages.get(index)).component = component;
         contents.add(component, component.getName(), index);
         component.setVisible(getSelectedIndex() == index);        
         reload();
+        propertyChangeSupport.firePropertyChange("componentAt", oldVal, ((Page) pages.get(index)).component);
     }
 
     /**
@@ -710,8 +726,10 @@ public class STabbedPane extends SContainer implements LowLevelEventListener {
     public void setTitleAt(int index, String title) {
         Page page = (Page)pages.get(index);
         if (isDifferent(page.title, title)) {
+            String oldVal = page.title;
             page.title = title;
             reload();
+            propertyChangeSupport.firePropertyChange("titleAt", oldVal, page.title);
         }
     }
 
@@ -726,8 +744,10 @@ public class STabbedPane extends SContainer implements LowLevelEventListener {
     public void setIconAt(int index, SIcon icon) {
         Page page = (Page)pages.get(index);
         if (isDifferent(page.icon, icon)) {
+            SIcon oldVal = page.icon;
             page.icon = icon;
             reload();
+            propertyChangeSupport.firePropertyChange("iconAt", oldVal, page.icon);
         }
     }
 
@@ -742,8 +762,10 @@ public class STabbedPane extends SContainer implements LowLevelEventListener {
     public void setDisabledIconAt(int index, SIcon disabledIcon) {
         Page page = (Page)pages.get(index);
         if (isDifferent(page.disabledIcon, disabledIcon)) {
+            SIcon oldVal = page.disabledIcon;
             page.disabledIcon = disabledIcon;
             reload();
+            propertyChangeSupport.firePropertyChange("disabledIconAt", oldVal, page.disabledIcon);
         }
     }
 
@@ -760,8 +782,10 @@ public class STabbedPane extends SContainer implements LowLevelEventListener {
     public void setBackgroundAt(int index, Color background) {
         Page page = (Page)pages.get(index);
         if (isDifferent(page.background, background)) {
+            Color oldVal = page.background;
             page.background = background;
             reload();
+            propertyChangeSupport.firePropertyChange("backgroundAt", oldVal, page.background);
         }
     }
 
@@ -778,8 +802,10 @@ public class STabbedPane extends SContainer implements LowLevelEventListener {
     public void setForegroundAt(int index, Color foreground) {
         Page page = (Page)pages.get(index);
         if (isDifferent(page.foreground, foreground)) {
+            Color oldVal = page.foreground;
             page.foreground = foreground;
             reload();
+            propertyChangeSupport.firePropertyChange("foregroundAt", oldVal, page.foreground);
         }
     }
 
@@ -796,8 +822,10 @@ public class STabbedPane extends SContainer implements LowLevelEventListener {
     public void setStyleAt(int index, String style) {
         Page page = (Page)pages.get(index);
         if (page.style != style) {
+            String oldVal = page.style;
             page.style = style;
             reload();
+            propertyChangeSupport.firePropertyChange("styleAt", oldVal, page.style);
         }
     }
 
@@ -812,8 +840,10 @@ public class STabbedPane extends SContainer implements LowLevelEventListener {
     public void setEnabledAt(int index, boolean enabled) {
         Page page = (Page)pages.get(index);
         if (page.enabled != enabled) {
+            boolean oldVal = page.enabled;
             page.enabled = enabled;
             reload();
+            propertyChangeSupport.firePropertyChange("enabledAt", oldVal, page.enabled);
         }
     }
 
@@ -825,8 +855,10 @@ public class STabbedPane extends SContainer implements LowLevelEventListener {
     public void setToolTipTextAt(int index, String toolTip) {
         Page page = (Page)pages.get(index);
         if (isDifferent(page.toolTip, toolTip)) {
+            String oldVal = page.toolTip;
             page.toolTip = toolTip;
             reload();
+            propertyChangeSupport.firePropertyChange("toolTipTextAt", oldVal, page.toolTip);
         }
     }
 
@@ -849,6 +881,7 @@ public class STabbedPane extends SContainer implements LowLevelEventListener {
      */
     public void setComponent(int index, SComponent component) {
         Page page = (Page) pages.get(index);
+        SComponent oldVal = page.component;
         if (component != page.component) {
             if (page.component != null) {
                 contents.remove(page.component);
@@ -859,6 +892,7 @@ public class STabbedPane extends SContainer implements LowLevelEventListener {
                 card.show(component);
 
             reload();
+            propertyChangeSupport.firePropertyChange("component", oldVal, page.component);
         }
     }
 
@@ -995,7 +1029,9 @@ public class STabbedPane extends SContainer implements LowLevelEventListener {
      * @see LowLevelEventListener#isEpochCheckEnabled()
      */
     public void setEpochCheckEnabled(boolean epochCheckEnabled) {
+        boolean oldVal = this.epochCheckEnabled;
         this.epochCheckEnabled = epochCheckEnabled;
+        propertyChangeSupport.firePropertyChange("epochCheckEnabled", oldVal, this.epochCheckEnabled);
     }
 
     public void removeAllTabs() {

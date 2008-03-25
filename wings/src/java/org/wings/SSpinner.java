@@ -86,10 +86,12 @@ public class SSpinner extends SComponent implements LowLevelEventListener {
      */
     public void setModel( SpinnerModel model ) {
         if ( !model.equals( this.model ) ) {
+            SpinnerModel oldVal = this.model;
             this.model = model;
             if ( modelChangeListener != null ) {
                 this.model.addChangeListener( modelChangeListener );
             }
+            propertyChangeSupport.firePropertyChange("model", oldVal, this.model);
         }
     }
     
@@ -113,7 +115,9 @@ public class SSpinner extends SComponent implements LowLevelEventListener {
                 value = new Double( ((Long)value).doubleValue() );
             }
         }
+        Object oldVal = getModel().getValue();
         getModel().setValue(value);
+        propertyChangeSupport.firePropertyChange("value", oldVal, getModel().getValue());
     }
     
     /**
@@ -140,9 +144,11 @@ public class SSpinner extends SComponent implements LowLevelEventListener {
      */
     public void setEditor(DefaultEditor editor) {
 	if (editor != null && !editor.equals(this.editor) ) {
+        DefaultEditor oldVal = this.editor;
             this.editor.dismiss( this );
 	    this.editor = editor;
-	}
+        propertyChangeSupport.firePropertyChange("editor", oldVal, this.editor);
+    }
     }
     
     public void addChangeListener( ChangeListener changeListener ) {
@@ -152,6 +158,7 @@ public class SSpinner extends SComponent implements LowLevelEventListener {
             modelChangeListener = new ChangeListener() {
                 public void stateChanged(javax.swing.event.ChangeEvent e) {
                     fireChangeEvents();
+                    propertyChangeSupport.firePropertyChange("stateChanged", "old", "new");
                 }
             };
             getModel().addChangeListener( modelChangeListener );
@@ -368,7 +375,9 @@ public class SSpinner extends SComponent implements LowLevelEventListener {
      * @see LowLevelEventListener#setEpochCheckEnabled()
      */
     public void setEpochCheckEnabled(boolean epochCheckEnabled) {
+        boolean oldVal = this.epochCheckEnabled;
         this.epochCheckEnabled = epochCheckEnabled;
+        propertyChangeSupport.firePropertyChange("epochCheckEnabled", oldVal, this.epochCheckEnabled);
     }
     
     /**

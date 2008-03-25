@@ -71,6 +71,7 @@ public abstract class STextComponent extends SComponent implements LowLevelEvent
             oldDocument.removeDocumentListener(this);
         document.addDocumentListener(this);
         reloadIfChange(oldDocument, document);
+        propertyChangeSupport.firePropertyChange("document", oldDocument, this.document);
     }
 
     /**
@@ -83,6 +84,7 @@ public abstract class STextComponent extends SComponent implements LowLevelEvent
         editable = ed;
         if (editable != oldEditable)
             reload();
+        propertyChangeSupport.firePropertyChange("editable", oldEditable, this.editable);
     }
 
 
@@ -96,7 +98,9 @@ public abstract class STextComponent extends SComponent implements LowLevelEvent
      * @param text the new text for the component.
      */
     public void setText(String text) {
+        String oldVal = document.getText();
         document.setText(text);
+        propertyChangeSupport.firePropertyChange("text", oldVal, document.getText());
     }
 
 
@@ -173,7 +177,9 @@ public abstract class STextComponent extends SComponent implements LowLevelEvent
      * @see LowLevelEventListener#isEpochCheckEnabled()
      */
     public void setEpochCheckEnabled(boolean epochCheckEnabled) {
+        boolean oldVal = this.epochCheckEnabled;
         this.epochCheckEnabled = epochCheckEnabled;
+        propertyChangeSupport.firePropertyChange("epochCheckEnabled", oldVal, this.epochCheckEnabled);
     }
 
     public void insertUpdate(SDocumentEvent e) {

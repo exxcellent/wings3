@@ -139,8 +139,10 @@ public class SClickable
      */
     public void setEvent(String e) {
         if (isDifferent(event, e)) {
+            String oldVal = this.event;
             event = e;
             reload();
+            propertyChangeSupport.firePropertyChange("event", oldVal, this.event);
         }
     }
 
@@ -157,8 +159,10 @@ public class SClickable
      */
     public void setEventTarget(LowLevelEventListener t) {
         if (isDifferent(requestTarget, t)) {
+            LowLevelEventListener oldVal = this.requestTarget;
             requestTarget = t;
             reload();
+            propertyChangeSupport.firePropertyChange("eventTarget", oldVal, this.requestTarget);
         }
     }
 

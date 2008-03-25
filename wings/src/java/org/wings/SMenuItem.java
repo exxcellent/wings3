@@ -55,7 +55,9 @@ public class SMenuItem extends SButton {
     }
 
     final void setParentMenu(SComponent menuParent) {
+        SComponent oldVal = this.menuParent;
         this.menuParent = menuParent;
+        propertyChangeSupport.firePropertyChange("parentMenu", oldVal, this.menuParent);
         setParentFrame(menuParent != null ? menuParent.getParentFrame() : null);
     }
 
@@ -68,7 +70,9 @@ public class SMenuItem extends SButton {
     }
 
     public void setAccelerator(KeyStroke keyStroke) {
+        KeyStroke oldVal = this.accelerator;
         accelerator = keyStroke;
+        propertyChangeSupport.firePropertyChange("accelerator", oldVal, this.accelerator);
         if (accelerator != null) {
             getInputMap(WHEN_IN_FOCUSED_FRAME).put(accelerator, "item_accelerator");
             getActionMap().put("item_accelerator", getAction());

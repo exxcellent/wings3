@@ -89,6 +89,7 @@ public class SFormattedTextField extends STextField {
      */
     public void setValue(Object object) {
         String string = null;
+        Object oldVal = this.value;
 
         try {
             string = getFormatter().valueToString(object);
@@ -99,6 +100,7 @@ public class SFormattedTextField extends STextField {
         }
 
         super.setText( string );
+        propertyChangeSupport.firePropertyChange("value", oldVal, this.value);
 
     }
 
@@ -172,10 +174,12 @@ public class SFormattedTextField extends STextField {
      * @param behavior focus lost behavior
      */
     public void setFocusLostBehavior( int behavior ) {
+        int oldVal = this.focusLostBehavior;
         if ( behavior != COMMIT && behavior != COMMIT_OR_REVERT ) {
             throw new IllegalArgumentException("i don't know your behavior");
         }
         focusLostBehavior = behavior;
+        propertyChangeSupport.firePropertyChange("focusLostBehavior", oldVal, this.focusLostBehavior);
     }
 
     /**
@@ -207,7 +211,9 @@ public class SFormattedTextField extends STextField {
      * @param formatter SAbstactFormatter
      */
     public void setFormatter(SAbstractFormatter formatter) {
+        SAbstractFormatter oldVal = this.formatter;
         this.formatter = formatter;
+        propertyChangeSupport.firePropertyChange("formatter", oldVal, this.formatter);
     }
 
     /**
@@ -215,9 +221,13 @@ public class SFormattedTextField extends STextField {
      * @param ff AbstractFormatterFactory
      */
     public void setFormatterFactory ( SAbstractFormatterFactory ff ) {
+        SAbstractFormatterFactory oldFactory = this.factory;
         this.factory = ff;
+        SAbstractFormatter oldFormatter = this.formatter;
         this.formatter = null;
         setValue( value );
+        propertyChangeSupport.firePropertyChange("factory", oldFactory, this.factory);
+        propertyChangeSupport.firePropertyChange("formatter", oldFormatter, this.formatter);
         
     }
     

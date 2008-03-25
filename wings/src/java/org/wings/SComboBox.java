@@ -117,6 +117,7 @@ public class SComboBox
      */
     public void setModel(ComboBoxModel model) {
         if (isDifferent(dataModel, model)) {
+            ComboBoxModel oldVal = this.dataModel;
             if (dataModel != null)
                 dataModel.removeListDataListener(this);
 
@@ -128,6 +129,7 @@ public class SComboBox
             selectedItemReminder = dataModel.getSelectedItem();
 
             reload();
+            propertyChangeSupport.firePropertyChange("model", oldVal, this.dataModel);
         }
     }
 
@@ -148,9 +150,11 @@ public class SComboBox
      */
     public void setMaximumRowCount(int count) {
         if (maximumRowCount != count) {
+            int oldVal = this.maximumRowCount;
             maximumRowCount = count;
 
             reload();
+            propertyChangeSupport.firePropertyChange("maximumRowCount", oldVal, this.maximumRowCount);
         }
     }
 
@@ -168,8 +172,10 @@ public class SComboBox
      */
     public void setRenderer(SListCellRenderer newRenderer) {
         if (isDifferent(renderer, newRenderer)) {
+            SListCellRenderer oldVal = this.renderer;
             renderer = newRenderer;
             reload();
+            propertyChangeSupport.firePropertyChange("renderer", oldVal, this.renderer);
         }
     }
 
@@ -191,7 +197,9 @@ public class SComboBox
             // call may result in ListDataEvents being fired.
 
             selectingItem = true;
+            Object oldVal = dataModel.getSelectedItem();
             dataModel.setSelectedItem(object);
+            propertyChangeSupport.firePropertyChange("selectedItem", oldVal, dataModel.getSelectedItem());
             selectingItem = false;
 
             if (!delayEvent) {
@@ -237,8 +245,10 @@ public class SComboBox
         else if (index < -1 || index >= size)
             throw new IllegalArgumentException("setSelectedIndex: " + index +
                     " out of bounds");
-        else
+        else{
+            int oldVal = this.getSelectedIndex();
             setSelectedItem(dataModel.getElementAt(index));
+        }
     }
 
     /**
@@ -397,7 +407,9 @@ public class SComboBox
      *                receives.
      */
     public void setActionCommand(String command) {
+        String oldVal = this.actionCommand;
         actionCommand = command;
+        propertyChangeSupport.firePropertyChange("actionCommand", oldVal, this.actionCommand);
     }
 
     /**
@@ -620,7 +632,9 @@ public class SComboBox
 
     /** @see LowLevelEventListener#isEpochCheckEnabled() */
     public void setEpochCheckEnabled(boolean epochCheckEnabled) {
+        boolean oldVal = this.epochCheckEnabled;
         this.epochCheckEnabled = epochCheckEnabled;
+        propertyChangeSupport.firePropertyChange("epochCheckEnabled", oldVal, this.epochCheckEnabled);
     }
 
     public final SCellRendererPane getCellRendererPane() {

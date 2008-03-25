@@ -120,11 +120,19 @@ public class SPopup extends SComponent {
      * @param contextCorner  anchor point: e.g. SAnchoredPopup.BOTTOM_LEFT
      */
     public void setContext(SComponent context, String contentsCorner, String contextCorner) {
+        boolean oldAnchored = this.anchored;
         this.anchored     = true;
+        SComponent oldContext = this.context;
         this.context        = context;
+        String oldContentsCorner = this.contentsCorner;
         this.contentsCorner = contentsCorner;
+        String oldContextCorner = this.contextCorner;
         this.contextCorner  = contextCorner;
         ((PopupCG)getCG()).attachJavaScript();
+        propertyChangeSupport.firePropertyChange("anchored", oldAnchored, this.anchored);
+        propertyChangeSupport.firePropertyChange("context", oldContext, this.context);
+        propertyChangeSupport.firePropertyChange("contentsCorner", oldContentsCorner, this.contentsCorner);
+        propertyChangeSupport.firePropertyChange("contextCorner", contextCorner, this.contextCorner);
     }
 
     protected void finalize() throws Throwable {

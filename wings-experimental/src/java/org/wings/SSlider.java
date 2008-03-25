@@ -143,6 +143,7 @@ public class SSlider extends SComponent implements SConstants, LowLevelEventList
         int oldValue = this.orientation;
         this.orientation = orientation;
         reloadIfChange(orientation, oldValue);
+        propertyChangeSupport.firePropertyChange("orientation", oldValue, this.orientation);
     }
 
     /**
@@ -243,6 +244,7 @@ public class SSlider extends SComponent implements SConstants, LowLevelEventList
         }
 
         reloadIfChange(newModel, oldModel);
+        propertyChangeSupport.firePropertyChange("model", oldModel, this.sliderModel);
     }
 
     /**
@@ -265,6 +267,7 @@ public class SSlider extends SComponent implements SConstants, LowLevelEventList
         int oldValue = m.getValue();
         m.setValue(n);
         reloadIfChange(n, oldValue);
+        propertyChangeSupport.firePropertyChange("value", oldValue, m.getValue());
     }
 
 
@@ -289,6 +292,7 @@ public class SSlider extends SComponent implements SConstants, LowLevelEventList
         int oldMin = getModel().getMinimum();
         getModel().setMinimum(minimum);
         reloadIfChange(minimum, oldMin);
+        propertyChangeSupport.firePropertyChange("minimum", oldMin, getModel().getMinimum());
     }
 
 
@@ -312,6 +316,7 @@ public class SSlider extends SComponent implements SConstants, LowLevelEventList
         int oldMax = getModel().getMaximum();
         getModel().setMaximum(maximum);
         reloadIfChange(maximum, oldMax);
+        propertyChangeSupport.firePropertyChange("maximum", oldMax, getModel().getMaximum());
     }
 
     public void fireFinalEvents() {
@@ -365,6 +370,7 @@ public class SSlider extends SComponent implements SConstants, LowLevelEventList
         int oldValue = majorTickSpacing;
         majorTickSpacing = n;
         reloadIfChange(n, oldValue);
+        propertyChangeSupport.firePropertyChange("majorTickSpacing", oldValue, this.majorTickSpacing);
     }
 
     /**
@@ -391,6 +397,7 @@ public class SSlider extends SComponent implements SConstants, LowLevelEventList
         boolean oldValue = snapToTicks;
         snapToTicks = b;
         reloadIfChange(b, oldValue);
+        propertyChangeSupport.firePropertyChange("snapToTicks", oldValue, this.snapToTicks);
     }
 
     /**
@@ -399,7 +406,12 @@ public class SSlider extends SComponent implements SConstants, LowLevelEventList
      * @param max pixels
      */
     public void setMaxPixelConstraint(int max) {
+        Integer oldVal = (Integer) this.getClientProperty("maxPixelConstraint");
+        oldVal = oldVal.intValue();
         this.putClientProperty("maxPixelConstraint", new Integer(max));
+        Integer newVal = (Integer) this.getClientProperty("maxPixelConstraint");
+        newVal = newVal.intValue();
+        propertyChangeSupport.firePropertyChange("maxPixelConstraint", oldVal, newVal);
     }
 
 }

@@ -148,11 +148,13 @@ public abstract class SRootContainer extends SContainer {
      * @param container the container for the contentPane.
      */
     public void setContentPane(SContainer container) {
+        SContainer oldVal = this.contentPane;
         if (this.contentPane != null) {
             super.remove(contentPane);
         }
         this.contentPane = container;
         super.addComponent(this.contentPane, null, 0);
+        propertyChangeSupport.firePropertyChange("contentPane", oldVal, this.contentPane);
     }
 
     /**
@@ -161,11 +163,14 @@ public abstract class SRootContainer extends SContainer {
      * @param windowsPane The container for the windowsPane.
      */
     protected void setWindowsPane(SContainer windowsPane) {
+        SContainer oldVal = this.windowsPane;
         if (this.windowsPane != null) {
             super.remove(this.windowsPane);
         }
         this.windowsPane = windowsPane;
         super.addComponent(this.windowsPane, null, 1);
+
+        propertyChangeSupport.firePropertyChange("windowsPane", oldVal, this.windowsPane);
     }
 
     /**

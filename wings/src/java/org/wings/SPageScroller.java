@@ -119,7 +119,9 @@ public class SPageScroller extends SAbstractAdjustable {
     }
 
     protected void setPageCountText(int pages) {
+        String oldVal = this.pageCountLabel.getText();
         pageCountLabel.setText("/" + pages);
+        propertyChangeSupport.firePropertyChange("pageCountText", oldVal, pageCountLabel.getText());
     }
 
     public int getLayoutMode() {
@@ -131,6 +133,7 @@ public class SPageScroller extends SAbstractAdjustable {
      * {@link #VERTICAL} or {@link #HORIZONTAL}
      */
     public void setLayoutMode(int orientation) {
+        int oldVal = this.layoutMode;
         switch (orientation) {
             case SConstants.VERTICAL:
             case SConstants.HORIZONTAL:
@@ -139,6 +142,7 @@ public class SPageScroller extends SAbstractAdjustable {
             default:
                 throw new IllegalArgumentException("layout mode must be one of: VERTICAL, HORIZONTAL");
         }
+        propertyChangeSupport.firePropertyChange("layoutMode", oldVal, this.orientation);
     }
 
     /**
@@ -154,8 +158,10 @@ public class SPageScroller extends SAbstractAdjustable {
      * @param count : New amount of page clickables.
      */
     public void setDirectPages(int count) {
+        int oldVal = directPages;
         reloadIfChange(directPages, count);
         directPages = count;
+        propertyChangeSupport.firePropertyChange("directPages", oldVal, this.directPages);
     }
 
     public final int getPageCount() {
@@ -189,7 +195,9 @@ public class SPageScroller extends SAbstractAdjustable {
     }
 
     public void setMarginVisible(boolean marginVisible) {
+        boolean oldVal = this.marginVisible;
         this.marginVisible = marginVisible;
+        propertyChangeSupport.firePropertyChange("marginVisible", oldVal, this.marginVisible);
     }
 
     public boolean isStepVisible() {
@@ -197,7 +205,9 @@ public class SPageScroller extends SAbstractAdjustable {
     }
 
     public void setStepVisible(boolean stepVisible) {
+        boolean oldVal = this.stepVisible;
         this.stepVisible = stepVisible;
+        propertyChangeSupport.firePropertyChange("stepVisible", oldVal, this.stepVisible);
     }
 
     /**

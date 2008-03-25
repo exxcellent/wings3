@@ -126,6 +126,7 @@ public abstract class SAbstractAdjustable extends SComponent implements Adjustab
      * @see #getModel
      */
     public void setModel(SBoundedRangeModel newModel) {
+        SBoundedRangeModel oldVal = this.model;
         reloadIfChange(this.model, newModel);
         if (model != null) {
             model.removeChangeListener(fwdAdjustmentEvents);
@@ -134,6 +135,7 @@ public abstract class SAbstractAdjustable extends SComponent implements Adjustab
         if (model != null) {
             model.addChangeListener(fwdAdjustmentEvents);
         }
+        propertyChangeSupport.firePropertyChange("model", oldVal, this.model);
     }
 
 
@@ -167,8 +169,10 @@ public abstract class SAbstractAdjustable extends SComponent implements Adjustab
      * @see #getUnitIncrement
      */
     public void setUnitIncrement(int unitIncrement) {
+        int oldVal = this.unitIncrement;
         reloadIfChange(this.unitIncrement, unitIncrement);
         this.unitIncrement = unitIncrement;
+        propertyChangeSupport.firePropertyChange("unitIncrement", oldVal, this.unitIncrement);
     }
 
     /**
@@ -201,8 +205,10 @@ public abstract class SAbstractAdjustable extends SComponent implements Adjustab
      * @see #getBlockIncrement()
      */
     public void setBlockIncrement(int blockIncrement) {
+        int oldVal = this.blockIncrement;
         reloadIfChange(this.blockIncrement, blockIncrement);
         this.blockIncrement = blockIncrement;
+        propertyChangeSupport.firePropertyChange("blockIncrement", oldVal, this.blockIncrement);
     }
 
 
@@ -247,7 +253,9 @@ public abstract class SAbstractAdjustable extends SComponent implements Adjustab
      * @see BoundedRangeModel#setValue
      */
     public void setValue(int value) {
+        int oldVal = getModel().getValue();
         getModel().setValue(value);
+        propertyChangeSupport.firePropertyChange("value", oldVal, getModel().getValue());
     }
 
     public final int getExtent() {
@@ -256,7 +264,9 @@ public abstract class SAbstractAdjustable extends SComponent implements Adjustab
 
 
     public void setExtent(int value) {
+        int oldVal = getModel().getExtent();
         getModel().setExtent(value);
+        propertyChangeSupport.firePropertyChange("extent", oldVal, getModel().getExtent());
     }
 
 
@@ -281,7 +291,9 @@ public abstract class SAbstractAdjustable extends SComponent implements Adjustab
      * @see BoundedRangeModel#setExtent
      */
     public void setVisibleAmount(int extent) {
+        int oldVal = getModel().getExtent();
         getModel().setExtent(extent);
+        propertyChangeSupport.firePropertyChange("visibleAmount", oldVal, getModel().getExtent());
     }
 
 
@@ -305,7 +317,9 @@ public abstract class SAbstractAdjustable extends SComponent implements Adjustab
      * @see BoundedRangeModel#setMinimum
      */
     public void setMinimum(int minimum) {
+        int oldVal = getModel().getMinimum();
         getModel().setMinimum(minimum);
+        propertyChangeSupport.firePropertyChange("minimum", oldVal, getModel().getMinimum());
     }
 
 
@@ -328,7 +342,9 @@ public abstract class SAbstractAdjustable extends SComponent implements Adjustab
      * @see BoundedRangeModel#setMaximum
      */
     public void setMaximum(int maximum) {
+        int oldVal = getModel().getMaximum();
         getModel().setMaximum(maximum);
+        propertyChangeSupport.firePropertyChange("maximum", oldVal, getModel().getMaximum());
     }
 
     /**
@@ -350,6 +366,7 @@ public abstract class SAbstractAdjustable extends SComponent implements Adjustab
      * @see #getOrientation
      */
     public void setOrientation(int orientation) {
+        int oldVal = this.orientation;
         switch (orientation) {
             case SConstants.VERTICAL:
                 this.orientation = orientation;
@@ -362,6 +379,7 @@ public abstract class SAbstractAdjustable extends SComponent implements Adjustab
             default:
                 throw new IllegalArgumentException("orientation must be one of: VERTICAL, HORIZONTAL");
         }
+        propertyChangeSupport.firePropertyChange("orientation", oldVal, this.orientation);
     }
 
 
@@ -387,7 +405,9 @@ public abstract class SAbstractAdjustable extends SComponent implements Adjustab
      * @see BoundedRangeModel#setValueIsAdjusting
      */
     public void setValueIsAdjusting(boolean b) {
+        boolean oldVal = getModel().getValueIsAdjusting();
         getModel().setValueIsAdjusting(b);
+        propertyChangeSupport.firePropertyChange("valueIsAdjusting", oldVal, getModel().getValueIsAdjusting());
     }
 
 
@@ -406,8 +426,11 @@ public abstract class SAbstractAdjustable extends SComponent implements Adjustab
      * @see #setMaximum
      */
     public void setValues(int newValue, int newExtent, int newMin, int newMax) {
+        int[] oldVal = {newValue, newExtent, newMin, newMax};
         BoundedRangeModel m = getModel();
         m.setRangeProperties(newValue, newExtent, newMin, newMax, m.getValueIsAdjusting());
+        int[] newVal = {m.getValue(), m.getExtent(), m.getMinimum(), m.getMaximum()};
+        propertyChangeSupport.firePropertyChange("values", oldVal, newVal);
     }
 
     public void processLowLevelEvent(String action, String[] values) {
@@ -526,7 +549,9 @@ public abstract class SAbstractAdjustable extends SComponent implements Adjustab
 
     /** @see LowLevelEventListener#isEpochCheckEnabled() */
     public void setEpochCheckEnabled(boolean epochCheckEnabled) {
+        boolean oldVal = this.epochCheckEnabled;
         this.epochCheckEnabled = epochCheckEnabled;
+        propertyChangeSupport.firePropertyChange("epochCheckEnabled", oldVal, this.epochCheckEnabled);
     }
 
 }

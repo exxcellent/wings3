@@ -30,6 +30,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Allows the user to select one or more objects from a list.
  * <em>CAVEAT</em>
@@ -190,6 +191,51 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
     private final ListSelectionListener fwdSelectionEvents = new ListSelectionListener() {
         public void valueChanged(ListSelectionEvent e) {
             fireSelectionValueChanged(e.getFirstIndex(), e.getLastIndex(), e.getValueIsAdjusting());
+            //int oldVal = getLeadSelectionIndex();
+            /*List oldVal = new ArrayList();
+            for (int index = e.getFirstIndex(); index <= e.getLastIndex(); ++index) {
+                int visibleIndex = index;
+                    if (getViewportSize() != null) {
+                        visibleIndex = index - getViewportSize().y;
+                        if (visibleIndex < 0 || visibleIndex >= getViewportSize().height)
+                            continue;
+                    }
+                System.out.println("first: "+e.getFirstIndex());
+                System.out.println("last: "+e.getLastIndex());
+                if (isSelectedIndex(visibleIndex)) {
+                    oldVal.add(new Integer(index));
+                }
+            } */
+
+           /* if(getSelectedIndices() != null){
+                int[] oldVal = getSelectedIndices();
+                for(int i=0; i<oldVal.length;i++){
+                    System.out.println(oldVal[i]);
+                }
+            }
+
+            List oldSelectedIndices = new ArrayList();
+            for (int index = e.getFirstIndex(); index <= e.getLastIndex(); ++index) {
+                int visibleIndex = index;
+                if (getViewportSize() != null) {
+                    visibleIndex = index - getViewportSize().y;
+                    if (visibleIndex < 0 || visibleIndex >= getViewportSize().height)
+                        continue;
+                }
+
+                if (isSelectedIndex(index)) {
+                    // selectedIndices.add(new Integer(visibleIndex));
+                } else {
+                    oldSelectedIndices.add(new Integer(visibleIndex));
+                }
+
+            }
+            if(oldSelectedIndices.size() != 0){
+                for(int i=0; i<oldSelectedIndices.size(); i++)
+                    System.out.println("old: "+oldSelectedIndices.get(i));
+            }  */
+
+
 
             if (isUpdatePossible() && SList.class.isAssignableFrom(SList.this.getClass())) {
                 List deselectedIndices = new ArrayList();
@@ -208,10 +254,14 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
                     }
                 }
                 update(((ListCG) getCG()).getSelectionUpdate(SList.this, deselectedIndices, selectedIndices));
+
+                 //propertyChangeSupport.firePropertyChange("selection", oldVal, e.getLastIndex() );
+
+
             } else {
                 reload();
             }
-        }
+       }
     };
 
     /**
@@ -298,6 +348,7 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
         SListCellRenderer oldValue = this.cellRenderer;
         this.cellRenderer = cellRenderer;
         reloadIfChange(oldValue, cellRenderer);
+        propertyChangeSupport.firePropertyChange("cellRenderer", oldValue, this.cellRenderer);
     }
 
 
@@ -316,7 +367,9 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
      * @param color the new foreground color
      */
     public void setSelectionBackground(Color color) {
+        Color oldVal = this.getSelectionBackground();
         setAttribute(SELECTOR_SELECTION, CSSProperty.BACKGROUND_COLOR, CSSStyleSheet.getAttribute(color));
+        propertyChangeSupport.firePropertyChange("selectionBackground", oldVal, this.getSelectionBackground());
     }
 
     /**
@@ -334,7 +387,9 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
      * @param color the new foreground color
      */
     public void setSelectionForeground(Color color) {
+        Color oldVal = this.getSelectionForeground();
         setAttribute(SELECTOR_SELECTION, CSSProperty.COLOR, CSSStyleSheet.getAttribute(color));
+        propertyChangeSupport.firePropertyChange("selectionForeground", oldVal, this.getSelectionForeground());
     }
 
     /**
@@ -343,7 +398,9 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
      * @param font the new font
      */
     public void setSelectionFont(SFont font) {
+        SFont oldVal = this.getSelectionFont();
         setAttributes(SELECTOR_SELECTION, CSSStyleSheet.getAttributes(font));
+        propertyChangeSupport.firePropertyChange("selectionFont", oldVal, this.getSelectionFont());
     }
 
     /**
@@ -378,9 +435,10 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
      */
     public void setVisibleRowCount(int visibleRowCount) {
         if (this.visibleRowCount != visibleRowCount) {
+            int oldVal = this.visibleRowCount;
             this.visibleRowCount = Math.max(0, visibleRowCount);
             reload();
-            //firePropertyChange("visibleRowCount", oldValue, visibleRowCount);
+            propertyChangeSupport.firePropertyChange("visibleRowCount", oldVal, this.visibleRowCount);
         }
     }
 
@@ -412,12 +470,14 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
             throw new IllegalArgumentException("model must be non null");
         }
         if (isDifferent(dataModel, model)) {
+            ListModel oldVal = this.dataModel;
             clearSelection();
             dataModel = model;
             dataModel.addListDataListener(this);
 
             fireViewportChanged(false);
             reload();
+            propertyChangeSupport.firePropertyChange("model", oldVal, this.dataModel);
         }
     }
 
@@ -568,12 +628,14 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
             throw new IllegalArgumentException("selectionModel must be non null");
         }
 
+        SListSelectionModel oldVal = this.selectionModel;
         if (this.selectionModel != null)
             this.selectionModel.removeListSelectionListener(fwdSelectionEvents);
 
         selectionModel.addListSelectionListener(fwdSelectionEvents);
 
         this.selectionModel = selectionModel;
+        propertyChangeSupport.firePropertyChange("selectionModel", oldVal, this.selectionModel);
     }
 
 
@@ -592,7 +654,9 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
      * @see #getSelectionMode
      */
     public void setSelectionMode(int selectionMode) {
+        int oldVal = selectionModel.getSelectionMode();
         selectionModel.setSelectionMode(selectionMode);
+        propertyChangeSupport.firePropertyChange("selectionMode", oldVal, selectionModel.getSelectionMode());
     }
 
     /**
@@ -694,7 +758,10 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
      * @see #addListSelectionListener
      */
     public void setSelectionInterval(int anchor, int lead) {
+        int[] oldVal = {this.getAnchorSelectionIndex(), this.getLeadSelectionIndex()};
         getSelectionModel().setSelectionInterval(anchor, lead);
+        int[] newVal = {this.getAnchorSelectionIndex(), this.getLeadSelectionIndex()};
+        propertyChangeSupport.firePropertyChange("selectionInterval", oldVal, newVal);
     }
 
 
@@ -729,7 +796,10 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
      * @see ListSelectionModel#setValueIsAdjusting
      */
     public void setValueIsAdjusting(boolean b) {
+        boolean oldVal = getSelectionModel().getValueIsAdjusting();
         getSelectionModel().setValueIsAdjusting(b);
+        boolean newVal = getSelectionModel().getValueIsAdjusting();
+        propertyChangeSupport.firePropertyChange("valueIsAdjusting", oldVal, newVal);
     }
 
     /**
@@ -779,7 +849,9 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
      * @see #addListSelectionListener
      */
     public void setSelectedIndex(int index) {
+        int oldVal = this.getSelectedIndex();
         getSelectionModel().setSelectionInterval(index, index);
+        propertyChangeSupport.firePropertyChange("selectedIndex", oldVal, this.getSelectedIndex());
     }
 
 
@@ -793,10 +865,12 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
      */
     public void setSelectedIndices(int[] indices) {
         ListSelectionModel sm = getSelectionModel();
+        int[] oldVal = this.getSelectedIndices();
         sm.clearSelection();
         for (int i = 0; i < indices.length; i++) {
             sm.addSelectionInterval(indices[i], indices[i]);
         }
+        propertyChangeSupport.firePropertyChange("selectedIndices", oldVal, this.getSelectedIndices());
     }
 
 
@@ -895,10 +969,12 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
      * @param t the type
      */
     public void setType(String t) {
+        String oldVal = this.type;
         if (t != null)
             type = t;
         else
             type = UNORDERED_LIST;
+        propertyChangeSupport.firePropertyChange("type", oldVal, this.type);
     }
 
     /**
@@ -914,7 +990,9 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
      * <li type="...">
      */
     public void setOrderType(String t) {
+        String oldVal = this.orderType;
         orderType = t;
+        propertyChangeSupport.firePropertyChange("orderType", oldVal, this.orderType);
     }
 
     /**
@@ -942,7 +1020,9 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
      * <li start="...">
      */
     public void setStart(int s) {
+        int oldVal = this.start;
         start = s;
+        propertyChangeSupport.firePropertyChange("start", oldVal, this.start);
     }
 
     /**
@@ -973,7 +1053,9 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
      * @see LowLevelEventListener#isEpochCheckEnabled()
      */
     public void setEpochCheckEnabled(boolean epochCheckEnabled) {
+        boolean oldVal = this.epochCheckEnabled;
         this.epochCheckEnabled = epochCheckEnabled;
+        propertyChangeSupport.firePropertyChange("epochCheckEnabled", oldVal, this.epochCheckEnabled);
     }
 
     /*
@@ -1075,6 +1157,7 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
             }
             reload();
         }
+        propertyChangeSupport.firePropertyChange("biewPortSize", oldViewport, this.viewport);
     }
 
     /**

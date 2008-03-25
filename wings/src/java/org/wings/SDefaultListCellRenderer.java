@@ -45,7 +45,9 @@ public class SDefaultListCellRenderer extends SLabel implements SListCellRendere
      * Sets the style the cell is drawn with when the cell is selected.
      */
     public void setSelectionStyle(String newStyle) {
+        String oldVal = this.selectionStyle;
         selectionStyle = newStyle;
+        propertyChangeSupport.firePropertyChange("selectionStyle", oldVal, this.selectionStyle);
     }
 
     /**
@@ -59,7 +61,9 @@ public class SDefaultListCellRenderer extends SLabel implements SListCellRendere
      * Sets the style the cell is drawn with when the cell isn't selected.
      */
     public void setNonSelectionStyle(String newStyle) {
+        String oldVal = this.nonSelectionStyle;
         nonSelectionStyle = newStyle;
+        propertyChangeSupport.firePropertyChange("nonSelectionStyle", oldVal, this.nonSelectionStyle);
     }
 
     /**

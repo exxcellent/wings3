@@ -137,8 +137,10 @@ public class SLabel extends SComponent {
      *                     <code>LEFT</code>, <code>CENTER</code>, <code>RIGHT</code>.
      */
     public void setHorizontalTextPosition(int textPosition) {
+        int oldVal = this.horizontalTextPosition;
         reloadIfChange(horizontalTextPosition, textPosition);
         horizontalTextPosition = textPosition;
+        propertyChangeSupport.firePropertyChange("horizontalTextPosition", oldVal, this.horizontalTextPosition);
     }
 
     /**
@@ -151,8 +153,10 @@ public class SLabel extends SComponent {
      *                     <code>TOP</code>, <code>CENTER</code>, <code>BOTTOM</code>.
      */
     public void setVerticalTextPosition(int textPosition) {
+        int oldVal = this.verticalTextPosition;
         reloadIfChange(verticalTextPosition, textPosition);
         verticalTextPosition = textPosition;
+        propertyChangeSupport.firePropertyChange("verticalTextPosition", oldVal, this.verticalTextPosition);
     }
 
     /**
@@ -172,12 +176,14 @@ public class SLabel extends SComponent {
      */
     public void setIcon(SIcon i) {
         if (isDifferent(icon, i)) {
+            SIcon oldVal = this.icon;
             // do reload if previous text was null
             if (isUpdatePossible() && icon != null && SLabel.class.isAssignableFrom(getClass()))
                 update(((LabelCG) getCG()).getIconUpdate(this, i));
             else
                 reload();
             icon = i;
+            propertyChangeSupport.firePropertyChange("icon", oldVal, this.icon);
         }
     }
 
@@ -194,8 +200,10 @@ public class SLabel extends SComponent {
      * @param i
      */
     public void setDisabledIcon(SIcon i) {
+        SIcon oldVal = this.disabledIcon;
         reloadIfChange(disabledIcon, i);
         disabledIcon = i;
+        propertyChangeSupport.firePropertyChange("disabledIcon", oldVal, this.disabledIcon);
     }
 
     /**
@@ -221,12 +229,14 @@ public class SLabel extends SComponent {
      */
     public void setText(String t) {
         if (isDifferent(text, t)) {
+            String oldVal = this.text;
             // do reload if previous text was null
             if (isUpdatePossible() && text != null && SLabel.class.isAssignableFrom(getClass()))
                 update(((LabelCG) getCG()).getTextUpdate(this, t));
             else
                 reload();
             text = t;
+            propertyChangeSupport.firePropertyChange("text", oldVal, this.text);
         }
     }
 
@@ -244,8 +254,10 @@ public class SLabel extends SComponent {
      */
     public void setWordWrap(boolean wordWrap) {
         if (this.wordWrap != wordWrap) {
+            boolean oldVal = this.wordWrap;
             this.wordWrap = wordWrap;
             reload();
+            propertyChangeSupport.firePropertyChange("wordWrap", oldVal, this.wordWrap);
         }
     }
 
@@ -271,8 +283,10 @@ public class SLabel extends SComponent {
      * @see #getIconTextGap
      */
     public void setIconTextGap(int iconTextGap) {
+        int oldVal = this.iconTextGap;
         reloadIfChange(this.iconTextGap, iconTextGap);
         this.iconTextGap = iconTextGap;
+        propertyChangeSupport.firePropertyChange("iconTextGap", oldVal, this.iconTextGap);
     }
 
     public void setCG(LabelCG cg) {

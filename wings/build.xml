@@ -12,6 +12,7 @@
     <property name="httpclient.version" value="commons-httpclient-2.0-beta1.jar"/>
     <property name="dwr.version" value="dwr.jar"/>
     <property name="xalan.version" value="xalan.jar"/>
+    <property name="junit.version" value="junit-4.4.jar"/>
 
     <property name="test.log.dir" value="/tmp/" />
 
@@ -24,6 +25,7 @@
             <include name="${httpclient.version}"/>
             <include name="${dwr.version}"/>
             <include name="${xalan.version}"/>
+            <include name="${junit.version}"/>
         </fileset>
     </path>
 
@@ -37,6 +39,7 @@
 
     <fileset id="test.classes.files" dir="${test.classes.dir}" defaultexcludes="yes">
       <include name="**/*Test.class" />
+      <include name="**/Test*.class" />
     </fileset>
 
     <filelist id="wings.js.modules" dir="src/res/org/wings/js/wings/modules">
@@ -152,12 +155,12 @@
 	    <classpath path="build/class"/>
 	    <classpath path="${test.classes.dir}"/>
 	    <classpath path="src/res"/>
-            <classpath refid="build.classpath"/>
-            <classpath refid="test.classpath"/>
-            <batchtest todir="${test.log.dir}">
-                <fileset refid="test.classes.files" />
-            </batchtest>
-            <formatter type="plain" usefile="false" />
+        <classpath refid="build.classpath"/>
+        <classpath refid="test.classpath"/>
+        <batchtest todir="${test.log.dir}">
+            <fileset refid="test.classes.files" />
+        </batchtest>
+        <formatter type="plain" usefile="false" />
         </junit>
     </target>
 

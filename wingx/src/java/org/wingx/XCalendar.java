@@ -30,6 +30,7 @@ import org.wings.text.SAbstractFormatter;
 import org.wings.text.SDateFormatter;
 import org.wings.text.SInternationalFormatter;
 import org.wingx.plaf.css.CalendarCG;
+import org.wings.SFormattedTextField.SAbstractFormatterFactory;
 
 /**
  * @author <a href="mailto:e.habicht@thiesen.com">Erik Habicht</a>
@@ -138,7 +139,9 @@ public class XCalendar extends SContainer implements LowLevelEventListener, SDoc
      * @param icon the icon used as the trigger icon to start the date picker.
      */
     public void setEditIcon( SIcon icon ) {
+        SIcon oldVal = this.editIcon;
         this.editIcon = icon;
+        propertyChangeSupport.firePropertyChange("editIcon", oldVal, this.editIcon);
     }
 
     /**
@@ -189,7 +192,9 @@ public class XCalendar extends SContainer implements LowLevelEventListener, SDoc
      * @param formatter <code>SDateFormatter</code> to use for formatting
      */
     public void setFormatter( SDateFormatter formatter ) {
+        SAbstractFormatterFactory oldVal = getFormattedTextField().getFormatterFactory();
         getFormattedTextField().setFormatterFactory( new SDefaultFormatterFactory( formatter ) );
+        propertyChangeSupport.firePropertyChange("formatter", oldVal, getFormattedTextField().getFormatterFactory());
     }
     
     /**
@@ -197,6 +202,7 @@ public class XCalendar extends SContainer implements LowLevelEventListener, SDoc
      * @param timeZone <code>TimeZone</code>
      */
     public void setTimeZone( TimeZone timeZone ) {
+        TimeZone oldVal = this.timeZone;
         this.timeZone = timeZone;
         if ( timeZone != null ) {
             SAbstractFormatter aFormatter = getFormattedTextField().getFormatter();
@@ -208,6 +214,7 @@ public class XCalendar extends SContainer implements LowLevelEventListener, SDoc
                 }
             }
         }
+        propertyChangeSupport.firePropertyChange("timeZone", oldVal, this.timeZone);
     }
     
     /**
@@ -231,6 +238,7 @@ public class XCalendar extends SContainer implements LowLevelEventListener, SDoc
      * @param date the current <code>Date</code>
      */
     public void setDate( Date date ) {
+        Object oldVal = getFormattedTextField().getValue();
         getFormattedTextField().removeDocumentListener(this);
         getFormattedTextField().setValue( date );
         getFormattedTextField().addDocumentListener(this);
@@ -238,6 +246,7 @@ public class XCalendar extends SContainer implements LowLevelEventListener, SDoc
             update(((CalendarCG)getCG()).getHiddenUpdate(this, date));
         else
             reload();
+        propertyChangeSupport.firePropertyChange("date", oldVal, getFormattedTextField().getValue());
     }
 
     /**
@@ -369,7 +378,9 @@ public class XCalendar extends SContainer implements LowLevelEventListener, SDoc
      * @see LowLevelEventListener#setEpochCheckEnabled()
      */
     public void setEpochCheckEnabled(boolean epochCheckEnabled) {
+        boolean oldVal = this.epochCheckEnabled;
         this.epochCheckEnabled = epochCheckEnabled;
+        propertyChangeSupport.firePropertyChange("epochCheckEnabled", oldVal, this.epochCheckEnabled);
     }
     
     /**

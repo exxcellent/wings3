@@ -48,7 +48,9 @@ public class XTable extends STable
     }
 
     public void setFilterRenderer(EditableTableCellRenderer filterRenderer) {
+        EditableTableCellRenderer oldVal = this.filterRenderer;
         this.filterRenderer = filterRenderer;
+        propertyChangeSupport.firePropertyChange("filterRenderer", oldVal, this.filterRenderer);
     }
 
     protected void nameFilterComponent(final SComponent component, final int col, final int num) {
@@ -333,7 +335,9 @@ public class XTable extends STable
     }
 
     public void setFilterVisible(boolean filterVisible) {
+        boolean oldVal = this.filterVisible;
         this.filterVisible = filterVisible;
+        propertyChangeSupport.firePropertyChange("filterVisible", oldVal, this.filterVisible);
     }
 
     private boolean isClickListenerSet(int col) {
@@ -423,7 +427,9 @@ public class XTable extends STable
     }
 
     public void setNoDataFoundLabel(String noDataFoundLabel) {
+        String oldVal = this.noDataFoundLabel;
         this.noDataFoundLabel = noDataFoundLabel;
+        propertyChangeSupport.firePropertyChange("noDataFoundLabel", oldVal, this.noDataFoundLabel);
     }
     
     public String getNoDataAvailableLabel() {
@@ -431,7 +437,9 @@ public class XTable extends STable
     }
 
     public void setNoDataAvailableLabel(String noDataAvailableLabel) {
+        String oldVal = this.noDataAvailableLabel;
         this.noDataAvailableLabel = noDataAvailableLabel;
+        propertyChangeSupport.firePropertyChange("noDataAvailableLabel", oldVal, this.noDataAvailableLabel);
     }
 
 }

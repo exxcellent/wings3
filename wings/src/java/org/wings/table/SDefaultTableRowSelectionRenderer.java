@@ -93,7 +93,9 @@ public class SDefaultTableRowSelectionRenderer extends SLabel implements STableC
      * Sets the style the cell is drawn with when the cell isn't selected.
      */
     public void setNonSelectionStyle(String newStyle) {
+        String oldVal = this.nonSelectionStyle;
         nonSelectionStyle = newStyle;
+        propertyChangeSupport.firePropertyChange("nonSelectionStyle", oldVal, this.nonSelectionStyle);
     }
 
     /**
@@ -107,7 +109,9 @@ public class SDefaultTableRowSelectionRenderer extends SLabel implements STableC
      * Sets the style the cell is drawn with when the cell isn't selected.
      */
     public void setSelectionStyle(String newStyle) {
+        String oldVal = this.selectionStyle;
         selectionStyle = newStyle;
+        propertyChangeSupport.firePropertyChange("selectionStyle", oldVal, this.selectionStyle);
     }
 
     /**
@@ -128,7 +132,9 @@ public class SDefaultTableRowSelectionRenderer extends SLabel implements STableC
      * @param multiSelectionIcon Icon used for selected rows in multi-selection mode for selected lines
      */
     public void setMultiSelectionIcon(SResourceIcon multiSelectionIcon) {
+        SResourceIcon oldVal = this.multiSelectionIcon;
         this.multiSelectionIcon = multiSelectionIcon;
+        propertyChangeSupport.firePropertyChange("multiSelectionIcon", oldVal, this.multiSelectionIcon);
     }
 
     /**
@@ -142,7 +148,9 @@ public class SDefaultTableRowSelectionRenderer extends SLabel implements STableC
      * @param multiNonSelectionIcon Icon used for selected rows in multi-selection mode for unselected lines
      */
     public void setMultiNonSelectionIcon(SResourceIcon multiNonSelectionIcon) {
+        SResourceIcon oldVal = this.multiNonSelectionIcon;
         this.multiNonSelectionIcon = multiNonSelectionIcon;
+        propertyChangeSupport.firePropertyChange("multiNonSelectionIcon", oldVal, this.multiNonSelectionIcon);
     }
 
     /**
@@ -156,7 +164,9 @@ public class SDefaultTableRowSelectionRenderer extends SLabel implements STableC
      * @param singleSelectionIcon Icon used for selected rows in single-selection mode tables for selected lines
      */
     public void setSingleSelectionIcon(SResourceIcon singleSelectionIcon) {
+        SResourceIcon oldVal = this.singleSelectionIcon;
         this.singleSelectionIcon = singleSelectionIcon;
+        propertyChangeSupport.firePropertyChange("singleSelectionIcon", oldVal, this.singleSelectionIcon);
     }
 
     /**
@@ -170,7 +180,9 @@ public class SDefaultTableRowSelectionRenderer extends SLabel implements STableC
      * @param singleNonSelectionIcon Icon used for selected rows in single-selection mode tables for unselected lines
      */
     public void setSingleNonSelectionIcon(SResourceIcon singleNonSelectionIcon) {
+        SResourceIcon oldVal = this.singleNonSelectionIcon;
         this.singleNonSelectionIcon = singleNonSelectionIcon;
+        propertyChangeSupport.firePropertyChange("singleNonSelectionIcon", oldVal, this.singleNonSelectionIcon);
     }
 
     /**
@@ -188,6 +200,8 @@ public class SDefaultTableRowSelectionRenderer extends SLabel implements STableC
      * @param useIcons if set to true render the row selection colum with icons, otherwise simple text.
      */
     public void setUseIcons(boolean useIcons) {
+        boolean oldVal = this.useIcons;
         this.useIcons = useIcons;
+        propertyChangeSupport.firePropertyChange("useIcons", oldVal, this.useIcons);
     }
 }

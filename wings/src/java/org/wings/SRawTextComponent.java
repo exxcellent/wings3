@@ -57,7 +57,9 @@ public class SRawTextComponent extends SComponent {
      * @param t The new text
      */
     public void setText(String t) {
+        String oldVal = this.text;
         reloadIfChange(text, t);
         text = t;
+        propertyChangeSupport.firePropertyChange("text", oldVal, this.text);
     }
 }

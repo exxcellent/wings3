@@ -125,6 +125,7 @@ public class STextArea extends STextComponent {
         rows = r;
         if (oldRows != rows)
             reload();
+        propertyChangeSupport.firePropertyChange("rows", oldRows, this.rows);
     }
 
     /**
@@ -145,6 +146,7 @@ public class STextArea extends STextComponent {
         columns = c;
         if (columns != oldColumns)
             reload();
+        propertyChangeSupport.firePropertyChange("columns", oldColumns, this.columns);
     }
 
 
@@ -161,8 +163,10 @@ public class STextArea extends STextComponent {
      * @param lw
      */
     public void setLineWrap(int lw) {
+        int oldVal = this.lineWrap;
         if (lw >= 0 && lw < 3)
             lineWrap = lw;
+        propertyChangeSupport.firePropertyChange("lineWrap", oldVal, this.lineWrap);
     }
 
 

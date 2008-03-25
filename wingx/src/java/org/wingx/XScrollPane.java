@@ -74,6 +74,7 @@ public class XScrollPane extends SScrollPane {
      *                   The {@link LayoutManager} is per default {@link SScrollPaneLayout}.
      */
     public void setHorizontalScrollBar(Adjustable sb, String constraint) {
+        Adjustable oldVal = this.horizontalScrollBar;
         if (horizontalScrollBar != null) {
             if (horizontalScrollBar instanceof SAbstractAdjustable)
                 ((SAbstractAdjustable) horizontalScrollBar).setModel(new SDefaultBoundedRangeModel());
@@ -109,6 +110,7 @@ public class XScrollPane extends SScrollPane {
         }
 
         reload();
+        propertyChangeSupport.firePropertyChange("horizontalScrollBar", oldVal, this.horizontalScrollBar);
     }
 
     /**
@@ -119,6 +121,7 @@ public class XScrollPane extends SScrollPane {
      *                   The {@link LayoutManager} is per default {@link SScrollPaneLayout}.
      */
     public void setVerticalScrollBar(Adjustable sb, String constraint) {
+        Adjustable oldVal = this.verticalScrollBar;
         if (verticalScrollBar != null) {
             if (verticalScrollBar instanceof SAbstractAdjustable)
                 ((SAbstractAdjustable) verticalScrollBar).setModel(new SDefaultBoundedRangeModel());
@@ -154,6 +157,7 @@ public class XScrollPane extends SScrollPane {
         }
 
         reload();
+        propertyChangeSupport.firePropertyChange("verticalScrollBar", oldVal, this.verticalScrollBar);
     }
 
     public void setExtentLabel(String label) {
@@ -165,7 +169,9 @@ public class XScrollPane extends SScrollPane {
     }
 
     public void setVisibleSectionLabel(String visibleSectionLabel) {
+        String oldVal = this.visibleSectionLabel;
         this.visibleSectionLabel = visibleSectionLabel;
+        propertyChangeSupport.firePropertyChange("visibleSectionLabel", oldVal, this.visibleSectionLabel);
     }
 
     /**
@@ -181,8 +187,10 @@ public class XScrollPane extends SScrollPane {
         if (!(view instanceof XTable)) {
             throw new RuntimeException("the inner component must be of type XTable");
         }
+        STable oldTableComponent = this.tableComponent;
         tableComponent = (XTable) view;
         tableComponent.setVerticalAlignment(SConstants.TOP_ALIGN);
+        propertyChangeSupport.firePropertyChange("tableComponent", oldTableComponent, this.tableComponent);
 
         super.setViewportView(view);
         refresh();
@@ -287,5 +295,9 @@ public class XScrollPane extends SScrollPane {
 
     public XPageScroller getPageScroller() {
         return pageScroller;
+    }
+
+    public SComboBox getExtentCombo(){
+        return extentCombo;
     }
 }

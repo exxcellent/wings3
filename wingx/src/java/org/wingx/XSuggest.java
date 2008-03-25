@@ -75,7 +75,9 @@ public class XSuggest extends STextField implements XSuggestDataSource {
      * @param source
      */
     public void setDataSource(XSuggestDataSource source) {
+        XSuggestDataSource oldVal = this.dataSource;
         this.dataSource = source;
+        propertyChangeSupport.firePropertyChange("dataSource", oldVal, this.dataSource);
     }
 
     /**
@@ -94,6 +96,7 @@ public class XSuggest extends STextField implements XSuggestDataSource {
         int oldTimeout = this.timeout;
         this.timeout = timeout;
         reloadIfChange(oldTimeout, timeout);
+        propertyChangeSupport.firePropertyChange("timeout", oldTimeout, this.timeout);
     }
 
     /**
@@ -112,6 +115,7 @@ public class XSuggest extends STextField implements XSuggestDataSource {
         int oldDelay = this.inputDelay;
         this.inputDelay = delay;
         reloadIfChange(oldDelay, delay);
+        propertyChangeSupport.firePropertyChange("inputDelay", oldDelay, this.inputDelay);
     }
 
     /**
@@ -132,6 +136,7 @@ public class XSuggest extends STextField implements XSuggestDataSource {
         SDimension oldSuggestBoxWidth = this.suggestBoxWidth;
         this.suggestBoxWidth = dim;
         reloadIfChange(oldSuggestBoxWidth, dim);
+        propertyChangeSupport.firePropertyChange("suggestBoxWidth", oldSuggestBoxWidth, this.suggestBoxWidth);
     }
 
     public SDimension getSuggestBoxWidth() {

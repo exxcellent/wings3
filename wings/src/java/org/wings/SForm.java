@@ -121,7 +121,9 @@ public class SForm  extends SContainer implements LowLevelEventListener {
      * @param actionCommand The action command to place insiside the {@link ActionEvent}
      */
     public void setActionCommand(String actionCommand) {
+        String oldVal = this.actionCommand;
         this.actionCommand = actionCommand;
+        propertyChangeSupport.firePropertyChange("actionCommand", oldVal, this.actionCommand);
     }
 
     /**
@@ -138,8 +140,10 @@ public class SForm  extends SContainer implements LowLevelEventListener {
      * If <code>null</code> enter key pressed will be catched by the wings framework.
      */
     public void setDefaultButton(SButton defaultButton) {
+        SButton oldVal = this.defaultButton;
         reloadIfChange(this.defaultButton, defaultButton);
         this.defaultButton = defaultButton;
+        propertyChangeSupport.firePropertyChange("defaultButton", oldVal, this.defaultButton);
     }
 
     /**
@@ -349,10 +353,11 @@ public class SForm  extends SContainer implements LowLevelEventListener {
      * usually want, is <code>POST</code>.
      */
     public void setPostMethod(boolean postMethod) {
+        boolean oldVal = this.postMethod;
         if (isDifferent(this.postMethod, postMethod))
             update(getCG().getMethodUpdate(this, postMethod ? "post" : "get"));
-
         this.postMethod = postMethod;
+        propertyChangeSupport.firePropertyChange("postMethod", oldVal, this.postMethod);
     }
 
     /**
@@ -383,10 +388,11 @@ public class SForm  extends SContainer implements LowLevelEventListener {
      *             <code>application/x-www-form-urlencoded</code> or null to detect encoding.
      */
     public void setEncodingType(String type) {
+        String oldVal = this.encType;
         if (isDifferent(encType, type))
             update(getCG().getEncodingUpdate(this, type));
-
         encType = type;
+        propertyChangeSupport.firePropertyChange("encodingType", oldVal, this.encType);
     }
 
     /**
@@ -419,7 +425,9 @@ public class SForm  extends SContainer implements LowLevelEventListener {
     }
 
     public void setAction(URL action) {
+        URL oldVal = this.action;
         this.action = action;
+        propertyChangeSupport.firePropertyChange("action", oldVal,this. action);
     }
 
 
@@ -464,7 +472,9 @@ public class SForm  extends SContainer implements LowLevelEventListener {
 
     /** @see LowLevelEventListener#isEpochCheckEnabled() */
     public void setEpochCheckEnabled(boolean epochCheckEnabled) {
+        boolean oldVal = this.epochCheckEnabled;
         this.epochCheckEnabled = epochCheckEnabled;
+        propertyChangeSupport.firePropertyChange("epochCheckEnabled", oldVal, this.epochCheckEnabled);
     }
 
     public SComponent addComponent(SComponent c, Object constraint, int index) {

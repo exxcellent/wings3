@@ -25,6 +25,8 @@ public class MyComponent extends SComponent {
         // We must notify the reload manager if the view of our component changes i.e. due to
         // a changed attribute.
         reloadIfChange(payload, this.payload);
+        String oldVal = this.payload;
         this.payload = payload;
+        propertyChangeSupport.firePropertyChange("payload", oldVal, this.payload);
     }
 }

@@ -60,6 +60,7 @@ public class STextField
         columns = c;
         if (columns != oldColumns)
             reload();
+        propertyChangeSupport.firePropertyChange("columns", oldColumns, this.columns);
     }
 
     /**
@@ -75,6 +76,7 @@ public class STextField
         maxColumns = mc;
         if (maxColumns != oldMaxColumns)
             reload();
+        propertyChangeSupport.firePropertyChange("maxColumns", oldMaxColumns, this.maxColumns);
     }
 
     public int getMaxColumns() {
@@ -95,7 +97,9 @@ public class STextField
      *                receives.
      */
     public void setActionCommand(String command) {
+        String oldVal = this.actionCommand;
         actionCommand = command;
+        propertyChangeSupport.firePropertyChange("actionCommand", oldVal, this.actionCommand);
     }
 
     /**

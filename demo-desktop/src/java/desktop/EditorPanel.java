@@ -242,7 +242,9 @@ public class EditorPanel
     }
 
     public void setText(String text) {
+        String oldVal = textArea.getText();
         textArea.setText(text);
+        propertyChangeSupport.firePropertyChange("text", oldVal, textArea.getText());
     }
 
     public String getText() {
@@ -250,7 +252,9 @@ public class EditorPanel
     }
 
     public void setBackup(String backup) {
+        String oldVal = this.backup;
         this.backup = backup;
+        propertyChangeSupport.firePropertyChange("backup", oldVal, this.backup);
     }
 
     public String getBackup() {

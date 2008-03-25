@@ -128,6 +128,7 @@ public class SPagingBoundedRangeModel implements SBoundedRangeModel {
             newValue = max - extent;
         }
         setRangeProperties(newValue, extent, min, max, isAdjusting);
+
     }
 
 
@@ -253,6 +254,7 @@ public class SPagingBoundedRangeModel implements SBoundedRangeModel {
                 (adjusting != isAdjusting);
 
         if (isChange) {
+            int oldVal = value;
             value = newValue;
             extent = newExtent;
             min = newMin;

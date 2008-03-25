@@ -323,6 +323,7 @@ public class STable extends SComponent
         if (tm == null)
             throw new IllegalArgumentException("Cannot set a null TableModel");
 
+      TableModel oldVal = this.model;
         if (this.model != tm) {
             if (model != null)
                 model.removeTableModelListener(this);
@@ -332,6 +333,7 @@ public class STable extends SComponent
 
             tableChanged(new TableModelEvent(tm, TableModelEvent.HEADER_ROW));
         }
+        propertyChangeSupport.firePropertyChange("model", oldVal, this.model);
     }
 
     /**
@@ -391,7 +393,9 @@ public class STable extends SComponent
     }
 
     public void setValueAt(Object v, int row, int column) {
+        Object oldVal = model.getValueAt(row, column);
         model.setValueAt(v, row, convertColumnIndexToModel(column));
+        propertyChangeSupport.firePropertyChange("valueAt", oldVal, model.getValueAt(row, column));
     }
 
     public int convertColumnIndexToModel(int viewColumnIndex) {
@@ -502,7 +506,9 @@ public class STable extends SComponent
      * @param r <p>The default renderer is used if no other renderer is set for the
      */
     public void setDefaultRenderer(STableCellRenderer r) {
+        STableCellRenderer oldVal = this.defaultRenderer;
         defaultRenderer = r;
+        propertyChangeSupport.firePropertyChange("defaultRenderer", oldVal, this.defaultRenderer);
     }
 
     /**
@@ -517,8 +523,10 @@ public class STable extends SComponent
 
     public void setDefaultRenderer(Class columnClass, STableCellRenderer r) {
         if (renderer != null) {
+            Object oldVal = renderer.get(columnClass);
             renderer.remove(columnClass);
             renderer.put(columnClass, r);
+            propertyChangeSupport.firePropertyChange("defaultRenderer", oldVal, this.renderer.get(columnClass));
         }
     }
 
@@ -540,7 +548,9 @@ public class STable extends SComponent
      * @param headerCellRenderer
      */
     public void setHeaderRenderer(STableCellRenderer headerCellRenderer) {
+        STableCellRenderer oldVal = this.headerRenderer;
         headerRenderer = headerCellRenderer;
+        propertyChangeSupport.firePropertyChange("headerRenderer", oldVal, this.headerRenderer);
     }
 
     /**
@@ -568,7 +578,9 @@ public class STable extends SComponent
      *  Set this to <code>null</code> if you don't want to have a selection row in any case
      */
     public void setRowSelectionRenderer(STableCellRenderer rowSelectionRenderer) {
+        STableCellRenderer oldVal = this.rowSelectionRenderer;
         this.rowSelectionRenderer = rowSelectionRenderer;
+        propertyChangeSupport.firePropertyChange("rowSelectionRenderer", oldVal, this.rowSelectionRenderer);
     }
 
     /**
@@ -682,8 +694,10 @@ public class STable extends SComponent
      * @see #fireIntermediateEvents()
      */
     public void setEditable(boolean editable) {
+        boolean oldVal = this.editable;
         reloadIfChange(this.editable, editable);
         this.editable = editable;
+        propertyChangeSupport.firePropertyChange("editable", oldVal, this.editable);
     }
 
     /**
@@ -710,8 +724,10 @@ public class STable extends SComponent
      * @see #fireIntermediateEvents()
      */
     public void setSelectable(boolean selectable) {
+        boolean oldVal = this.selectable;
         reloadIfChange(this.selectable, selectable);
         this.selectable = selectable;
+        propertyChangeSupport.firePropertyChange("selectable", oldVal, this.selectable);
     }
 
     /**
@@ -729,8 +745,10 @@ public class STable extends SComponent
      */
     public void setDefaultEditor(Class columnClass, STableCellEditor r) {
         if (editors != null) {
+            Object oldVal = this.editors.get(columnClass);
             editors.remove(columnClass);
             editors.put(columnClass, r);
+            propertyChangeSupport.firePropertyChange("defaultEditor", oldVal, this.editors.get(columnClass));
         }
     }
 
@@ -904,7 +922,9 @@ public class STable extends SComponent
      * @see #cellEditor
      */
     protected void setCellEditor(STableCellEditor anEditor) {
+        STableCellEditor oldVal = this.cellEditor;
         cellEditor = anEditor;
+        propertyChangeSupport.firePropertyChange("cellEditor", oldVal, this.cellEditor);
     }
 
     /**
@@ -913,7 +933,9 @@ public class STable extends SComponent
      * @see #editingColumn
      */
     public void setEditingColumn(int editingColumn) {
+        int oldVal = this.editingColumn;
         this.editingColumn = editingColumn;
+        propertyChangeSupport.firePropertyChange("editingColumn", oldVal, this.editingColumn);
     }
 
     /**
@@ -922,7 +944,9 @@ public class STable extends SComponent
      * @see #editingRow
      */
     public void setEditingRow(int editingRow) {
+        int oldVal = this.editingRow;
         this.editingRow = editingRow;
+        propertyChangeSupport.firePropertyChange("editingRow", oldVal, this.editingRow);
     }
 
     /**
@@ -1082,6 +1106,7 @@ public class STable extends SComponent
             throw new IllegalArgumentException("cannot set a null SListSelectionModel");
         }
 
+        SListSelectionModel oldVal = this.selectionModel;    
         if (getSelectionModel() != null) {
             removeSelectionListener(fwdSelectionEvents);
         }
@@ -1089,6 +1114,7 @@ public class STable extends SComponent
         selectionModel = model;
 
         addSelectionListener(fwdSelectionEvents);
+        propertyChangeSupport.firePropertyChange("selectionModel", oldVal, this.selectionModel);
     }
 
 
@@ -1149,8 +1175,10 @@ public class STable extends SComponent
      * </UL>
      */
     public void setSelectionMode(int s) {
+        int oldVal = getSelectionModel().getSelectionMode();
         reloadIfChange(getSelectionModel().getSelectionMode(), s);
         getSelectionModel().setSelectionMode(s);
+        propertyChangeSupport.firePropertyChange("selectionMode", oldVal, getSelectionModel().getSelectionMode());
     }
 
     /**
@@ -1338,7 +1366,9 @@ public class STable extends SComponent
      * @see LowLevelEventListener#isEpochCheckEnabled()
      */
     public void setEpochCheckEnabled(boolean epochCheckEnabled) {
+        boolean oldVal = this.epochCheckEnabled;
         this.epochCheckEnabled = epochCheckEnabled;
+        propertyChangeSupport.firePropertyChange("epochCheckEnabled", oldVal, this.epochCheckEnabled);
     }
 
     public void tableChanged(TableModelEvent e) {
@@ -1407,7 +1437,9 @@ public class STable extends SComponent
      * @param color the new foreground color
      */
     public void setSelectionBackground(Color color) {
+        Color oldVal = this.getSelectionBackground();
         setAttribute(SELECTOR_SELECTED, CSSProperty.BACKGROUND_COLOR, CSSStyleSheet.getAttribute(color));
+        propertyChangeSupport.firePropertyChange("selectionBackground", oldVal, this.getSelectionBackground());
     }
 
     /**
@@ -1425,7 +1457,9 @@ public class STable extends SComponent
      * @param color the new foreground color
      */
     public void setSelectionForeground(Color color) {
+        Color oldVal = this.getSelectionForeground();
         setAttribute(SELECTOR_SELECTED, CSSProperty.COLOR, CSSStyleSheet.getAttribute(color));
+        propertyChangeSupport.firePropertyChange("selectionForeground", oldVal, this.getSelectionForeground());
     }
 
     /**
@@ -1434,7 +1468,9 @@ public class STable extends SComponent
      * @param font the new font
      */
     public void setSelectionFont(SFont font) {
+        SFont oldVal = this.getSelectionFont();
         setAttributes(SELECTOR_SELECTED, CSSStyleSheet.getAttributes(font));
+        propertyChangeSupport.firePropertyChange("selectionFont", oldVal, this.getSelectionFont());
     }
 
     /**
@@ -1461,7 +1497,9 @@ public class STable extends SComponent
      * @param color the new foreground color
      */
     public void setHeaderBackground(Color color) {
+        Color oldVal = this.getHeaderBackground();
         setAttribute(SELECTOR_HEADER, CSSProperty.BACKGROUND_COLOR, CSSStyleSheet.getAttribute(color));
+        propertyChangeSupport.firePropertyChange("headerBackground", oldVal, this.getHeaderBackground());
     }
 
     /**
@@ -1479,7 +1517,9 @@ public class STable extends SComponent
      * @param color the new foreground color
      */
     public void setHeaderForeground(Color color) {
+        Color oldVal = this.getHeaderForeground();
         setAttribute(SELECTOR_HEADER, CSSProperty.COLOR, CSSStyleSheet.getAttribute(color));
+        propertyChangeSupport.firePropertyChange("headerForeground", oldVal, this.getHeaderForeground());
     }
 
     /**
@@ -1488,7 +1528,9 @@ public class STable extends SComponent
      * @param font the new font
      */
     public void setHeaderFont(SFont font) {
+        SFont oldVal = this.getHeaderFont();
         setAttributes(SELECTOR_HEADER, CSSStyleSheet.getAttributes(font));
+        propertyChangeSupport.firePropertyChange("headerFont", oldVal, this.getHeaderFont());
     }
 
     /**
@@ -1514,6 +1556,7 @@ public class STable extends SComponent
         if (oldHeaderVisible != headerVisible) {
             reload();
         }
+        propertyChangeSupport.firePropertyChange("headerVisible", oldHeaderVisible, this.headerVisible);
     }
 
     /**
@@ -1545,6 +1588,7 @@ public class STable extends SComponent
         if (showHorizontalLines != oldShowHorizontalLines) {
             reload();
         }
+        propertyChangeSupport.firePropertyChange("showHorizontalLines", oldShowHorizontalLines, this.showHorizontalLines);
     }
 
     /**
@@ -1569,6 +1613,7 @@ public class STable extends SComponent
         if (showVerticalLines != oldShowVerticalLines) {
             reload();
         }
+        propertyChangeSupport.firePropertyChange("showVerticalLines", oldShowVerticalLines, this.showVerticalLines);
     }
 
     /**
@@ -1592,6 +1637,7 @@ public class STable extends SComponent
         if ((intercellSpacing == null && oldIntercellSpacing != null) ||
                 intercellSpacing != null && !intercellSpacing.equals(oldIntercellSpacing))
             reload();
+        propertyChangeSupport.firePropertyChange("intercellSpacing", oldIntercellSpacing, this.intercellSpacing);
     }
 
     public SDimension getIntercellSpacing() {
@@ -1610,6 +1656,7 @@ public class STable extends SComponent
         if ((intercellPadding == null && oldIntercellPadding != null) ||
                 intercellPadding != null && !intercellPadding.equals(oldIntercellPadding))
             reload();
+        propertyChangeSupport.firePropertyChange("intercellPadding", oldIntercellPadding, this.intercellPadding);
     }
 
     public SDimension getIntercellPadding() {
@@ -1679,6 +1726,7 @@ public class STable extends SComponent
             }
             update(((TableCG)getCG()).getTableScrollUpdate(this, newViewport, oldViewport));
         }
+        propertyChangeSupport.firePropertyChange("viewportSize", oldViewport, this.viewport);
     }
 
     /**
@@ -1716,7 +1764,9 @@ public class STable extends SComponent
     }
 
     public void setSelectedRow(int selectedIndex) {
+        int oldVal = getSelectedRow();
         getSelectionModel().setSelectionInterval(selectedIndex, selectedIndex);
+        propertyChangeSupport.firePropertyChange("selectedRow", oldVal, getSelectedRow());
     }
 
 
@@ -1731,10 +1781,12 @@ public class STable extends SComponent
      */
     public void setAutoCreateColumnsFromModel(boolean autoCreateColumnsFromModel) {
         if (this.autoCreateColumnsFromModel != autoCreateColumnsFromModel) {
+            boolean oldVal = this.autoCreateColumnsFromModel;
             this.autoCreateColumnsFromModel = autoCreateColumnsFromModel;
             if (autoCreateColumnsFromModel) {
                 createDefaultColumnsFromModel();
             }
+            propertyChangeSupport.firePropertyChange("autoCreateColumnsFromModel", oldVal, this.autoCreateColumnsFromModel);
         }
     }
 
@@ -1776,6 +1828,7 @@ public class STable extends SComponent
         if (newColumnModel == null)
             throw new IllegalArgumentException("Column model must not be null");
 
+        STableColumnModel oldVal = this.columnModel;
         if (columnModel != newColumnModel) {
             if (tableColumnModelListener == null)
                 tableColumnModelListener = createTableColumnModelListener();
@@ -1786,6 +1839,7 @@ public class STable extends SComponent
             columnModel.addColumnModelListener(tableColumnModelListener);
 
             reload();
+            propertyChangeSupport.firePropertyChange("columnModel", oldVal, this.columnModel);
         }
     }
 

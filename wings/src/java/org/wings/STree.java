@@ -495,14 +495,18 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
 
     /** @see LowLevelEventListener#isEpochCheckEnabled() */
     public void setEpochCheckEnabled(boolean epochCheckEnabled) {
+        boolean oldVal = this.epochCheckEnabled;
         this.epochCheckEnabled = epochCheckEnabled;
+        propertyChangeSupport.firePropertyChange("epochCheckEnabled", oldVal, this.epochCheckEnabled);
     }
 
     public void setRootVisible(boolean rootVisible) {
         if (isRootVisible() != rootVisible) {
+            boolean oldVal = treeState.isRootVisible();
             treeState.setRootVisible(rootVisible);
             fireViewportChanged(false);
             reload();
+            propertyChangeSupport.firePropertyChange("rootVisible", oldVal, treeState.isRootVisible());
         }
     }
 
@@ -513,6 +517,7 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
 
 
     public void setModel(TreeModel m) {
+        TreeModel oldVal = this.model;
         if (model != null && treeModelListener != null)
             model.removeTreeModelListener(treeModelListener);
         model = m;
@@ -532,6 +537,7 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
             fireViewportChanged(false);
             reload();
         }
+        propertyChangeSupport.firePropertyChange("model", oldVal, this.model);
     }
 
 
@@ -589,6 +595,8 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
      * @see TreeSelectionModel
      */
     public void setSelectionModel(STreeSelectionModel selectionModel) {
+        STreeSelectionModel oldVal = this.selectionModel;
+
         if (this.selectionModel != null)
             this.selectionModel.removeTreeSelectionListener(fwdSelectionEvents);
 
@@ -599,6 +607,8 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
             this.selectionModel = SDefaultTreeSelectionModel.NO_SELECTION_MODEL;
         else
             this.selectionModel = selectionModel;
+
+        propertyChangeSupport.firePropertyChange("selectionModel", oldVal, this.selectionModel);
     }
 
     /**
@@ -644,7 +654,9 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
      * @param path the TreePath specifying the node to select
      */
     public void setSelectionPath(TreePath path) {
+        TreePath oldVal = getSelectionModel().getSelectionPath();
         getSelectionModel().setSelectionPath(path);
+        propertyChangeSupport.firePropertyChange("selectionPath", oldVal, getSelectionModel().getSelectionPath());
     }
 
     /**
@@ -656,7 +668,9 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
      *              to select
      */
     public void setSelectionPaths(TreePath[] paths) {
+        TreePath[] oldVal = getSelectionModel().getSelectionPaths();
         getSelectionModel().setSelectionPaths(paths);
+        propertyChangeSupport.firePropertyChange("selectionPaths", oldVal, getSelectionModel().getSelectionPaths());
     }
 
     /**
@@ -1056,8 +1070,10 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
             depth = 0;
         }
         if (nodeIndentDepth != depth) {
+            int oldVal = this.nodeIndentDepth;
             nodeIndentDepth = depth;
             reload();
+            propertyChangeSupport.firePropertyChange("nodeIndentDepth", oldVal, this.nodeIndentDepth);
         }
     }
 
@@ -1066,7 +1082,9 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
     }
 
     public void setCellRenderer(STreeCellRenderer x) {
+        STreeCellRenderer oldVal = this.renderer;
         renderer = x;
+        propertyChangeSupport.firePropertyChange("renderer", oldVal, this.renderer);
     }
 
     public STreeCellRenderer getCellRenderer() {
@@ -1178,6 +1196,8 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
             }
             reload();
         }
+
+        propertyChangeSupport.firePropertyChange("viewortSize", oldViewport, this.viewport);
     }
 
     /**

@@ -208,6 +208,8 @@ public class SSplitPane
             dividerSize = newSize;
             reloadIfChange(oldSize, newSize);
         }
+
+        propertyChangeSupport.firePropertyChange("dividerSize", oldSize, this.dividerSize);
     }
 
     /**
@@ -225,6 +227,8 @@ public class SSplitPane
      * @param comp the <code>SComponent</code> to display in that position
      */
     public void setLeftComponent(SComponent comp) {
+        SComponent oldVal = this.leftComponent;
+
         if (comp == null) {
             if (leftComponent != null) {
                 remove(leftComponent);
@@ -233,6 +237,8 @@ public class SSplitPane
         } else {
             add(comp, SSplitPane.LEFT);
         }
+
+        propertyChangeSupport.firePropertyChange("leftComponent", oldVal, this.leftComponent);
     }
 
     /**
@@ -276,6 +282,8 @@ public class SSplitPane
      *  description: The component to the right (or below) the divider.
      */
     public void setRightComponent(SComponent comp) {
+        SComponent oldVal = this.rightComponent;
+
         if (comp == null) {
             if (rightComponent != null) {
                 remove(rightComponent);
@@ -284,6 +292,8 @@ public class SSplitPane
         } else {
             add(comp, SSplitPane.RIGHT);
         }
+
+        propertyChangeSupport.firePropertyChange("rightComponent", oldVal, this.rightComponent);
     }
 
     /**
@@ -344,6 +354,8 @@ public class SSplitPane
 
         this.orientation = orientation;
         reloadIfChange(oldOrientation, orientation);
+
+        propertyChangeSupport.firePropertyChange("orientation", oldOrientation, this.orientation);
     }
 
     /**
@@ -375,10 +387,12 @@ public class SSplitPane
      * @see #isContinuousLayout
      */
     public void setContinuousLayout(boolean newContinuousLayout) {
-        boolean           oldCD = continuousLayout;
+        boolean oldCD = continuousLayout;
 
         continuousLayout = newContinuousLayout;
         reloadIfChange(oldCD, newContinuousLayout);
+
+        propertyChangeSupport.firePropertyChange("continuousLayout", oldCD, this.continuousLayout);
     }
 
     /**
@@ -413,10 +427,12 @@ public class SSplitPane
 	if (value < 0 || value > 1) {
 	    throw new IllegalArgumentException("JSplitPane weight must be between 0 and 1");
 	}
-	double         oldWeight = resizeWeight;
+	double oldWeight = resizeWeight;
 
 	resizeWeight = value;
 	reloadIfChange(oldWeight, value);
+
+    propertyChangeSupport.firePropertyChange("resizeWeight", oldWeight, this.resizeWeight);
     }
 
     /**
@@ -456,6 +472,7 @@ public class SSplitPane
         int oldValue = dividerLocation;
         dividerLocation = location;
         reloadIfChange(oldValue, dividerLocation);
+        propertyChangeSupport.firePropertyChange("dividerLocation", oldValue, this.dividerLocation);
     }
 
     /**

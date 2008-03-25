@@ -24,9 +24,9 @@ import org.wings.plaf.Update;
  * @see SScrollPane
  */
 public class SScrollBar extends SAbstractAdjustable {
-    boolean marginVisisble;
-    boolean stepVisisble;
-    boolean blockVisisble;
+    boolean marginVisible;
+    boolean stepVisible;
+    boolean blockVisible;
 
     /**
      * Creates a scrollbar with the specified orientation, value, extent, mimimum, and maximum.
@@ -85,28 +85,34 @@ public class SScrollBar extends SAbstractAdjustable {
         }
     }
 
-    public boolean isMarginVisisble() {
-        return marginVisisble;
+    public boolean isMarginVisible() {
+        return marginVisible;
     }
 
-    public void setMarginVisisble(boolean marginVisisble) {
-        this.marginVisisble = marginVisisble;
+    public void setMarginVisible(boolean marginVisible) {
+        boolean oldVal = this.marginVisible;
+        this.marginVisible = marginVisible;
+        propertyChangeSupport.firePropertyChange("marginVisible", oldVal, this.marginVisible);
     }
 
-    public boolean isStepVisisble() {
-        return stepVisisble;
+    public boolean isStepVisible() {
+        return stepVisible;
     }
 
-    public void setStepVisisble(boolean stepVisisble) {
-        this.stepVisisble = stepVisisble;
+    public void setStepVisible(boolean stepVisible) {
+        boolean oldVal = this.stepVisible;
+        this.stepVisible = stepVisible;
+        propertyChangeSupport.firePropertyChange("stepVisible", oldVal, this.stepVisible);
     }
 
-    public boolean isBlockVisisble() {
-        return blockVisisble;
+    public boolean isBlockVisible() {
+        return blockVisible;
     }
 
-    public void setBlockVisisble(boolean blockVisisble) {
-        this.blockVisisble = blockVisisble;
+    public void setBlockVisible(boolean blockVisible) {
+        boolean oldVal = this.blockVisible;
+        this.blockVisible = blockVisible;
+        propertyChangeSupport.firePropertyChange("blockVisible", oldVal, this.blockVisible);
     }
 
     public void setCG(ScrollBarCG cg) {

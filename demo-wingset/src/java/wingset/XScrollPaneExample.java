@@ -1,19 +1,26 @@
 package wingset;
 
-import org.wingx.XTable;
-import org.wingx.XScrollPane;
-import org.wingx.table.*;
 import org.wings.*;
-import org.wings.table.STableColumnModel;
+import org.wings.event.SMouseEvent;
+import org.wings.event.SMouseListener;
+import org.wings.plaf.css.TableCG;
 import org.wings.style.CSSProperty;
 import org.wings.style.CSSStyleSheet;
-import org.wings.plaf.css.TableCG;
-import org.wings.event.SMouseListener;
-import org.wings.event.SMouseEvent;
+import org.wings.table.STableColumnModel;
+import org.wingx.XScrollPane;
+import org.wingx.XTable;
+import org.wingx.table.EditableTableCellRenderer;
+import org.wingx.table.XTableColumn;
+import org.wingx.table.XTableModel;
 
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.*;
 
 /**
@@ -71,7 +78,17 @@ public class XScrollPaneExample
         });
 
         XScrollPane scrollPane = new XScrollPane(table);
+        final PropertyChangeListener propertyChangeListener = new PropertyChangeListener(){
+                public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+                    String property = propertyChangeEvent.getPropertyName();
+                    System.out.println(propertyChangeEvent.getPropertyName() +": "+
+                        propertyChangeEvent.getOldValue()+ " -> "+propertyChangeEvent.getNewValue());
+                }
+        };
+        //scrollPane.getExtentCombo().addPropertyChangeListener("selectedIndex",propertyChangeListener);
+        scrollPane.getExtentCombo().addPropertyChangeListener(propertyChangeListener);
         scrollPane.setVerticalAlignment(SConstants.TOP_ALIGN);
+
         controls.addControllable(scrollPane);
 
         SPanel panel = new SPanel(new SBorderLayout());

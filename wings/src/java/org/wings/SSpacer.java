@@ -31,7 +31,9 @@ public class SSpacer extends SComponent {
     }
 
     public void setEnabled(boolean enabled) {
+        boolean oldVal = this.enabled;
         this.enabled = enabled;
+        propertyChangeSupport.firePropertyChange("enabled", oldVal, this.enabled);
     }
 
 }

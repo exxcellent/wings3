@@ -438,6 +438,7 @@ public class SOptionPane extends SDialog implements ActionListener {
     public void setOptions(Object[] options) {
         resetOptions();
 
+        Object[] oldVal = this.options;
         if (customButtons == null)
             customButtons = new SPanel();
 
@@ -452,9 +453,10 @@ public class SOptionPane extends SDialog implements ActionListener {
                 b.addActionListener(this);
                 customButtons.add(b);
             }
-        }
-
+        }                             
         add(customButtons);
+
+        propertyChangeSupport.firePropertyChange("options", oldVal, this.options);
     }
 
     /**
@@ -491,7 +493,9 @@ public class SOptionPane extends SDialog implements ActionListener {
             }
         }
 
+        int oldVal = this.messageType;
         messageType = newType;
+        propertyChangeSupport.firePropertyChange("messageType", oldVal, this.messageType);
     }
 
     /**
@@ -505,6 +509,8 @@ public class SOptionPane extends SDialog implements ActionListener {
     }
 
     public void setOptionType(int newType) {
+        boolean[] oldVal = {optionOK.isVisible(), optionYes.isVisible(), optionNo.isVisible(), optionCancel.isVisible()};
+
         resetOptions();
 
         switch (newType) {
@@ -551,6 +557,9 @@ public class SOptionPane extends SDialog implements ActionListener {
                 optionCancel.setVisible(true);
                 break;
         }
+
+        boolean[] newVal = {optionOK.isVisible(), optionYes.isVisible(), optionNo.isVisible(), optionCancel.isVisible()};
+        propertyChangeSupport.firePropertyChange("optionType", oldVal, newVal);
     }
 
     public void showOption(SComponent c, String title, Object message) {

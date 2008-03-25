@@ -54,6 +54,10 @@ public class SDefaultBoundedRangeModel
         delayEvents = b;
     }
 
+    public void setValue(int n) {
+        super.setValue(n);
+    }
+
     /**
      * fire event with isValueIsAdjusting true
      */

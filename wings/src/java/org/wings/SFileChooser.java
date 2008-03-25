@@ -174,6 +174,7 @@ public class SFileChooser
         columns = c;
         if (columns != oldColumns)
             reload();
+        propertyChangeSupport.firePropertyChange("columns", oldColumns, this.columns);
     }
 
     /**
@@ -203,7 +204,9 @@ public class SFileChooser
      * @param mimeFilter the mime type to be filtered.
      */
     public void setFileNameFilter(String mimeFilter) {
+        String oldVal = this.fileNameFilter;
         fileNameFilter = mimeFilter;
+        propertyChangeSupport.firePropertyChange("fileNameFilter", oldVal, this.fileNameFilter);
     }
 
     /**
@@ -370,8 +373,10 @@ public class SFileChooser
         if (!FilterOutputStream.class.isAssignableFrom(filter))
             throw new IllegalArgumentException(filter.getName() + " is not a FilterOutputStream!");
 
+        Class oldVal = this.filter;
         UploadFilterManager.registerFilter(getLowLevelEventId(), filter);
         this.filter = filter;
+        propertyChangeSupport.firePropertyChange("uploadFilter", oldVal, this.filter);
     }
 
     /**
@@ -449,7 +454,9 @@ public class SFileChooser
 
     /** @see LowLevelEventListener#isEpochCheckEnabled() */
     public void setEpochCheckEnabled(boolean epochCheckEnabled) {
+        boolean oldVal = this.epochCheckEnabled;
         this.epochCheckEnabled = epochCheckEnabled;
+        propertyChangeSupport.firePropertyChange("epochCheckEnabled", oldVal, this.epochCheckEnabled);
     }
 
     /**

@@ -168,7 +168,8 @@ public class SDialog extends SWindow {
 		if ((title == null && oldTitle != null)
 				|| (title != null && !title.equals(oldTitle)))
 			reload();
-	}
+        propertyChangeSupport.firePropertyChange("title", oldTitle, this.title);
+    }
 
 	/**
 	 * Gets the title of the dialog. The title is displayed in the dialog's
@@ -182,9 +183,11 @@ public class SDialog extends SWindow {
 
 	public void setIcon(SIcon i) {
 		if (i != icon || i != null && !i.equals(icon)) {
-			icon = i;
+            SIcon oldVal = this.icon;
+            icon = i;
 			reload();
-		}
+            propertyChangeSupport.firePropertyChange("icon", oldVal, this.icon);
+        }
 	}
 
 	public SIcon getIcon() {
@@ -196,16 +199,20 @@ public class SDialog extends SWindow {
 	}
 
 	public void setModal(boolean modal) {
-		this.modal = modal;
-	}
+        boolean oldVal = this.modal;
+        this.modal = modal;
+        propertyChangeSupport.firePropertyChange("modal", oldVal, this.modal);
+    }
 
 	public boolean isDraggable() {
 		return draggable;
 	}
 
 	public void setDraggable(boolean draggable) {
-		this.draggable = draggable;
-	}
+        boolean oldVal = this.draggable;
+        this.draggable = draggable;
+        propertyChangeSupport.firePropertyChange("draggable", oldVal, this.draggable);
+    }
 
 	public void hide() {
 		super.hide();

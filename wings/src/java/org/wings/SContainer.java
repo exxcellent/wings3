@@ -103,6 +103,8 @@ public class SContainer extends SComponent {
      *            new layout manager
      */
     public void setLayout(SLayoutManager l) {
+        SLayoutManager oldVal = this.layout;
+        
         if (layout != null) {
             for (int i = 0; i < getComponentCount(); i++) {
                 layout.removeComponent(getComponent(i));
@@ -119,6 +121,8 @@ public class SContainer extends SComponent {
 
             layout.setContainer(this);
         }
+
+        propertyChangeSupport.firePropertyChange("layoutManager", oldVal, this.layout);
     }
 
     /**

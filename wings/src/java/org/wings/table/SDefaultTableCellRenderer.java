@@ -39,7 +39,9 @@ public class SDefaultTableCellRenderer
      * <code>setEditIcon(getSession().getCGManager().getIcon("TableCG.editIcon"));</code>
      */
     public void setEditIcon(SIcon editIcon) {
+        SIcon oldVal = this.editIcon;
         this.editIcon = editIcon;
+        propertyChangeSupport.firePropertyChange("editIcon", oldVal, this.editIcon);
     }
 
     public SComponent getTableCellRendererComponent(STable table,

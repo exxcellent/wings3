@@ -150,6 +150,7 @@ public class SDefaultListSelectionModel
         fireAdjustingEvents = b;
     }
 
+   
     /**
      * fire event with isValueIsAdjusting true
      */

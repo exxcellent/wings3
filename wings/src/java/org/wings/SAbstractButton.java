@@ -90,7 +90,9 @@ public abstract class SAbstractButton
      * @param ac the action command for this button
      */
     public void setActionCommand(String ac) {
+        String oldVal = this.actionCommand;
         actionCommand = ac;
+        propertyChangeSupport.firePropertyChange("actionCommand", oldVal, this.actionCommand);
     }
 
     /**
@@ -134,6 +136,7 @@ public abstract class SAbstractButton
      */
     protected void setGroup(SButtonGroup g) {
         if (isDifferent(buttonGroup, g)) {
+            SButtonGroup oldVal = this.buttonGroup;
             // Do no longer react on  events from old button group
             if (buttonGroup != null && getSession().getDispatcher() != null) {
                 getSession().getDispatcher().removeLowLevelEventListener(this, buttonGroup.getComponentId());
@@ -144,6 +147,7 @@ public abstract class SAbstractButton
                 getSession().getDispatcher().addLowLevelEventListener(this, buttonGroup.getComponentId());
             } // end of if ()
             reload();
+            propertyChangeSupport.firePropertyChange("group", oldVal, this.buttonGroup);
         }
     }
 
@@ -215,8 +219,10 @@ public abstract class SAbstractButton
      */
     public void setType(String t) {
         if (isDifferent(type, t)) {
+            String oldVal = this.type;
             type = t;
             reload();
+            propertyChangeSupport.firePropertyChange("type", oldVal, this.type);
         }
     }
 
@@ -355,8 +361,10 @@ public abstract class SAbstractButton
 
     public void setEventTarget(String target) {
         if (isDifferent(eventTarget, target)) {
+            String oldVal = this.eventTarget;
             eventTarget = target;
             reload();
+            propertyChangeSupport.firePropertyChange("eventTarget", oldVal, this.eventTarget);
         }
     }
 
@@ -411,6 +419,7 @@ public abstract class SAbstractButton
             }
             reload();
         }
+        propertyChangeSupport.firePropertyChange("action", oldValue, this.action);
     }
 
     private boolean isListener(Class c, ActionListener a) {
@@ -490,8 +499,10 @@ public abstract class SAbstractButton
     }
 
     public void setMnemonic(String mnemonic) {
+        String oldVal = this.mnemonic;
         reloadIfChange(this.mnemonic, mnemonic);
         this.mnemonic = mnemonic;
+        propertyChangeSupport.firePropertyChange("mnemonic", oldVal, this.mnemonic);
     }
 
     public String getMnemonic() {
@@ -505,7 +516,9 @@ public abstract class SAbstractButton
 
     /** @see LowLevelEventListener#isEpochCheckEnabled() */
     public void setEpochCheckEnabled(boolean epochCheckEnabled) {
+        boolean oldVal = this.epochCheckEnabled;
         this.epochCheckEnabled = epochCheckEnabled;
+        propertyChangeSupport.firePropertyChange("epochCheckEnabled", oldVal, this.epochCheckEnabled);
     }
 
     /**
@@ -522,8 +535,10 @@ public abstract class SAbstractButton
      */
     public void setWordWrap(boolean wordWrap) {
         if (this.wordWrap != wordWrap) {
+            boolean oldVal = this.wordWrap;
             this.wordWrap = wordWrap;
             reload();
+            propertyChangeSupport.firePropertyChange("wordWrap", oldVal, this.wordWrap);
         }
     }
 }

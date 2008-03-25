@@ -84,7 +84,9 @@ public class SDefaultTreeCellRenderer
      * Sets the icon used to represent non-leaf nodes that are expanded.
      */
     public void setOpenIcon(SIcon newIcon) {
+        SIcon oldVal = this.openIcon;
         openIcon = newIcon;
+        propertyChangeSupport.firePropertyChange("openIcon", oldVal, this.openIcon);
     }
 
     /**
@@ -98,7 +100,9 @@ public class SDefaultTreeCellRenderer
      * Sets the icon used to represent non-leaf nodes that are not expanded.
      */
     public void setClosedIcon(SIcon newIcon) {
+        SIcon oldVal = this.closedIcon;
         closedIcon = newIcon;
+        propertyChangeSupport.firePropertyChange("closedIcon", oldVal, this.closedIcon);
     }
 
     /**
@@ -113,7 +117,9 @@ public class SDefaultTreeCellRenderer
      * Sets the icon used to represent leaf nodes.
      */
     public void setLeafIcon(SIcon newIcon) {
+        SIcon oldVal = this.leafIcon;
         leafIcon = newIcon;
+        propertyChangeSupport.firePropertyChange("leafIcon", oldVal, this.leafIcon);
     }
 
     /**
@@ -188,7 +194,9 @@ public class SDefaultTreeCellRenderer
      * Sets the style the cell is drawn with when the cell is selected.
      */
     public void setSelectionStyle(String newStyle) {
+        String oldVal = this.selectionStyle;
         selectionStyle = newStyle;
+        propertyChangeSupport.firePropertyChange("selectionStyle", oldVal, this.selectionStyle);
     }
 
     /**
@@ -202,7 +210,9 @@ public class SDefaultTreeCellRenderer
      * Sets the style the cell is drawn with when the cell isn't selected.
      */
     public void setNonSelectionStyle(String newStyle) {
+        String oldVal = this.nonSelectionStyle;
         nonSelectionStyle = newStyle;
+        propertyChangeSupport.firePropertyChange("nonSelectionStyle", oldVal, this.nonSelectionStyle);
     }
 
     /**

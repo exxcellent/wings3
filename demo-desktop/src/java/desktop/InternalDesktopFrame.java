@@ -136,11 +136,13 @@ public class InternalDesktopFrame
 
 
     public void setItem(DesktopItem item) {
+        DesktopItem oldVal = this.item;
         this.item = item;
         getContentPane().addComponent(item.getComponent());
         setTitle((String)item.getValue(DesktopItem.NAME));
         setIcon((SURLIcon)item.getValue(DesktopItem.ICON));
         item.activated();
+        propertyChangeSupport.firePropertyChange("item", oldVal, this.item);
     }
 
     public void addComponentDropListener(SComponentDropListener listener) {
@@ -157,6 +159,7 @@ public class InternalDesktopFrame
     }
 
     public void setDragEnabled(boolean dragEnabled) {
+        boolean oldVal = this.dragEnabled;
         this.dragEnabled = dragEnabled;
         if (dragEnabled) {
             SessionManager.getSession().getDragAndDropManager().registerDragSource(this);
@@ -164,6 +167,7 @@ public class InternalDesktopFrame
         else {
             SessionManager.getSession().getDragAndDropManager().deregisterDragSource(this);
         }
+        propertyChangeSupport.firePropertyChange("dragEnabled", oldVal, this.dragEnabled);
     }
 
     public void internalFrameClosed(SInternalFrameEvent e) {

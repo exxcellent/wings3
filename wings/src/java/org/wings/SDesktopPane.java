@@ -67,9 +67,12 @@ public class SDesktopPane
      */
     public void setPosition(SComponent c, int position) {
         if (position != getComponentList().indexOf(c)) {
+            int oldVal = getComponentList().indexOf(c);
             getComponentList().remove(c);
             getComponentList().add(position, c);
             reload();
+            int newVal = getComponentList().indexOf(c);
+            propertyChangeSupport.firePropertyChange("position", oldVal, newVal);
         }
     }
 

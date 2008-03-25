@@ -85,6 +85,8 @@ public class SWindow extends SForm implements LowLevelEventListener {
     public void show(SComponent c) {
         LOG.debug("show window");
 
+        SComponent oldVal = this.owner;
+
         // If the owner is empty get the components root container.
         if (owner == null) {
             if (c != null) {
@@ -99,6 +101,8 @@ public class SWindow extends SForm implements LowLevelEventListener {
             owner = getSession().getRootFrame();
         }
         owner.pushWindow(this);
+
+        propertyChangeSupport.firePropertyChange("owner", oldVal, c);
 
         /*
         if (isUpdatePossible() && SWindow.class.isAssignableFrom(getClass())) {

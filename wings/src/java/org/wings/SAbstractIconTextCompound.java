@@ -119,8 +119,10 @@ public abstract class SAbstractIconTextCompound
     public void setModel(SButtonModel model) {
         if (model == null)
             throw new IllegalArgumentException("null not allowed");
+        SButtonModel oldVal = this.model;
         reloadIfChange(this.model, model);
         this.model = model;
+        propertyChangeSupport.firePropertyChange("model", oldVal, this.model);
     }
 
     /**
@@ -213,8 +215,10 @@ public abstract class SAbstractIconTextCompound
     }
 
     public void setHorizontalTextPosition(int textPosition) {
+        int oldVal = this.horizontalTextPosition;
         reloadIfChange(this.horizontalTextPosition, textPosition);
         horizontalTextPosition = textPosition;
+        propertyChangeSupport.firePropertyChange("horizontalTextPosition", oldVal, this.horizontalTextPosition);
 
     }
 
@@ -223,8 +227,10 @@ public abstract class SAbstractIconTextCompound
     }
 
     public void setVerticalTextPosition(int textPosition) {
+        int oldVal = this.verticalTextPosition;
         reloadIfChange(this.verticalTextPosition, textPosition);
         verticalTextPosition = textPosition;
+        propertyChangeSupport.firePropertyChange("verticalTextPosition", oldVal, this.verticalTextPosition);
     }
 
     public int getVerticalTextPosition() {
@@ -232,8 +238,10 @@ public abstract class SAbstractIconTextCompound
     }
 
     public void setIconTextGap(int gap) {
+        int oldVal = this.iconTextGap;
         reloadIfChange(this.iconTextGap, gap);
         iconTextGap = gap;
+        propertyChangeSupport.firePropertyChange("iconTextGap", oldVal, this.iconTextGap);
     }
 
     public int getIconTextGap() {
@@ -246,6 +254,7 @@ public abstract class SAbstractIconTextCompound
      * @param i the icon.
      */
     public void setIcon(SIcon i) {
+        SIcon oldVal = this.icon;
         if (isDifferent(icon, i)) {
             // do reload if previous icon was null
             if (isUpdatePossible() && icon != null) {
@@ -267,6 +276,7 @@ public abstract class SAbstractIconTextCompound
             }
             icon = i;
         }
+        propertyChangeSupport.firePropertyChange("icon", oldVal, this.icon);
     }
 
     /**
@@ -284,8 +294,10 @@ public abstract class SAbstractIconTextCompound
      * @param icon to be shown when mouse button is pressed.
      */
     public void setPressedIcon(SIcon icon) {
+        SIcon oldVal = this.pressedIcon;
         reloadIfChange(pressedIcon, icon);
         pressedIcon = icon;
+        propertyChangeSupport.firePropertyChange("pressedIcon", oldVal, this.pressedIcon);
     }
 
     /**
@@ -304,8 +316,10 @@ public abstract class SAbstractIconTextCompound
      * @param icon rollOver icon for unselected compound.
      */
     public void setRolloverIcon(SIcon icon) {
+        SIcon oldVal = this.rolloverIcon;
         reloadIfChange(rolloverIcon, icon);
         rolloverIcon = icon;
+        propertyChangeSupport.firePropertyChange("rolloverIcon", oldVal, this.rolloverIcon);
     }
 
     /**
@@ -325,8 +339,10 @@ public abstract class SAbstractIconTextCompound
      * @param icon rollOver icon for selected compound.
      */
     public void setRolloverSelectedIcon(SIcon icon) {
+        SIcon oldVal = this.rolloverSelectedIcon;
         reloadIfChange(rolloverSelectedIcon, icon);
         rolloverSelectedIcon = icon;
+        propertyChangeSupport.firePropertyChange("rolloverSelectedIcon", oldVal, this.rolloverSelectedIcon);
     }
 
     /**
@@ -344,8 +360,10 @@ public abstract class SAbstractIconTextCompound
      * @param icon to be shown for a selected compound.
      */
     public void setSelectedIcon(SIcon icon) {
+        SIcon oldVal = this.selectedIcon;
         reloadIfChange(selectedIcon, icon);
         selectedIcon = icon;
+        propertyChangeSupport.firePropertyChange("selectedIcon", oldVal, this.selectedIcon);
     }
 
     /**
@@ -363,8 +381,10 @@ public abstract class SAbstractIconTextCompound
      * @param icon to be shown for a selected compound that is disabled.
      */
     public void setDisabledSelectedIcon(SIcon icon) {
+        SIcon oldVal = this.disabledSelectedIcon;
         reloadIfChange(disabledSelectedIcon, icon);
         disabledSelectedIcon = icon;
+        propertyChangeSupport.firePropertyChange("disabledSelectedIcon", oldVal, this.disabledSelectedIcon);
     }
 
     /**
@@ -376,14 +396,17 @@ public abstract class SAbstractIconTextCompound
         return disabledSelectedIcon;
     }
 
+
     /**
      * Sets the icon that is displayed when a compound is disabled.
      *
      * @param icon to be shown for a disabled compound.
      */
     public void setDisabledIcon(SIcon icon) {
+        SIcon oldVal = this.disabledIcon;
         reloadIfChange(disabledIcon, icon);
         disabledIcon = icon;
+        propertyChangeSupport.firePropertyChange("disabledIcon", oldVal, this.disabledIcon);
     }
 
     /**
@@ -417,7 +440,9 @@ public abstract class SAbstractIconTextCompound
      * @param color the new foreground color
      */
     public void setSelectionBackground(Color color) {
+        Color oldVal = this.getSelectionBackground();
         setAttribute(SELECTOR_SELECTED, CSSProperty.BACKGROUND_COLOR, CSSStyleSheet.getAttribute(color));
+        propertyChangeSupport.firePropertyChange("selectionBackground", oldVal, this.getSelectionBackground());
     }
 
     /**
@@ -435,7 +460,9 @@ public abstract class SAbstractIconTextCompound
      * @param color the new foreground color
      */
     public void setSelectionForeground(Color color) {
+        Color oldVal = this.getSelectionForeground();
         setAttribute(SELECTOR_SELECTED, CSSProperty.COLOR, CSSStyleSheet.getAttribute(color));
+        propertyChangeSupport.firePropertyChange("selectionForeground", oldVal, this.getSelectionForeground());
     }
 
     /**
@@ -444,7 +471,9 @@ public abstract class SAbstractIconTextCompound
      * @param font the new font
      */
     public void setSelectionFont(SFont font) {
+        SFont oldVal = this.getFont();
         setAttributes(SELECTOR_SELECTED, CSSStyleSheet.getAttributes(font));
+        propertyChangeSupport.firePropertyChange("font", oldVal, this.getSelectionFont());
     }
 
     /**
@@ -461,6 +490,7 @@ public abstract class SAbstractIconTextCompound
      */
     public void setText(String t) {
         if (isDifferent(text, t)) {
+            String oldVal = this.text;
             // do reload if previous text was null
             if (isUpdatePossible() && text != null) {
                 if (SButton.class.isAssignableFrom(getClass()))
@@ -480,6 +510,7 @@ public abstract class SAbstractIconTextCompound
                 reload();
             }
             text = t;
+            propertyChangeSupport.firePropertyChange("text", oldVal, this.text);
         }
     }
 
@@ -503,7 +534,9 @@ public abstract class SAbstractIconTextCompound
      */
     public void setSelected(boolean selected) {
         if (model.isSelected() != selected) {
+            boolean oldVal = model.isSelected();
             model.setSelected(selected);
+            propertyChangeSupport.firePropertyChange("selected", oldVal, model.isSelected());
 
             if (!delayEvents) {
                 fireStateChanged();

@@ -121,8 +121,12 @@ public class XInplaceEditor extends SLabel implements XInplaceEditorInterface {
     }
         
     public String setAjaxText(String text) {
+        String oldAjaxDocumenttext = ajaxDocument.getText();
+        String oldText = this.text;
         this.ajaxDocument.setText(text);
         this.text = text;
+        propertyChangeSupport.firePropertyChange("ajaxText", oldAjaxDocumenttext, ajaxDocument.getText());
+        propertyChangeSupport.firePropertyChange("ajaxText", oldText, this.text);
         
         // to avoid a invisible label
         if (text.compareTo("") == 0) {
@@ -146,6 +150,7 @@ public class XInplaceEditor extends SLabel implements XInplaceEditorInterface {
         int oldValue = this.cols;
         this.cols = cols;
         reloadIfChange(cols, oldValue);
+        propertyChangeSupport.firePropertyChange("cols", oldValue, this.cols);
     }
     
     /**
@@ -162,6 +167,7 @@ public class XInplaceEditor extends SLabel implements XInplaceEditorInterface {
         int oldValue = this.rows;
         this.rows = rows;
         reloadIfChange(rows, oldValue);
+        propertyChangeSupport.firePropertyChange("rows", oldValue, this.rows);
     }
     
     /**
@@ -179,6 +185,7 @@ public class XInplaceEditor extends SLabel implements XInplaceEditorInterface {
         int oldValue = this.timeout;
         this.timeout = timeout;
         reloadIfChange(timeout, oldValue);
+        propertyChangeSupport.firePropertyChange("timeout", oldValue, this.timeout);
     }
     
     /**
@@ -208,6 +215,7 @@ public class XInplaceEditor extends SLabel implements XInplaceEditorInterface {
         String oldValue = this.clickNotificationText;
         this.clickNotificationText = text;
         reloadIfChange(text, oldValue);
+        propertyChangeSupport.firePropertyChange("clickNotificationText", oldValue, this.clickNotificationText);
     }
     
     /**

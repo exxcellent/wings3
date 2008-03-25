@@ -144,9 +144,11 @@ public class SMenu extends SMenuItem {
      * @param b a boolean value -- true to make the menu visible, false to hide it
      */
     public void setPopupMenuVisible(boolean b) {
+        boolean oldVal = this.popupMenuVisible;
         if (!isEnabled())
             return;
         popupMenuVisible = b;
+        propertyChangeSupport.firePropertyChange("popupMenuVisible", oldVal, this.popupMenuVisible);
     }
 
     /**
@@ -178,7 +180,9 @@ public class SMenu extends SMenuItem {
      * @param widthScaleFactor The widthScaleFactor to set.
      */
     public void setWidthScaleFactor(double widthScaleFactor) {
+        double oldVal = this.widthScaleFactor;
         this.widthScaleFactor = widthScaleFactor;
+        propertyChangeSupport.firePropertyChange("widthScaleFactor", oldVal, this.widthScaleFactor);
     }
 
     /**
