@@ -51,9 +51,6 @@ public class SDialog extends SWindow {
 
 	protected boolean draggable = true;
 
-	protected int x = -1;
-	protected int y = -1;
-
 	private boolean closable = true;
 	private boolean closed = false;
 
@@ -131,28 +128,6 @@ public class SDialog extends SWindow {
 		this.owner = owner;
 		this.title = title;
 		this.modal = modal;
-	}
-
-	public int getX() {
-		return x;
-	}
-
-	public void setX(int x) {
-		int oldX = x;
-		this.x = x;
-		if (oldX != x)
-			reload();
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		int oldY = y;
-		this.y = y;
-		if (oldY != y)
-			reload();
 	}
 
 	/**
@@ -240,40 +215,6 @@ public class SDialog extends SWindow {
 	// public boolean isClosed() {
 	// return closed;
 	// }
-
-	// LowLevelEventListener interface. Handle own events.
-	public void processLowLevelEvent(String action, String[] values) {
-		processKeyEvents(values);
-		if (action.endsWith("_keystroke"))
-			return;
-
-		if (action.indexOf("_") > -1) {
-			String[] actions = action.split("_");
-			if ("xy".equals(actions[1])) {
-				String[] coords = values[0].split(",");
-
-				x = Integer.parseInt(coords[0]);
-				y = Integer.parseInt(coords[1]);
-				return;
-			}
-		}
-
-		// is this a window event?
-		try {
-			switch (new Integer(values[0]).intValue()) {
-			case org.wings.event.SInternalFrameEvent.INTERNAL_FRAME_CLOSED:
-				hide();
-				actionCommand = CLOSE_ACTION;
-				break;
-			default:
-				// form event
-				actionCommand = DEFAULT_ACTION;
-			}
-		} catch (NumberFormatException ex) {
-			// no window event...
-		}
-		SForm.addArmedComponent(this); // trigger later invocation of fire*()
-	}
 
 	public void setCG(DialogCG cg) {
 		super.setCG(cg);

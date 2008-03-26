@@ -29,12 +29,13 @@ wingS.dialog.SDialog.CSS_DIALOG = "SDialog";
 wingS.dialog.SDialog._DEFAULT_CONFIG = {
     "VIEWPORTELEMENT": {
         key: "viewportelement",
-        suppressEvent:true
+		validator: YAHOO.lang.isString
     },
 	
 	"PROPAGATE_MOVE_EVENT": {
         key: "propagateMoveEvent",
-        value:true
+		value:true,
+		validator: YAHOO.lang.isBoolean
     }
 };
 
@@ -43,53 +44,84 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
     shadowWidth: 0,
 
     init: function(el, userConfig) {
-        wingS.dialog.SDialog.superclass.init.call(this, el);
-        this.beforeInitEvent.fire(wingS.dialog.SDialog);
-        YAHOO.util.Dom.addClass(this.element, wingS.dialog.SDialog.CSS_DIALOG);
-        this.cfg.setProperty("visible", false);
-        if (userConfig) {
-            this.cfg.applyConfig(userConfig, true);
-        }
-        this.showEvent.subscribe(this.focusFirst, this, true);
-        this.beforeHideEvent.subscribe(this.blurButtons, this, true);
-        this.subscribe("changeBody", this.registerForm);
-        this.initEvent.fire(wingS.dialog.SDialog);
-		
-		if (this.cfg.getProperty("propagateMoveEvent")) {
-			// Handles move events and sends x-y-coordinates
-			this.moveEvent.subscribe(this.moveHandler, this, true);
-		}
+        wingS.dialog.SDialog.superclass.init.call(this, el, userConfig);
         
-        if (this.cfg.getProperty("underlay") == "shadow") {
+		YAHOO.util.Dom.addClass(this.element, wingS.dialog.SDialog.CSS_DIALOG);
+
+		// Handle close events.
+		this.cancelEvent.subscribe(this.destroy, this, true);
+		
+		if (this.cfg.getProperty("underlay") == "shadow") {
             // Actually the default shadow width is 3px,
             // however, this doesn't seem to be enough.
             this.shadowWidth = 5;
         };
     },
-	
-	moveHandler: function(type, args, obj) {
-		wingS.request.sendEvent(null, false, true, this.id + "_xy", args);
-	},
 
     initDefaultConfig : function() {
         wingS.dialog.SDialog.superclass.initDefaultConfig.call(this);
 
         // Add SDialog config properties //
         var DEFAULT_CONFIG = wingS.dialog.SDialog._DEFAULT_CONFIG;
+		
         // The element that get the dialog as responsible actor
         this.cfg.addProperty(DEFAULT_CONFIG.VIEWPORTELEMENT.key,
         {
             handler: this.configContext,
-            suppressEvent: DEFAULT_CONFIG.VIEWPORTELEMENT.suppressEvent
+            validator: DEFAULT_CONFIG.VIEWPORTELEMENT.validator
         });
 		
 		this.cfg.addProperty(DEFAULT_CONFIG.PROPAGATE_MOVE_EVENT.key,
         {
-            handler: this.configContext,
-            value: DEFAULT_CONFIG.PROPAGATE_MOVE_EVENT.value
+            handler: this.configMoveHandler,
+            value: DEFAULT_CONFIG.PROPAGATE_MOVE_EVENT.value,
+			validator: DEFAULT_CONFIG.PROPAGATE_MOVE_EVENT.validator
         });
     },
+	
+	configMoveHandler: function(type, args, obj) {
+		// Register the dialog for move events if args[0] == true.
+		if (args[0]) {
+			this.moveEvent.subscribe(this.moveHandler, this, true);
+		}
+	},
+	
+	/**
+	 * Handle move events. Send a request back to server containing the
+	 * x-position and y-position of this dialog. That permits a consitent
+	 * component state between server and client.
+	 * 
+	 * @param {Object} type
+	 * @param {Object} args
+	 * @param {Object} obj
+	 */
+	moveHandler: function(type, args, obj) {
+		wingS.request.sendEvent(null, false, true, this.id + "_xy", args);
+	},
+	
+	doSubmit: function() {
+		// do nothing
+	},
+	
+	submit: function() {
+		// do nothing
+	},
+	
+	/**
+	 * Sends a destroy event to the server and destroys this dialog afterwards.
+	 * 
+	 * @param {Object} type
+	 * @param {Object} args
+	 * @param {Object} obj
+	 */
+	destroy: function(type, args, obj) {
+		wingS.request.sendEvent(null, false, true, this.id + "_dispose", 1);
+	},
 
+	/**
+	 * Centers this dialog within the window or within a viewport element if specified
+	 * at instanciation time.
+	 */
     center: function() {        
         // Workarounds for IE:
         //  - avoid toggeling dialog width (e.g. while dragging) in IE 7
@@ -297,16 +329,6 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
             this.dd.addInvalidHandleType("TEXTAREA");
         }
     },
-	
-	/*
-	moveEvent: function(x, y) {
-		// Call moveEvent of superclass.
-		wingS.dialog.SDialog.superclass.moveEvent.call(this, x, y);
-		
-		var xy = this.cfg.getProperty("xy");
-		wingS.request.sendEvent(null, false, true, this.id + "_xy", xy);
-	},
-	*/
 
     buildMask: function () {
         var oMask = this.mask;
@@ -427,7 +449,7 @@ wingS.dialog.showExceptionDialog = function(exception){
     
     // Define various event handlers for Dialog
     var handleClose = function(){
-		this.hideMask();
+		this.removeMask();
         this.destroy();
         wingS.request.reloadFrame();
     };

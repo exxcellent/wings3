@@ -45,6 +45,9 @@ public class SWindow extends SForm implements LowLevelEventListener {
     public static final String DEFAULT_ACTION = "DEFAULT";
 
     protected SRootContainer owner;
+    
+	protected int x = -1;
+	protected int y = -1;
 
 	/**
      * Returns the root container in which this dialog is to be displayed.
@@ -56,6 +59,27 @@ public class SWindow extends SForm implements LowLevelEventListener {
         return owner;
     }
 
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		int oldX = x;
+		this.x = x;
+		if (oldX != x)
+			reload();
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		int oldY = y;
+		this.y = y;
+		if (oldY != y)
+			reload();
+	}
 
     public void setVisible(boolean visible) {
         if (visible) {
@@ -127,10 +151,25 @@ public class SWindow extends SForm implements LowLevelEventListener {
         if (action.endsWith("_keystroke"))
             return;
 
+        if (action.indexOf("_") > -1) {
+			String[] actions = action.split("_");
+			if ("xy".equals(actions[1])) {
+				String[] coords = values[0].split(",");
+
+				x = Integer.parseInt(coords[0]);
+				y = Integer.parseInt(coords[1]);
+				return;
+			}
+			else if ("dispose".equals(actions[1])) {
+				dispose();
+			}
+		}
+        
         // is this a window event?
         try {
             switch (new Integer(values[0]).intValue()) {
                 case org.wings.event.SInternalFrameEvent.INTERNAL_FRAME_CLOSED:
+                	dispose();
                     actionCommand = CLOSE_ACTION;
                     break;
 
