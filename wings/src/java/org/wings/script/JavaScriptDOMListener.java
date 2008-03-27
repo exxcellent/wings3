@@ -14,7 +14,6 @@
 package org.wings.script;
 
 import org.wings.SComponent;
-import org.wings.util.SStringBuilder;
 
 /**
  * Specialized ScriptListener for DOM events. The original JavaScriptListener
@@ -63,7 +62,7 @@ public class JavaScriptDOMListener extends JavaScriptListener {
      * @return init code
      */
     public String getScript() {
-        SStringBuilder elementId = new SStringBuilder();
+        StringBuilder elementId = new StringBuilder();
         elementId
                 .append("'")
                 .append(component.getName())
@@ -72,7 +71,7 @@ public class JavaScriptDOMListener extends JavaScriptListener {
         // special Yahoo UI event, see JavaScriptDOMEvent.ON_AVAILABLE docu for more
         if (this.getEvent().compareTo(JavaScriptEvent.ON_AVAILABLE) == 0) {
 
-            SStringBuilder initCode = new SStringBuilder();
+            StringBuilder initCode = new StringBuilder();
             initCode
                     .append("YAHOO.util.Event.onAvailable(")
                     .append(elementId).append(", ")
@@ -98,7 +97,7 @@ public class JavaScriptDOMListener extends JavaScriptListener {
             else if (modifiedEventName.compareTo("focus") == 0)
                 elementId.delete(0, elementId.length()).append("document");
 
-            SStringBuilder initCode = new SStringBuilder();
+            StringBuilder initCode = new StringBuilder();
             initCode
                     .append("YAHOO.util.Event.addListener(")
                     .append(elementId).append(", ")

@@ -6,7 +6,6 @@ import org.wings.SComponent;
 import org.wings.border.SBorder;
 import org.wings.io.Device;
 import org.wings.plaf.css.Utils;
-import org.wings.util.SStringBuilder;
 
 import java.io.IOException;
 import java.awt.*;
@@ -76,7 +75,7 @@ public final class PaddingVoodoo
         if (component == null)
             return;
         if (component.getBorder() != null && Utils.hasInsets(component.getBorder().getInsets())) {
-            final SStringBuilder stringBuilder = new SStringBuilder();
+            final StringBuilder stringBuilder = new StringBuilder();
             Utils.createInlineStylesForInsets(stringBuilder, component.getBorder().getInsets());
             Utils.optAttribute(d, "style", stringBuilder);
         }

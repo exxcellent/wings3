@@ -15,8 +15,6 @@ package org.wings.session;
 import java.text.DateFormat;
 import java.util.Date;
 
-import org.wings.util.SStringBuilder;
-
 /**
  * @author <a href="mailto:@mueller.de">armin</a>
  */
@@ -123,7 +121,7 @@ public class WingsStatistics {
     }
 
     public final String toString() {
-        SStringBuilder tResult = new SStringBuilder();
+        StringBuilder tResult = new StringBuilder();
 
         tResult.append("birthday: ").append(DateFormat.getDateTimeInstance().format(new Date(birthDay))).append("\n")
                 .append("sessions: ").append(sessionCounter).append(" / ").append(activeSessionCounter).append(" / ").append(allocatedSessionCounter).append("\n")

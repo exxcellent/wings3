@@ -3,7 +3,6 @@ package wingset;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.session.WingsStatistics;
-import org.wings.util.SStringBuilder;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -33,7 +32,7 @@ public class StatisticsTimerTask extends TimerTask {
      * Do not call this method directly. Used by Timer.
      */
     public void run() {
-        SStringBuilder result = new SStringBuilder();
+        StringBuilder result = new StringBuilder();
         long totalmem = Runtime.getRuntime().totalMemory();
         long freemem = Runtime.getRuntime().freeMemory();
 
@@ -81,7 +80,7 @@ public class StatisticsTimerTask extends TimerTask {
                 log.info("Logging session statistics to "+outputFile.getAbsolutePath());
                 infoWriter = new FileWriter(outputFile, false);
 
-                SStringBuilder result = new SStringBuilder();
+                StringBuilder result = new StringBuilder();
                 result.append("timestamp").append(' ')
                         .append("uptime").append(' ')
                         .append("overall_sessions").append(' ')

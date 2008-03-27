@@ -2,7 +2,6 @@ package org.wingx;
 
 import org.wings.*;
 import org.wings.table.*;
-import org.wings.util.SStringBuilder;
 import org.wings.event.SMouseListener;
 import org.wings.event.SMouseEvent;
 import org.wingx.table.*;
@@ -28,7 +27,7 @@ public class XTable extends STable
     private EditableTableCellRenderer filterRenderer;
     private boolean refresh;
     private SMouseListener linkMouseListener;
-    private SStringBuilder nameBuffer = new SStringBuilder();
+    private StringBuilder nameBuffer = new StringBuilder();
     private String noDataFoundLabel = "- - -";
     private String noDataAvailableLabel = "- - -";
 

@@ -22,7 +22,6 @@ import org.wings.plaf.css.PaddingVoodoo;
 import org.wings.session.BrowserType;
 import org.wings.session.SessionManager;
 import org.wings.style.CSSProperty;
-import org.wings.util.SStringBuilder;
 
 import java.awt.*;
 import java.io.IOException;
@@ -199,7 +198,7 @@ public abstract class AbstractLayoutCG implements LayoutCG {
         Utils.optAttribute(d, "class", cellStyle.optionalStyleClass);
         // render optional style attribute
         if (cellStyle.hasAdditionalCellStyles() || cellStyle.hasInsets()) {
-            SStringBuilder styleString = new SStringBuilder();
+            StringBuilder styleString = new StringBuilder();
             Utils.createInlineStylesForInsets(styleString, cellStyle.getInsets());
             styleString.append(cellStyle.getAdditionalCellStyles().toString());
             Utils.optAttribute(d, "style", styleString);

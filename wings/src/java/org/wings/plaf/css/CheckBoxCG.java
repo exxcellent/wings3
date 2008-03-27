@@ -12,14 +12,12 @@
  */
 package org.wings.plaf.css;
 
-
 import org.wings.*;
 import org.wings.io.Device;
 import org.wings.plaf.Update;
 import org.wings.resource.ResourceManager;
 import org.wings.script.JavaScriptEvent;
 import org.wings.script.JavaScriptListener;
-import org.wings.util.SStringBuilder;
 
 import java.io.IOException;
 
@@ -127,7 +125,7 @@ public class CheckBoxCG extends ButtonCG implements org.wings.plaf.CheckBoxCG {
             device.print(" checked=\"true\"");
 
         String style = button.getStyle();
-        SStringBuilder className = new SStringBuilder(style);
+        StringBuilder className = new StringBuilder(style);
         if (button.getShowAsFormComponent())
             className.append("_form");
         if (!button.isEnabled())

@@ -14,11 +14,10 @@ package org.wings.script;
 
 import org.wings.SButton;
 import org.wings.SComponent;
-import org.wings.util.SStringBuilder;
 
 import java.util.Arrays;
 
-public class JavaScriptListener        implements ScriptListener {
+public class JavaScriptListener implements ScriptListener {
     private final String event;
     private final String code;
     private final String script;
@@ -112,7 +111,7 @@ public class JavaScriptListener        implements ScriptListener {
     public SComponent[] getComponents() { return components; }
 
     private String substituteIds(String code, SComponent[] components) {
-        SStringBuilder buffer = new SStringBuilder();
+        StringBuilder buffer = new StringBuilder();
 
         int startPos = 0;
         int endPos = 0;

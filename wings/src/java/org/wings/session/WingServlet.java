@@ -15,7 +15,6 @@ package org.wings.session;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.RequestURL;
-import org.wings.util.SStringBuilder;
 import org.wings.externalizer.AbstractExternalizeManager;
 import org.wings.externalizer.ExternalizedResource;
 import org.wings.externalizer.SystemExternalizeManager;
@@ -244,7 +243,7 @@ public class WingServlet
 
 
             if (log.isDebugEnabled()) {
-                SStringBuilder message = new SStringBuilder()
+                StringBuilder message = new StringBuilder()
                         .append("session id: ").append(request.getRequestedSessionId())
                         .append(", created at: ")
                         .append(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)

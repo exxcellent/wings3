@@ -18,7 +18,6 @@ package org.wings;
  import org.wings.plaf.TableCG;
  import org.wings.style.*;
  import org.wings.table.*;
- import org.wings.util.SStringBuilder;
 
  import javax.swing.event.*;
  import javax.swing.table.DefaultTableModel;
@@ -26,7 +25,6 @@ package org.wings;
  import java.awt.*;
 import java.util.*;
 import java.util.List;
-
 
 /**
  * Displays information contained in a {@link TableModel} object.
@@ -231,7 +229,7 @@ public class STable extends SComponent
     /**
      * Helper variable for {@link #nameRendererComponent(SComponent, int, int)}
      */
-    private SStringBuilder nameBuffer = new SStringBuilder();
+    private StringBuilder nameBuffer = new StringBuilder();
 
     /**
      * changes in the selection model should force a reload if possible

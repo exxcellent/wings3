@@ -17,7 +17,6 @@ import org.wings.SConstants;
 import org.wings.SFlowLayout;
 import org.wings.SLayoutManager;
 import org.wings.io.Device;
-import org.wings.util.SStringBuilder;
 
 import java.awt.*;
 import java.io.IOException;
@@ -110,7 +109,7 @@ public class FlowLayoutCG extends AbstractLayoutCG {
             if (component.isVisible()) {
                 Utils.printNewline(d, component);
                 d.print("<div");
-                Utils.optAttribute(d, "style", Utils.createInlineStylesForInsets(new SStringBuilder(alignmentStlye), insets));
+                Utils.optAttribute(d, "style", Utils.createInlineStylesForInsets(new StringBuilder(alignmentStlye), insets));
                 d.print(">");
                 component.write(d); // Render contained component
                 Utils.printNewline(d, component);

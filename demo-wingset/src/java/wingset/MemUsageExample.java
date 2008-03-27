@@ -16,7 +16,6 @@ import org.wings.*;
 import org.wings.event.SRenderEvent;
 import org.wings.event.SRenderListener;
 import org.wings.session.WingsStatistics;
-import org.wings.util.SStringBuilder;
 
 import java.awt.event.ActionEvent;
 import java.text.DecimalFormat;
@@ -135,7 +134,7 @@ public class MemUsageExample extends WingSetPane {
         final long MINUTE = 60 * SECOND;
         final long HOUR = 60 * MINUTE;
         final long DAY = 24 * HOUR;
-        final SStringBuilder result = new SStringBuilder();
+        final StringBuilder result = new StringBuilder();
         boolean doAppend = false;
 
         if (uptime / DAY > 0) {

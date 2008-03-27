@@ -12,7 +12,6 @@
  */
 package org.wings.session;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.*;
@@ -23,7 +22,6 @@ import org.wings.externalizer.ExternalizeManager;
 import org.wings.externalizer.ExternalizedResource;
 import org.wings.io.*;
 import org.wings.resource.*;
-import org.wings.util.SStringBuilder;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -424,7 +422,7 @@ final class SessionServlet
                     log.debug("Parameters:");
                     for (Enumeration e = req.getParameterNames(); e.hasMoreElements();) {
                         String paramName = (String) e.nextElement();
-                        SStringBuilder param = new SStringBuilder();
+                        StringBuilder param = new StringBuilder();
                         param.append("    ").append(paramName).append(": ");
                         final String[] values = req.getParameterValues(paramName);
                         param.append(values != null ? Arrays.toString(values) : "null");

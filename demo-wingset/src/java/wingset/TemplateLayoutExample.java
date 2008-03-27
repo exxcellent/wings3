@@ -17,7 +17,6 @@ import org.wings.style.CSSProperty;
 import org.wings.border.SLineBorder;
 import org.wings.template.StringTemplateSource;
 import org.wings.template.propertymanagers.DefaultPropertyManager;
-import org.wings.util.SStringBuilder;
 
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
@@ -49,7 +48,7 @@ public class TemplateLayoutExample
 
         try {
             java.net.URL templateURL = getSession().getServletContext().getResource(TEMPLATE);
-            SStringBuilder buffer = new SStringBuilder();
+            StringBuilder buffer = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(templateURL.openStream()));
 
             String line = reader.readLine();

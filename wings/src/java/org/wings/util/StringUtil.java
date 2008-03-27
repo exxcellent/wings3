@@ -31,7 +31,7 @@ public class StringUtil {
      */
     public static final String replace(String s,
                                        String toFind, String replace) {
-        SStringBuilder erg = new SStringBuilder();
+        StringBuilder erg = new StringBuilder();
 
         int lastindex = 0;
         int indexOf = s.indexOf(toFind);
@@ -50,7 +50,7 @@ public class StringUtil {
     /* slower ..
       ist langsamer, mit jit 1/3, weniger als halb so schnell
      public static String replaceNew(String s, String toFind, String replace) {
-     SStringBuilder erg = new SStringBuilder();
+     StringBuilder erg = new StringBuilder();
 
      StringTokenizer t = new StringTokenizer(s, toFind);
      while ( t.hasMoreTokens() ) {
@@ -70,7 +70,7 @@ public class StringUtil {
      * @return the resulting string.
      */
     public static final String replaceNewLines(String s, String r) {
-        SStringBuilder result = new SStringBuilder();
+        StringBuilder result = new StringBuilder();
 
         StringTokenizer t = new StringTokenizer(s, "\n");
         while (t.hasMoreTokens()) {
@@ -217,7 +217,7 @@ public class StringUtil {
         if (array.length == 0)
             return "";
 
-        SStringBuilder buffer = new SStringBuilder("" + array[0]);
+        StringBuilder buffer = new StringBuilder("" + array[0]);
         for (int i = 1; i < array.length; i++) {
             if (array[i] == null)
                 buffer.append(", null");

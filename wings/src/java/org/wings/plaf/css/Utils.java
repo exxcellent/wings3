@@ -37,7 +37,6 @@ import org.wings.session.SessionManager;
 import org.wings.style.Style;
 import org.wings.style.CSSStyle;
 import org.wings.style.CSSAttributeSet;
-import org.wings.util.SStringBuilder;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -294,13 +293,13 @@ public final class Utils {
     }
 
     /**
-     * Generates a SStringBuilder containing inlined CSS styles for the following properties of a SComponent:
+     * Generates a StringBuilder containing inlined CSS styles for the following properties of a SComponent:
      * <p><ul><li>Preffered Size</li><li>Font</li><li>Background- and Foregroud color.</li></ul>
      *
      * @param component Component to grab parameters from.
      */
-    public static SStringBuilder generateCSSComponentInlineStyle(SComponent component) {
-        final SStringBuilder styleString = new SStringBuilder();
+    public static StringBuilder generateCSSComponentInlineStyle(SComponent component) {
+        final StringBuilder styleString = new StringBuilder();
         appendCSSInlineSize(styleString, component);
         appendCSSComponentInlineColorStyle(styleString, component);
         appendCSSComponentInlineFontStyle(styleString, component);
@@ -310,11 +309,11 @@ public final class Utils {
     /**
      * Append a inline CSS style definition for the passed component of the aspect foreground- and background color.
      *
-     * @param styleString SStringBuilder to append to
+     * @param styleString StringBuilder to append to
      * @param component   Component to use as style source
      * @return The passed styleString
      */
-    public static SStringBuilder appendCSSComponentInlineColorStyle(SStringBuilder styleString, final SComponent component) {
+    public static StringBuilder appendCSSComponentInlineColorStyle(StringBuilder styleString, final SComponent component) {
         if (component != null) {
             if (component.getBackground() != null) {
                 styleString.append("background-color:#").append(toColorString(component.getBackground())).append(";");
@@ -330,11 +329,11 @@ public final class Utils {
     /**
      * Append a inline CSS style definition for the passed component of the aspect font properties.
      *
-     * @param styleString SStringBuilder to append to
+     * @param styleString StringBuilder to append to
      * @param component   Component to use as style source
      * @return The passed styleString
      */
-    public static SStringBuilder appendCSSComponentInlineFontStyle(final SStringBuilder styleString, final SComponent component) {
+    public static StringBuilder appendCSSComponentInlineFontStyle(final StringBuilder styleString, final SComponent component) {
         if (component != null && component.getFont() != null) {
             final SFont font = component.getFont();
             styleString.append("font-size:").append(font.getSize()).append("pt;");
@@ -349,7 +348,7 @@ public final class Utils {
      * Appends a CSS inline style string for the preferred size of the passed component to the passed stringbuffer.
      * <p>Sample: <code>width:100%;heigth=15px"</code>
      */
-    public static SStringBuilder appendCSSInlineSize(SStringBuilder styleString, SComponent component) {
+    public static StringBuilder appendCSSInlineSize(StringBuilder styleString, SComponent component) {
         if (component == null)
             return styleString;
         SDimension preferredSize = component.getPreferredSize();
@@ -378,7 +377,7 @@ public final class Utils {
         return styleString;
     }
 
-    public static SStringBuilder generateCSSInlineBorder(SStringBuilder styles, int borderSize) {
+    public static StringBuilder generateCSSInlineBorder(StringBuilder styles, int borderSize) {
         if (borderSize > 0) {
             styles.append("border:").append(borderSize).append("px solid black;");
         }
@@ -421,15 +420,15 @@ public final class Utils {
      * on an outer, sized HTML element. Otherwise the component would appear to small (as size is applied only
      * on the invisible outer limiting element)
      *
-     * @param pSStringBuilder buffer to append to
+     * @param pStringBuilder buffer to append to
      * @param pComponent      preferredSize trigger dimension
      */
-    public static void appendCSSInlineFullSize(SStringBuilder pSStringBuilder, SComponent pComponent) {
+    public static void appendCSSInlineFullSize(StringBuilder pStringBuilder, SComponent pComponent) {
         SDimension preferredSize = pComponent.getPreferredSize();
         if (preferredSize != null &&
             (!SDimension.AUTO.equals(preferredSize.getWidth()) || !SDimension.AUTO.equals(preferredSize.getHeight())))
         {
-            pSStringBuilder.append("width:100%;height:100%;");
+            pStringBuilder.append("width:100%;height:100%;");
         }
     }
 
@@ -612,7 +611,7 @@ public final class Utils {
      * (value != null && value.length > 0), the attrib is added otherwise
      * it is left out
      */
-    public static void optAttribute(final Device d, String attr, final SStringBuilder value)
+    public static void optAttribute(final Device d, String attr, final StringBuilder value)
             throws IOException {
         optAttribute(d, attr, value != null ? value.toString() : null);
     }
@@ -738,7 +737,7 @@ public final class Utils {
      * of <code>String</code> and the values one of the following
      * classes.<br/>
      * <ul>
-     * <li>org.wings.util.SStringBuilder</li>
+     * <li>org.wings.util.StringBuilder</li>
      * <li>java.lang.String</li>
      * <li>java.awt.Color</li>
      * <li>org.wings.Renderable</li>
@@ -762,8 +761,8 @@ public final class Utils {
                     String attr = (String) key;
 
                     Object value = entries.getValue();
-                    if (value instanceof SStringBuilder) {
-                        Utils.optAttribute(d, attr, (SStringBuilder) value);
+                    if (value instanceof StringBuilder) {
+                        Utils.optAttribute(d, attr, (StringBuilder) value);
                     } else if (value instanceof String) {
                         Utils.optAttribute(d, attr, (String) value);
                     } else if (value instanceof Color) {
@@ -930,7 +929,7 @@ public final class Utils {
         try {
             in = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
             reader = new BufferedReader(new InputStreamReader(in));
-            SStringBuilder buffer = new SStringBuilder();
+            StringBuilder buffer = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
                 buffer.append(line).append("\n");
@@ -984,7 +983,7 @@ public final class Utils {
 
         // more than one word
         StringTokenizer tokenizer = new StringTokenizer(words, " ");
-        SStringBuilder returnValue = new SStringBuilder();
+        StringBuilder returnValue = new StringBuilder();
         while (tokenizer.hasMoreElements()) {
             returnValue.append(tokenizer.nextToken()).append(wordSuffix);
             if (tokenizer.hasMoreTokens()) {
@@ -1001,7 +1000,7 @@ public final class Utils {
      * @param component   Component may be <code>null</code> and may have a <code>null</code> style string.
      * @param styleString The style string to append
      */
-    public static SStringBuilder joinStyles(final SComponent component, final SStringBuilder styleString) {
+    public static StringBuilder joinStyles(final SComponent component, final StringBuilder styleString) {
         if (component != null && component.getStyle() != null) {
             if (styleString != null) {
                 styleString.insert(0, " ");
@@ -1009,7 +1008,7 @@ public final class Utils {
                 return styleString;
             }
             else {
-                return new SStringBuilder(component.getStyle());
+                return new StringBuilder(component.getStyle());
             }
         }
         else {
@@ -1095,13 +1094,13 @@ public final class Utils {
      * @return javascript code fragment n the form of <code>,new Array(function(){...},function(){...})</code>
      */
     public static String collectJavaScriptListenerCode(final SComponent component, final String javascriptEventType) {
-        SStringBuilder script = null;
+        StringBuilder script = null;
         JavaScriptListener[] eventListeners = getEventTypeListeners(component, javascriptEventType);
         if (eventListeners != null && eventListeners.length > 0) {
             for (int i = 0; i < eventListeners.length; ++i) {
                 if (eventListeners[i].getCode() != null) {
                     if (script == null) {
-                        script = new SStringBuilder(64);
+                        script = new StringBuilder(64);
                     }
                     if (i > 0) {
                         script.append(",");
@@ -1136,9 +1135,9 @@ public final class Utils {
         return result.toArray(new JavaScriptListener[result.size()]);
     }
 
-    public static SStringBuilder inlineStyles(Style tabAreaStyle) {
+    public static StringBuilder inlineStyles(Style tabAreaStyle) {
         if (tabAreaStyle != null) {
-            SStringBuilder tabArea = new SStringBuilder();
+            StringBuilder tabArea = new StringBuilder();
             tabArea.append(tabAreaStyle.toString());
             return tabArea;
         }
@@ -1176,7 +1175,7 @@ public final class Utils {
             boolean widthSet = width != null && !"".equals(width) && !SDimension.AUTO.equals(width);
             String height = dim.getHeight();
             boolean heightSet = height != null && !"".equals(height) && !SDimension.AUTO.equals(height);
-            SStringBuilder style = new SStringBuilder();
+            StringBuilder style = new StringBuilder();
             if (widthSet) {
                 style.append("width:100%;");
             }
@@ -1194,8 +1193,8 @@ public final class Utils {
      * @param insets The insets to generate CSS padding declaration
      * @return Empty or filled stringbuffer with padding declaration
      */
-    public static SStringBuilder createInlineStylesForInsets(Insets insets) {
-        return createInlineStylesForInsets(new SStringBuilder(), insets);
+    public static StringBuilder createInlineStylesForInsets(Insets insets) {
+        return createInlineStylesForInsets(new StringBuilder(), insets);
     }
 
     /**
@@ -1228,7 +1227,7 @@ public final class Utils {
      * @param insets The insets to generate CSS padding declaration
      * @return Empty or filled stringbuffer with padding declaration
      */
-    public static SStringBuilder createInlineStylesForInsets(SStringBuilder styles, Insets insets) {
+    public static StringBuilder createInlineStylesForInsets(StringBuilder styles, Insets insets) {
         if (insets != null && (insets.top > 0 || insets.left > 0 || insets.right > 0 || insets.bottom > 0)) {
             if (insets.top == insets.left && insets.left == insets.right && insets.right == insets.bottom) {
                 styles.append("padding:").append(insets.top).append("px;");
@@ -1553,7 +1552,7 @@ public final class Utils {
 
     public static String getInlineStyles(SComponent component) {
         // write inline styles
-        final SStringBuilder builder = new SStringBuilder();
+        final StringBuilder builder = new StringBuilder();
 
         appendCSSInlineSize(builder, component);
 

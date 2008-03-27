@@ -15,7 +15,6 @@ package org.wings.plaf.css;
 import org.wings.session.Browser;
 import org.wings.session.SessionManager;
 import org.wings.util.PropertyDiscovery;
-import org.wings.util.SStringBuilder;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -29,7 +28,7 @@ public class CSSLookAndFeel  extends org.wings.plaf.LookAndFeel {
     }
 
     private static Properties loadProperties() throws IOException {
-        final SStringBuilder propertyFile = new SStringBuilder();
+        final StringBuilder propertyFile = new StringBuilder();
 
         // check for default PLAF properties under org/wings/plaf/css/default.properties
         propertyFile.append(PROPERTIES_DEFAULTFILE_PREFIX).append(".properties");

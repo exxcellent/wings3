@@ -15,7 +15,6 @@ package org.wings.session;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.UploadFilterManager;
-import org.wings.util.SStringBuilder;
 import org.wings.util.LocaleCharSet;
 
 import javax.servlet.ServletInputStream;
@@ -290,7 +289,7 @@ public final class MultipartRequest extends HttpServletRequestWrapper {
         MultipartInputStream mimeStream = null;
 
         ByteArrayOutputStream headerByteArray;
-        SStringBuilder content = new SStringBuilder();
+        StringBuilder content = new StringBuilder();
         HashMap headers = null;
         int currentByte = 0;
         int currentPos = 0;
@@ -759,7 +758,7 @@ public final class MultipartRequest extends HttpServletRequestWrapper {
             String encoding = getRequest().getCharacterEncoding() != null ? getRequest().getCharacterEncoding() : LocaleCharSet.DEFAULT_ENCODING;
 
             try {
-                SStringBuilder buffer = new SStringBuilder();
+                StringBuilder buffer = new StringBuilder();
                 buffer.append("dir=");
                 buffer.append(URLEncoder.encode(getDir(), encoding));
                 if (getFileName() != null) {

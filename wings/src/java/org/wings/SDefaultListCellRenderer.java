@@ -12,10 +12,6 @@
  */
 package org.wings;
 
-import org.wings.util.SStringBuilder;
-
-
-
 /**
  * Default implementation of a {@link SListCellRenderer}.
  *
@@ -23,7 +19,7 @@ import org.wings.util.SStringBuilder;
  */
 public class SDefaultListCellRenderer extends SLabel implements SListCellRenderer {
 
-    private SStringBuilder nameBuffer = new SStringBuilder();
+    private StringBuilder nameBuffer = new StringBuilder();
     /**
      * Style class to use for the foreground for selected nodes.
      */

@@ -17,7 +17,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.plaf.ComponentCG;
 import org.wings.plaf.Update;
-import org.wings.util.SStringBuilder;
 
 /**
  * Default implementation of the reload manager.
@@ -237,10 +236,10 @@ public class DefaultReloadManager implements ReloadManager {
      * Return the path of the component. The first character denotes the depth of the path.
      */
     private String getPath(SComponent component) {
-        return getPath(new SStringBuilder("0"), component).toString();
+        return getPath(new StringBuilder("0"), component).toString();
     }
 
-    private SStringBuilder getPath(SStringBuilder builder, SComponent component) {
+    private StringBuilder getPath(StringBuilder builder, SComponent component) {
         if (component == null)
             return builder;
         if (component.getClientProperty("drm:realParentComponent") != null) {
@@ -256,7 +255,7 @@ public class DefaultReloadManager implements ReloadManager {
     private void printAllUpdates(String header) {
         log.debug(header);
         int numberOfUpdates = 0;
-        SStringBuilder output = new SStringBuilder(512);
+        StringBuilder output = new StringBuilder(512);
         for (SComponent component : getDirtyComponents()) {
             output.setLength(0);
             output.append("    ").append(component + ":");

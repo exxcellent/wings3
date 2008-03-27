@@ -28,7 +28,6 @@ import org.wings.plaf.css.script.OnHeadersLoadedScript;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.session.ScriptManager;
-import org.wings.util.SStringBuilder;
 import org.wingx.XPopupFrame;
 
 public class PopupFrameCG extends AbstractComponentCG implements org.wingx.plaf.PopupFrameCG, SParentFrameListener {
@@ -47,7 +46,7 @@ public class PopupFrameCG extends AbstractComponentCG implements org.wingx.plaf.
 
         XPopupFrame popup = (XPopupFrame) component;
 
-        SStringBuilder code = new SStringBuilder("function() {");
+        StringBuilder code = new StringBuilder("function() {");
         code
                 .append("popupFrame = new wingS.PopupFrame('").append(popup.getName()).append("',")
                 .append(popup.getWidth()).append(",")

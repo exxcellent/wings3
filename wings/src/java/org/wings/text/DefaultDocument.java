@@ -15,7 +15,6 @@ package org.wings.text;
 import org.wings.event.SDocumentEvent;
 import org.wings.event.SDocumentListener;
 import org.wings.util.EditTranscriptGenerator;
-import org.wings.util.SStringBuilder;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.EventListenerList;
@@ -29,7 +28,7 @@ import java.util.List;
  * @author hengels
  */
 public class DefaultDocument implements SDocument {
-    private final SStringBuilder buffer = new SStringBuilder();
+    private final StringBuilder buffer = new StringBuilder();
     private EventListenerList listeners = null;
 
     /**

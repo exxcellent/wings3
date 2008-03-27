@@ -13,7 +13,6 @@
 package org.wings;
 
 import org.wings.io.Device;
-import org.wings.util.SStringBuilder;
 import org.wings.session.Session;
 import org.wings.session.SessionManager;
 import org.apache.commons.logging.Log;
@@ -41,7 +40,7 @@ public class RequestURL extends SimpleURL {
 
     private String resource;
 
-    private SStringBuilder parameters = null;
+    private StringBuilder parameters = null;
 
     /**
      * Current session encoding used for URLEncoder.
@@ -62,8 +61,8 @@ public class RequestURL extends SimpleURL {
         this.hasQuestMark = other.hasQuestMark;
         this.eventEpoch = other.eventEpoch;
         this.resource = other.resource;
-        SStringBuilder params = other.parameters;
-        parameters = (params == null) ? null : new SStringBuilder(params.toString());
+        StringBuilder params = other.parameters;
+        parameters = (params == null) ? null : new StringBuilder(params.toString());
     }
 
 
@@ -117,7 +116,7 @@ public class RequestURL extends SimpleURL {
     public RequestURL addParameter(String parameter) {
         if (parameter != null) {
             if (parameters == null)
-                parameters = new SStringBuilder();
+                parameters = new StringBuilder();
             else
                 parameters.append("&amp;");
             parameters.append(recode(parameter));
@@ -219,7 +218,7 @@ public class RequestURL extends SimpleURL {
      * all paramters given.
      */
     public String toString() {
-        SStringBuilder erg = new SStringBuilder();
+        StringBuilder erg = new StringBuilder();
 
         if (baseURL != null) {
             erg.append(baseURL);

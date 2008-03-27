@@ -29,7 +29,7 @@ public class KeystrokeUtil {
 
     public static String keyStroke2String(KeyStroke key) {
         if (key == null) return "";
-        SStringBuilder s = new SStringBuilder(50);
+        StringBuilder s = new StringBuilder(50);
         int m = key.getModifiers();
 
         if ((m & (InputEvent.CTRL_DOWN_MASK|InputEvent.CTRL_MASK)) != 0) {

@@ -1,6 +1,5 @@
 package org.wings.plaf.css.script;
 
-import org.wings.util.SStringBuilder;
 import org.wings.script.ScriptListener;
 
 public class OnHeadersLoadedScript
@@ -27,7 +26,7 @@ public class OnHeadersLoadedScript
     }
 
     public String getScript() {
-        final SStringBuilder output = new SStringBuilder();
+        final StringBuilder output = new StringBuilder();
 
         output.append("wingS.global.onHeadersLoaded(");
         if (wrapAsFunction) output.append("function() {");

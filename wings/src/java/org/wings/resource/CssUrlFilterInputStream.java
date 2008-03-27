@@ -3,7 +3,6 @@ package org.wings.resource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.externalizer.ExternalizeManager;
-import org.wings.util.SStringBuilder;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -77,7 +76,7 @@ public class CssUrlFilterInputStream extends BufferedInputStream {
      * @throws IOException
      */
     private void substitute() throws IOException {
-        SStringBuilder classPathBuffer = new SStringBuilder();
+        StringBuilder classPathBuffer = new StringBuilder();
         int tempBuffer = super.read();
         while (tempBuffer != -1 && tempBuffer != ')') {
             classPathBuffer.append((char)tempBuffer);
@@ -121,7 +120,7 @@ public class CssUrlFilterInputStream extends BufferedInputStream {
             log.debug("Could not find resource: " + e.getMessage());
             return "";
         }
-        SStringBuilder imageUrl = new SStringBuilder("'");
+        StringBuilder imageUrl = new StringBuilder("'");
         imageUrl.append(extManager.externalize(res, ExternalizeManager.GLOBAL));
         imageUrl.append("'");
         return imageUrl.toString();

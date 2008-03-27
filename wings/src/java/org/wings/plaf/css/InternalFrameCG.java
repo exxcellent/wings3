@@ -25,7 +25,6 @@ import org.wings.plaf.css.script.OnPageRenderedScript;
 import org.wings.plaf.Update;
 import org.wings.resource.ResourceManager;
 import org.wings.session.ScriptManager;
-import org.wings.util.SStringBuilder;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -97,7 +96,7 @@ public class InternalFrameCG extends AbstractComponentCG implements
         // write the actual content
         if (!frame.isIconified()) {
             device.print("<div class=\"WindowContent\"");
-            SStringBuilder contentArea = Utils.inlineStyles(frame.getDynamicStyle(SInternalFrame.SELECTOR_CONTENT));
+            StringBuilder contentArea = Utils.inlineStyles(frame.getDynamicStyle(SInternalFrame.SELECTOR_CONTENT));
             Utils.optAttribute(device, "style", contentArea);
             device.print(">");
 
@@ -123,7 +122,7 @@ public class InternalFrameCG extends AbstractComponentCG implements
         device.print(frame.getName());
         device.print("_titlebar\"");
 
-        SStringBuilder titleArea = Utils.inlineStyles(frame.getDynamicStyle(SInternalFrame.SELECTOR_TITLE));
+        StringBuilder titleArea = Utils.inlineStyles(frame.getDynamicStyle(SInternalFrame.SELECTOR_TITLE));
         Utils.optAttribute(device, "style", titleArea);
         device.print(">");
 

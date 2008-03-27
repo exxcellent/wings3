@@ -12,10 +12,8 @@
  */
 package org.wings.plaf.css;
 
-
 import org.wings.*;
 import org.wings.plaf.Update;
-import org.wings.util.SStringBuilder;
 import org.wings.io.Device;
 
 import java.io.IOException;
@@ -77,7 +75,7 @@ public class ButtonCG extends AbstractLabelCG implements org.wings.plaf.ButtonCG
         Utils.printClickability(device, button, button.getToggleSelectionParameter(), button.isEnabled(), button.getShowAsFormComponent());
 
         String style = button.getStyle();
-        SStringBuilder className = new SStringBuilder(style != null ? style : "SButton");
+        StringBuilder className = new StringBuilder(style != null ? style : "SButton");
         if (button.getShowAsFormComponent())
             className.append("_form");
         if (!button.isEnabled())

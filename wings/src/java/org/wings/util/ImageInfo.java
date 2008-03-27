@@ -401,7 +401,7 @@ public class ImageInfo {
                     {
                         int extensionType = read();
                         if (collectComments && extensionType == 0xfe) {
-                            SStringBuilder sb = new SStringBuilder();
+                            StringBuilder sb = new StringBuilder();
                             int n;
                             do {
                                 n = read();
@@ -1103,10 +1103,10 @@ public class ImageInfo {
     }
 
     private String readLine() throws IOException {
-        return readLine(new SStringBuilder());
+        return readLine(new StringBuilder());
     }
 
-    private String readLine(SStringBuilder sb) throws IOException {
+    private String readLine(StringBuilder sb) throws IOException {
         boolean finished;
         do {
             int value = read();
@@ -1180,7 +1180,7 @@ public class ImageInfo {
     }
 
     private String readLine(int firstChar) throws IOException {
-        SStringBuilder result = new SStringBuilder();
+        StringBuilder result = new StringBuilder();
         result.append((char) firstChar);
         return readLine(result);
     }

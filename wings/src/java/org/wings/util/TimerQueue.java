@@ -213,10 +213,10 @@ public final class TimerQueue
     }
 
     public synchronized String toString() {
-        SStringBuilder buf;
+        StringBuilder buf;
         Timer nextTimer;
 
-        buf = new SStringBuilder();
+        buf = new StringBuilder();
         buf.append("TimerQueue (");
 
         nextTimer = firstTimer;

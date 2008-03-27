@@ -12,7 +12,6 @@
  */
 package org.wings.plaf.css;
 
-
 import org.wings.*;
 import org.wings.io.Device;
 import org.wings.io.StringBuilderDevice;
@@ -20,7 +19,6 @@ import org.wings.plaf.CGManager;
 import org.wings.plaf.Update;
 import org.wings.plaf.css.script.OnPageRenderedScript;
 import org.wings.script.*;
-import org.wings.util.SStringBuilder;
 
 import java.io.IOException;
 
@@ -95,7 +93,7 @@ public final class ComboBoxCG extends AbstractComponentCG implements org.wings.p
 
             if (cellRenderer != null) {
                 Utils.optAttribute(device, "title", cellRenderer.getToolTipText());
-                SStringBuilder buffer = Utils.generateCSSComponentInlineStyle(cellRenderer);
+                StringBuilder buffer = Utils.generateCSSComponentInlineStyle(cellRenderer);
                 Utils.optAttribute(device, "style", buffer.toString());
             }
 

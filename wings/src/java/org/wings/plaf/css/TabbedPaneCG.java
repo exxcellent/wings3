@@ -12,9 +12,7 @@
  */
 package org.wings.plaf.css;
 
-
 import org.wings.*;
-import org.wings.util.SStringBuilder;
 import org.wings.io.Device;
 import org.wings.plaf.css.script.LayoutFillScript;
 import org.wings.session.Browser;
@@ -76,8 +74,8 @@ public class TabbedPaneCG extends AbstractComponentCG {
         if (tabbedPane.getTabCount() > 0) {
             final int placement = tabbedPane.getTabPlacement();
 
-            SStringBuilder tabArea = Utils.inlineStyles(component.getDynamicStyle(STabbedPane.SELECTOR_TABS));
-            SStringBuilder contentArea = Utils.inlineStyles(component.getDynamicStyle(STabbedPane.SELECTOR_CONTENT));
+            StringBuilder tabArea = Utils.inlineStyles(component.getDynamicStyle(STabbedPane.SELECTOR_TABS));
+            StringBuilder contentArea = Utils.inlineStyles(component.getDynamicStyle(STabbedPane.SELECTOR_CONTENT));
 
             SDimension preferredSize = component.getPreferredSize();
             String height = preferredSize != null ? preferredSize.getHeight() : null;
@@ -184,9 +182,9 @@ public class TabbedPaneCG extends AbstractComponentCG {
         // substitute whitespaces for konqueror and ie5.0x
         final boolean nbspWorkaround = browser.getBrowserType().equals(BrowserType.KONQUEROR);
 
-        SStringBuilder selectedTab = Utils.inlineStyles(tabbedPane.getDynamicStyle(STabbedPane.SELECTOR_SELECTED_TAB));
-        SStringBuilder unselectedTab = Utils.inlineStyles(tabbedPane.getDynamicStyle(STabbedPane.SELECTOR_UNSELECTED_TAB));
-        SStringBuilder disabledTab = Utils.inlineStyles(tabbedPane.getDynamicStyle(STabbedPane.SELECTOR_DISABLED_TAB));
+        StringBuilder selectedTab = Utils.inlineStyles(tabbedPane.getDynamicStyle(STabbedPane.SELECTOR_SELECTED_TAB));
+        StringBuilder unselectedTab = Utils.inlineStyles(tabbedPane.getDynamicStyle(STabbedPane.SELECTOR_UNSELECTED_TAB));
+        StringBuilder disabledTab = Utils.inlineStyles(tabbedPane.getDynamicStyle(STabbedPane.SELECTOR_DISABLED_TAB));
 
         for (int i = 0; i < tabbedPane.getTabCount(); i++) {
             final SIcon icon = tabbedPane.getIconAt(i);
@@ -211,7 +209,7 @@ public class TabbedPaneCG extends AbstractComponentCG {
                 Utils.optAttribute(device, "foc", tabbedPane.getName());
             }
 
-            final SStringBuilder cssClassName = new SStringBuilder("STabbedPane_Tab_");
+            final StringBuilder cssClassName = new StringBuilder("STabbedPane_Tab_");
             cssClassName.append(placements.get(tabbedPane.getTabPlacement()));
             if (i == tabbedPane.getSelectedIndex()) {
                 cssClassName.append(" STabbedPane_Tab_selected");

@@ -26,7 +26,6 @@ import org.wings.session.Session;
 import org.wings.session.SessionManager;
 import org.wings.style.*;
 import org.wings.util.ComponentVisitor;
-import org.wings.util.SStringBuilder;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -1294,7 +1293,7 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * @return a string containing all properties
      */
     protected String paramString() {
-        SStringBuilder buffer = new SStringBuilder(getClass().getName());
+        StringBuilder buffer = new StringBuilder(getClass().getName());
         buffer.append("[");
 
         try {

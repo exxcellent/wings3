@@ -23,7 +23,6 @@ import org.wings.plaf.css.UpdateHandler;
 import org.wings.plaf.css.Utils;
 import org.wings.plaf.css.script.OnHeadersLoadedScript;
 import org.wings.session.ScriptManager;
-import org.wings.util.SStringBuilder;
 import org.wingx.XCalendar;
 
 /**
@@ -114,7 +113,7 @@ public class CalendarCG extends AbstractComponentCG<XCalendar> implements org.wi
             SimpleDateFormat format_weekdays_short = new SimpleDateFormat("EE");
             format_weekdays_short.setTimeZone(component.getTimeZone());
             
-            SStringBuilder script = new SStringBuilder("new wingS.calendar.XCalendar(")
+            StringBuilder script = new StringBuilder("new wingS.calendar.XCalendar(")
                 .append('"').append(component.getName()).append("\",\"")
                 .append(component.getParentFrame().getName()).append("\", {iframe:false,")
                 .append("months_long:").append(createMonthsString( format_months_long)).append(',')
@@ -128,7 +127,7 @@ public class CalendarCG extends AbstractComponentCG<XCalendar> implements org.wi
     }
 
     private String createMonthsString(Format format) {
-        SStringBuilder stringBuilder = new SStringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append('[');
         Calendar cal = new GregorianCalendar();
         cal.set(Calendar.MONTH, Calendar.JANUARY);
@@ -144,7 +143,7 @@ public class CalendarCG extends AbstractComponentCG<XCalendar> implements org.wi
     }
     
     private String createWeekdaysString(Format format) {
-        SStringBuilder stringBuilder = new SStringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append('[');
         Calendar cal = new GregorianCalendar();
         cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);

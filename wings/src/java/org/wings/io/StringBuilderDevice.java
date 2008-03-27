@@ -12,8 +12,6 @@
  */
 package org.wings.io;
 
-import org.wings.util.SStringBuilder;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
@@ -24,15 +22,15 @@ import java.io.Serializable;
  * @author <a href="mailto:ole@freiheit.com">Ole Langbehn</a>
  */
 public final class StringBuilderDevice implements Device, Serializable {
-    private SStringBuilder builder;
+    private StringBuilder builder;
     private transient ByteArrayOutputStream byteStream = null;
 
     public StringBuilderDevice() {
-        builder = new SStringBuilder(4 * 1024);
+        builder = new StringBuilder(4 * 1024);
     }
 
     public StringBuilderDevice(int capacity) {
-        builder = new SStringBuilder(capacity);
+        builder = new StringBuilder(capacity);
     }
 
     public String toString() {

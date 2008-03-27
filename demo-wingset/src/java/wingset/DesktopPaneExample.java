@@ -3,7 +3,6 @@ package wingset;
 import org.wings.*;
 import org.wings.style.CSSProperty;
 import org.wings.style.CSSStyleSheet;
-import org.wings.util.SStringBuilder;
 
 import java.awt.event.ActionEvent;
 import java.awt.*;
@@ -36,7 +35,7 @@ public class DesktopPaneExample extends WingSetPane {
             fillFrame(iFrame);
             // set some special contents & icons
             if ((i % 2) == 0) {
-                SStringBuilder labelText = new SStringBuilder("some extra label...");
+                StringBuilder labelText = new StringBuilder("some extra label...");
                 for (int j = 0; j <= i; j++) {
                     labelText.append("extra-");
                     iFrame.getContentPane().add(new SLabel(labelText.toString()));

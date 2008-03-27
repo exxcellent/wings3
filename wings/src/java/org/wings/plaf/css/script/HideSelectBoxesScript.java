@@ -1,7 +1,6 @@
 package org.wings.plaf.css.script;
 
 import org.wings.script.ScriptListener;
-import org.wings.util.SStringBuilder;
 
 public class HideSelectBoxesScript
     implements ScriptListener
@@ -16,7 +15,7 @@ public class HideSelectBoxesScript
     }
 
     public String getScript() {
-        final SStringBuilder script = new SStringBuilder();
+        final StringBuilder script = new StringBuilder();
         script.append("function hideSelectBoxes() {\n");
         script.append("    for (var i = 0; i < document.forms.length; i++) {\n");
         script.append("        for (var e = 0; e < document.forms[i].length; e++) {\n");

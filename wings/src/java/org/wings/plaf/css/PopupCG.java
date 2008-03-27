@@ -25,7 +25,6 @@ import java.io.IOException;
 import org.wings.io.StringBuilderDevice;
 import org.wings.plaf.css.dwr.CallableManager;
 import org.wings.plaf.css.script.OnHeadersLoadedScript;
-import org.wings.util.SStringBuilder;
 
 /**
  * CG for SPopup instances.
@@ -74,7 +73,7 @@ public final class PopupCG extends AbstractComponentCG implements org.wings.plaf
     }
 
     private String generateInitScript() {
-        SStringBuilder code = new SStringBuilder();
+        StringBuilder code = new StringBuilder();
 
         if (this.popup.isAnchored()) {
             code

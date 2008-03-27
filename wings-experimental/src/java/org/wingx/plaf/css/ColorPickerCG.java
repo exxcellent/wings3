@@ -32,7 +32,6 @@ import org.wings.plaf.css.Utils;
 import org.wings.plaf.css.dwr.CallableManager;
 import org.wings.plaf.css.script.OnHeadersLoadedScript;
 import org.wings.session.ScriptManager;
-import org.wings.util.SStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wingx.XColorPicker;
@@ -77,23 +76,23 @@ public class ColorPickerCG extends AbstractComponentCG implements org.wingx.plaf
         String id = component.getName();
 
         component.putClientProperty("pickerPanelId", id);
-        component.putClientProperty("pickerHandleId", (new SStringBuilder(id).append("_pickerHandle")).toString());
-        component.putClientProperty("pickerId", (new SStringBuilder(id).append("_pickerDiv")).toString());
-        component.putClientProperty("pickerSwatchId", (new SStringBuilder(id).append("_pickerSwatch")).toString());
-        component.putClientProperty("selectorId", (new SStringBuilder(id).append("_selector")).toString());
-        component.putClientProperty("hueBackgroundId", (new SStringBuilder(id).append("_hueBg")).toString());
-        component.putClientProperty("hueThumbId", (new SStringBuilder(id).append("_hueThumb")).toString());
-        component.putClientProperty("pickerFormName", (new SStringBuilder(id).append("_pickerform")).toString());
+        component.putClientProperty("pickerHandleId", (new StringBuilder(id).append("_pickerHandle")).toString());
+        component.putClientProperty("pickerId", (new StringBuilder(id).append("_pickerDiv")).toString());
+        component.putClientProperty("pickerSwatchId", (new StringBuilder(id).append("_pickerSwatch")).toString());
+        component.putClientProperty("selectorId", (new StringBuilder(id).append("_selector")).toString());
+        component.putClientProperty("hueBackgroundId", (new StringBuilder(id).append("_hueBg")).toString());
+        component.putClientProperty("hueThumbId", (new StringBuilder(id).append("_hueThumb")).toString());
+        component.putClientProperty("pickerFormName", (new StringBuilder(id).append("_pickerform")).toString());
 
-        component.putClientProperty("pickerRvalId", (new SStringBuilder(id).append("_pickerrval")).toString());
-        component.putClientProperty("pickerGvalId", (new SStringBuilder(id).append("_pickergval")).toString());
-        component.putClientProperty("pickerBvalId", (new SStringBuilder(id).append("_pickerbval")).toString());
+        component.putClientProperty("pickerRvalId", (new StringBuilder(id).append("_pickerrval")).toString());
+        component.putClientProperty("pickerGvalId", (new StringBuilder(id).append("_pickergval")).toString());
+        component.putClientProperty("pickerBvalId", (new StringBuilder(id).append("_pickerbval")).toString());
 
-        component.putClientProperty("pickerHvalId", (new SStringBuilder(id).append("_pickerhval")).toString());
-        component.putClientProperty("pickerSvalId", (new SStringBuilder(id).append("_pickersval")).toString());
-        component.putClientProperty("pickerVvalId", (new SStringBuilder(id).append("_pickervval")).toString());
+        component.putClientProperty("pickerHvalId", (new StringBuilder(id).append("_pickerhval")).toString());
+        component.putClientProperty("pickerSvalId", (new StringBuilder(id).append("_pickersval")).toString());
+        component.putClientProperty("pickerVvalId", (new StringBuilder(id).append("_pickervval")).toString());
 
-        component.putClientProperty("pickerHexValId", (new SStringBuilder(id).append("_pickerhexval")).toString());
+        component.putClientProperty("pickerHexValId", (new StringBuilder(id).append("_pickerhexval")).toString());
     }
 
     protected void printPicker(Device device, SComponent component) throws IOException {
@@ -172,7 +171,7 @@ public class ColorPickerCG extends AbstractComponentCG implements org.wingx.plaf
         // prepare script
         XColorPicker picker = (XColorPicker)component;
         Color c = picker.getSelectedColor();
-        SStringBuilder code = new SStringBuilder("function() {");
+        StringBuilder code = new StringBuilder("function() {");
         code.append("new wingS.HSVColorPicker(")
         .append(component.getClientProperty("DWR_JS_OBJECT")).append(", ")
         .append(picker.getTimeout()).append(", ")

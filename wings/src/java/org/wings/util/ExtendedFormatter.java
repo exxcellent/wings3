@@ -28,7 +28,7 @@ public class ExtendedFormatter
     }
 
     public String format(LogRecord record) {
-        SStringBuilder msg = new SStringBuilder();
+        StringBuilder msg = new StringBuilder();
         msg.append(dateFormatter.format(new Date()));
         msg.append(" ");
         msg.append(record.getLevel());

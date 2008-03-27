@@ -14,7 +14,6 @@ package org.wings.style;
 
 import org.wings.SFont;
 import org.wings.io.Device;
-import org.wings.util.SStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -502,7 +501,7 @@ public class CSSStyleSheet implements StyleSheet {
 
         if (face != null && size != -1) {
             // use font property
-            SStringBuilder builder = new SStringBuilder();
+            StringBuilder builder = new StringBuilder();
             if (italic) {
                 builder.append("italic ");
             }

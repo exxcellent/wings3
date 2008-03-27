@@ -13,7 +13,6 @@
 package org.wings.style;
 
 import org.wings.Renderable;
-import org.wings.util.SStringBuilder;
 import org.wings.io.Device;
 
 import java.io.IOException;
@@ -265,7 +264,7 @@ public class CSSAttributeSet implements Renderable, Serializable, Cloneable {
     @Override
     public String toString() {
         if (cachedStringRepresentation == null) {
-            final SStringBuilder builder = new SStringBuilder();
+            final StringBuilder builder = new StringBuilder();
             if (map != null) {
                 for (Map.Entry<CSSProperty, String> entry : map.entrySet()) {
                     builder.append(entry.getKey());

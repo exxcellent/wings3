@@ -3,7 +3,6 @@ package org.wings.session;
 import org.wings.*;
 import org.wings.io.ServletDevice;
 import org.wings.io.Device;
-import org.wings.util.SStringBuilder;
 
 import java.io.*;
 
@@ -40,7 +39,7 @@ public class DefaultExceptionHandler
             versionLabel.setText("wingS " + Version.getVersion() + " / " + Version.getCompileTime());
 
             // build the stacktrace wrapped by pre'device so line breaks are preserved
-            SStringBuilder stackTrace = new SStringBuilder("<html><pre>");
+            StringBuilder stackTrace = new StringBuilder("<html><pre>");
             stackTrace.append(getStackTraceString(thrown));
             stackTrace.append("</pre>");
             errorStackTraceLabel.setText(stackTrace.toString());

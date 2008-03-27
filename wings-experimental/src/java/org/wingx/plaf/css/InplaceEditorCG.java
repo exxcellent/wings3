@@ -25,7 +25,6 @@ import org.wings.plaf.css.dwr.CallableManager;
 import org.wings.plaf.css.script.OnHeadersLoadedScript;
 import org.wings.resource.ResourceManager;
 import org.wings.session.ScriptManager;
-import org.wings.util.SStringBuilder;
 import org.wingx.XInplaceEditor;
 import org.wingx.XInplaceEditorInterface;
 
@@ -70,14 +69,14 @@ public class InplaceEditorCG extends LabelCG implements SParentFrameListener {
     }
 
     private String generateInitScript(XInplaceEditor inplace) {
-        SStringBuilder options = new SStringBuilder("{");
+        StringBuilder options = new StringBuilder("{");
         options
                 .append("cols: ").append(inplace.getCols()).append(",")
                 .append("rows: ").append(inplace.getRows()).append(",")
                 .append("timeout: ").append(inplace.getTimeout()).append(",")
                 .append("clickNotificationText: '").append(inplace.getClickNotificationText()).append("'}");
 
-        SStringBuilder script = new SStringBuilder("function () {new wingS.InplaceEditor(\"");
+        StringBuilder script = new StringBuilder("function () {new wingS.InplaceEditor(\"");
         script
                 .append(inplace.getName()).append("\", ")
                 .append(inplace.getClientProperty("DWR_JS_OBJECT")).append(", ")                

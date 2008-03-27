@@ -164,7 +164,7 @@ public class TimeMeasure {
      *                            longest is the reference.
      */
     public String print(boolean shortestIsReference) {
-        SStringBuilder result = new SStringBuilder();
+        StringBuilder result = new StringBuilder();
         long reference = findReferenceValue(shortestIsReference);
         Iterator it = measures.iterator();
         while (it.hasNext()) {

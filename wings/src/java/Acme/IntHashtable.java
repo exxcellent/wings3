@@ -7,8 +7,6 @@
 
 package Acme;
 
-import org.wings.util.SStringBuilder;
-
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
@@ -288,7 +286,7 @@ public class IntHashtable extends Dictionary implements Cloneable {
     /// Converts to a rather lengthy String.
     public synchronized String toString() {
         int max = size() - 1;
-        SStringBuilder buf = new SStringBuilder();
+        StringBuilder buf = new StringBuilder();
         Enumeration k = keys();
         Enumeration e = elements();
         buf.append("{");

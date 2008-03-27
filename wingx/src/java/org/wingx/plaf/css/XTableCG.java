@@ -18,7 +18,6 @@ import org.wings.plaf.CGManager;
 import org.wings.plaf.Update;
 import org.wings.*;
 import org.wings.session.SessionManager;
-import org.wings.util.SStringBuilder;
 import org.wings.io.Device;
 import org.wings.io.StringBuilderDevice;
 import org.wings.table.*;
@@ -363,7 +362,7 @@ public class XTableCG
         final SCellRendererPane rendererPane = table.getCellRendererPane();
         STableColumnModel columnModel = table.getColumnModel();
 
-        SStringBuilder headerArea = Utils.inlineStyles(table.getDynamicStyle(STable.SELECTOR_HEADER));
+        StringBuilder headerArea = Utils.inlineStyles(table.getDynamicStyle(STable.SELECTOR_HEADER));
         device.print("<tr class=\"header\"");
         Utils.optAttribute(device, "style", headerArea);
         device.print(">");
@@ -409,9 +408,9 @@ public class XTableCG
             int startX, int endX, int startY, int endY, int emptyIndex) throws IOException {
         final SListSelectionModel selectionModel = table.getSelectionModel();
 
-        SStringBuilder selectedArea = Utils.inlineStyles(table.getDynamicStyle(STable.SELECTOR_SELECTED));
-        SStringBuilder evenArea = Utils.inlineStyles(table.getDynamicStyle(STable.SELECTOR_EVEN_ROWS));
-        SStringBuilder oddArea = Utils.inlineStyles(table.getDynamicStyle(STable.SELECTOR_ODD_ROWS));
+        StringBuilder selectedArea = Utils.inlineStyles(table.getDynamicStyle(STable.SELECTOR_SELECTED));
+        StringBuilder evenArea = Utils.inlineStyles(table.getDynamicStyle(STable.SELECTOR_EVEN_ROWS));
+        StringBuilder oddArea = Utils.inlineStyles(table.getDynamicStyle(STable.SELECTOR_ODD_ROWS));
         final SCellRendererPane rendererPane = table.getCellRendererPane();
         STableColumnModel columnModel = table.getColumnModel();
 
@@ -425,8 +424,8 @@ public class XTableCG
             Device device, XTable table, STableColumnModel columnModel,
             SListSelectionModel selectionModel, SCellRendererPane rendererPane,
             final int rowIndex, int startX, int endX,
-            int emptyIndex, SStringBuilder selectedArea,
-            SStringBuilder oddArea, SStringBuilder evenArea) throws IOException {
+            int emptyIndex, StringBuilder selectedArea,
+            StringBuilder oddArea, StringBuilder evenArea) throws IOException {
         if (rowIndex >= emptyIndex) {
             int colspan = endX - startX;
             device.print("<tr class=\"empty\">\n");
@@ -439,7 +438,7 @@ public class XTableCG
         }
 
         String rowStyle = table.getRowStyle(rowIndex);
-        SStringBuilder rowClass = new SStringBuilder(rowStyle != null ? rowStyle + " " : "");
+        StringBuilder rowClass = new StringBuilder(rowStyle != null ? rowStyle + " " : "");
         device.print("<tr");
         if (selectionModel.isSelectedIndex(rowIndex)) {
             Utils.optAttribute(device, "style", selectedArea);

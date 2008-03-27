@@ -15,8 +15,6 @@ package org.wings.style;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.wings.util.SStringBuilder;
-
 /**
  * A CSS parser. This works by way of a delegate that implements the
  * CSSParserCallback interface. The delegate is notified of the following
@@ -95,7 +93,7 @@ class CSSParser {
     /**
      * Temporary place to hold identifiers.
      */
-    private SStringBuilder unitBuffer;
+    private StringBuilder unitBuffer;
     /**
      * Used to indicate blocks.
      */
@@ -157,7 +155,7 @@ class CSSParser {
     CSSParser() {
         unitStack = new int[2];
         tokenBuffer = new char[80];
-        unitBuffer = new SStringBuilder();
+        unitBuffer = new StringBuilder();
     }
 
     void parse(Reader reader, CSSParserCallback callback,

@@ -27,7 +27,6 @@ import org.wings.session.ScriptManager;
 import org.wings.SComponent;
 import org.wings.io.Device;
 import java.io.IOException;
-import org.wings.util.SStringBuilder;
 import org.wings.header.SessionHeaders;
 
 /**
@@ -104,7 +103,7 @@ public class SliderCG extends AbstractComponentCG implements org.wings.plaf.Slid
 
         device.print("</div>");
 
-        String valId = (new SStringBuilder(id).append("_val")).toString();
+        String valId = (new StringBuilder(id).append("_val")).toString();
         device.print("<div");
         if (c.getOrientation() == VERTICAL) {
             Utils.optAttribute(device, "class", "SSliderValueRight");
@@ -123,9 +122,9 @@ public class SliderCG extends AbstractComponentCG implements org.wings.plaf.Slid
         device.print("</div></div>");
 
         // prepare script
-        String slider = (new SStringBuilder(id).append("_").append("slider")).toString();
+        String slider = (new StringBuilder(id).append("_").append("slider")).toString();
 
-        SStringBuilder code = new SStringBuilder("function() {");
+        StringBuilder code = new StringBuilder("function() {");
         code.append("var ").append(slider).append(" = YAHOO.widget.Slider.");
         if (HORIZONTAL == c.getOrientation()) {
             code.append("getHorizSlider(");
