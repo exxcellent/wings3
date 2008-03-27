@@ -5,7 +5,7 @@ package org.wings.io;
 import java.io.IOException;
 
 /**
- * This device buffers all input in an internal {@link org.wings.util.SStringBuilder}
+ * This device buffers all input in an internal {@link java.lang.StringBuilder}
  * until {@link Device#flush()} or {@link Device#close()}
  * is called.
  */
