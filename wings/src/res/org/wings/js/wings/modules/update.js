@@ -505,6 +505,13 @@ wingS.update.selectionTable = function(tableId, indexOffset, deselectedIndices,
     }
 
     var table = document.getElementById(tableId);
+    /**
+    * Workaround for tables with titled border.
+    * This is necessary as long as the fieldset id is equal to the table id.
+    */
+    if ( table.tagName == "FIELDSET" ) {
+        table = table.childNodes[1];
+    }
     var rows = table.rows;
 
     for (var i = 0; i < deselectedIndices.length; i++) {
