@@ -10,7 +10,6 @@ import org.wings.io.Device;
 import org.wings.portlet.Const;
 import org.wings.session.Session;
 import org.wings.session.SessionManager;
-import org.wings.util.SStringBuilder;
 
 /**
  * 
@@ -40,7 +39,7 @@ public class PortletRequestURL extends RequestURL {
 
 	private String resource;
 
-	private SStringBuilder parameters = null;
+	private StringBuilder parameters = null;
 
 	public PortletRequestURL() {
 		super();
@@ -62,8 +61,8 @@ public class PortletRequestURL extends RequestURL {
 		this.hasQuestMark = other.hasQuestMark;
 		this.eventEpoch = other.eventEpoch;
 		this.resource = other.resource;
-		SStringBuilder params = other.parameters;
-		parameters = (params == null) ? null : new SStringBuilder(params
+		StringBuilder params = other.parameters;
+		parameters = (params == null) ? null : new StringBuilder(params
 				.toString());
 	}
 
@@ -166,7 +165,7 @@ public class PortletRequestURL extends RequestURL {
 	public PortletRequestURL addParameter(String parameter) {
 		if (parameter != null) {
 			if (parameters == null)
-				parameters = new SStringBuilder();
+				parameters = new StringBuilder();
 			else
 				parameters.append("&amp;");
 			parameters.append(recode(parameter));
@@ -263,7 +262,7 @@ public class PortletRequestURL extends RequestURL {
 
 	@Override
 	public String toString() {
-		SStringBuilder erg = new SStringBuilder();
+		StringBuilder erg = new StringBuilder();
 
 		boolean printed = false;
 		String epoResString = "";
