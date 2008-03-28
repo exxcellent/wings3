@@ -17,7 +17,6 @@ import org.apache.commons.logging.LogFactory;
 import org.wings.PortletRequestURL;
 import org.wings.RequestURL;
 import org.wings.portlet.Const;
-import org.wings.util.SStringBuilder;
 import org.wings.externalizer.AbstractExternalizeManager;
 import org.wings.externalizer.ExternalizedResource;
 import org.wings.externalizer.SystemExternalizeManager;
@@ -286,7 +285,7 @@ public final class PortletWingServlet
 
 
             if (log.isDebugEnabled()) {
-                SStringBuilder message = new SStringBuilder()
+                StringBuilder message = new StringBuilder()
                         .append("session id: ").append(request.getRequestedSessionId())
                         .append(", created at: ")
                         .append(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)

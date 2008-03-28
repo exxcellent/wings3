@@ -25,7 +25,6 @@ import org.wings.io.*;
 import org.wings.portlet.Const;
 import org.wings.portlet.PortletParameterCodec;
 import org.wings.resource.*;
-import org.wings.util.SStringBuilder;
 
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
@@ -478,7 +477,7 @@ final class PortletSessionServlet
 	                    log.debug("Parameters:");
 	                    for (Enumeration e = req.getParameterNames(); e.hasMoreElements();) {
 	                        String paramName = (String) e.nextElement();
-	                        SStringBuilder param = new SStringBuilder();
+	                        StringBuilder param = new StringBuilder();
 	                        param.append("    ").append(paramName).append(": ");
 	                        final String[] values = req.getParameterValues(paramName);
 	                        param.append(values != null ? Arrays.toString(values) : "null");
