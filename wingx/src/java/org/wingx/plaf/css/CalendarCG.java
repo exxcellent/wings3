@@ -32,7 +32,7 @@ import org.wingx.XCalendar;
 public class CalendarCG extends AbstractComponentCG<XCalendar> implements org.wingx.plaf.CalendarCG<XCalendar> {
 
     private static final long serialVersionUID = 1L;
-    
+
     protected final static List<Header> headers;
 
     static {
@@ -47,7 +47,7 @@ public class CalendarCG extends AbstractComponentCG<XCalendar> implements org.wi
         }
 
         List<Header> headerList = new ArrayList<Header>();
-        headerList.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_CALENDAR));   
+        headerList.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_CALENDAR));
         headerList.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CALENDAR));
         headerList.add(Utils.createExternalizedJSHeader("org/wingx/calendar/calendar.js"));
         headers = Collections.unmodifiableList(headerList);
@@ -55,12 +55,12 @@ public class CalendarCG extends AbstractComponentCG<XCalendar> implements org.wi
 
     public CalendarCG() {
     }
-       
+
     public void installCG(XCalendar component) {
         super.installCG(component);
         SessionHeaders.getInstance().registerHeaders(headers);
     }
-    
+
     public void uninstallCG(XCalendar component) {
         super.uninstallCG(component);
         SessionHeaders.getInstance().deregisterHeaders(headers);
@@ -93,7 +93,7 @@ public class CalendarCG extends AbstractComponentCG<XCalendar> implements org.wi
         fTextField.write(device);
 
         device.print("\n</td><td class=\"bu\" width=\"1\">\n");
-        
+
         device.print("<input type=\"hidden\" id=\"").print(idValue)
               .print("\" name=\"").print(idValue)
               .print("\" value=\"").print(format(dateFormat, component.getDate()))
@@ -112,7 +112,7 @@ public class CalendarCG extends AbstractComponentCG<XCalendar> implements org.wi
             format_months_long.setTimeZone(component.getTimeZone());
             SimpleDateFormat format_weekdays_short = new SimpleDateFormat("EE");
             format_weekdays_short.setTimeZone(component.getTimeZone());
-            
+
             StringBuilder script = new StringBuilder("new wingS.calendar.XCalendar(")
                 .append('"').append(component.getName()).append("\",\"")
                 .append(component.getParentFrame().getName()).append("\", {iframe:false,")
@@ -120,10 +120,10 @@ public class CalendarCG extends AbstractComponentCG<XCalendar> implements org.wi
                 .append("weekdays_short:").append(createWeekdaysString( format_weekdays_short)).append(',')
                 .append("start_weekday:").append((Calendar.getInstance().getFirstDayOfWeek() - 1)).append("}")
                 .append(");");
-            
+
             ScriptManager.getInstance().addScriptListener(new OnHeadersLoadedScript(script.toString(), true));
         }
-            
+
     }
 
     private String createMonthsString(Format format) {
@@ -141,7 +141,7 @@ public class CalendarCG extends AbstractComponentCG<XCalendar> implements org.wi
         stringBuilder.append(']');
         return stringBuilder.toString();
     }
-    
+
     private String createWeekdaysString(Format format) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append('[');
@@ -157,7 +157,7 @@ public class CalendarCG extends AbstractComponentCG<XCalendar> implements org.wi
         stringBuilder.append(']');
         return stringBuilder.toString();
     }
-    
+
     private String format(DateFormat dateFormat, Date date) {
         return date != null ? dateFormat.format(date) : "";
     }
@@ -179,10 +179,10 @@ public class CalendarCG extends AbstractComponentCG<XCalendar> implements org.wi
 
         public Handler getHandler() {
             UpdateHandler handler = new UpdateHandler("value");
-            handler.addParameter(component.getName() + "val");
+            handler.addParameter("_cal_" + component.getName() + "_val");
             handler.addParameter(date == null ? "" : format.format(date));
             return handler;
         }
     }
-    
+
 }
