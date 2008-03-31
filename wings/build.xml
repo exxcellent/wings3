@@ -170,7 +170,7 @@
             <fileset dir="build/class"/>
             <fileset dir="src/res">
                 <exclude name="**/*.java.in"/>
-
+            	<exclude name="org/wings/js/yui/**"/>
             </fileset>
         	<fileset refid="yui.js.modules"/>
             <manifest>
