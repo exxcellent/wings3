@@ -41,6 +41,10 @@ wingS.dialog.SDialog._DEFAULT_CONFIG = {
 
 YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
 
+	x: -1,
+	
+	y: -1,
+
     shadowWidth: 0,
 
     init: function(el, userConfig) {
@@ -96,7 +100,14 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
 	 * @param {Object} obj
 	 */
 	moveHandler: function(type, args, obj) {
-		wingS.request.sendEvent(null, false, true, this.id + "_xy", args);
+		var xy = args[0];
+		
+		// Send events if position has been changed.
+		if (xy[0] != this.x || xy[1] != this.y) {
+			this.x = xy[0];
+			this.y = xy[1];
+			wingS.request.sendEvent(null, false, true, this.id + "_xy", args[0]);
+		}
 	},
 	
 	doSubmit: function() {
