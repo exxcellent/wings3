@@ -550,16 +550,8 @@ public class XTableCG
                                          final int row)
         throws IOException
     {
-        final STableCellRenderer rowSelectionRenderer = table.getRowSelectionRenderer();
         if (isSelectionColumnVisible(table)) {
-            if (rowSelectionRenderer instanceof SDefaultTableRowSelectionRenderer) {
-                SDefaultTableRowSelectionRenderer defaultTableRowSelectionRenderer = (SDefaultTableRowSelectionRenderer)rowSelectionRenderer;
-                defaultTableRowSelectionRenderer.setUseIcons(table.getSelectionMode() != SListSelectionModel.NO_SELECTION);
-            }
-            final SComponent comp = rowSelectionRenderer.getTableCellRendererComponent(table,
-                                                                                       table.getToggleSelectionParameter(row, -1),
-                                                                                       table.isRowSelected(row),
-                                                                                       row, -1);
+            final SComponent comp = getRowSelectionRenderer(table, row);
             final String columnStyle = Utils.joinStyles(comp, "num");
 
             device.print("<td valign=\"top\" align=\"right\"");
@@ -584,6 +576,19 @@ public class XTableCG
 
             device.print("</td>");
         }
+    }
+
+    private SComponent getRowSelectionRenderer(final STable table, final int row) {
+        final STableCellRenderer rowSelectionRenderer = table.getRowSelectionRenderer();
+        if (rowSelectionRenderer instanceof SDefaultTableRowSelectionRenderer) {
+            SDefaultTableRowSelectionRenderer defaultTableRowSelectionRenderer = (SDefaultTableRowSelectionRenderer)rowSelectionRenderer;
+            defaultTableRowSelectionRenderer.setUseIcons(table.getSelectionMode() != SListSelectionModel.NO_SELECTION);
+        }
+        final SComponent comp = rowSelectionRenderer.getTableCellRendererComponent(table,
+                                                                                   table.getToggleSelectionParameter(row, -1),
+                                                                                   table.isRowSelected(row),
+                                                                                   row, -1);
+        return comp;
     }
 
     public static void printClickability(final Device device, final SComponent component, final String eventValue,
@@ -712,7 +717,8 @@ public class XTableCG
                 final StringBuilderDevice htmlDevice = new StringBuilderDevice(512);
                 final SCellRendererPane rendererPane = component.getCellRendererPane();
                 for (Integer index : indices) {
-                    writeSelectionBody(htmlDevice, component, rendererPane, index);
+                    SComponent rowSelectionRenderer = getRowSelectionRenderer(component, index);
+                    rendererPane.writeComponent(htmlDevice, rowSelectionRenderer, component);
                     bodies.add(htmlDevice.toString());
                     htmlDevice.reset();
                 }
