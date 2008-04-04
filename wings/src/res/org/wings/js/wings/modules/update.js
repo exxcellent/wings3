@@ -505,12 +505,8 @@ wingS.update.selectionTable = function(tableId, indexOffset, deselectedIndices,
     }
 
     var table = document.getElementById(tableId);
-    /**
-    * Workaround for tables with titled border.
-    * This is necessary as long as the fieldset id is equal to the table id.
-    */
-    if ( table.tagName == "FIELDSET" ) {
-        table = table.childNodes[1];
+    if (table.tagName == "FIELDSET") {  // Workaround for tables with titled border: Necessary
+        table = table.childNodes[1];    // as long as the fieldset id is equal to the table id.
     }
     var rows = table.rows;
 
@@ -518,14 +514,14 @@ wingS.update.selectionTable = function(tableId, indexOffset, deselectedIndices,
         var tr = rows[deselectedIndices[i] + indexOffset];
         YAHOO.util.Dom.removeClass(tr, "selected");
         if (deselectedBodies != null) {
-            wingS.update.element(tr.cells[0], deselectedBodies[i]);
+            tr.cells[0].innerHTML = deselectedBodies[i];
         }
     }
     for (var i = 0; i < selectedIndices.length; i++) {
         var tr = rows[selectedIndices[i] + indexOffset];
         YAHOO.util.Dom.addClass(tr, "selected");
         if (selectedBodies != null) {
-            wingS.update.element(tr.cells[0], selectedBodies[i]);
+            tr.cells[0].innerHTML = selectedBodies[i];
         }
     }
 };
