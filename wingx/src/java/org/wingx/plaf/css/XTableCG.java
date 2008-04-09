@@ -12,7 +12,6 @@
  */
 package org.wingx.plaf.css;
 
-import org.wings.plaf.Update.Handler;
 import org.wings.plaf.css.*;
 import org.wings.plaf.CGManager;
 import org.wings.plaf.Update;
@@ -716,8 +715,13 @@ public class XTableCG
             try {
                 final StringBuilderDevice htmlDevice = new StringBuilderDevice(512);
                 final SCellRendererPane rendererPane = component.getCellRendererPane();
+                Rectangle currentViewport = component.getViewportSize();
+                int viewportOffset = 0;
+                if (currentViewport != null) {
+                    viewportOffset += currentViewport.y;
+                }
                 for (Integer index : indices) {
-                    SComponent rowSelectionRenderer = getRowSelectionRenderer(component, index);
+                    SComponent rowSelectionRenderer = getRowSelectionRenderer(component, index + viewportOffset);
                     rendererPane.writeComponent(htmlDevice, rowSelectionRenderer, component);
                     bodies.add(htmlDevice.toString());
                     htmlDevice.reset();
