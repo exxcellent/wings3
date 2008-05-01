@@ -86,6 +86,17 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
     	
     };
     
+    private PropertyChangeListener fwdLocaleChange = new PropertyChangeListener() {
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			// Reload the component if the locale changes
+			if(evt.getPropertyName() == "locale") {
+				reload();
+			}
+		}
+    	
+    };
+    
     /**
      * Constructs the Calendar component using the current (Server) Time/Date for the current Day/Month/Year and the Servers locale with the DefaultCalendarModel
      */
@@ -156,6 +167,10 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 		//getSelectionModel().setSelectionMode(CalendarSelectionModel.MULTIPLE_APPOINTMENT_SELECTION | CalendarSelectionModel.MULTIPLE_DATE_SELECTION);		
 	}
 	
+	/**
+	 * Sets the CalendarModel
+	 * @param model
+	 */
 	public void setCalendarModel(CalendarModel model)
 	{
 		if(model == null)
@@ -165,11 +180,13 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 		
 		if(oldVal == null && model != null) {
 			this.model = model;
+			this.model.addPropertyChangeListener(fwdLocaleChange);
 			this.model.addCalendarViewChangeListener(fwdCalendarViewEvents);
 		} else if(oldVal != null && model != null) {
 			this.model = model;
-
+			oldVal.removePropertyChangeListener(fwdLocaleChange);
 			oldVal.removeCalendarViewChangeListener(fwdCalendarViewEvents);
+			this.model.removePropertyChangeListener(fwdLocaleChange);
 			this.model.addCalendarViewChangeListener(fwdCalendarViewEvents);
 		}
 		
@@ -272,7 +289,11 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	
 	*/
 	
-	private void setLocale(Locale locale)
+	/**
+	 * Sets the Locale of the Calendar
+	 * @param locale Locale to be set
+	 */
+	public void setLocale(Locale locale)
 	{
 		getCalendarModel().setLocale(locale);
 	}

@@ -1,5 +1,7 @@
 package calendar;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,6 +21,7 @@ import org.apache.commons.logging.LogFactory; */
  */
 public class DefaultCalendarModel implements CalendarModel {
 //	private static final Log LOG = LogFactory.getLog(DefaultCalendarModel.class);
+	private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 	private CalendarView view;
 	private Collection<IAppointment> appointments;
 	private Date visibleFrom;
@@ -364,6 +367,19 @@ public class DefaultCalendarModel implements CalendarModel {
 
 	@Override
 	public void setLocale(Locale locale) {
+		Locale oldVal = this.locale;
 		this.locale = locale;
+		
+		propertyChangeSupport.firePropertyChange("locale", oldVal, locale);
+	}
+
+	@Override
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		propertyChangeSupport.addPropertyChangeListener(listener);
+	}
+
+	@Override
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		propertyChangeSupport.removePropertyChangeListener(listener);
 	}
 }

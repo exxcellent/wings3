@@ -2,6 +2,7 @@ package calendar;
 
 import java.util.Collection;
 import java.util.Locale;
+import java.beans.PropertyChangeListener;
 import java.sql.Date;
 
 /**
@@ -120,7 +121,18 @@ public abstract interface CalendarModel {
 	 */
 	public Locale getLocale();
 	
+	/**
+	 * Adds a Property Change Listener to the CalendarSelectionModel
+	 * @param listener The Listener to be added to the CalendarSelectionModel 
+	 */
+	void addPropertyChangeListener(PropertyChangeListener listener);
 	
+	/**
+	 * Removes a Property Change Listener from the CalendarSelectionModel  
+	 * @param listener The Listener to be removed from the CalendarSelectionModel
+	 */
+	void removePropertyChangeListener(PropertyChangeListener listener);
+
 	/**
 	 * A Enumeration representing the current View at the Calendar (NONE, MONTH, WEEK, DAY)    
 	 * @author Florian roks
