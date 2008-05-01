@@ -33,9 +33,6 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	private CalendarModel model;
     private CalendarSelectionModel selectionModel;
     
-    private Collection<CalendarViewChangeListener> viewChangeListener;
-    private Collection<CalendarSelectionListener> selectionListener;
-
     private ModifierKeyStatus modifierKeyStatus = new ModifierKeyStatus();
     
     /**
@@ -88,18 +85,6 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
     	
     	
     };
-    
-    protected void fireCalendarViewChangeEvent(CalendarViewChangeEvent e) {
-    	for(CalendarViewChangeListener listener:viewChangeListener) {
-    		listener.valueChanged(e);
-    	}
-    }
-    
-    protected void fireCalendarSelectionEvent(CalendarSelectionEvent e) {
-    	for(CalendarSelectionListener listener:selectionListener) {
-    		listener.valueChanged(e);
-    	}
-    }
     
     /**
      * Constructs the Calendar component using the current (Server) Time/Date for the current Day/Month/Year and the Servers locale with the DefaultCalendarModel
@@ -155,9 +140,6 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 		CalendarCG calCG = new CalendarCG();
 		this.setCG(calCG);
 		
-		viewChangeListener = new ArrayList<CalendarViewChangeListener>();
-		selectionListener = new ArrayList<CalendarSelectionListener>();
-
 		if(model == null)
 			setCalendarModel(new DefaultCalendarModel());
 		else
@@ -347,7 +329,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	 */
 	public void addCalendarViewChangeListener(CalendarViewChangeListener listener)
 	{
-		viewChangeListener.add(listener);
+		getCalendarModel().addCalendarViewChangeListener(listener);
 	}
 	
 	/**
