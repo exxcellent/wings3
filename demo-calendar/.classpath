@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/devel/wings3/thirdparty/lib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="C:/devel/wings3/thirdparty/lib/servlet.jar"/>
+	<classpathentry kind="lib" path="C:/devel/wings3/wings/build/web/WEB-INF/lib/wings.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

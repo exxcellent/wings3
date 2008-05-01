@@ -1,0 +1,212 @@
+#AppointmentCalendar td
+{
+	height:100%; /* ie fix! */
+}
+
+/* Shared */
+#AppointmentCalendar #monthview,
+#AppointmentCalendar #weekview
+{ 
+	width:100%;
+	height:100%;
+	border-collapse:collapse;
+}
+
+/* Month View */
+#AppointmentCalendar #monthview thead th
+{
+	background-color:#fff;
+	font-style:italic;
+	font-weight:bold;
+	font-size:larger;
+	border:1px solid white;
+	text-align:center;
+	height:1px;
+}
+
+#AppointmentCalendar #monthview tbody td
+{
+	background-color:#eee;
+	border:1px solid white;
+	padding:2px;
+	vertical-align:top;
+	min-height:100px;
+	width:14%;
+ 	height:15%;
+	margin-left:1%;
+	margin-right:1%;
+	cursor:pointer;
+}
+
+#AppointmentCalendar #monthview tbody td span.dayofmonth
+{
+	font-weight:bold;
+}
+
+#AppointmentCalendar #monthview tbody td.notthismonth span.dayofmonth
+{
+	font-style:italic;
+	font-weight:normal;
+}
+
+#AppointmentCalendar #monthview tbody td:hover,
+#AppointmentCalendar #monthview tbody td.today:hover,
+#AppointmentCalendar #monthview tbody td.notthismonth:hover
+{
+	background-color:#fafafa;
+}
+
+#AppointmentCalendar #monthview tbody td.today
+{
+	background-color:#44ff44;
+}
+
+#AppointmentCalendar #monthview tbody td div.event
+{
+	border:1px solid black;
+	margin-bottom:2px;
+	margin-left:1px;
+	margin-right:1px;
+	width:98%;
+	height:18px;
+	text-align:center;
+	overflow:hidden;
+	background-color:white;
+	color:black;
+	cursor:pointer;
+}
+
+#AppointmentCalendar #monthview tbody td div.event:hover
+{
+	background-color:black;
+	color:white;
+}
+ 
+#AppointmentCalendar #monthview tbody td.notthismonth
+{
+	background-color:#e0e0e0;
+}
+
+#AppointmentCalendar #monthview tbody td.selected
+{
+	background-color:red;
+}
+
+#AppointmentCalendar #monthview tbody td div.selected
+{
+	border:1px solid black;
+	margin-bottom:2px;
+	margin-left:1px;
+	margin-right:1px;
+	width:98%;
+/*	height:16px; */
+	text-align:center;
+	background-color:red;
+	color:white;
+	text-align:center;
+	cursor:pointer;
+}
+
+/* Weekview */
+#AppointmentCalendar #weekview td
+{
+	width:14%;
+	height:100%;
+	vertical-align:top;
+	border:1px solid white;
+	cursor:pointer;
+}
+
+#AppointmentCalendar #weekview td.container
+{
+	background-color:#eee;
+}
+
+#AppointmentCalendar #weekview td.container-today
+{
+	background-color:#4f4;
+}
+
+
+#AppointmentCalendar #weekview td.container-today:hover,
+#AppointmentCalendar #weekview td.container:hover
+{
+	background-color:white;
+}
+
+#AppointmentCalendar #weekview div.weekdaytitle
+{
+	width:100%;
+	font-size:larger;
+	font-weight:bold;
+	border-bottom:1px solid white;
+	text-align:center;
+	background-color:#fff;
+}
+
+#AppointmentCalendar #weekview div.normalappointment,
+#AppointmentCalendar #weekview div.recurringappointment,
+#AppointmentCalendar #weekview div.alldayappointment
+{
+	width:98%;
+	text-align:left;
+	border:1px solid black;
+	margin-bottom:4px;
+	margin-left:1%;
+	margin-right:1%;
+
+	background-color:white;
+	color:black;
+}
+
+#AppointmentCalendar #weekview td.selected /* cell */
+{
+	background-color:red;
+}
+
+#AppointmentCalendar #weekview div.selected  /* appointment */
+{
+	width:98%;
+	text-align:left;
+	border:1px solid black;
+	margin-bottom:4px;
+	margin-left:1%;
+	margin-right:1%;
+
+	background-color:red;
+	color:black;
+}
+
+#AppointmentCalendar #weekview div.time
+{
+	font-weight:bold;
+}
+
+#AppointmentCalendar #weekview div.name,
+#AppointmentCalendar #weekview div.date
+{
+}
+
+#AppointmentCalendar #weekview div.additional
+{
+	display:none;
+}
+
+#AppointmentCalendar #weekview div.recurringweekdays
+{
+	font-size:smaller;
+}
+
+
+/* Calendar Popup */
+#AppointmentCalendar-Popup
+{
+	border:1px solid black;
+	background-color:white;
+	color:black;
+	position:absolute;
+	top:0px;
+ 	left:0px;
+	visibility:hidden;
+	text-align:left;
+}
