@@ -44,14 +44,8 @@ public abstract interface CalendarModel {
 	public abstract Collection<IAppointment> getAppointments(Date date);
 
 	/**
-	 * Sets the appointments, that the calendar can display
-	 * @param appointments The appointments, that the calendar can display
-	 */
-	public abstract void setAppointments(Collection <IAppointment> appointments);
-	
-	/**
 	 * Sets the <code>Date</code> that this Calendars view starts
-	 * @param visibleFrom The <code>Date</code> that this Calendars view (should) stop
+	 * @param visibleFrom The <code>Date</code> that this Calendars view (should) start
 	 */
 	public abstract void setVisibleFrom(Date visibleFrom);
 	
@@ -135,7 +129,7 @@ public abstract interface CalendarModel {
 
 	/**
 	 * A Enumeration representing the current View at the Calendar (NONE, MONTH, WEEK, DAY)    
-	 * @author Florian roks
+	 * @author Florian Roks
 	 *
 	 */
 	public enum CalendarView
@@ -149,6 +143,7 @@ public abstract interface CalendarModel {
 	/**
 	 * Must return a unique String for the appointment on date, to be used as a identifier 
 	 * looks in DefaultCalendarModel like: "YEAR:DAY_OF_YEAR:appointment_number_on_this_day"
+	 * NOTE: It isn't allowed to contain the semicolon ';', as it is used as seperator between values
 	 * @param date
 	 * @param appointment
 	 * @return

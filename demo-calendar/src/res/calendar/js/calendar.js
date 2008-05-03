@@ -47,16 +47,23 @@ AppCalendar.clickDate = function(date, event, eventName) {
 	return false;
 }
 
+AppCalendar.timeout = null;
+
 AppCalendar.loadPopup = function(element, event, eventName)
 {
 	if(!event) {
 		event = window.event;
 	}
 
+	AppCalendar.timeout = setTimeout("AppCalendar.showPopup('" + eventName + "', '" + element.id + "')", 500);
 	AppCalendar.updatePopupPosition(event);
-	document.getElementById('AppointmentCalendar-Popup').style.visibility = 'visible';
 	element.onmousemove = AppCalendar.updatePopupPosition;
-	wingS.request.sendEvent(null, false, true, eventName, "q:"+element.id, null);
+}
+
+AppCalendar.showPopup = function(eventName, elementID)
+{
+	document.getElementById(eventName + '-Popup').style.visibility = 'visible';
+	wingS.request.sendEvent(null, false, true, eventName, "q:"+elementID, null);
 }
 
 AppCalendar.updatePopupPosition = function(event)
@@ -94,6 +101,7 @@ AppCalendar.updatePopupPosition = function(event)
 AppCalendar.hidePopup = function(element)
 {
 	//document.getElementById('AppointmentCalendar-Popup').style.display = 'none';
+	clearTimeout(AppCalendar.timeout);
 	document.getElementById('AppointmentCalendar-Popup').style.visibility = 'hidden';
 	document.getElementById('AppointmentCalendar-Popup').innerHTML = "<span>...</span>";
 	//AppCalendar.swapColors(element);

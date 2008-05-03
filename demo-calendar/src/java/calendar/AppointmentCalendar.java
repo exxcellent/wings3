@@ -9,12 +9,8 @@ import calendar.CalendarModel.CalendarView;
 import calendar.plaf.CalendarCG;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.EnumSet;
-import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -226,42 +222,6 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 		return model;
 	}
 
-	/**
-	 * Generates and sets some test appointments for the current month
-	 */
-	public void generateAndSetTestAppointments2()
-	{
-		final long ONE_MINUTE_IN_MILLISECONDS = 60*1000; 
-		Collection<IAppointment> appointments = new ArrayList<IAppointment>();
-		
-		Calendar todayCal = Calendar.getInstance();
-		
-		Date startDate = new Date(todayCal.getTime().getTime());
-		Date endDate = new Date(todayCal.getTime().getTime()+120*ONE_MINUTE_IN_MILLISECONDS);
-		Appointment simpleEvent = new Appointment("NormalEvent lang lang lang lang lang lang lang", null, IAppointment.AppointmentType.NORMAL, startDate, endDate);
-		simpleEvent.setForegroundColor(Color.BLACK);
-		simpleEvent.setBackgroundColor(Color.MAGENTA);
-		appointments.add(simpleEvent);
-
-		
-		startDate = new Date(todayCal.getTime().getTime()+-3*24*60*ONE_MINUTE_IN_MILLISECONDS);
-		endDate = new Date(todayCal.getTime().getTime()+2*24*60*ONE_MINUTE_IN_MILLISECONDS);
-		Appointment alldayEvent = new Appointment("AlldayEvent", "Description", IAppointment.AppointmentType.ALLDAY, startDate, endDate);
-		alldayEvent.setForegroundColor(Color.WHITE);
-		alldayEvent.setBackgroundColor(Color.BLUE);
-		appointments.add(alldayEvent);
-
-		startDate = new Date(todayCal.getTime().getTime()+ -10*24*60*ONE_MINUTE_IN_MILLISECONDS);
-		endDate = new Date(todayCal.getTime().getTime()+10*24*60*ONE_MINUTE_IN_MILLISECONDS + 90*ONE_MINUTE_IN_MILLISECONDS);
-		
-		EnumSet<IAppointment.Weekday> weekdays = EnumSet.<IAppointment.Weekday>of(IAppointment.Weekday.SUNDAY, IAppointment.Weekday.TUESDAY);
-		Appointment recurringEvent = new Appointment("RecurringNormalEvent", "lang lang lang lang lang lang lagn", IAppointment.AppointmentType.NORMAL, startDate, endDate, weekdays);
-		recurringEvent.setForegroundColor(null);
-		recurringEvent.setBackgroundColor(null);
-		appointments.add(recurringEvent);
-		
-		getCalendarModel().setAppointments(appointments);
-}
 /*	
 	public void generateAndSetTestAppointments()
 	{

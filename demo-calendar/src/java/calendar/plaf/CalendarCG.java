@@ -84,7 +84,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	{
 		writeHeader(device, calendar);
 		
-		Calendar tempCal = Calendar.getInstance();
+//		Calendar tempCal = Calendar.getInstance();
 		tempCal.setTime(calendar.getCalendarModel().getVisibleFrom());
 
 		device.print("<table id=\"weekview\"><tr>");

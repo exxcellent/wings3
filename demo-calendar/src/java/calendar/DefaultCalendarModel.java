@@ -249,7 +249,11 @@ public class DefaultCalendarModel implements CalendarModel {
 		this.visibleUntil = visibleUntil;
 	}
 
-	@Override
+
+	/**
+	 * Sets the Appointments for this CalendarModel
+	 * @param appointments
+	 */
 	public void setAppointments(Collection<IAppointment> appointments) {
 		this.appointments = appointments;
 		

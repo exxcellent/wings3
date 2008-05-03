@@ -3,7 +3,11 @@ package calendar;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.EnumSet;
 import java.util.Locale;
 
 import org.apache.commons.logging.Log;
@@ -192,7 +196,7 @@ public class CalendarExample {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						calendar.generateAndSetTestAppointments2();
+						generateAndSetTestAppointments2();
 					}
 					
 				});
@@ -205,13 +209,13 @@ public class CalendarExample {
 
 						@Override
 						public void actionPerformed(ActionEvent arg0) {
-							String selection = (String)((SComboBox)arg0.getSource()).getSelectedItem();
-							if(selection == "Woche")
-								calendar.getCalendarModel().setView(CalendarView.WEEK);
-							if(selection == "Tag")
-								calendar.getCalendarModel().setView(CalendarView.DAY);
-							if(selection == "Monat")
+							int selection = ((SComboBox)arg0.getSource()).getSelectedIndex();
+							if(selection == 0)
 								calendar.getCalendarModel().setView(CalendarView.MONTH);
+							if(selection == 1)
+								calendar.getCalendarModel().setView(CalendarView.WEEK);
+							if(selection == 2)
+								calendar.getCalendarModel().setView(CalendarView.DAY);
 						}
 						
 					}
@@ -269,5 +273,40 @@ public class CalendarExample {
 		panel.add(comboBox2);
 		panel.add(comboBox3);
 		return panel;
+	}
+	/**
+	 * Generates and sets some test appointments for the current month
+	 */
+	private void generateAndSetTestAppointments2()
+	{
+		final long ONE_MINUTE_IN_MILLISECONDS = 60*1000; 
+		Collection<IAppointment> appointments = new ArrayList<IAppointment>();
+		
+		Calendar todayCal = Calendar.getInstance();
+		
+		Date startDate = new Date(todayCal.getTime().getTime());
+		Date endDate = new Date(todayCal.getTime().getTime()+120*ONE_MINUTE_IN_MILLISECONDS);
+		Appointment simpleEvent = new Appointment("NormalEvent lang lang lang lang lang lang lang", null, IAppointment.AppointmentType.NORMAL, startDate, endDate);
+		simpleEvent.setForegroundColor(Color.BLACK);
+		simpleEvent.setBackgroundColor(Color.MAGENTA);
+		appointments.add(simpleEvent);
+
+		
+		startDate = new Date(todayCal.getTime().getTime()+-3*24*60*ONE_MINUTE_IN_MILLISECONDS);
+		endDate = new Date(todayCal.getTime().getTime()+2*24*60*ONE_MINUTE_IN_MILLISECONDS);
+		Appointment alldayEvent = new Appointment("AlldayEvent", "Description", IAppointment.AppointmentType.ALLDAY, startDate, endDate);
+		alldayEvent.setForegroundColor(Color.WHITE);
+		alldayEvent.setBackgroundColor(Color.BLUE);
+		appointments.add(alldayEvent);
+
+		startDate = new Date(todayCal.getTime().getTime()+ -10*24*60*ONE_MINUTE_IN_MILLISECONDS);
+		endDate = new Date(todayCal.getTime().getTime()+10*24*60*ONE_MINUTE_IN_MILLISECONDS + 90*ONE_MINUTE_IN_MILLISECONDS);
+		
+		EnumSet<IAppointment.Weekday> weekdays = EnumSet.<IAppointment.Weekday>of(IAppointment.Weekday.SUNDAY, IAppointment.Weekday.TUESDAY);
+		Appointment recurringEvent = new Appointment("RecurringNormalEvent", "lang lang lang lang lang lang lagn", IAppointment.AppointmentType.NORMAL, startDate, endDate, weekdays);
+		recurringEvent.setForegroundColor(null);
+		recurringEvent.setBackgroundColor(null);
+		appointments.add(recurringEvent);
+		((DefaultCalendarModel)this.calendar.getCalendarModel()).setAppointments(appointments);
 	}
 }
