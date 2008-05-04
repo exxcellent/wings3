@@ -8,11 +8,18 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.TimeZone;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.property.DateProperty;
+import net.fortuna.ical4j.model.property.Description;
+import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.Sequence;
+import net.fortuna.ical4j.model.property.Summary;
 
 import calendar.Appointment;
 import calendar.DefaultCalendarModel;
@@ -46,8 +53,9 @@ public class ICalCalendarModel extends DefaultCalendarModel {
 			updateAppointments();
 			
 			propertyChangeSupport.firePropertyChange("uri", oldUri, this.uri);
-		} catch(Exception e) {
-			LOG.fatal(e.getMessage());
+		} catch(Throwable t) {
+			t.printStackTrace();
+			LOG.fatal("FATAL Error: " + t.getMessage());
 		}
 	}
 	
@@ -61,24 +69,35 @@ public class ICalCalendarModel extends DefaultCalendarModel {
 				continue;
 			
 			Appointment appointment = new Appointment();
+
+			if(component.getProperty("DTSTART") == null)
+			{
+				LOG.info("no Start date");
+				continue;
+			}
+			if(component.getProperty("DTEND") == null)
+			{
+				LOG.info("no end date");
+				continue;
+			}
+				
+			appointment.setAppointmentStartDate(new Date(((DtStart)component.getProperty("DTSTART")).getDate().getTime()));
+			appointment.setAppointmentEndDate(new Date(((DtEnd)component.getProperty("DTEND")).getDate().getTime()));
 			
-			for(Iterator<Property> j = component.getProperties().iterator(); j.hasNext();) {
-				Property property = j.next();
-				if(property.getName() == "DTSTART") {
-					Date date = parseDate(property.getValue());
-					appointment.setAppointmentStartDate(date);
-				}
-				if(property.getName() == "DTEND") {
-					Date date = parseDate(property.getValue());
-					appointment.setAppointmentEndDate(date);
-				}
-				if(property.getName() == "SUMMARY") {
-					appointment.setAppointmentName(property.getValue());
-				}
-				if(property.getName() == "DESCRIPTION") {
-					appointment.setAppointmentDescription(property.getValue());
-				}
-				LOG.info("[" + property.getName() + ":" + property.getValue() + "]");
+			if(component.getProperty("SUMMARY") != null) {
+				String summary = ((Summary)component.getProperty("SUMMARY")).getValue();
+				appointment.setAppointmentName(summary);
+			}
+			
+			if(component.getProperty("DESCRIPTION") != null) {
+				String description = ((Description)component.getProperty("DESCRIPTION")).getValue();
+				appointment.setAppointmentDescription(description);
+			}
+
+			int sequenceNr = ((Sequence)component.getProperty("SEQUENCE")).getSequenceNo();
+			if(sequenceNr == 1) {
+				// probably a allday event
+				appointment.setAppointmentType(IAppointment.AppointmentType.ALLDAY);
 			}
 			
 			appointments.add(appointment);
@@ -86,9 +105,17 @@ public class ICalCalendarModel extends DefaultCalendarModel {
 		
 		this.setAppointments(appointments);
 	}
-	
+	/*
 	private Date parseDate(String date) {
+		LOG.info("to parse: " + date);
 		java.util.Calendar cal = java.util.Calendar.getInstance();
+		if(date.indexOf(":") != -1) {
+			String timeZone = date.substring(0, date.indexOf(":"));
+			LOG.info("timezone: " + timeZone);
+			cal.setTimeZone(TimeZone.getTimeZone(timeZone));
+			
+			date = date.substring(date.indexOf(':')+1);
+		}
 		int year = Integer.parseInt(date.substring(0, 4));
 		int month  = Integer.parseInt(date.substring(4, 6)) -1;
 		int day = Integer.parseInt(date.substring(6, 8));
@@ -106,5 +133,5 @@ public class ICalCalendarModel extends DefaultCalendarModel {
 		cal.set(java.util.Calendar.SECOND, seconds);
 
 		return new java.sql.Date(cal.getTimeInMillis());
-	}
+	} */
 }
