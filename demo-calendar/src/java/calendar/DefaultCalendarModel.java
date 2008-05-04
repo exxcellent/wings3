@@ -21,7 +21,7 @@ import org.apache.commons.logging.LogFactory; */
  */
 public class DefaultCalendarModel implements CalendarModel {
 //	private static final Log LOG = LogFactory.getLog(DefaultCalendarModel.class);
-	private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+	public PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 	private CalendarView view;
 	private Collection<IAppointment> appointments;
 	private Date visibleFrom;
@@ -32,10 +32,12 @@ public class DefaultCalendarModel implements CalendarModel {
 	
 	/**
 	 * Constructs the DefaultCalendarModel
-	 * @param calendar The AppointmentCalendar that references this model
 	 */
 	public DefaultCalendarModel()
 	{
+		this.date = new java.sql.Date(Calendar.getInstance().getTimeInMillis());
+		this.locale = Locale.getDefault();
+		this.view = CalendarView.MONTH;
 	}
 	
 	@Override

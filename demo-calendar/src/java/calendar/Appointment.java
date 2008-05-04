@@ -20,6 +20,7 @@ public class Appointment implements IAppointment {
 	private boolean isRecurring;
 	private EnumSet<Weekday> recurringWeekdays;
 	private AppointmentType appointmentType;
+	private String additional;
 	
 	/**
 	 * Creates a new normal or allday Event with the default Colors
@@ -79,6 +80,11 @@ public class Appointment implements IAppointment {
 		this(name, description, appointmentType, startDate, endDate, true, recurringWeekdays, foregroundColor, backgroundColor);
 	}
 	
+	public Appointment()
+	{
+		this.setAppointmentType(AppointmentType.NORMAL);
+	}
+	
 	private Appointment(String name, String description, IAppointment.AppointmentType appointmentType, Date startDate, Date endDate, boolean isRecurring, EnumSet<Weekday> recurringWeekdays, Color foregroundColor, Color backgroundColor)
 	{
 			this.name = name;
@@ -95,9 +101,17 @@ public class Appointment implements IAppointment {
 			this.backgroundColor = backgroundColor;
 	}
 	
+	public void setAdditionalAppointmentInformation(String additional) {
+		this.additional = additional;
+	}
+	
 	@Override
 	public String getAdditionalAppointmentInformation() {
-		return null;
+		return additional;
+	}
+	
+	public void setAppointmentDescription(String description) {
+		this.description = description;
 	}
 	
 	@Override
@@ -105,9 +119,17 @@ public class Appointment implements IAppointment {
 		return description;
 	}
 	
+	public void setAppointmentStartDate(Date date) {
+		this.startDate = date;
+	}
+	
 	@Override
 	public Date getAppointmentStartDate() {
 		return startDate;
+	}
+	
+	public void setAppointmentEndDate(Date date) {
+		this.endDate = date;
 	}
 	
 	@Override
@@ -115,14 +137,26 @@ public class Appointment implements IAppointment {
 		return endDate;
 	}
 	
+	public void setAppointmentName(String name) {
+		this.name = name;
+	}
+	
 	@Override
 	public String getAppointmentName() {
 		return name;
 	}
 	
+	public void setAppointmentRecurringDays(EnumSet<Weekday> recurringWeekdays) {
+		this.recurringWeekdays = recurringWeekdays;
+	}
+	
 	@Override
 	public EnumSet<Weekday> getAppointmentRecurringDays() {
 		return recurringWeekdays;
+	}
+	
+	public void setAppointmentType(AppointmentType appointmentType) {
+		this.appointmentType = appointmentType;
 	}
 	
 	@Override
@@ -156,6 +190,11 @@ public class Appointment implements IAppointment {
 	public void setBackgroundColor(Color backgroundColor)
 	{
 		this.backgroundColor = backgroundColor;
+	}
+	
+	
+	public void setAppointmentRecurring(boolean isRecurring) {
+		this.isRecurring = isRecurring;
 	}
 	
 	@Override

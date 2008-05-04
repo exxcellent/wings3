@@ -26,6 +26,7 @@ import org.wings.SURLIcon;
 import org.wings.SFont;
 
 import calendar.CalendarModel.CalendarView;
+import calendar.RemoteCalendar.RemoteCalendar;
 
 /**
  * Simple Example to show the Calendar Component
@@ -35,6 +36,7 @@ import calendar.CalendarModel.CalendarView;
 public class CalendarExample {
 	private static final Log LOG = LogFactory.getLog(CalendarExample.class);
 	final AppointmentCalendar calendar = new AppointmentCalendar(Locale.GERMAN);
+	private final String iCalURL = null;
 	
 	/**
 	 * Constructs the Calendar Example
@@ -42,6 +44,12 @@ public class CalendarExample {
 	public CalendarExample()
 	{
 		LOG.info("Calendar Example startup");
+
+		if(iCalURL != null) {
+			RemoteCalendar remoteCal = new RemoteCalendar(RemoteCalendar.CalendarType.ICAL, iCalURL);
+			this.calendar.setCalendarModel(remoteCal.getModel());
+			this.calendar.setDate(Calendar.getInstance().getTime());
+		}
 		
 		SFrame rootFrame = new SFrame();
 		rootFrame.setTitle("Demo Event-Calendar!");

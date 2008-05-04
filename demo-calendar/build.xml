@@ -12,8 +12,8 @@
         <fileset dir="../wings/build/web/WEB-INF/lib" includes="*.jar"/>
         <fileset dir="../wingx/build/web/WEB-INF/lib" includes="*.jar"/>
         <fileset dir="../thirdparty/lib" includes="servlet.jar"/>
+        <fileset dir="thirdparty/lib" includes="*.jar"/> <!-- remotecalendar -->
     </path>
-
 
     <target name="prepare">
         <tstamp/>
@@ -46,6 +46,11 @@
                 <include name="WEB-INF/web.xml"/>
             </fileset>
         </copy>
+        <copy todir="build/web/WEB-INF/lib">
+            <fileset dir="thirdparty/lib"> <!-- remotecalendar -->
+				<include name="*.jar" />
+            </fileset>
+		</copy>
         <copy todir="build/web/WEB-INF/classes">
             <fileset dir="build/class"/>
 			<fileset dir="src/res" />

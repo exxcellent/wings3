@@ -1,7 +1,7 @@
 package calendar;
 
 /*import org.apache.commons.logging.Log;
-im port org.apache.commons.logging.LogFactory;*/
+import org.apache.commons.logging.LogFactory;*/
 import org.wings.LowLevelEventListener;
 import org.wings.SComponent;
 
@@ -100,6 +100,15 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 		this(Locale.getDefault());
 	}
 	
+	/**
+	 * Constructs the Calendar component using the current (Server) Time/Date for the current Day/Month/Year with the DefaultCalendarModel 
+	 * @param locale Locale 
+	 * @param model CalendarModel to use
+	 */
+	public AppointmentCalendar(Locale locale, CalendarModel model) {
+		this(new Date(Calendar.getInstance().getTimeInMillis()), locale, model);
+	}
+	
     /**
      * Constructs the Calendar component using the current (Server) Time/Date for the current Day/Month/Year and given Locale with the DefaultCalendarModel
      */
@@ -182,7 +191,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 			this.model = model;
 			oldVal.removePropertyChangeListener(fwdLocaleChange);
 			oldVal.removeCalendarViewChangeListener(fwdCalendarViewEvents);
-			this.model.removePropertyChangeListener(fwdLocaleChange);
+			this.model.addPropertyChangeListener(fwdLocaleChange);
 			this.model.addCalendarViewChangeListener(fwdCalendarViewEvents);
 		}
 		

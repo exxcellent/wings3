@@ -470,9 +470,10 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 		Calendar cal1 = Calendar.getInstance();
 		cal1.setTime(appointment.getAppointmentStartDate());
 		Calendar cal2 = Calendar.getInstance();
-		cal1.setTime(appointment.getAppointmentEndDate());
+		cal2.setTime(appointment.getAppointmentEndDate());
 
-		if(cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR))
+		if(cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) && 
+					cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR))
 			device.print("<div id=\"startenddate\">" + format.format(appointment.getAppointmentStartDate()) + "</div>");
 		else
 			device.print("<div id=\"startenddate\">" + format.format(appointment.getAppointmentStartDate()) + " - " + format.format(appointment.getAppointmentEndDate()) + "</div>");
