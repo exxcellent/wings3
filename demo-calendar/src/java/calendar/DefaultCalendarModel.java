@@ -302,9 +302,11 @@ public class DefaultCalendarModel implements CalendarModel {
 				return 4;
 			case WEEK:
 				return 10;
+			case DAY:
+				return 1000;
 		}
 		
-		return 0;
+		return 1000;
 	}
 
 	private void fireViewChangeEvent(CalendarViewChangeEvent e) {

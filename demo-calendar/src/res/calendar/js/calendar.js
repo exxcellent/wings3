@@ -39,10 +39,12 @@ AppCalendar.clickDate = function(date, event, eventName) {
 	if(eventName == null)
 		return false;
 		
-	if(document.getElementById('AppointmentCalendar-Popup').style.visibility != 'visible') {
-		var eventValue = 'shiftKey=' + event.shiftKey + ';ctrlKey=' + event.ctrlKey + ';altKey=' + event.altKey + ';d:' + date.id;
-		wingS.request.sendEvent(event, false, true, eventName, eventValue);
+	if(document.getElementById('AppointmentCalendar-Popup').style.visibility == 'visible' || AppCalendar.timeout != null) {
+		return false;
 	}
+
+	var eventValue = 'shiftKey=' + event.shiftKey + ';ctrlKey=' + event.ctrlKey + ';altKey=' + event.altKey + ';d:' + date.id;
+	wingS.request.sendEvent(event, false, true, eventName, eventValue);
 	
 	return false;
 }
@@ -55,15 +57,16 @@ AppCalendar.loadPopup = function(element, event, eventName)
 		event = window.event;
 	}
 
-	AppCalendar.timeout = setTimeout("AppCalendar.showPopup('" + eventName + "', '" + element.id + "')", 500);
 	AppCalendar.updatePopupPosition(event);
-	element.onmousemove = AppCalendar.updatePopupPosition;
+	AppCalendar.timeout = setTimeout("AppCalendar.showPopup('" + eventName + "', '" + element.id + "')", 500);
 }
 
 AppCalendar.showPopup = function(eventName, elementID)
 {
+	document.getElementById(elementID).onmousemove = AppCalendar.updatePopupPosition;
 	document.getElementById(eventName + '-Popup').style.visibility = 'visible';
-	wingS.request.sendEvent(null, false, true, eventName, "q:"+elementID, null);
+	wingS.request.sendEvent(null, false, true,   eventName, "q:"+elementID, null);
+	AppCalendar.timeout = null;
 }
 
 AppCalendar.updatePopupPosition = function(event)
@@ -104,5 +107,7 @@ AppCalendar.hidePopup = function(element)
 	clearTimeout(AppCalendar.timeout);
 	document.getElementById('AppointmentCalendar-Popup').style.visibility = 'hidden';
 	document.getElementById('AppointmentCalendar-Popup').innerHTML = "<span>...</span>";
+	element.onmousemove = null;
+	AppCalendar.timeout = null;
 	//AppCalendar.swapColors(element);
 }

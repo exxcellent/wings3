@@ -5,7 +5,8 @@
 
 /* Shared */
 #AppointmentCalendar #monthview,
-#AppointmentCalendar #weekview
+#AppointmentCalendar #weekview,
+#AppointmentCalendar #dayview
 { 
 	width:100%;
 	height:100%;
@@ -199,6 +200,54 @@
 	font-size:smaller;
 }
 
+/* Day View */
+#AppointmentCalendar #dayview td
+{
+	width:100%;
+	height:100%;
+	vertical-align:top;
+	border:none; /* 1px solid white; */
+	cursor:pointer;
+	-moz-user-select:none;
+}
+
+#AppointmentCalendar #dayview td div.daycontainer
+{	
+	border-collapse:collapse;
+}
+
+#AppointmentCalendar #dayview td div.daytitle
+{
+	background-color:white;
+	width:100%;
+}
+
+#AppointmentCalendar #dayview td div.dayappcontainer
+{
+	background-color:#fafafa;
+	width:100%;
+	height:100%;
+	border:1px solid white;
+}
+
+#AppointmentCalendar #dayview td div.normalappointment,
+#AppointmentCalendar #dayview td div.alldayappointment,
+#AppointmentCalendar #dayview td div.recurringappointment
+{
+	border:1px solid white;
+}
+
+#AppointmentCalendar #dayview td div.normalappointment:hover,
+#AppointmentCalendar #dayview td div.alldayappointment:hover,
+#AppointmentCalendar #dayview td div.recurringappointment:hover
+{
+	background-color:white;
+}
+
+#AppointmentCalendar #dayview td div.selected
+{
+	background-color:red;
+}
 
 /* Calendar Popup */
 #AppointmentCalendar-Popup

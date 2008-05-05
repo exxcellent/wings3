@@ -3,7 +3,10 @@ package calendar.RemoteCalendar;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.io.BufferedInputStream;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,19 +38,29 @@ public class ICalCalendarModel extends DefaultCalendarModel {
 	private String uri;
 	private Calendar iCalendar;
 	
-	public ICalCalendarModel(String uri) {
+	public ICalCalendarModel(String uri, String proxy, int proxyport) {
 		super();
 		
-		setUri(uri);
+		setUri(uri, proxy, proxyport);
 	}
 	
-	private void setUri(String uri) {
+	public ICalCalendarModel(String uri) {
+		this(uri, null, 0);
+	}
+	
+	private void setUri(String uri, String proxy, int proxyport) {
 		try {
 			String oldUri = this.uri;
 			this.uri = uri;
 			URL url = new URL(uri);
-			BufferedInputStream in = new BufferedInputStream(url.openStream());
-				
+			URLConnection urlCon;
+			if(proxy != null)
+				urlCon = url.openConnection(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxy, proxyport)));
+			else
+				urlCon = url.openConnection();
+			
+			BufferedInputStream in = new BufferedInputStream(urlCon.getInputStream());
+
 			CalendarBuilder builder = new CalendarBuilder();
 			iCalendar = builder.build(in);
 			updateAppointments();

@@ -36,7 +36,7 @@ import calendar.RemoteCalendar.RemoteCalendar;
 public class CalendarExample {
 	private static final Log LOG = LogFactory.getLog(CalendarExample.class);
 	final AppointmentCalendar calendar = new AppointmentCalendar(Locale.GERMAN);
-	private final String iCalURL = null;
+	private final String iCalURL = "http://www.google.com/calendar/ical/v7n52d874v7jqfng7la71hjtpk%40group.calendar.google.com/private-069b3a42aacc352806c3048c2f71c8db/basic.ics";
 	
 	/**
 	 * Constructs the Calendar Example
@@ -95,10 +95,12 @@ public class CalendarExample {
 								case MONTH:
 									tempCal.add(Calendar.MONTH, +1);
 								break;
+								case DAY:
+									tempCal.add(Calendar.DAY_OF_YEAR, +1);
+								break;
 							}
 							calendar.setDate(tempCal.getTime());
 						}
-						
 					}
 			);
 
@@ -122,10 +124,12 @@ public class CalendarExample {
 							case MONTH:
 								tempCal.add(Calendar.MONTH, -1);
 							break;
+							case DAY:
+								tempCal.add(Calendar.DAY_OF_YEAR, -1);
+							break;
 						}
 						calendar.setDate(tempCal.getTime());
 					}
-					
 				}
 		);
 		
@@ -144,7 +148,6 @@ public class CalendarExample {
 				{
 					@Override
 					public void valueChanged(CalendarViewChangeEvent e) {
-						// TODO Auto-generated method stub
 						switch(e.getType())
 						{
 							case DATE:
