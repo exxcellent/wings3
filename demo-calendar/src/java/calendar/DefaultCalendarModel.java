@@ -68,6 +68,11 @@ public class DefaultCalendarModel implements CalendarModel {
 		return this.date;
 	}
 	
+	public Collection<IAppointment> getAppointments()
+	{
+		return appointments;
+	}
+	
 	/**
 	 * Sets the type of view on this calendar (e.g. MONTH, DAY, WEEK)
 	 * @param view The view to be set  
