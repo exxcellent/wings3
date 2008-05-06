@@ -91,8 +91,8 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	{
 		writeHeader(device, calendar);
 		
-		tempCal.setTime(calendar.getCalendarModel().getVisibleFrom());
-
+		tempCal.setTimeInMillis(calendar.getCalendarModel().getVisibleFrom().getTime());
+		
 		device.print("<table id=\"weekview\"><tr>");
 		while(tempCal.getTime().before(calendar.getCalendarModel().getVisibleUntil()))
 		{
@@ -154,7 +154,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	{
 		writeHeader(device, calendar);
 		
-		tempCal.setTime(calendar.getCalendarModel().getDate());
+		tempCal.setTimeInMillis(calendar.getCalendarModel().getVisibleFrom().getTime());
 		
 		device.print("<table id=\"dayview\"><tr><td>");
 		device.print("<div class=\"daycontainer\">");
@@ -244,7 +244,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	{
 		CalendarModel model = calendar.getCalendarModel();
 		
-		tempCal.setTime(model.getVisibleFrom());
+		tempCal.setTimeInMillis(calendar.getCalendarModel().getVisibleFrom().getTime());
 		
 		writeHeader(device, calendar);
 		
