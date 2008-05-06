@@ -148,14 +148,14 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	{
 		super();
 		
-		this.setName("AppointmentCalendar");
-		
-		this.getSession().getDispatcher().register(this);
-
 		/// TODO: do this in the default.properties
 		CalendarCG calCG = new CalendarCG();
 		this.setCG(calCG);
 		
+		this.setName("AppointmentCalendar");
+		
+		this.getSession().getDispatcher().register(this);
+
 		if(model == null)
 			setCalendarModel(new DefaultCalendarModel());
 		else
