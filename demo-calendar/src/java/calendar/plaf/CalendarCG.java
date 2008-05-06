@@ -323,6 +323,9 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	public void writeInternal(final Device device, final AppointmentCalendar calendar) throws IOException {
 		
 		CalendarModel model = calendar.getCalendarModel();
+		if(model == null)
+			return;
+
 		assert model.getVisibleFrom().before(model.getVisibleUntil());
 		
 		switch(model.getView())

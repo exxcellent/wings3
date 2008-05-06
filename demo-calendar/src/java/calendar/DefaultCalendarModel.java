@@ -35,9 +35,9 @@ public class DefaultCalendarModel implements CalendarModel {
 	 */
 	public DefaultCalendarModel()
 	{
-		this.date = new java.sql.Date(Calendar.getInstance().getTimeInMillis());
-		this.locale = Locale.getDefault();
-		this.view = CalendarView.MONTH;
+		setDate(new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+		setLocale(Locale.getDefault());
+		setView(CalendarView.MONTH);
 	}
 	
 	@Override
