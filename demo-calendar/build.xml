@@ -79,6 +79,7 @@
     </target>
 
 	<target name="jar" depends="build" description="Create a usable jar-library">
+        <delete file="build/calendar.jar"/>
 		<jar file="build/calendar.jar">
 			<fileset dir="build/web/WEB-INF/classes">
 			</fileset>
