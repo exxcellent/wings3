@@ -258,7 +258,7 @@ public class Appointment implements IAppointment {
 		return Appointment.StaticGetAppointmentRecurringDaysString(this, locale);
 	}
 	
-	public static String StaticGetAppointmentRecurringDaysString(Appointment appointment, Locale locale)
+	public static String StaticGetAppointmentRecurringDaysString(IAppointment appointment, Locale locale)
 	{
 		Calendar tempCal = Calendar.getInstance(locale);
 		EnumSet<Weekday> weekdays = appointment.getAppointmentRecurringDays();
