@@ -374,7 +374,7 @@ public class Appointment implements IAppointment {
     private static Calendar cal1 = Calendar.getInstance();
     private static Calendar cal2 = Calendar.getInstance();
 
-    private static String StaticGetAppointmentStartEndDateString(IAppointment appointment, Locale locale) {
+    public static String StaticGetAppointmentStartEndDateString(IAppointment appointment, Locale locale) {
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);
 
         cal1.setTime(appointment.getAppointmentStartDate());
@@ -392,7 +392,7 @@ public class Appointment implements IAppointment {
         return Appointment.StaticGetAppointmentStartEndTimeString(this, locale);
     }
 
-    private static String StaticGetAppointmentStartEndTimeString(IAppointment appointment, Locale locale)
+    public static String StaticGetAppointmentStartEndTimeString(IAppointment appointment, Locale locale)
     {
         DateFormat formatTime = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
 
