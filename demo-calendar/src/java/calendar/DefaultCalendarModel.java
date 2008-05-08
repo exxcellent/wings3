@@ -9,9 +9,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
-
-/*import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory; */
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * The Default Calendar Model for the AppointmentCalendar
@@ -20,10 +19,10 @@ import org.apache.commons.logging.LogFactory; */
  *
  */
 public class DefaultCalendarModel implements CalendarModel {
-//	private static final Log LOG = LogFactory.getLog(DefaultCalendarModel.class);
+	private static final Log LOG = LogFactory.getLog(DefaultCalendarModel.class);
 	public PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 	private CalendarView view;
-	private Collection<IAppointment> appointments;
+	protected Collection<IAppointment> appointments;
 	private Date visibleFrom;
 	private Date visibleUntil;
 	private Date date;
@@ -147,10 +146,20 @@ public class DefaultCalendarModel implements CalendarModel {
 		calTestDate.setTime(date);
 		
 		Calendar appStartDate = Calendar.getInstance();
-		appStartDate.setTime(appointment.getAppointmentStartDate());
+		Date startDate = appointment.getAppointmentStartDate();
+		if(startDate == null) {
+			LOG.warn("Appointment with startDate == null");
+			return false;
+		}
+		appStartDate.setTime(startDate);
 		
 		Calendar appEndDate = Calendar.getInstance();
-		appEndDate.setTime(appointment.getAppointmentEndDate());
+		Date endDate = appointment.getAppointmentEndDate();
+		if(endDate == null) {
+			LOG.warn("Appointment with endDate == null");
+			return false;
+		}
+		appEndDate.setTime(endDate);
 		
 		if(appStartDate.get(Calendar.YEAR) <= calTestDate.get(Calendar.YEAR) && 
 				appEndDate.get(Calendar.YEAR) >= calTestDate.get(Calendar.YEAR))
@@ -202,7 +211,7 @@ public class DefaultCalendarModel implements CalendarModel {
 		}
 	}
 	
-	private Comparator<IAppointment> timeComparator = new TimeComparator();
+	protected Comparator<IAppointment> timeComparator = new TimeComparator();
 	
 	/**
 	 * Returns the appointments on date

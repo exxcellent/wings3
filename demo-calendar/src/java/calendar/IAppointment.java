@@ -2,6 +2,7 @@ package calendar;
 
 import java.sql.Date;
 import java.util.EnumSet;
+import java.util.Locale;
 import java.awt.Color;
  
 public interface IAppointment {
@@ -65,6 +66,36 @@ public interface IAppointment {
 	 * @return Background color of the appointment
 	 */
 	public abstract Color getBackgroundColor();
+	
+	/**
+	 * Gets a String that represents the Weekdays this Appointment recurrs
+	 * @param weekdays EnumSet of Weekdays that to build String
+	 * @param locale Locale to use when building the string
+	 * @return String representing the given Weekday Enum in the given Locale 
+	 */
+	public abstract String getAppointmentRecurringDaysString(Locale locale);
+
+	/**
+	 * Gets a localized String of the AppointmentType
+	 * @param type Type of the Appointment
+	 * @param locale Locale to use to build the String (supports US, UK, CANADA, GERMAN)
+	 * @return Comma-Seperated Localized String with the Weekdays in human-readable form 
+	 */
+	public abstract String getAppointmentTypeString(AppointmentType type, Locale locale);
+
+	/**
+	 * Gets a localized String of the Start/End Date of a Appointment
+	 * @return
+	 */
+	public abstract String getAppointmentStartEndDateString(Locale locale);
+	
+	/**
+	 * Gets a localized String of the Start/end Time of a Appointment
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public abstract String getAppointmentStartEndTimeString(Locale locale);
 	
 	/**
 	 * A Enumeration representing the Type of an Appointment (either NORMAL or ALLDAY) 

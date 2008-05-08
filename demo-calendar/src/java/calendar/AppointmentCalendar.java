@@ -154,20 +154,15 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 		
 		this.setName("AppointmentCalendar");
 		
-		this.getSession().getDispatcher().register(this);
-
 		if(model == null)
 			setCalendarModel(new DefaultCalendarModel());
 		else
 			setCalendarModel(model);
 		
-		this.model.setView(CalendarView.MONTH);
-
-		setLocale(locale);
-		setDate(date);
-
 		setSelectionModel(new DefaultCalendarSelectionModel());
 		
+		this.getSession().getDispatcher().register(this);
+
 		//getSelectionModel().setSelectionMode(CalendarSelectionModel.SINGLE_EXCLUSIVE_DATE_OR_APPOINTMENT_SELECTION);
 		//getSelectionModel().setSelectionMode(CalendarSelectionModel.MULTIPLE_APPOINTMENT_SELECTION | CalendarSelectionModel.MULTIPLE_DATE_SELECTION);		
 	}

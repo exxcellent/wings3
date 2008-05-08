@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.util.EnumSet;
 import java.util.Calendar;
 import java.util.Locale;
+import java.text.DateFormat;
 
 /**
  * Class that represents an Appointment in the Calendar
@@ -215,7 +216,13 @@ public class Appointment implements IAppointment {
 	 * @param locale Locale to use to build the String (supports US, UK, CANADA, GERMAN)
 	 * @return Comma-Seperated Localized String with the Weekdays in human-readable form 
 	 */
-	public static String getAppointmentTypeString(AppointmentType type, Locale locale)
+	@Override
+	public String getAppointmentTypeString(AppointmentType type, Locale locale)
+	{
+		return Appointment.StaticGetAppointmentTypeString(type, locale);
+	}
+	
+	public static String StaticGetAppointmentTypeString(AppointmentType type, Locale locale)
 	{
 		if(locale == Locale.US || locale == Locale.UK || locale == Locale.CANADA)
 		{
@@ -240,16 +247,26 @@ public class Appointment implements IAppointment {
 	}
 	
 	/**
-	 * Gets a String that represents the Weekdays this Appoint recurrs
+	 * Gets a String that represents the Weekdays this Appointment recurrs
 	 * @param weekdays EnumSet of Weekdays that to build String
 	 * @param locale Locale to use when building the string
 	 * @return String representing the given Weekday Enum in the given Locale 
 	 */
-	public static String getAppointmentRecurringDaysString(EnumSet<Weekday> weekdays, Locale locale)
+	@Override
+	public String getAppointmentRecurringDaysString(Locale locale)
+	{
+		return Appointment.StaticGetAppointmentRecurringDaysString(this, locale);
+	}
+	
+	public static String StaticGetAppointmentRecurringDaysString(Appointment appointment, Locale locale)
 	{
 		Calendar tempCal = Calendar.getInstance(locale);
-		
+		EnumSet<Weekday> weekdays = appointment.getAppointmentRecurringDays();
+
 		String recurringDays = "";
+		
+		if(weekdays == null)
+			return recurringDays;
 		
 		int i = 0;
 		for(Weekday weekday:weekdays)
@@ -265,6 +282,7 @@ public class Appointment implements IAppointment {
 		else
 			return null;
 	}
+
 	
 	/**
 	 * Gets the Calendar.WEEKDAY integer that a Weekday enum represents
@@ -346,4 +364,38 @@ public class Appointment implements IAppointment {
 		
 		return false;
 	}
+
+	@Override
+	public String getAppointmentStartEndDateString(Locale locale) {
+		return Appointment.StaticGetAppointmentStartEndDateString(this, locale);
+	}
+
+
+    private static Calendar cal1 = Calendar.getInstance();
+    private static Calendar cal2 = Calendar.getInstance();
+
+    private static String StaticGetAppointmentStartEndDateString(Appointment appointment, Locale locale) {
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+
+        cal1.setTime(appointment.getAppointmentStartDate());
+        cal2.setTime(appointment.getAppointmentEndDate());
+
+        if(cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
+                    cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR))
+            return dateFormat.format(appointment.getAppointmentStartDate());
+        else        
+            return dateFormat.format(appointment.getAppointmentStartDate()) + " - " + dateFormat.format(appointment.getAppointmentEndDate());
+    }
+
+    @Override
+	public String getAppointmentStartEndTimeString(Locale locale) {
+        return Appointment.StaticGetAppointmentStartEndTimeString(this, locale);
+    }
+
+    private static String StaticGetAppointmentStartEndTimeString(Appointment appointment, Locale locale)
+    {
+        DateFormat formatTime = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
+
+        return formatTime.format(appointment.getAppointmentStartDate()) + "-" + formatTime.format(appointment.getAppointmentEndDate());
+    }
 }

@@ -326,6 +326,8 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 		if(model == null)
 			return;
 
+		assert model.getVisibleFrom() != null;
+		assert model.getVisibleUntil() != null;
 		assert model.getVisibleFrom().before(model.getVisibleUntil());
 		
 		switch(model.getView())
@@ -454,7 +456,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 				}
 				else
 				{
-					device.print("<div class=\"time\">" + Appointment.getAppointmentTypeString(appointment.getAppointmentType(), calendar.getLocale()) + "</div>");
+					device.print("<div class=\"time\">" + appointment.getAppointmentTypeString(appointment.getAppointmentType(), calendar.getLocale()) + "</div>");
 				}
 				device.print("<div class=\"name\">" + appointment.getAppointmentName() +  "</div>");
 				
@@ -474,7 +476,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 					device.print("<div class=\"description\">" + appointment.getAppointmentDescription() +  "</div>");
 				
 				if(appointment.isAppointmentRecurring())
-					device.print("<div class=\"recurringweekdays\">" + Appointment.getAppointmentRecurringDaysString(appointment.getAppointmentRecurringDays(), calendar.getLocale()) +  "</div>");
+					device.print("<div class=\"recurringweekdays\">" + appointment.getAppointmentRecurringDaysString(calendar.getLocale()) +  "</div>");
 
 				if(appointment.getAdditionalAppointmentInformation() != null && appointment.getAdditionalAppointmentInformation().length() > 0)
 					device.print("<div class=\"additional\">" + appointment.getAdditionalAppointmentInformation() +  "</div>");
@@ -532,7 +534,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 				}
 				else
 				{
-					device.print("<div class=\"time\">" + Appointment.getAppointmentTypeString(appointment.getAppointmentType(), calendar.getLocale()) + "</div>");
+					device.print("<div class=\"time\">" + appointment.getAppointmentTypeString(appointment.getAppointmentType(), calendar.getLocale()) + "</div>");
 				}
 				device.print("<div class=\"name\">" + appointment.getAppointmentName() +  "</div>");
 				
@@ -552,7 +554,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 					device.print("<div class=\"description\">" + appointment.getAppointmentDescription() +  "</div>");
 				
 				if(appointment.isAppointmentRecurring())
-					device.print("<div class=\"recurringweekdays\">" + Appointment.getAppointmentRecurringDaysString(appointment.getAppointmentRecurringDays(), calendar.getLocale()) +  "</div>");
+					device.print("<div class=\"recurringweekdays\">" + appointment.getAppointmentRecurringDaysString(calendar.getLocale()) +  "</div>");
 
 				if(appointment.getAdditionalAppointmentInformation() != null && appointment.getAdditionalAppointmentInformation().length() > 0)
 					device.print("<div class=\"additional\">" + appointment.getAdditionalAppointmentInformation() +  "</div>");
@@ -605,25 +607,17 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 		Calendar cal2 = Calendar.getInstance();
 		cal2.setTime(appointment.getAppointmentEndDate());
 
-		if(cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) && 
-					cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR))
-			device.print("<div id=\"startenddate\">" + format.format(appointment.getAppointmentStartDate()) + "</div>");
-		else
-			device.print("<div id=\"startenddate\">" + format.format(appointment.getAppointmentStartDate()) + " - " + format.format(appointment.getAppointmentEndDate()) + "</div>");
+		device.print("<div id=\"startenddate\">" + appointment.getAppointmentStartEndDateString(calendar.getLocale()) + "</div>");
 			
 		if(appointment.getAppointmentType() == IAppointment.AppointmentType.NORMAL)
 		{
-			DateFormat formatTime = DateFormat.getTimeInstance(DateFormat.SHORT, calendar.getLocale());
-
-			device.print("<span class=\"timeframe\">" + formatTime.format(appointment.getAppointmentStartDate()) + 
-							"-" + formatTime.format(appointment.getAppointmentEndDate()) +
-							"</span><br />");
+			device.print("<span class=\"timeframe\">" + appointment.getAppointmentStartEndTimeString(calendar.getLocale()) + "</span><br />");
 		}
 		else // if the appointment ain't normal, it must be ALLDAY => timeframe is useless
-			device.print("<span class=\"appointmenttype\">" + Appointment.getAppointmentTypeString(appointment.getAppointmentType(), calendar.getLocale()) + "</span><br />");
+			device.print("<span class=\"appointmenttype\">" + appointment.getAppointmentTypeString(appointment.getAppointmentType(), calendar.getLocale()) + "</span><br />");
 		
-		if(appointment.isAppointmentRecurring())
-			device.print("<span class=\"recurringdays\">" + Appointment.getAppointmentRecurringDaysString(appointment.getAppointmentRecurringDays(), calendar.getLocale()) + "</span><br />");
+		if(appointment.isAppointmentRecurring() && appointment.getAppointmentRecurringDays() != null)
+			device.print("<span class=\"recurringdays\">" + appointment.getAppointmentRecurringDaysString(calendar.getLocale()) + "</span><br />");
 	
 		String additionalInformation = appointment.getAdditionalAppointmentInformation();
 		if(additionalInformation != null && additionalInformation.length() > 0)
