@@ -5,11 +5,6 @@
 // Create module namespace
 wingS.namespace("update");
 
-
-wingS.update.runScript = function(scriptToEval) {
-    eval(scriptToEval);
-}
-
 /**
  * Adds or removes a script header with the given parameters.
  * @param {Boolean} add - true, if the header should be added
@@ -546,3 +541,10 @@ wingS.update.alertException = function(exception, details) {
 	wingS.dialog.showExceptionDialog(e);
 };
 
+/**
+ * Runs the script in the given parameter.
+ * @param scriptToEval Script to run
+ */
+wingS.update.runScript = function(scriptToEval) {
+    eval(scriptToEval);
+}
