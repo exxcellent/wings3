@@ -342,28 +342,28 @@ public class Appointment implements IAppointment {
 		return IAppointment.Weekday.SUNDAY;
 	}
 	
-	@Override
-	public boolean equals(Object obj)
-	{
-		if(obj instanceof Appointment)
-		{
-			Appointment cmp = (Appointment)obj;
-			if(	cmp.getAppointmentName() == this.getAppointmentName() &&
-				cmp.getAppointmentDescription() == this.getAppointmentDescription() &&
-				cmp.isAppointmentRecurring() == this.isAppointmentRecurring() &&
-				cmp.getAppointmentRecurringDays() == this.getAppointmentRecurringDays() &&
-				cmp.getAppointmentStartDate().getTime() == this.getAppointmentStartDate().getTime() &&
-				cmp.getAppointmentEndDate().getTime() == this.getAppointmentEndDate().getTime() &&
-				cmp.getAdditionalAppointmentInformation() == this.getAdditionalAppointmentInformation() &&
-				cmp.getBackgroundColor() == this.getBackgroundColor() &&
-				cmp.getForegroundColor() == this.getForegroundColor())
-			{
-				return true;
-			}
-		}
-		
-		return false;
-	}
+    @Override
+    public boolean equals(Object obj)
+    {
+        if(obj instanceof Appointment)
+        {
+            Appointment cmp = (Appointment)obj;
+            if(	cmp.getAppointmentName() == this.getAppointmentName() &&
+                cmp.getAppointmentDescription() == this.getAppointmentDescription() &&
+                cmp.isAppointmentRecurring() == this.isAppointmentRecurring() &&
+                cmp.getAppointmentRecurringDays() == this.getAppointmentRecurringDays() &&
+                cmp.getAppointmentStartDate().getTime() == this.getAppointmentStartDate().getTime() &&
+                cmp.getAppointmentEndDate().getTime() == this.getAppointmentEndDate().getTime() &&
+                cmp.getAdditionalAppointmentInformation() == this.getAdditionalAppointmentInformation() &&
+                cmp.getBackgroundColor() == this.getBackgroundColor() &&
+                cmp.getForegroundColor() == this.getForegroundColor())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 	@Override
 	public String getAppointmentStartEndDateString(Locale locale) {

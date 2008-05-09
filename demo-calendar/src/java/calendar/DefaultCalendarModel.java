@@ -28,8 +28,8 @@ public class DefaultCalendarModel implements CalendarModel {
 	private Date date;
 	private ArrayList<CalendarViewChangeListener> viewChangeListener = new ArrayList<CalendarViewChangeListener>();
 	private Locale locale;
-	
-	/**
+    
+    /**
 	 * Constructs the DefaultCalendarModel
 	 */
 	public DefaultCalendarModel()
@@ -37,7 +37,7 @@ public class DefaultCalendarModel implements CalendarModel {
 		setDate(new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
 		setLocale(Locale.getDefault());
 		setView(CalendarView.MONTH);
-	}
+    }
 	
 	@Override
 	public CalendarView getView() {

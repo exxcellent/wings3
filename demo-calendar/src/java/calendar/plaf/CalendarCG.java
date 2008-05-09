@@ -345,8 +345,6 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 				writeDayInternal(device, calendar);
 			break;
 		}
-		
-		writePopup(device, calendar, null);
 	}
 	
 	/**
@@ -389,7 +387,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 
 				Utils.quote(device, "javascript:AppCalendar.loadPopup(this, event, \"" + calendar.getName() + "\")", true, false, true); 
 				device.print("\"");
-				device.print(" onmouseout=\"javascript:AppCalendar.hidePopup(this)\"");
+				//device.print(" onmouseout=\"javascript:AppCalendar.hidePopup(this)\"");
 				
 				if( (calendar.getSelectionModel().getSelectionMode()&CalendarSelectionModel.APPOINTMENT_BITMASK) != 0) {
 					writeClickability(device, "Appointment", calendar);
@@ -441,7 +439,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 
 				Utils.quote(device, "javascript:AppCalendar.loadPopup(this, event, \"" + calendar.getName() + "\")", true, false, true); 
 				device.print("\"");
-				device.print(" onmouseout=\"javascript:AppCalendar.hidePopup(this)\"");
+//				device.print(" onmouseout=\"javascript:AppCalendar.hidePopup(this)\"");
 				
 				if( (calendar.getSelectionModel().getSelectionMode()&CalendarSelectionModel.APPOINTMENT_BITMASK) != 0) {
 					writeClickability(device, "Appointment", calendar);
@@ -519,7 +517,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 
 				Utils.quote(device, "javascript:AppCalendar.loadPopup(this, event, \"" + calendar.getName() + "\")", true, false, true); 
 				device.print("\"");
-				device.print(" onmouseout=\"javascript:AppCalendar.hidePopup(this)\"");
+//				device.print(" onmouseout=\"javascript:AppCalendar.hidePopup(this)\"");
 				
 				if( (calendar.getSelectionModel().getSelectionMode()&CalendarSelectionModel.APPOINTMENT_BITMASK) != 0) {
 					writeClickability(device, "Appointment", calendar);
@@ -572,12 +570,45 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	 * @param appointment
 	 * @throws IOException
 	 */
-	public void writePopup(final Device device, final AppointmentCalendar calendar, final Appointment appointment) throws IOException
+	public void writePopupText(final Device device, final AppointmentCalendar calendar, final IAppointment appointment) throws IOException
 	{
-		device.print("<div id=\"" + calendar.getName() + "-Popup\">");
+/*		device.print("<div id=\"" + calendar.getName() + "-Popup\">");
 		writePopupInnerHTML(device, calendar, appointment);
-		device.print("</div>");
-	} 
+		device.print("</div>"); */
+        if(appointment == null)
+        {
+            return;
+        }
+
+        device.print(appointment.getAppointmentName() + "<br />");
+        if(appointment.getAppointmentDescription() != null && appointment.getAppointmentDescription().length() > 0)
+            device.print(appointment.getAppointmentDescription() + "<br />");
+
+        DateFormat format = DateFormat.getDateInstance(DateFormat.LONG, calendar.getLocale());
+
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(appointment.getAppointmentStartDate());
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(appointment.getAppointmentEndDate());
+
+        device.print(appointment.getAppointmentStartEndDateString(calendar.getLocale()) + "<br />");
+
+        if(appointment.getAppointmentType() == IAppointment.AppointmentType.NORMAL)
+        {
+            device.print(appointment.getAppointmentStartEndTimeString(calendar.getLocale()) + "<br />");
+        }
+        else // if the appointment ain't normal, it must be ALLDAY => timeframe is useless
+            device.print(appointment.getAppointmentTypeString(appointment.getAppointmentType(), calendar.getLocale()) + "<br />");
+
+        if(appointment.isAppointmentRecurring() && appointment.getAppointmentRecurringDays() != null)
+            device.print(appointment.getAppointmentRecurringDaysString(calendar.getLocale()) + "<br />");
+
+        String additionalInformation = appointment.getAdditionalAppointmentInformation();
+        if(additionalInformation != null && additionalInformation.length() > 0)
+            device.print(additionalInformation + "<br />");
+
+        return;
+    }
 
 	/**
 	 * Writes the inner HTML of a popup to device
@@ -587,7 +618,8 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	 * @param appointment
 	 * @throws IOException
 	 */
-	public void writePopupInnerHTML(final Device device, final AppointmentCalendar calendar, final IAppointment appointment) throws IOException
+    /*
+    public void writePopupInnerHTML(final Device device, final AppointmentCalendar calendar, final IAppointment appointment) throws IOException
 	{
 		// on the first call (to render the initial div, appointment will be null
 		if(appointment == null)
@@ -622,7 +654,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 		String additionalInformation = appointment.getAdditionalAppointmentInformation();
 		if(additionalInformation != null && additionalInformation.length() > 0)
 			device.print("<span class=\"additional\">" + additionalInformation + "</span><br />");
-	}
+	} */
 
 	/**
 	 * Gets an Selection Update for the Updates caused by event 
@@ -690,7 +722,10 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 		@Override
 		public int hashCode()
 		{
-			return super.hashCode() ^ this.getHandler().hashCode() ^ this.getHandler().getParameters().hashCode(); 
+            int hash1 =  super.hashCode();
+            int hash2 = getHandler().hashCode();
+            int hash3 = getHandler().getParameters().hashCode();
+            return hash1 ^ hash2 ^ hash3; 
 		}
 		
 		@Override
@@ -742,7 +777,8 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 					if(uniqueAppointmentID == null)
 					{
 						LOG.info("invalid appointment was sent: date:" + event.getDate().toLocaleString() + " app: "+event.getAppointment());
-						return null;
+                        calendar.getSelectionModel().removeSelection(event.getAppointment(), event.getDate());
+                        return null;
 					}
 					handler.addParameter(uniqueAppointmentID);
 					String htmlCode = "";
@@ -789,13 +825,13 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 
 		@Override
 		public Handler getHandler() {
-			UpdateHandler handler = new UpdateHandler("text");
+			UpdateHandler handler = new UpdateHandler("runScript");
 			String htmlCode = "";
 			
 			try
 			{
 				StringBuilderDevice htmlDevice = new StringBuilderDevice(1024);
-				((CalendarCG)component.getCG()).writePopupInnerHTML(htmlDevice, (AppointmentCalendar)component, this.appointment);
+				((CalendarCG)component.getCG()).writePopupText(htmlDevice, (AppointmentCalendar)component, this.appointment);
 				htmlCode = htmlDevice.toString();
 			}
 			catch(Throwable t)
@@ -803,8 +839,8 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 				LOG.fatal("An error occured during rendering of AppointmentCalendar-Popup");
 				exception = t.getClass().getName();
 			}
-			handler.addParameter(component.getName() + "-Popup");
-			handler.addParameter(htmlCode);
+            //htmlCode = "test";
+            handler.addParameter("Tip(\"" + htmlCode +  "\", DELAY, 0, FADEIN, 0, FADEOUT, 0, OPACITY, 100, FOLLOWMOUSE, true, DURATION, 0);");
 			
 			if(exception != null) {
 				handler.addParameter(exception);
@@ -812,7 +848,6 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 			
 			return handler;
 		}
-		
 	}
 	
 }

@@ -3,33 +3,37 @@ if(typeof AppCalendar == 'undefined')
 	var AppCalendar = { };
 }
 
-AppCalendar.pointerX = function(event) {
-	return event.pageX || (event.clientX +
-		(document.documentElement.scrollLeft || document.body.scrollLeft));
-}
-
-AppCalendar.pointerY = function(event) {
-	return event.pageY || (event.clientY +
-		(document.documentElement.scrollTop || document.body.scrollTop));
-}
-
 /*
-if(wingS.update.selectCalendarElement == undefined && wingS.update.deselectCalendarElement == undefined)
+AppCalendar.pointerX = function(event) 
 {
-	wingS.update.selectCalendarElement = function(elementId) {
-		document.getElementById(elementId).className = "selected";
-	}
-	
-	wingS.update.deselectCalendarElement = function(elementId) {
-		document.getElementById(elementId).className = null;
-	}
+    var body = (window.document.compatMode && window.document.compatMode == "CSS1Compat") ? window.document.documentElement : window.document.body || null;
+	return event.clientX + body.scrollLeft;
+	return event.pageX ? event.pageX : event.clientX + body.scrollLeft;
 }
+
+AppCalendar.pointerY = function(event) 
+{
+    var body = (window.document.compatMode && window.document.compatMode == "CSS1Compat") ? window.document.documentElement : window.document.body || null;
+	return event.clientY + body.scrollTop;    
+	return event.pageY ? event.pageY : event.clientY + body.scrollTop;    
+}
+
 */
+
 AppCalendar.clickAppointment = function(appointment, event, eventName) {
 	if(eventName == null)
 		return false;
 
-	var eventValue = 'shiftKey=' + event.shiftKey + ';ctrlKey=' + event.ctrlKey + ';altKey=' + event.altKey + ';a:' + appointment.id;
+	// cancel event bubbling
+	if(typeof(event) == "undefined" && typeof(window.event) != "undefined") { // IE
+		event = window.event;
+		event.cancelBubble = true;
+	} else {
+		event.stopPropagation();
+	}
+	
+	//  send ajax request (selection of appointment)
+    var eventValue = 'shiftKey=' + event.shiftKey + ';ctrlKey=' + event.ctrlKey + ';altKey=' + event.altKey + ';a:' + appointment.id;
 	wingS.request.sendEvent(event, false, true, eventName, eventValue);
 	
 	return false;
@@ -38,11 +42,8 @@ AppCalendar.clickAppointment = function(appointment, event, eventName) {
 AppCalendar.clickDate = function(date, event, eventName) {
 	if(eventName == null)
 		return false;
-		
-	if(document.getElementById('AppointmentCalendar-Popup').style.visibility == 'visible' || AppCalendar.timeout != null) {
-		return false;
-	}
 
+	// send ajax request (selection of date)
 	var eventValue = 'shiftKey=' + event.shiftKey + ';ctrlKey=' + event.ctrlKey + ';altKey=' + event.altKey + ';d:' + date.id;
 	wingS.request.sendEvent(event, false, true, eventName, eventValue);
 	
@@ -50,64 +51,17 @@ AppCalendar.clickDate = function(date, event, eventName) {
 }
 
 AppCalendar.timeout = null;
+AppCalendar.popupShown = false;
 
 AppCalendar.loadPopup = function(element, event, eventName)
 {
-	if(!event) {
-		event = window.event;
-	}
-
-	AppCalendar.updatePopupPosition(event);
 	AppCalendar.timeout = setTimeout("AppCalendar.showPopup('" + eventName + "', '" + element.id + "')", 500);
 }
 
 AppCalendar.showPopup = function(eventName, elementID)
 {
-	document.getElementById(elementID).onmousemove = AppCalendar.updatePopupPosition;
-	document.getElementById(eventName + '-Popup').style.visibility = 'visible';
+	// send ajax request (show popup)
 	wingS.request.sendEvent(null, false, true,   eventName, "q:"+elementID, null);
-	AppCalendar.timeout = null;
-}
-
-AppCalendar.updatePopupPosition = function(event)
-{
-	if(!event) {
-		event = window.event;
-	}	
-	var elt = document.getElementById('AppointmentCalendar-Popup');
-	var windowHeight = 0;
-	var windowWidth = 0;
-	if(typeof(window.innerWidth) == 'number') {
-		windowHeight = window.innerHeight;
-		windowWidth = window.innerWidth;
-	} else if( document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
-		windowHeight = document.documentElement.clientHeight;
-		windowWidth = document.documentElement.clientWidth;
-	} else if( document.body && (document.body.clientWidth || document.body.clientHeight)) {
-		windowHeight = document.body.clientHeight;
-		windowWidth = document.body.clientWidth;
-	}
-	
-	if(AppCalendar.pointerX(event) + elt.clientWidth + 12 > windowWidth) {
-		elt.style.left = (AppCalendar.pointerX(event) - 1 - elt.clientWidth) + "px";
-	} else {
-		elt.style.left = (AppCalendar.pointerX(event) + 12) + "px";
-	}
-	
-	if(AppCalendar.pointerY(event) + elt.clientHeight + 12 > windowHeight) {
-		elt.style.top = (AppCalendar.pointerY(event) - 6 - elt.clientHeight) + "px";
-	} else {
-		elt.style.top = (AppCalendar.pointerY(event)+12) + "px";
-	}
-}
-
-AppCalendar.hidePopup = function(element)
-{
-	//document.getElementById('AppointmentCalendar-Popup').style.display = 'none';
 	clearTimeout(AppCalendar.timeout);
-	document.getElementById('AppointmentCalendar-Popup').style.visibility = 'hidden';
-	document.getElementById('AppointmentCalendar-Popup').innerHTML = "<span>...</span>";
-	element.onmousemove = null;
 	AppCalendar.timeout = null;
-	//AppCalendar.swapColors(element);
 }

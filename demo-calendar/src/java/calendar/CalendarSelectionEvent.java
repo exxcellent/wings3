@@ -88,7 +88,13 @@ public class CalendarSelectionEvent extends EventObject {
 		return selectedDate;
 	}
 
-	/**
+    @Override
+    public String toString()
+    {
+        return this.getType() + " " + this.getAffectedComponent() + " " + this.getDate() + " " + this.getAppointment();
+    }
+    
+    /**
 	 * SelectionType 
 	 * @author Florian Roks
 	 *

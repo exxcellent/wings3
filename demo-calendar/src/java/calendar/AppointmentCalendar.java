@@ -40,7 +40,12 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 			if(isUpdatePossible() && AppointmentCalendar.class.isAssignableFrom(AppointmentCalendar.this.getClass()))
 			{
 				Update update = ((CalendarCG)getCG()).getSelectionUpdate(AppointmentCalendar.this, selectionModel, e);
-				update(update);
+                if(update == null)
+                {
+                    System.out.println("selection update is null!");
+                    return;
+                }
+                update(update);
 			}
 			else
 			{
@@ -159,7 +164,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 		else
 			setCalendarModel(model);
 		
-		setSelectionModel(new DefaultCalendarSelectionModel());
+		setSelectionModel(new DefaultCalendarSelectionModel(this));
 		
 		this.getSession().getDispatcher().register(this);
 

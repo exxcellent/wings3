@@ -24,8 +24,14 @@ public class DefaultCalendarSelectionModel implements CalendarSelectionModel {
 	private Date lastSelectedDate;
 	private boolean delayEvents = false;
 	protected final ArrayList<CalendarSelectionEvent> delayedEvents = new ArrayList<CalendarSelectionEvent>();
-	
-	@Override
+	private AppointmentCalendar calendar;
+
+    public DefaultCalendarSelectionModel(AppointmentCalendar calendar)
+    {
+        this.calendar = calendar;
+    }
+
+    @Override
 	public void clearAppointmentSelection() {
 		ArrayList<UniqueAppointment> appointments = new ArrayList<UniqueAppointment>();
 		appointments.addAll(selectedAppointments);
@@ -263,6 +269,10 @@ public class DefaultCalendarSelectionModel implements CalendarSelectionModel {
 		
 		for(CalendarSelectionListener listener:selectionListener)
 		{
+            if(e.getAffectedComponent() == CalendarSelectionEvent.SelectionComponent.APPOINTMENT) // check if an appointment was removed from the list before firing a selection remove event
+                if(e.getType() == CalendarSelectionEvent.SelectionType.REMOVED)
+                    if(!calendar.getCalendarModel().getAppointments(e.getDate()).contains(e.getAppointment()))
+                        continue;
 			listener.valueChanged(e);
 		}
 	}
@@ -337,9 +347,13 @@ public class DefaultCalendarSelectionModel implements CalendarSelectionModel {
 	public void fireDelayedFinalEvents() {
 		for(CalendarSelectionEvent e:delayedEvents)
 		{
-			for(CalendarSelectionListener l:selectionListener)
+            for(CalendarSelectionListener l:selectionListener)
 			{
-				l.valueChanged(e);
+                if(e.getAffectedComponent() == CalendarSelectionEvent.SelectionComponent.APPOINTMENT) // check if an appointment was removed from the list before firing a selection remove event
+                    if(e.getType() == CalendarSelectionEvent.SelectionType.REMOVED)
+                        if(!calendar.getCalendarModel().getAppointments(e.getDate()).contains(e.getAppointment()))
+                            continue;
+                l.valueChanged(e);
 			}
 		}
 		
