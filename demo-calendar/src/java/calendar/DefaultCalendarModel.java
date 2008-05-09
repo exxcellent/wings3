@@ -28,7 +28,8 @@ public class DefaultCalendarModel implements CalendarModel {
 	private Date date;
 	private ArrayList<CalendarViewChangeListener> viewChangeListener = new ArrayList<CalendarViewChangeListener>();
 	private Locale locale;
-    
+    private boolean mergeWeekends;
+
     /**
 	 * Constructs the DefaultCalendarModel
 	 */
@@ -212,8 +213,10 @@ public class DefaultCalendarModel implements CalendarModel {
 	}
 	
 	protected Comparator<Appointment> timeComparator = new TimeComparator();
-	
-	/**
+
+
+
+    /**
 	 * Returns the appointments on date
 	 */
 	@Override
@@ -273,13 +276,11 @@ public class DefaultCalendarModel implements CalendarModel {
 	public void setAppointments(Collection<Appointment> appointments) {
 		this.appointments = appointments;
 		
-		// TODO: implement a equals/hashCode for appointments to check if they changed
 		fireViewChangeEvent(new CalendarViewChangeEvent(this, appointments));
 	}
 
 	@Override
 	public int getColumnCount() {
-		// changes here do screw up the layout, as the CG can't handle it yet
 		switch(this.view)
 		{
 			case NONE:
@@ -309,11 +310,13 @@ public class DefaultCalendarModel implements CalendarModel {
 	}
 
 	@Override
-	public int getMaxNumberAppointmentsPerCell() {
+	public int getMaxNumberAppointmentsPerCell(boolean isMerged) {
 		switch(this.view)
 		{
 			case MONTH:
-				return 4;
+                if(isMerged)
+                    return 1;
+                return 4;
 			case WEEK:
 				return 10;
 			case DAY:
@@ -340,8 +343,7 @@ public class DefaultCalendarModel implements CalendarModel {
 		{
 			if(appointment == appointmentToGetIDFrom)
 			{
-				String uniqueIDApp = tempCal.get(Calendar.YEAR) + ":" + tempCal.get(Calendar.DAY_OF_YEAR) + ":" + i;
-				return uniqueIDApp;
+				return tempCal.get(Calendar.YEAR) + ":" + tempCal.get(Calendar.DAY_OF_YEAR) + ":" + i;
 			}
 			i++;
 		}
@@ -372,7 +374,18 @@ public class DefaultCalendarModel implements CalendarModel {
 		return null;
 	}
 
-	@Override
+    public void setMergeWeekends(boolean mergeWeekends) {
+        boolean oldVal = this.mergeWeekends;
+        this.mergeWeekends = mergeWeekends;
+
+        propertyChangeSupport.firePropertyChange("mergeWeekends", oldVal, this.mergeWeekends);
+    }
+
+    public boolean isMergeWeekendsEnabled() {
+        return this.mergeWeekends; 
+    }
+
+    @Override
 	public void addCalendarViewChangeListener(CalendarViewChangeListener listener) {
 		viewChangeListener.add(listener);
 	}

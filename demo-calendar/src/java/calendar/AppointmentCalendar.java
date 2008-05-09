@@ -58,7 +58,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 		public void propertyChange(PropertyChangeEvent evt) {
 			// reload the page to remove/add the onClick event handlers to the calendar
 			// and/or change the selections (i.e. if the user switches from multiple appointments to single)
-			if(evt.getPropertyName() == "selectionMode") {
+			if(evt.getPropertyName().equals("selectionMode")) {
 				reload();
 			}
 		}
@@ -90,10 +90,13 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 		@Override
 		public void propertyChange(PropertyChangeEvent evt) {
 			// Reload the component if the locale changes
-			if(evt.getPropertyName() == "locale") {
+			if(evt.getPropertyName().equals("locale")) {
 				reload();
 			}
-		}
+            if(evt.getPropertyName().equals("mergeWeekends")) {
+                reload();
+            }
+        }
     	
     };
     
@@ -115,6 +118,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	
     /**
      * Constructs the Calendar component using the current (Server) Time/Date for the current Day/Month/Year and given Locale with the DefaultCalendarModel
+     * @param locale Locale to create the calendar with
      */
 	public AppointmentCalendar(Locale locale) {
 		this(Calendar.getInstance().getTime(), locale);
@@ -151,8 +155,8 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	public AppointmentCalendar(Date date, Locale locale, CalendarModel model)
 	{
 		super();
-		
-		/// TODO: do this in the default.properties
+
+        // TODO: do this in the default.properties
 		CalendarCG calCG = new CalendarCG();
 		this.setCG(calCG);
 		
@@ -164,8 +168,10 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 			setCalendarModel(model);
 		
 		setSelectionModel(new DefaultCalendarSelectionModel(this));
-		
-		this.getSession().getDispatcher().register(this);
+		setDate(date);
+        setLocale(locale);
+
+        this.getSession().getDispatcher().register(this);
 
 		//getSelectionModel().setSelectionMode(CalendarSelectionModel.SINGLE_EXCLUSIVE_DATE_OR_APPOINTMENT_SELECTION);
 		//getSelectionModel().setSelectionMode(CalendarSelectionModel.MULTIPLE_APPOINTMENT_SELECTION | CalendarSelectionModel.MULTIPLE_DATE_SELECTION);		
@@ -177,16 +183,17 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	 */
 	public void setCalendarModel(CalendarModel model)
 	{
-		if(model == null)
+		if(model == null) {
 			throw new IllegalArgumentException("model must be not null");
+        }
+
+        CalendarModel oldVal = this.model;
 		
-		CalendarModel oldVal = this.model;
-		
-		if(oldVal == null && model != null) {
+		if(oldVal == null) {
 			this.model = model;
 			this.model.addPropertyChangeListener(fwdLocaleChange);
 			this.model.addCalendarViewChangeListener(fwdCalendarViewEvents);
-		} else if(oldVal != null && model != null) {
+		} else {
 			this.model = model;
 			oldVal.removePropertyChangeListener(fwdLocaleChange);
 			oldVal.removeCalendarViewChangeListener(fwdCalendarViewEvents);
@@ -229,33 +236,6 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	public CalendarModel getCalendarModel() {
 		return model;
 	}
-
-/*	
-	public void generateAndSetTestAppointments()
-	{
-		Collection<DefaultAppointment> appointments = new ArrayList<DefaultAppointment>();
-        Random random = new Random();
-        java.util.Calendar from = java.util.Calendar.getInstance();
-        from.add(java.util.Calendar.MONTH, -1);
-        for (int i = 0; i < 30; i++) {
-            java.util.Calendar until = (java.util.Calendar)from.clone();
-            until.add(java.util.Calendar.DAY_OF_YEAR, random.nextInt(10));
-
-            Event event = new Event(new Date(from.getTimeInMillis()), new Date(until.getTimeInMillis()));
-            int hour = 10 + random.nextInt(14);
-            java.sql.Time fromTime = new java.sql.Time(hour, 0, 0);
-            java.sql.Time untilTime = new java.sql.Time(hour + 2, 0, 0);
-            event.setFromTime(fromTime);
-            event.setUntilTime(untilTime);
-            event.setName(((random.nextInt(2) == 0)?"Meeting ":"Betriebsfeier ")); // + i); 
-            events.add(event);
-            from.add(java.util.Calendar.DAY_OF_YEAR, random.nextInt(5));
-        }
-        
-        setAppointments(appointments);
-	}
-	
-	*/
 	
 	/**
 	 * Sets the Locale of the Calendar
@@ -297,7 +277,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 		CalendarSelectionModel oldVal = this.selectionModel;
 		this.selectionModel = selectionModel;
 		
-		if(oldVal == null && selectionModel != null) {
+		if(oldVal == null) {
 			selectionModel.addCalendarSelectionListener(fwdSelectionEvents);
 			selectionModel.addPropertyChangeListener(this.fwdSelectionModeChange);
 		}
@@ -354,7 +334,6 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	{
 		String[] processedValues; 
 		
-		// TODO: find out why this doesn't work without splitting!
 		if(values[0].contains(";"))
 			processedValues = values[0].split(";");
 		else

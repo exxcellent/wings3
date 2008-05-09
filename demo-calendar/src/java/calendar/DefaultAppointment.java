@@ -248,7 +248,6 @@ public class DefaultAppointment implements Appointment {
 	
 	/**
 	 * Gets a String that represents the Weekdays this Appointment recurrs
-	 * @param weekdays EnumSet of Weekdays that to build String
 	 * @param locale Locale to use when building the string
 	 * @return String representing the given Weekday Enum in the given Locale 
 	 */
@@ -341,24 +340,33 @@ public class DefaultAppointment implements Appointment {
 		// to satisfy the compiler
 		return Appointment.Weekday.SUNDAY;
 	}
-	
+
+    private static boolean isEqual(String str1, String str2) {
+        if(str1 == null && str2 == null)
+            return true;
+        if(str1 != null && str1.equals(str2))
+            return true;
+        
+        return false;
+    }
+
     @Override
     public boolean equals(Object obj)
     {
         if(obj instanceof DefaultAppointment)
         {
             DefaultAppointment cmp = (DefaultAppointment)obj;
-            if(	cmp.getAppointmentName() == this.getAppointmentName() &&
-                cmp.getAppointmentDescription() == this.getAppointmentDescription() &&
-                cmp.isAppointmentRecurring() == this.isAppointmentRecurring() &&
+            if( cmp.isAppointmentRecurring() == this.isAppointmentRecurring() &&
                 cmp.getAppointmentRecurringDays() == this.getAppointmentRecurringDays() &&
                 cmp.getAppointmentStartDate().getTime() == this.getAppointmentStartDate().getTime() &&
                 cmp.getAppointmentEndDate().getTime() == this.getAppointmentEndDate().getTime() &&
-                cmp.getAdditionalAppointmentInformation() == this.getAdditionalAppointmentInformation() &&
                 cmp.getBackgroundColor() == this.getBackgroundColor() &&
                 cmp.getForegroundColor() == this.getForegroundColor())
             {
-                return true;
+                if(DefaultAppointment.isEqual(cmp.getAppointmentName(), this.getAppointmentName()) &&
+                    DefaultAppointment.isEqual(cmp.getAppointmentDescription(), this.getAppointmentDescription())
+                        )
+                    return true;
             }
         }
 

@@ -20,7 +20,6 @@ public abstract interface CalendarModel {
 	/**
 	 * Sets the view of this Calendar
 	 * @param type The CalendarView to be set (CalendarView.MONTH, DAY, WEEK)
-	 * @param date The Date around which the view should be build 
 	 */
 	public abstract void setView(CalendarView type);
 
@@ -89,8 +88,8 @@ public abstract interface CalendarModel {
 	 * Returns the maximum Number of Appointments to be shown in a Cell 
 	 * @return
 	 */
-	public abstract int getMaxNumberAppointmentsPerCell();
-	
+	public abstract int getMaxNumberAppointmentsPerCell(boolean isMerged);
+
 	/**
 	 * Adds a CalendarViewChangeListener
 	 * @param listener Listener to be added
@@ -156,4 +155,10 @@ public abstract interface CalendarModel {
 	 * @return
 	 */
 	public Appointment getAppointmentFromID(String uniqueID);
+
+    /**
+     * Returns true if weekends (Sa/Su) should be merged into one cell
+     * @return
+     */
+    public boolean isMergeWeekendsEnabled();
 }

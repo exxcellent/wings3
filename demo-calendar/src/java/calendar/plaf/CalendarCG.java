@@ -56,7 +56,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	/**
 	 * Sets the "Today-Date" for the View (The Date the view is constructed around)
 	 * This may be removed later 
-	 * @param todayDate
+	 * @param todayDate The Date the view is constructed around 
 	 */
 	public void setToday(java.util.Date todayDate)
 	{
@@ -130,7 +130,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 			int i=0;
 			for(Appointment appointment:appointments)
 			{
-				if(i > calendar.getCalendarModel().getMaxNumberAppointmentsPerCell())
+				if(i > calendar.getCalendarModel().getMaxNumberAppointmentsPerCell(false))
 					break;
 				
 				this.writeAppointment(device, calendar, appointment, tempCal);
@@ -182,7 +182,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 				int i = 0;
 				for(Appointment appointment:appointments)
 				{
-					if(i >= calendar.getCalendarModel().getMaxNumberAppointmentsPerCell())
+					if(i >= calendar.getCalendarModel().getMaxNumberAppointmentsPerCell(false))
 						continue;
 					
 					writeAppointment(device, calendar, appointment, tempCal);
@@ -248,9 +248,15 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 		
 		for(int column = 0; column < model.getColumnCount(); column++)
 		{
-			device.print("<th>" + tempCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, calendar.getLocale()) + "</th>");
-			tempCal.add(Calendar.DAY_OF_MONTH, 1);
-		}
+			device.print("<th>" + tempCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, calendar.getLocale()));
+            if(isThisDayMerged(model, tempCal, column)) {
+                tempCal.add(Calendar.DAY_OF_MONTH, 1);
+                device.print("/" + tempCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, calendar.getLocale()));
+                column += 1;
+            }
+            tempCal.add(Calendar.DAY_OF_MONTH, 1);
+            device.print("</th>");
+        }
 		tempCal.setTime(model.getVisibleFrom());
 		device.print("</thead><tbody>");
 		
@@ -265,51 +271,118 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 					continue;
 				}
 				
-				device.print("<td class=\"" + this.getCellClassname(calendar, tempCal, viewToday) + "\"");
+                if(isThisDayMerged(model, tempCal, column)) {
+                    device.print("<td class=\"" + this.getCellClassname(calendar, tempCal, viewToday) + "\">");
+                    
+                    // begin inner double-cell
+                    device.print("<table style=\"height:100%; width:100%;\">");
 
-				String uniqueID = tempCal.get(Calendar.YEAR) + ":" + tempCal.get(Calendar.DAY_OF_YEAR);
-				device.print(" id=\"");
-				Utils.quote(device, uniqueID, true, false, true);
-				device.print("\"");
-				
-				if((calendar.getSelectionModel().getSelectionMode()&CalendarSelectionModel.DATE_BITMASK) != 0) {
-					writeClickability(device, "Date", calendar);
-				}
-				
-				device.print(">");
+                    // upper-cell
+                    device.print("<tr style=\"height:50%; overflow:hidden;\"><td style=\"overflow:hidden;\" class=\"" + this.getCellClassname(calendar, tempCal, viewToday) + "\"");
 
-				device.print("<span class=\"dayofmonth\">" + tempCal.get(Calendar.DAY_OF_MONTH) + "</span><br />");
-				Collection<Appointment> appointments = model.getAppointments(new java.sql.Date(tempCal.getTimeInMillis()));
-				if(appointments == null)
-				{
-					tempCal.add(Calendar.DAY_OF_MONTH, 1);
-					continue;
-				}
+                    String uniqueID = tempCal.get(Calendar.YEAR) + ":" + tempCal.get(Calendar.DAY_OF_YEAR);
+                    device.print(" id=\"");
+                    Utils.quote(device, uniqueID, true, false, true);
+                    device.print("\"");
 
-				int i = 0;
-				for(Appointment appointment:appointments)
-				{
-					if(i >= model.getMaxNumberAppointmentsPerCell())
-						continue;
-					
-					writeAppointment(device, calendar, appointment, tempCal);
-					
-					i++;
-				}
+                    if((calendar.getSelectionModel().getSelectionMode()&CalendarSelectionModel.DATE_BITMASK) != 0) {
+                        writeClickability(device, "Date", calendar);
+                    }
+                    device.print(">");
 
-				tempCal.add(Calendar.DAY_OF_MONTH, 1);
-				device.print("</td>");
-			}
+                    device.print("<span class=\"dayofmonth\">" + tempCal.get(Calendar.DAY_OF_MONTH) + "</span><br />");
+
+                    writeOutAppointments(device, calendar, model, tempCal, true);
+
+                    device.print("</td></tr>");
+
+                    tempCal.add(Calendar.DAY_OF_MONTH, 1);
+                    column++;
+
+                    // bottom-cell
+                    device.print("<tr style=\"height:50%; overflow:hidden;\"><td style=\"overflow:hidden;\" class=\"" + this.getCellClassname(calendar, tempCal, viewToday) + "\"");
+
+                    uniqueID = tempCal.get(Calendar.YEAR) + ":" + tempCal.get(Calendar.DAY_OF_YEAR);
+                    device.print(" id=\"");
+                    Utils.quote(device, uniqueID, true, false, true);
+                    device.print("\"");
+
+                    if((calendar.getSelectionModel().getSelectionMode()&CalendarSelectionModel.DATE_BITMASK) != 0) {
+                        writeClickability(device, "Date", calendar);
+                    }
+                    device.print(">");
+
+                    device.print("<span class=\"dayofmonth\">" + tempCal.get(Calendar.DAY_OF_MONTH) + "</span><br />");
+
+                    writeOutAppointments(device, calendar, model, tempCal, true);
+
+                    device.print("</td></tr>");
+
+                    // end inner-double-cell
+                    device.print("</table>");
+
+                    // end outer cell
+                    device.print("</td>");
+
+                    tempCal.add(Calendar.DAY_OF_MONTH, 1);
+                } else {
+                    device.print("<td class=\"" + this.getCellClassname(calendar, tempCal, viewToday) + "\"");
+
+                    String uniqueID = tempCal.get(Calendar.YEAR) + ":" + tempCal.get(Calendar.DAY_OF_YEAR);
+                    device.print(" id=\"");
+                    Utils.quote(device, uniqueID, true, false, true);
+                    device.print("\"");
+
+                    if((calendar.getSelectionModel().getSelectionMode()&CalendarSelectionModel.DATE_BITMASK) != 0) {
+                        writeClickability(device, "Date", calendar);
+                    }
+                    device.print(">");
+
+                    device.print("<span class=\"dayofmonth\">" + tempCal.get(Calendar.DAY_OF_MONTH) + "</span><br />");
+
+                    writeOutAppointments(device, calendar, model, tempCal, false);
+                    device.print("</td>");
+
+                    tempCal.add(Calendar.DAY_OF_MONTH, 1);
+                }
+
+            }
 			device.print("</tr>");
-			tempCal.add(Calendar.DAY_OF_MONTH, (7 % model.getColumnCount()));
+			//tempCal.add(Calendar.DAY_OF_MONTH, (7 % model.getColumnCount()));
 		}
 		device.print("</tbody>");
 		device.print("</table>");
 		
 		writeFooter(device, calendar);
 	}
-	
-	private String getCSSColorAttributes(Color foregroundColor, Color backgroundColor)
+
+    private boolean isThisDayMerged(final CalendarModel model, final Calendar date, int column)
+    {
+        return model.isMergeWeekendsEnabled() && date.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY && column < model.getColumnCount();
+    }
+
+    private boolean writeOutAppointments(final Device device, final AppointmentCalendar calendar, final CalendarModel model, final Calendar dateCal, boolean isMerged) throws IOException {
+        Collection<Appointment> appointments = model.getAppointments(new Date(dateCal.getTimeInMillis()));
+        if(appointments == null)
+        {
+            return true;
+        }
+
+        // write out appointments into the date-cell
+        int i = 0;
+        for(Appointment appointment:appointments)
+        {
+            if(i >= model.getMaxNumberAppointmentsPerCell(isMerged))
+                continue;
+
+            writeAppointment(device, calendar, appointment, dateCal);
+
+            i++;
+        }
+        return false;
+    }
+
+    private String getCSSColorAttributes(Color foregroundColor, Color backgroundColor)
 	{
 		return "color:"+String.format("#%02X%02X%02X", foregroundColor.getRed(), foregroundColor.getGreen(), foregroundColor.getBlue()) + "; background-color:" + String.format("#%02X%02X%02X", backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue()) + ";";
 	}
@@ -382,7 +455,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 
 				Utils.quote(device, "javascript:AppCalendar.loadPopup(this, event, \"" + calendar.getName() + "\")", true, false, true); 
 				device.print("\"");
-				//device.print(" onmouseout=\"javascript:AppCalendar.hidePopup(this)\"");
+				device.print(" onmouseout=\"javascript:AppCalendar.hidePopup(this)\"");
 				
 				if( (calendar.getSelectionModel().getSelectionMode()&CalendarSelectionModel.APPOINTMENT_BITMASK) != 0) {
 					writeClickability(device, "Appointment", calendar);
@@ -434,7 +507,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 
 				Utils.quote(device, "javascript:AppCalendar.loadPopup(this, event, \"" + calendar.getName() + "\")", true, false, true); 
 				device.print("\"");
-//				device.print(" onmouseout=\"javascript:AppCalendar.hidePopup(this)\"");
+				device.print(" onmouseout=\"javascript:AppCalendar.hidePopup(this)\"");
 				
 				if( (calendar.getSelectionModel().getSelectionMode()&CalendarSelectionModel.APPOINTMENT_BITMASK) != 0) {
 					writeClickability(device, "Appointment", calendar);
@@ -512,7 +585,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 
 				Utils.quote(device, "javascript:AppCalendar.loadPopup(this, event, \"" + calendar.getName() + "\")", true, false, true); 
 				device.print("\"");
-//				device.print(" onmouseout=\"javascript:AppCalendar.hidePopup(this)\"");
+				device.print(" onmouseout=\"javascript:AppCalendar.hidePopup(this)\"");
 				
 				if( (calendar.getSelectionModel().getSelectionMode()&CalendarSelectionModel.APPOINTMENT_BITMASK) != 0) {
 					writeClickability(device, "Appointment", calendar);
@@ -567,9 +640,6 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	 */
 	public void writePopupText(final Device device, final AppointmentCalendar calendar, final Appointment appointment) throws IOException
 	{
-/*		device.print("<div id=\"" + calendar.getName() + "-Popup\">");
-		writePopupInnerHTML(device, calendar, appointment);
-		device.print("</div>"); */
         if(appointment == null)
         {
             return;
@@ -578,8 +648,6 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
         device.print(appointment.getAppointmentName() + "<br />");
         if(appointment.getAppointmentDescription() != null && appointment.getAppointmentDescription().length() > 0)
             device.print(appointment.getAppointmentDescription() + "<br />");
-
-        DateFormat format = DateFormat.getDateInstance(DateFormat.LONG, calendar.getLocale());
 
         Calendar cal1 = Calendar.getInstance();
         cal1.setTime(appointment.getAppointmentStartDate());
@@ -601,55 +669,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
         String additionalInformation = appointment.getAdditionalAppointmentInformation();
         if(additionalInformation != null && additionalInformation.length() > 0)
             device.print(additionalInformation + "<br />");
-
-        return;
     }
-
-	/**
-	 * Writes the inner HTML of a popup to device
-	 * This is used by the PopupUpdate (AJAX update get)
-	 * @param device
-	 * @param calendar
-	 * @param appointment
-	 * @throws IOException
-	 */
-    /*
-    public void writePopupInnerHTML(final Device device, final AppointmentCalendar calendar, final Appointment appointment) throws IOException
-	{
-		// on the first call (to render the initial div, appointment will be null
-		if(appointment == null)
-		{
-			device.print("<span>...</span>");
-			return;
-		}
-		
-		device.print("<span class=\"name\">" + appointment.getAppointmentName() + "</span><br />");
-		if(appointment.getAppointmentDescription() != null && appointment.getAppointmentDescription().length() > 0)
-			device.print("<span class=\"description\">" + appointment.getAppointmentDescription() + "</span><br />");
-
-		DateFormat format = DateFormat.getDateInstance(DateFormat.LONG, calendar.getLocale());
-
-		Calendar cal1 = Calendar.getInstance();
-		cal1.setTime(appointment.getAppointmentStartDate());
-		Calendar cal2 = Calendar.getInstance();
-		cal2.setTime(appointment.getAppointmentEndDate());
-
-		device.print("<div id=\"startenddate\">" + appointment.getAppointmentStartEndDateString(calendar.getLocale()) + "</div>");
-			
-		if(appointment.getAppointmentType() == Appointment.AppointmentType.NORMAL)
-		{
-			device.print("<span class=\"timeframe\">" + appointment.getAppointmentStartEndTimeString(calendar.getLocale()) + "</span><br />");
-		}
-		else // if the appointment ain't normal, it must be ALLDAY => timeframe is useless
-			device.print("<span class=\"appointmenttype\">" + appointment.getAppointmentTypeString(appointment.getAppointmentType(), calendar.getLocale()) + "</span><br />");
-		
-		if(appointment.isAppointmentRecurring() && appointment.getAppointmentRecurringDays() != null)
-			device.print("<span class=\"recurringdays\">" + appointment.getAppointmentRecurringDaysString(calendar.getLocale()) + "</span><br />");
-	
-		String additionalInformation = appointment.getAdditionalAppointmentInformation();
-		if(additionalInformation != null && additionalInformation.length() > 0)
-			device.print("<span class=\"additional\">" + additionalInformation + "</span><br />");
-	} */
 
 	/**
 	 * Gets an Selection Update for the Updates caused by event 
@@ -677,15 +697,19 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.YEAR, Integer.parseInt(data[0]));
 		cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(data[1]));
+
+        try {
+            Collection<Appointment> appointments = calendar.getCalendarModel().getAppointments(new Date(cal.getTimeInMillis()));
+            if(appointments != null)
+            {
+                Object appointmentArray[] = appointments.toArray();
+                return new AppointmentPopupUpdate(calendar, (Appointment)appointmentArray[Integer.parseInt(data[2])]);
+            }
+        } catch(ArrayIndexOutOfBoundsException e) {
+            LOG.debug("A Popup was requested for a non-existing appointment.");
+        }
 		
-		Collection<Appointment> appointments = calendar.getCalendarModel().getAppointments(new Date(cal.getTimeInMillis()));
-		if(appointments != null)
-		{
-			Object appointmentArray[] = appointments.toArray();
-			return new AppointmentPopupUpdate(calendar, (Appointment)appointmentArray[Integer.parseInt(data[2])]);
-		}
-		
-		return null;
+        return null;
 	}
 	
 	/**
@@ -771,12 +795,12 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 					String uniqueAppointmentID = calendar.getCalendarModel().getUniqueAppointmentID(event.getDate(), event.getAppointment());
 					if(uniqueAppointmentID == null)
 					{
-						LOG.info("invalid appointment was sent: date:" + event.getDate() + " app: "+event.getAppointment());
+						LOG.info("invalid appointment was sent: date:" + event.getDate() + " app: " + event.getAppointment());
                         calendar.getSelectionModel().removeSelection(event.getAppointment(), event.getDate());
                         return null;
 					}
 					handler.addParameter(uniqueAppointmentID);
-					String htmlCode = "";
+					String htmlCode;
 					String exception = null;
 					try {
 						StringBuilderDevice htmlDevice = new StringBuilderDevice(1024);
@@ -834,8 +858,8 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 				LOG.fatal("An error occured during rendering of AppointmentCalendar-Popup");
 				exception = t.getClass().getName();
 			}
-            //htmlCode = "test";
-            handler.addParameter("Tip(\"" + htmlCode +  "\", DELAY, 0, FADEIN, 0, FADEOUT, 0, OPACITY, 100, FOLLOWMOUSE, true, DURATION, 0);");
+            
+            handler.addParameter("Tip(\"" + htmlCode +  "\", DELAY, 0, FADEIN, 0, FADEOUT, 0, OPACITY, 100, FOLLOWMOUSE, true, DURATION, 0, BGCOLOR, 'white');");
 			
 			if(exception != null) {
 				handler.addParameter(exception);

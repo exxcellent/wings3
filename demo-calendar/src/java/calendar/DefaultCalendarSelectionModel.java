@@ -12,6 +12,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 */
 
+/**
+ * Default Calendar Selection Model
+ * Supports basic selection of Appointments and Dates with variable parameters
+ */
 public class DefaultCalendarSelectionModel implements CalendarSelectionModel {
 	PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 	ArrayList<CalendarSelectionListener> selectionListener = new ArrayList<CalendarSelectionListener>();
@@ -26,6 +30,10 @@ public class DefaultCalendarSelectionModel implements CalendarSelectionModel {
 	protected final ArrayList<CalendarSelectionEvent> delayedEvents = new ArrayList<CalendarSelectionEvent>();
 	private AppointmentCalendar calendar;
 
+    /**
+     * Constructs the DefaultCalendarSelectionModel
+     * @param calendar the Calendar for which this DefaultCalendarSelectionModel is used
+     */
     public DefaultCalendarSelectionModel(AppointmentCalendar calendar)
     {
         this.calendar = calendar;
@@ -158,9 +166,9 @@ public class DefaultCalendarSelectionModel implements CalendarSelectionModel {
 			
 			lastSelectedAppointment = uniqueAppointment;
 			addSelection(uniqueAppointment);
-			
-			return;
-		}
+
+            return;
+        }
 	}
 
 	private void addSelectionFireEvent(Date date)
@@ -189,7 +197,8 @@ public class DefaultCalendarSelectionModel implements CalendarSelectionModel {
 		if((selectionMode & CalendarSelectionModel.MULTIPLE_DATE_SELECTION) == CalendarSelectionModel.MULTIPLE_DATE_SELECTION)
 		{
 			addSelectionFireEvent(date);
-			return;
+
+            return;
 		}
 		
 	}
@@ -317,12 +326,8 @@ public class DefaultCalendarSelectionModel implements CalendarSelectionModel {
 	
 	@Override
 	public boolean isSelected(Appointment appointment, Date date) {
-		if(selectedAppointments.contains(new UniqueAppointment(appointment, date)))
-		{
-			return true;
-		}
-		return false;
-	}
+        return selectedAppointments.contains(new UniqueAppointment(appointment, date));
+    }
 	
 	@Override
 	public boolean isSelected(Date date) {

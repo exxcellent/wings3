@@ -1,5 +1,5 @@
 package calendar;
-// TODO: Bug: Browserfenster viel viel zu klein => ajax-hammering
+
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -50,7 +50,8 @@ public class CalendarExample {
 			this.calendar.setDate(Calendar.getInstance().getTime());
 		} else {
 			DefaultCalendarModel model = new DefaultCalendarModel();
-			calendar.setCalendarModel(model);
+            model.setMergeWeekends(false);
+            calendar.setCalendarModel(model);
 		}
 		
 		SFrame rootFrame = new SFrame();
@@ -202,6 +203,18 @@ public class CalendarExample {
 		layout.setHgap(4);
 		panel.setLayout(layout);
 		
+        SButton button0 = new SButton("Delete Events");
+        button0.addActionListener(
+                new ActionListener()
+                {
+
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        deleteAppointments();
+                    }
+
+                });
+
 		SButton button1 = new SButton("Generate Random Events");
 		button1.addActionListener(
 				new ActionListener() 
@@ -281,13 +294,19 @@ public class CalendarExample {
 			);
 		
 		panel.setHorizontalAlignment(SConstants.CENTER);
+        panel.add(button0);
 		panel.add(button1);
 		panel.add(comboBox1);
 		panel.add(comboBox2);
 		panel.add(comboBox3);
 		return panel;
 	}
-	/**
+
+    private void deleteAppointments()
+    {
+        ((DefaultCalendarModel)this.calendar.getCalendarModel()).setAppointments(null);
+    }
+    /**
 	 * Generates and sets some test appointments for the current month
 	 */
 	private void generateAndSetTestAppointments2()
@@ -315,7 +334,7 @@ public class CalendarExample {
 		startDate = new Date(todayCal.getTime().getTime()+ -10*24*60*ONE_MINUTE_IN_MILLISECONDS);
 		endDate = new Date(todayCal.getTime().getTime()+10*24*60*ONE_MINUTE_IN_MILLISECONDS + 90*ONE_MINUTE_IN_MILLISECONDS);
 		
-		EnumSet<Appointment.Weekday> weekdays = EnumSet.<Appointment.Weekday>of(Appointment.Weekday.SUNDAY, Appointment.Weekday.TUESDAY);
+		EnumSet<Appointment.Weekday> weekdays = EnumSet.<Appointment.Weekday>of(Appointment.Weekday.FRIDAY, Appointment.Weekday.TUESDAY);
 		DefaultAppointment recurringEvent = new DefaultAppointment("RecurringNormalEvent", "lang lang lang lang lang lang lagn", Appointment.AppointmentType.NORMAL, startDate, endDate, weekdays);
 		recurringEvent.setForegroundColor(null);
 		recurringEvent.setBackgroundColor(null);
