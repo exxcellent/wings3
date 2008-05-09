@@ -103,14 +103,14 @@ public interface CalendarSelectionModel extends SDelayedEventModel {
 	 * @param appointment
 	 * @param date
 	 */
-	void addSelection(IAppointment appointment, Date date);
+	void addSelection(Appointment appointment, Date date);
 	
 	/**
 	 * Deselects an appointment at a given Date
 	 * @param appointment Appointment to be deselected
 	 * @param date Date of the appointment to be deselected
 	 */
-	void removeSelection(IAppointment appointment, Date date);
+	void removeSelection(Appointment appointment, Date date);
 	
 	/**
 	 * Deselects the given Date 
@@ -124,7 +124,7 @@ public interface CalendarSelectionModel extends SDelayedEventModel {
 	 * @param date Date that the appointment was clicked on 
 	 * @param keyStatus Status of the Modifier Keys
 	 */
-	void clickAppointment(IAppointment appointment, Date date, ModifierKeyStatus keyStatus);
+	void clickAppointment(Appointment appointment, Date date, ModifierKeyStatus keyStatus);
 	
 	/**
 	 * Geta called when a Date is clicked
@@ -139,7 +139,7 @@ public interface CalendarSelectionModel extends SDelayedEventModel {
 	 * @param date Date to be checked
 	 * @return true if the Appointment appointment is selected on Date date, false if not
 	 */
-	boolean isSelected(IAppointment appointment, Date date);
+	boolean isSelected(Appointment appointment, Date date);
 	
 	/**
 	 * Returns if the given Date is currently selected. 

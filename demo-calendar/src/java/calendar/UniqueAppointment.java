@@ -11,7 +11,7 @@ import java.util.Calendar;
  *
  */
 public class UniqueAppointment {
-	private IAppointment appointment;
+	private Appointment appointment;
 	private Date date;
 	
 	/**
@@ -19,7 +19,7 @@ public class UniqueAppointment {
 	 * @param appointment
 	 * @param date
 	 */
-	public UniqueAppointment(IAppointment appointment, Date date)
+	public UniqueAppointment(Appointment appointment, Date date)
 	{
 		this.appointment = appointment;
 		this.date = date;
@@ -38,7 +38,7 @@ public class UniqueAppointment {
 	 * Returns the Appointment
 	 * @return
 	 */
-	public IAppointment getAppointment()
+	public Appointment getAppointment()
 	{
 		return appointment;
 	}

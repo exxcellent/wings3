@@ -134,7 +134,7 @@ public class DefaultCalendarSelectionModel implements CalendarSelectionModel {
 	}
 	
 	@Override
-	public void addSelection(IAppointment appointment, Date date) {
+	public void addSelection(Appointment appointment, Date date) {
 		if((selectionMode & CalendarSelectionModel.DESELECT_DATE_ON_APPOINTMENT_SELECTION) == CalendarSelectionModel.DESELECT_DATE_ON_APPOINTMENT_SELECTION)
 		{
 			clearDateSelection();
@@ -194,7 +194,7 @@ public class DefaultCalendarSelectionModel implements CalendarSelectionModel {
 		
 	}
 	
-	private void addSelectionCheckModifierKeys(IAppointment appointment, Date date, ModifierKeyStatus keyStatus)
+	private void addSelectionCheckModifierKeys(Appointment appointment, Date date, ModifierKeyStatus keyStatus)
 	{
 		if((selectionMode & CalendarSelectionModel.MULTIPLE_APPOINTMENT_SELECTION) == CalendarSelectionModel.MULTIPLE_APPOINTMENT_SELECTION)
 		{
@@ -224,7 +224,7 @@ public class DefaultCalendarSelectionModel implements CalendarSelectionModel {
 	}
 
 	@Override
-	public void removeSelection(IAppointment appointment, Date date) {
+	public void removeSelection(Appointment appointment, Date date) {
 		selectedAppointments.remove(new UniqueAppointment(appointment, date));
 
 		fireSelectionChangeEvent(new CalendarSelectionEvent(this, CalendarSelectionEvent.SelectionType.REMOVED, appointment, date));
@@ -278,7 +278,7 @@ public class DefaultCalendarSelectionModel implements CalendarSelectionModel {
 	}
 
 	@Override
-	public void clickAppointment(IAppointment appointment, Date date, ModifierKeyStatus keyStatus) {
+	public void clickAppointment(Appointment appointment, Date date, ModifierKeyStatus keyStatus) {
 		if(isSelected(appointment, date))
 			removeSelection(appointment, date);
 		else
@@ -316,7 +316,7 @@ public class DefaultCalendarSelectionModel implements CalendarSelectionModel {
 	}
 	
 	@Override
-	public boolean isSelected(IAppointment appointment, Date date) {
+	public boolean isSelected(Appointment appointment, Date date) {
 		if(selectedAppointments.contains(new UniqueAppointment(appointment, date)))
 		{
 			return true;

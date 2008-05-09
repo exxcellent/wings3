@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -168,8 +167,8 @@ public class CalendarExample {
 				new SelectionChangeListener()
 				{
 					@Override
-					public void appointmentSelected(IAppointment appointment) {
-						LOG.info("Appointment selected: " + appointment.toString());
+					public void appointmentSelected(Appointment appointment) {
+						LOG.info("DefaultAppointment selected: " + appointment.toString());
 					}
 
 					@Override
@@ -294,13 +293,13 @@ public class CalendarExample {
 	private void generateAndSetTestAppointments2()
 	{
 		final long ONE_MINUTE_IN_MILLISECONDS = 60*1000; 
-		Collection<IAppointment> appointments = new ArrayList<IAppointment>();
+		Collection<Appointment> appointments = new ArrayList<Appointment>();
 		
 		Calendar todayCal = Calendar.getInstance();
 		
 		Date startDate = new Date(todayCal.getTime().getTime());
 		Date endDate = new Date(todayCal.getTime().getTime()+120*ONE_MINUTE_IN_MILLISECONDS);
-		Appointment simpleEvent = new Appointment("NormalEvent lang lang lang lang lang lang lang", null, IAppointment.AppointmentType.NORMAL, startDate, endDate);
+		DefaultAppointment simpleEvent = new DefaultAppointment("NormalEvent lang lang lang lang lang lang lang", null, Appointment.AppointmentType.NORMAL, startDate, endDate);
 		simpleEvent.setForegroundColor(Color.BLACK);
 		simpleEvent.setBackgroundColor(Color.MAGENTA);
 		appointments.add(simpleEvent);
@@ -308,7 +307,7 @@ public class CalendarExample {
 		
 		startDate = new Date(todayCal.getTime().getTime()+-3*24*60*ONE_MINUTE_IN_MILLISECONDS);
 		endDate = new Date(todayCal.getTime().getTime()+2*24*60*ONE_MINUTE_IN_MILLISECONDS);
-		Appointment alldayEvent = new Appointment("AlldayEvent", "Description", IAppointment.AppointmentType.ALLDAY, startDate, endDate);
+		DefaultAppointment alldayEvent = new DefaultAppointment("AlldayEvent", "Description", Appointment.AppointmentType.ALLDAY, startDate, endDate);
 		alldayEvent.setForegroundColor(Color.WHITE);
 		alldayEvent.setBackgroundColor(Color.BLUE);
 		appointments.add(alldayEvent);
@@ -316,8 +315,8 @@ public class CalendarExample {
 		startDate = new Date(todayCal.getTime().getTime()+ -10*24*60*ONE_MINUTE_IN_MILLISECONDS);
 		endDate = new Date(todayCal.getTime().getTime()+10*24*60*ONE_MINUTE_IN_MILLISECONDS + 90*ONE_MINUTE_IN_MILLISECONDS);
 		
-		EnumSet<IAppointment.Weekday> weekdays = EnumSet.<IAppointment.Weekday>of(IAppointment.Weekday.SUNDAY, IAppointment.Weekday.TUESDAY);
-		Appointment recurringEvent = new Appointment("RecurringNormalEvent", "lang lang lang lang lang lang lagn", IAppointment.AppointmentType.NORMAL, startDate, endDate, weekdays);
+		EnumSet<Appointment.Weekday> weekdays = EnumSet.<Appointment.Weekday>of(Appointment.Weekday.SUNDAY, Appointment.Weekday.TUESDAY);
+		DefaultAppointment recurringEvent = new DefaultAppointment("RecurringNormalEvent", "lang lang lang lang lang lang lagn", Appointment.AppointmentType.NORMAL, startDate, endDate, weekdays);
 		recurringEvent.setForegroundColor(null);
 		recurringEvent.setBackgroundColor(null);
 		appointments.add(recurringEvent);

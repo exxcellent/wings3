@@ -22,7 +22,7 @@ public class DefaultCalendarModel implements CalendarModel {
 	private static final Log LOG = LogFactory.getLog(DefaultCalendarModel.class);
 	public PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 	private CalendarView view;
-	protected Collection<IAppointment> appointments;
+	protected Collection<Appointment> appointments;
 	private Date visibleFrom;
 	private Date visibleUntil;
 	private Date date;
@@ -67,7 +67,7 @@ public class DefaultCalendarModel implements CalendarModel {
 		return this.date;
 	}
 	
-	public Collection<IAppointment> getAppointments()
+	public Collection<Appointment> getAppointments()
 	{
 		return appointments;
 	}
@@ -140,7 +140,7 @@ public class DefaultCalendarModel implements CalendarModel {
 	 * @param date
 	 * @return
 	 */
-	private boolean isAppointmentOnDateDay(IAppointment appointment, Date date)
+	private boolean isAppointmentOnDateDay(Appointment appointment, Date date)
 	{
 		Calendar calTestDate = Calendar.getInstance();
 		calTestDate.setTime(date);
@@ -176,13 +176,13 @@ public class DefaultCalendarModel implements CalendarModel {
 		return false;
 	}
 	
-	private boolean isAppointmentAdded(IAppointment appointment, Date date)
+	private boolean isAppointmentAdded(Appointment appointment, Date date)
 	{
 		if(isAppointmentOnDateDay(appointment, date))
 		{
 			if(appointment.isAppointmentRecurring())
 			{
-				if(appointment.getAppointmentRecurringDays().contains(Appointment.getWeekdayFromDate(date)))
+				if(appointment.getAppointmentRecurringDays().contains(DefaultAppointment.getWeekdayFromDate(date)))
 					return true;
 			}
 			else
@@ -199,10 +199,10 @@ public class DefaultCalendarModel implements CalendarModel {
 	 * @author Florian Roks
 	 *
 	 */
-	private class TimeComparator implements Comparator<IAppointment>
+	private class TimeComparator implements Comparator<Appointment>
 	{
 		@Override
-		public int compare(IAppointment arg0, IAppointment arg1) {
+		public int compare(Appointment arg0, Appointment arg1) {
 			Date date0 = arg0.getAppointmentStartDate();
 			Date date1 = arg1.getAppointmentStartDate();
 			 
@@ -211,28 +211,28 @@ public class DefaultCalendarModel implements CalendarModel {
 		}
 	}
 	
-	protected Comparator<IAppointment> timeComparator = new TimeComparator();
+	protected Comparator<Appointment> timeComparator = new TimeComparator();
 	
 	/**
 	 * Returns the appointments on date
 	 */
 	@Override
-	public Collection<IAppointment> getAppointments(Date date) {
+	public Collection<Appointment> getAppointments(Date date) {
 		if(appointments == null)
 			return null;
 		
-		ArrayList<IAppointment> eventListAllDay = new ArrayList<IAppointment>();
-		ArrayList<IAppointment> eventListNormal = new ArrayList<IAppointment>();
+		ArrayList<Appointment> eventListAllDay = new ArrayList<Appointment>();
+		ArrayList<Appointment> eventListNormal = new ArrayList<Appointment>();
 		
 		// TODO: Pregenerate this data from visiblefrom to visibleuntil on setAppointments
-		for(IAppointment appointment:appointments)
+		for(Appointment appointment:appointments)
 		{
 			// this should add all appointments that are active on this day
 			if(isAppointmentAdded(appointment, date))
 			{
-				if(appointment.getAppointmentType() == IAppointment.AppointmentType.NORMAL)
+				if(appointment.getAppointmentType() == Appointment.AppointmentType.NORMAL)
 					eventListNormal.add(appointment);
-				if(appointment.getAppointmentType() == IAppointment.AppointmentType.ALLDAY)
+				if(appointment.getAppointmentType() == Appointment.AppointmentType.ALLDAY)
 					eventListAllDay.add(appointment);
 			}
 		}
@@ -270,7 +270,7 @@ public class DefaultCalendarModel implements CalendarModel {
 	 * Sets the Appointments for this CalendarModel
 	 * @param appointments
 	 */
-	public void setAppointments(Collection<IAppointment> appointments) {
+	public void setAppointments(Collection<Appointment> appointments) {
 		this.appointments = appointments;
 		
 		// TODO: implement a equals/hashCode for appointments to check if they changed
@@ -331,12 +331,12 @@ public class DefaultCalendarModel implements CalendarModel {
 	}
 	
 	@Override
-	public String getUniqueAppointmentID(Date date, IAppointment appointmentToGetIDFrom) {
+	public String getUniqueAppointmentID(Date date, Appointment appointmentToGetIDFrom) {
 		Calendar tempCal = Calendar.getInstance();
 		tempCal.setTime(date);
-		Collection<IAppointment> appointments = this.getAppointments(date);
+		Collection<Appointment> appointments = this.getAppointments(date);
 		int i = 0;
-		for(IAppointment appointment:appointments)
+		for(Appointment appointment:appointments)
 		{
 			if(appointment == appointmentToGetIDFrom)
 			{
@@ -350,17 +350,17 @@ public class DefaultCalendarModel implements CalendarModel {
 	}
 	
 	@Override
-	public IAppointment getAppointmentFromID(String uniqueID) {
+	public Appointment getAppointmentFromID(String uniqueID) {
 		String[] values = uniqueID.split(":"); // year:day_of_year:appointmentNR
 		
 		Calendar tempCal = Calendar.getInstance();
 		tempCal.set(Calendar.YEAR, Integer.parseInt(values[0]));
 		tempCal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(values[1]));
 
-		Collection<IAppointment> appointments = this.getAppointments(new java.sql.Date(tempCal.getTimeInMillis()));
+		Collection<Appointment> appointments = this.getAppointments(new java.sql.Date(tempCal.getTimeInMillis()));
 		int i = 0;
 		int lookForNr = Integer.parseInt(values[2]);
-		for(IAppointment appointment:appointments)
+		for(Appointment appointment:appointments)
 		{
 			if(i == lookForNr)
 			{

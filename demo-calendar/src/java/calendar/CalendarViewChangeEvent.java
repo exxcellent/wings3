@@ -16,7 +16,7 @@ import calendar.CalendarModel.CalendarView;
  */
 public class CalendarViewChangeEvent extends EventObject {
 	private static final long serialVersionUID = -6315890972303735738L;
-	private Collection<IAppointment> appointments;
+	private Collection<Appointment> appointments;
 	private Date date;
 	private ChangeType type;
 	private CalendarView view;
@@ -26,7 +26,7 @@ public class CalendarViewChangeEvent extends EventObject {
 	 * @param source Source of the Event
 	 * @param appointments New Appointments
 	 */
-	public CalendarViewChangeEvent(Object source, Collection<IAppointment> appointments)
+	public CalendarViewChangeEvent(Object source, Collection<Appointment> appointments)
 	{
 		super(source);
 		
@@ -54,7 +54,7 @@ public class CalendarViewChangeEvent extends EventObject {
 	 * @param appointments New Appointments / null if date
 	 * @param date New Date / null if appointment
 	 */
-	public CalendarViewChangeEvent(Object source, ChangeType type, Collection<IAppointment> appointments, Date date)
+	public CalendarViewChangeEvent(Object source, ChangeType type, Collection<Appointment> appointments, Date date)
 	{
 		super(source);
 		
@@ -102,7 +102,7 @@ public class CalendarViewChangeEvent extends EventObject {
 	 * Returns the new Appointments of the view
 	 * @return
 	 */
-	public Collection<IAppointment> getAppointments()
+	public Collection<Appointment> getAppointments()
 	{
 		return this.appointments;
 	}

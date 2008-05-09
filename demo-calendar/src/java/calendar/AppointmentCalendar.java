@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;*/
 import org.wings.LowLevelEventListener;
 import org.wings.SComponent;
 
-import calendar.CalendarModel.CalendarView;
 import calendar.plaf.CalendarCG;
 
 import java.sql.Date;
@@ -234,7 +233,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 /*	
 	public void generateAndSetTestAppointments()
 	{
-		Collection<Appointment> appointments = new ArrayList<Appointment>();
+		Collection<DefaultAppointment> appointments = new ArrayList<DefaultAppointment>();
         Random random = new Random();
         java.util.Calendar from = java.util.Calendar.getInstance();
         from.add(java.util.Calendar.MONTH, -1);
@@ -394,7 +393,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 				String[] data = value.split(":");
 				cal.set(Calendar.YEAR, Integer.parseInt(data[1]));
 				cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(data[2]));
-				IAppointment appointment = getCalendarModel().getAppointmentFromID(value.substring(2));
+				Appointment appointment = getCalendarModel().getAppointmentFromID(value.substring(2));
 
 				this.getSelectionModel().clickAppointment(appointment, new Date(cal.getTimeInMillis()), modifierKeyStatus);
 			}

@@ -41,7 +41,7 @@ public abstract interface CalendarModel {
 	 * @param date Date for which to retrieve the Appointments
 	 * @return Appointments that are active on this day
 	 */
-	public abstract Collection<IAppointment> getAppointments(Date date);
+	public abstract Collection<Appointment> getAppointments(Date date);
 
 	/**
 	 * Sets the <code>Date</code> that this Calendars view starts
@@ -148,12 +148,12 @@ public abstract interface CalendarModel {
 	 * @param appointment
 	 * @return
 	 */
-	public String getUniqueAppointmentID(Date date, IAppointment appointment);
+	public String getUniqueAppointmentID(Date date, Appointment appointment);
 	
 	/**
 	 * Must return a Appointment for a Unique ID created by getUniqueAppointmentID(...)
 	 * @param uniqueID
 	 * @return
 	 */
-	public IAppointment getAppointmentFromID(String uniqueID);
+	public Appointment getAppointmentFromID(String uniqueID);
 }

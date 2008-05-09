@@ -1,11 +1,6 @@
 package calendar.plaf;
 
 import java.io.IOException;
-import calendar.AppointmentCalendar;
-import calendar.CalendarModel;
-import calendar.Appointment;
-import calendar.CalendarSelectionEvent;
-import calendar.CalendarSelectionModel;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,8 +22,8 @@ import java.util.ArrayList;
 import org.wings.plaf.css.Utils;
 import org.wings.header.SessionHeaders;
 import java.awt.Color;
-import calendar.IAppointment;
-import calendar.CustomCellRenderer;
+import calendar.Appointment;
+import calendar.*;
 
 /**
  * PLAF Code Generator for the Calendar Component 
@@ -123,7 +118,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 			device.print(formatter.format(tempCal.getTime()));
 			device.print("</div>");
 
-			Collection<IAppointment> appointments = calendar.getCalendarModel().getAppointments(new Date(tempCal.getTimeInMillis()));
+			Collection<Appointment> appointments = calendar.getCalendarModel().getAppointments(new Date(tempCal.getTimeInMillis()));
 
 			if(appointments == null)
 			{
@@ -133,7 +128,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 			}
 			
 			int i=0;
-			for(IAppointment appointment:appointments)
+			for(Appointment appointment:appointments)
 			{
 				if(i > calendar.getCalendarModel().getMaxNumberAppointmentsPerCell())
 					break;
@@ -181,11 +176,11 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 			device.print(">");
 			
 			
-			Collection<IAppointment> appointments = calendar.getCalendarModel().getAppointments(new java.sql.Date(tempCal.getTimeInMillis()));
+			Collection<Appointment> appointments = calendar.getCalendarModel().getAppointments(new java.sql.Date(tempCal.getTimeInMillis()));
 			if(appointments != null)
 			{
 				int i = 0;
-				for(IAppointment appointment:appointments)
+				for(Appointment appointment:appointments)
 				{
 					if(i >= calendar.getCalendarModel().getMaxNumberAppointmentsPerCell())
 						continue;
@@ -284,7 +279,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 				device.print(">");
 
 				device.print("<span class=\"dayofmonth\">" + tempCal.get(Calendar.DAY_OF_MONTH) + "</span><br />");
-				Collection<IAppointment> appointments = model.getAppointments(new java.sql.Date(tempCal.getTimeInMillis()));
+				Collection<Appointment> appointments = model.getAppointments(new java.sql.Date(tempCal.getTimeInMillis()));
 				if(appointments == null)
 				{
 					tempCal.add(Calendar.DAY_OF_MONTH, 1);
@@ -292,7 +287,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 				}
 
 				int i = 0;
-				for(IAppointment appointment:appointments)
+				for(Appointment appointment:appointments)
 				{
 					if(i >= model.getMaxNumberAppointmentsPerCell())
 						continue;
@@ -356,7 +351,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	 * @param today
 	 * @throws IOException
 	 */
-	public void writeAppointment(final Device device, final AppointmentCalendar calendar, final IAppointment appointment, final Calendar today) throws IOException
+	public void writeAppointment(final Device device, final AppointmentCalendar calendar, final Appointment appointment, final Calendar today) throws IOException
 	{	
 		java.sql.Date sqlDate = new Date(today.getTimeInMillis());
 		String uniqueID = calendar.getCalendarModel().getUniqueAppointmentID(sqlDate, appointment);
@@ -394,7 +389,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 				}
 				device.print(">");
 				
-				if(appointment.getAppointmentType() == IAppointment.AppointmentType.NORMAL)
+				if(appointment.getAppointmentType() == Appointment.AppointmentType.NORMAL)
 				{
 					String startTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(appointment.getAppointmentStartDate());
 					device.print(startTime + " ");
@@ -411,7 +406,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 
 				if(!calendar.getSelectionModel().isSelected(appointment, sqlDate))
 				{
-					if(appointment.getAppointmentType() == IAppointment.AppointmentType.NORMAL)
+					if(appointment.getAppointmentType() == Appointment.AppointmentType.NORMAL)
 					{
 						if(appointment.isAppointmentRecurring())
 							device.print("<div class=\"recurringappointment\"");
@@ -447,7 +442,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 						
 				device.print(">");
 
-				if(appointment.getAppointmentType() == IAppointment.AppointmentType.NORMAL)
+				if(appointment.getAppointmentType() == Appointment.AppointmentType.NORMAL)
 				{
 					DateFormat timeFormatter = DateFormat.getTimeInstance(DateFormat.SHORT, calendar.getLocale());
 					device.print("<div class=\"time\">" + timeFormatter.format(start) + " - " + timeFormatter.format(end) + "</div>");
@@ -489,7 +484,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 				
 				if(!calendar.getSelectionModel().isSelected(appointment, sqlDate))
 				{
-					if(appointment.getAppointmentType() == IAppointment.AppointmentType.NORMAL)
+					if(appointment.getAppointmentType() == Appointment.AppointmentType.NORMAL)
 					{
 						if(appointment.isAppointmentRecurring())
 							device.print("<div class=\"recurringappointment\"");
@@ -525,7 +520,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 						
 				device.print(">");
 
-				if(appointment.getAppointmentType() == IAppointment.AppointmentType.NORMAL)
+				if(appointment.getAppointmentType() == Appointment.AppointmentType.NORMAL)
 				{
 					DateFormat timeFormatter = DateFormat.getTimeInstance(DateFormat.SHORT, calendar.getLocale());
 					device.print("<div class=\"time\">" + timeFormatter.format(start) + " - " + timeFormatter.format(end) + "</div>");
@@ -570,7 +565,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	 * @param appointment
 	 * @throws IOException
 	 */
-	public void writePopupText(final Device device, final AppointmentCalendar calendar, final IAppointment appointment) throws IOException
+	public void writePopupText(final Device device, final AppointmentCalendar calendar, final Appointment appointment) throws IOException
 	{
 /*		device.print("<div id=\"" + calendar.getName() + "-Popup\">");
 		writePopupInnerHTML(device, calendar, appointment);
@@ -593,7 +588,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 
         device.print(appointment.getAppointmentStartEndDateString(calendar.getLocale()) + "<br />");
 
-        if(appointment.getAppointmentType() == IAppointment.AppointmentType.NORMAL)
+        if(appointment.getAppointmentType() == Appointment.AppointmentType.NORMAL)
         {
             device.print(appointment.getAppointmentStartEndTimeString(calendar.getLocale()) + "<br />");
         }
@@ -619,7 +614,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	 * @throws IOException
 	 */
     /*
-    public void writePopupInnerHTML(final Device device, final AppointmentCalendar calendar, final IAppointment appointment) throws IOException
+    public void writePopupInnerHTML(final Device device, final AppointmentCalendar calendar, final Appointment appointment) throws IOException
 	{
 		// on the first call (to render the initial div, appointment will be null
 		if(appointment == null)
@@ -641,7 +636,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 
 		device.print("<div id=\"startenddate\">" + appointment.getAppointmentStartEndDateString(calendar.getLocale()) + "</div>");
 			
-		if(appointment.getAppointmentType() == IAppointment.AppointmentType.NORMAL)
+		if(appointment.getAppointmentType() == Appointment.AppointmentType.NORMAL)
 		{
 			device.print("<span class=\"timeframe\">" + appointment.getAppointmentStartEndTimeString(calendar.getLocale()) + "</span><br />");
 		}
@@ -683,11 +678,11 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 		cal.set(Calendar.YEAR, Integer.parseInt(data[0]));
 		cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(data[1]));
 		
-		Collection<IAppointment> appointments = calendar.getCalendarModel().getAppointments(new Date(cal.getTimeInMillis()));
+		Collection<Appointment> appointments = calendar.getCalendarModel().getAppointments(new Date(cal.getTimeInMillis()));
 		if(appointments != null)
 		{
 			Object appointmentArray[] = appointments.toArray();
-			return new AppointmentPopupUpdate(calendar, (IAppointment)appointmentArray[Integer.parseInt(data[2])]);
+			return new AppointmentPopupUpdate(calendar, (Appointment)appointmentArray[Integer.parseInt(data[2])]);
 		}
 		
 		return null;
@@ -776,7 +771,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 					String uniqueAppointmentID = calendar.getCalendarModel().getUniqueAppointmentID(event.getDate(), event.getAppointment());
 					if(uniqueAppointmentID == null)
 					{
-						LOG.info("invalid appointment was sent: date:" + event.getDate().toLocaleString() + " app: "+event.getAppointment());
+						LOG.info("invalid appointment was sent: date:" + event.getDate() + " app: "+event.getAppointment());
                         calendar.getSelectionModel().removeSelection(event.getAppointment(), event.getDate());
                         return null;
 					}
@@ -809,7 +804,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	public class AppointmentPopupUpdate extends AbstractUpdate {
 		String htmlCode = "";
 		String exception = null;
-		IAppointment appointment;
+		Appointment appointment;
 		
 		/**
 		 * Constructs a Popup Update which is to be sent after a popup request 
@@ -817,7 +812,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 		 * @param appointment
 		 */
 		@SuppressWarnings("unchecked")
-		public AppointmentPopupUpdate(SComponent component, IAppointment appointment) {
+		public AppointmentPopupUpdate(SComponent component, Appointment appointment) {
 			super(component);
 			
 			this.appointment = appointment;

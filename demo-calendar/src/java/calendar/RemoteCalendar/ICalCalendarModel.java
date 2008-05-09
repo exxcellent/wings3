@@ -11,7 +11,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.TimeZone;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
@@ -24,9 +23,9 @@ import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Sequence;
 import net.fortuna.ical4j.model.property.Summary;
 
-import calendar.Appointment;
+import calendar.DefaultAppointment;
 import calendar.DefaultCalendarModel;
-import calendar.IAppointment;
+import calendar.Appointment;
 
 /**
  * Example Calendar Model for the iCal Format (using ical4j) - it's incomplete, as it's only a proof-of-concept 
@@ -73,7 +72,7 @@ public class ICalCalendarModel extends DefaultCalendarModel {
 	}
 	
 	private void updateAppointments() {
-		Collection<IAppointment> appointments = new ArrayList<IAppointment>();
+		Collection<Appointment> appointments = new ArrayList<Appointment>();
 		
 		for(Iterator<Component> i = iCalendar.getComponents().iterator(); i.hasNext();) {
 			Component component = i.next();
@@ -81,7 +80,7 @@ public class ICalCalendarModel extends DefaultCalendarModel {
 			if(component.getName() != "VEVENT")
 				continue;
 			
-			Appointment appointment = new Appointment();
+			DefaultAppointment appointment = new DefaultAppointment();
 
 			if(component.getProperty("DTSTART") == null)
 			{
@@ -110,7 +109,7 @@ public class ICalCalendarModel extends DefaultCalendarModel {
 			int sequenceNr = ((Sequence)component.getProperty("SEQUENCE")).getSequenceNo();
 			if(sequenceNr == 1) {
 				// probably a allday event
-				appointment.setAppointmentType(IAppointment.AppointmentType.ALLDAY);
+				appointment.setAppointmentType(Appointment.AppointmentType.ALLDAY);
 			}
 			
 			appointments.add(appointment);

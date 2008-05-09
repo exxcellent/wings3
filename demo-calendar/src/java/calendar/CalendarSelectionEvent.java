@@ -16,7 +16,7 @@ public class CalendarSelectionEvent extends EventObject {
 
 	private SelectionType selectionType;
 	private SelectionComponent selectionComponent;
-	private IAppointment selectedAppointment;
+	private Appointment selectedAppointment;
 	private Date selectedDate;
 	
 	/**
@@ -26,7 +26,7 @@ public class CalendarSelectionEvent extends EventObject {
 	 * @param selectedAppointment
 	 * @param date
 	 */
-	public CalendarSelectionEvent(Object source, SelectionType type, IAppointment selectedAppointment, Date date)
+	public CalendarSelectionEvent(Object source, SelectionType type, Appointment selectedAppointment, Date date)
 	{
 		super(source);
 	
@@ -74,7 +74,7 @@ public class CalendarSelectionEvent extends EventObject {
 	 * Returns the selected/deselected Appointment (or null if this event's a date)
 	 * @return
 	 */
-	public IAppointment getAppointment()
+	public Appointment getAppointment()
 	{
 		return selectedAppointment;
 	}
