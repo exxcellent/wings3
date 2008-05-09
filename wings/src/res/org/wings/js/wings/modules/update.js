@@ -6,6 +6,10 @@
 wingS.namespace("update");
 
 
+wingS.update.runScript = function(scriptToEval) {
+    eval(scriptToEval);
+}
+
 /**
  * Adds or removes a script header with the given parameters.
  * @param {Boolean} add - true, if the header should be added
