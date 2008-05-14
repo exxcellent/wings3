@@ -529,7 +529,7 @@ public class SGridBagLayout
      * @param comp the component
      * @return the constraint or null if the component is unknown
      */
-    final public GridBagConstraints getConstraints(SComponent comp) {
+    public GridBagConstraints getConstraints(SComponent comp) {
         // It might be better to return a copy of the constraint,
         // but that would hurt the performance
         return (GridBagConstraints) getGrid().modifiedConstraints.get(comp);
