@@ -795,9 +795,10 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 					String uniqueAppointmentID = calendar.getCalendarModel().getUniqueAppointmentID(event.getDate(), event.getAppointment());
 					if(uniqueAppointmentID == null)
 					{
-						LOG.info("invalid appointment was sent: date:" + event.getDate() + " app: " + event.getAppointment());
-                        calendar.getSelectionModel().removeSelection(event.getAppointment(), event.getDate());
-                        return null;
+                        LOG.info("invalid appointment was sent: date:" + event.getDate() + " app: " + event.getAppointment());
+                        handler.addParameter("invalid appointment");
+                        //calendar.getSelectionModel().removeSelection(event.getAppointment(), event.getDate());
+                        return handler;
 					}
 					handler.addParameter(uniqueAppointmentID);
 					String htmlCode;

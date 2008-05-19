@@ -42,8 +42,14 @@ public class UniqueAppointment {
 	{
 		return appointment;
 	}
-	
-	@Override
+
+    @Override
+    public int hashCode()
+    {
+        return this.date.hashCode() ^ this.appointment.hashCode();
+    }
+
+    @Override
 	public boolean equals(Object obj)
 	{
 		if(obj instanceof UniqueAppointment)
