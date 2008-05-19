@@ -965,10 +965,10 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
 
     public void setAttributes(Selector selector, CSSAttributeSet attributes) {
         Style style = getDynamicStyle(selector);
-        Map<CSSProperty, String> oldStyleProperties = style.properties();
         if (style == null) {
             addDynamicStyle(new CSSStyle(selector, attributes));
         } else {
+        	Map<CSSProperty, String> oldStyleProperties = style.properties();
             boolean changed = style.putAll(attributes);
             if (changed)
                 reload();
