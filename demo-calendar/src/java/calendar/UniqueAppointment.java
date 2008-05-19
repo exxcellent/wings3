@@ -46,7 +46,10 @@ public class UniqueAppointment {
     @Override
     public int hashCode()
     {
-        return this.date.hashCode() ^ this.appointment.hashCode();
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTimeInMillis(this.date.getTime());
+
+        return cal1.get(Calendar.DAY_OF_YEAR) ^ cal1.get(Calendar.YEAR) ^ this.appointment.hashCode();
     }
 
     @Override
