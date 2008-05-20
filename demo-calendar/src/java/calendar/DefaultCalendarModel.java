@@ -268,13 +268,15 @@ public class DefaultCalendarModel implements CalendarModel {
 		this.visibleUntil = visibleUntil;
 	}
 
-
 	/**
 	 * Sets the Appointments for this CalendarModel
 	 * @param appointments
 	 */
 	public void setAppointments(Collection<Appointment> appointments) {
-		this.appointments = appointments;
+	    // if only properties of objects in the list changed, this.appointments.equals(appointments) 
+        propertyChangeSupport.firePropertyChange("preAppointmentsChange", null, appointments);
+
+        this.appointments = appointments;
 		
 		fireViewChangeEvent(new CalendarViewChangeEvent(this, appointments));
 	}
@@ -326,7 +328,7 @@ public class DefaultCalendarModel implements CalendarModel {
 		return 1000;
 	}
 
-	private void fireViewChangeEvent(CalendarViewChangeEvent e) {
+	public void fireViewChangeEvent(CalendarViewChangeEvent e) {
 		for(CalendarViewChangeListener listener:viewChangeListener)
 		{
 			listener.valueChanged(e);

@@ -86,15 +86,18 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
     	
     };
     
-    private PropertyChangeListener fwdLocaleChange = new PropertyChangeListener() {
+    private PropertyChangeListener fwdPropChangeCalModel = new PropertyChangeListener() {
 		@Override
 		public void propertyChange(PropertyChangeEvent evt) {
 			// Reload the component if the locale changes
-			if(evt.getPropertyName().equals("locale")) {
+            if(evt.getPropertyName().equals("locale")) {
 				reload();
 			}
             if(evt.getPropertyName().equals("mergeWeekends")) {
                 reload();
+            }
+            if(evt.getPropertyName().equals("preAppointmentsChange")) {
+                getSelectionModel().clearAppointmentSelection();
             }
         }
     	
@@ -191,13 +194,13 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 		
 		if(oldVal == null) {
 			this.model = model;
-			this.model.addPropertyChangeListener(fwdLocaleChange);
+			this.model.addPropertyChangeListener(fwdPropChangeCalModel);
 			this.model.addCalendarViewChangeListener(fwdCalendarViewEvents);
 		} else {
 			this.model = model;
-			oldVal.removePropertyChangeListener(fwdLocaleChange);
+			oldVal.removePropertyChangeListener(fwdPropChangeCalModel);
 			oldVal.removeCalendarViewChangeListener(fwdCalendarViewEvents);
-			this.model.addPropertyChangeListener(fwdLocaleChange);
+			this.model.addPropertyChangeListener(fwdPropChangeCalModel);
 			this.model.addCalendarViewChangeListener(fwdCalendarViewEvents);
 		}
 		
