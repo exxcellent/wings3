@@ -53,6 +53,7 @@
         <file name="layout.js"/>
         <file name="keyboard.js"/>
         <file name="dnd.js"/>
+        <file name="sdnd.js"/>
     	<file name="tooltip.js"/>
     	<file name="scrollbar.js"/>
     	<file name="table.js"/>
