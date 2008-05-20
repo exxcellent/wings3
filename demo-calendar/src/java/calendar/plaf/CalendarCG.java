@@ -853,7 +853,8 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 				StringBuilderDevice htmlDevice = new StringBuilderDevice(1024);
 				((CalendarCG)component.getCG()).writePopupText(htmlDevice, (AppointmentCalendar)component, this.appointment);
 				htmlCode = htmlDevice.toString();
-			}
+                htmlCode = htmlCode.replaceAll("\n", "<br />");
+            }
 			catch(Throwable t)
 			{
 				LOG.fatal("An error occured during rendering of AppointmentCalendar-Popup");
