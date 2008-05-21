@@ -53,7 +53,6 @@
         <file name="layout.js"/>
         <file name="keyboard.js"/>
         <file name="dnd.js"/>
-        <file name="sdnd.js"/>
     	<file name="tooltip.js"/>
     	<file name="scrollbar.js"/>
     	<file name="table.js"/>
@@ -111,24 +110,35 @@
 
     <target name="generate-wings.js" depends="-concat-wings.js" unless="nominimize">
         <!-- Minimize concatenated JS-file -->
-        <java jar="tools/javascript-compressor/js-compressor-1.2.7.jar" failonerror="true"
-            fork="true" maxmemory="128m">
-            <!--
+		<java jar="tools/yuicompressor/yuicompressor-2.3.4.jar" failonerror="true" fork="true" maxmemory="128m">
+            <arg value="-v" />
+            <arg value="-o" />
+			<arg value="${basedir}/src/res/org/wings/js/wings/wings-min.js"/>
+			<arg value="${basedir}/src/res/org/wings/js/wings/wings.js" />
+            <classpath>
+                <pathelement location="tools/yuicompressor/lib"/>
+                <pathelement path="${java.class.path}"/>
+            </classpath>
+		</java>
+		<!--
+        <java jar="tools/javascript-compressor/js-compressor-1.2.7.jar" failonerror="true" fork="true" maxmemory="128m">-->
+		<!--
                 Use this instead "-c" to achieve a greater compression and replace the
                 output file with the 3rd argument to use alternative compression
                 approach (55kb vs. 24kb. vs 16kb).
                 <arg value="${basedir}/tools/javascript-compressor/packer.js"/>
-            -->
-            <arg value="-v"/>
-            <arg value="-c"/>
-            <arg value="${basedir}/src/res/org/wings/js/wings/wings.js"/>
-            <classpath>
-                <pathelement location="tools/javascript-compressor/js-compressor-1.2.7.jar"/>
-                <pathelement path="${java.class.path}"/>
-            </classpath>
-        </java>
-        <copy file="${basedir}/src/res/org/wings/js/wings/wings.js.compressed"
-            tofile="${basedir}/src/res/org/wings/js/wings/wings-min.js"/>
+		--><!--
+			<arg value="-v"/>
+			<arg value="-c"/>
+			<arg value="${basedir}/src/res/org/wings/js/wings/wings.js"/>
+			<classpath>
+				<pathelement location="tools/javascript-compressor/js-compressor-1.2.7.jar"/>
+				<pathelement path="${java.class.path}"/>
+			</classpath>
+		</java>
+		-->
+<!--        <copy file="${basedir}/src/res/org/wings/js/wings/wings.js.compressed"
+            tofile="${basedir}/src/res/org/wings/js/wings/wings-min.js"/> -->
     </target>
 
     <target name="compile" depends="prepare, generate">
