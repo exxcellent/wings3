@@ -338,6 +338,7 @@
             </files>
           </module>
           <module name="global" />
+          <module name="demo-dnd" />
         </modules>
       </facet-type>
     </autodetection-disabled>
@@ -551,24 +552,24 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/demo-calendar/demo-calendar.iml" filepath="$PROJECT_DIR$/demo-calendar/demo-calendar.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo-desktop/demo-desktop.iml" filepath="$PROJECT_DIR$/demo-desktop/demo-desktop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/demo-dnd/demo-dnd.iml" filepath="$PROJECT_DIR$/demo-dnd/demo-dnd.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo-jsp/demo-jsp.iml" filepath="$PROJECT_DIR$/demo-jsp/demo-jsp.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo-logconfig/demo-logconfig.iml" filepath="$PROJECT_DIR$/demo-logconfig/demo-logconfig.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo-mycomponent/demo-mycomponent.iml" filepath="$PROJECT_DIR$/demo-mycomponent/demo-mycomponent.iml" />
-      <module fileurl="file://$PROJECT_DIR$/demo-wingset/demo-wingscms.iml" filepath="$PROJECT_DIR$/demo-wingset/demo-wingscms.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo-wingset/demo-wingset.iml" filepath="$PROJECT_DIR$/demo-wingset/demo-wingset.iml" />
       <module fileurl="file://$PROJECT_DIR$/global.iml" filepath="$PROJECT_DIR$/global.iml" />
       <module fileurl="file://$PROJECT_DIR$/wings/wings.iml" filepath="$PROJECT_DIR$/wings/wings.iml" />
       <module fileurl="file://$PROJECT_DIR$/wings-cms/wings-cms.iml" filepath="$PROJECT_DIR$/wings-cms/wings-cms.iml" />
       <module fileurl="file://$PROJECT_DIR$/wings-experimental/wings-experimental.iml" filepath="$PROJECT_DIR$/wings-experimental/wings-experimental.iml" />
-      <module fileurl="file://$PROJECT_DIR$/wings-tests/wings-tests.iml" filepath="$PROJECT_DIR$/wings-tests/wings-tests.iml" />
       <module fileurl="file://$PROJECT_DIR$/wingx/wingx.iml" filepath="$PROJECT_DIR$/wingx/wingx.iml" />
     </modules>
   </component>
   <component name="ProjectReloadState">
     <option name="STATE" value="0" />
   </component>
-  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.6.0_03" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="ProjectView">
@@ -686,6 +687,25 @@
     <option name="myTilesValidationEnabled" value="true" />
     <option name="myValidatorValidationEnabled" value="true" />
     <option name="myReportErrorsAsWarnings" value="true" />
+  </component>
+  <component name="SvnBranchConfigurationManager">
+    <option name="myConfigurationMap">
+      <map>
+        <entry key="$PROJECT_DIR$">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchUrls">
+                <list>
+                  <option value="https://j-wings.svn.sourceforge.net/svnroot/j-wings/wings3/branches" />
+                  <option value="https://j-wings.svn.sourceforge.net/svnroot/j-wings/wings3/tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="https://j-wings.svn.sourceforge.net/svnroot/j-wings/wings3/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="SvnChangesBrowserSettings">
     <option name="USE_AUTHOR_FIELD" value="true" />
