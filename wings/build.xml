@@ -14,6 +14,12 @@
     <property name="xalan.version" value="xalan.jar"/>
     <property name="junit.version" value="junit-4.4.jar"/>
 
+    <!-- temporary fix, until jdk 1.6 includes sun.reflect.misc -->
+    <property environment="env" />
+    <property name="jre.home" value="${env.JRE_HOME}" /> <!-- note: ${env.JAVA_HOME}/jre doesn't work and without any classpath either -->
+    <property name="jre.lib" value="${jre.home}/lib" />
+    <!-- end temporary fix -->
+    
     <property name="test.log.dir" value="/tmp/" />
 
     <path id="build.classpath">
@@ -27,6 +33,11 @@
             <include name="${xalan.version}"/>
             <include name="${junit.version}"/>
         </fileset>
+        <!-- temporary fix, until jdk 1.6 includes sun.reflect.misc -->
+        <fileset dir="${jre.lib}">
+            <include name="rt.jar" />
+        </fileset>
+        <!-- end temporary fix -->
     </path>
 
     <path id="test.classpath">
@@ -137,9 +148,10 @@
 				<pathelement path="${java.class.path}"/>
 			</classpath>
 		</java>
-		-->
-<!--        <copy file="${basedir}/src/res/org/wings/js/wings/wings.js.compressed"
-            tofile="${basedir}/src/res/org/wings/js/wings/wings-min.js"/> -->
+		--><!--
+        <copy file="${basedir}/src/res/org/wings/js/wings/wings.js.compressed"
+            tofile="${basedir}/src/res/org/wings/js/wings/wings-min.js"/>
+        -->
     </target>
 
     <target name="compile" depends="prepare, generate">
@@ -164,15 +176,15 @@
             description="executes all tests">
         <junit fork="yes" haltonfailure="no" printsummary="on"
 	       showoutput="false">
-	    <classpath path="build/class"/>
-	    <classpath path="${test.classes.dir}"/>
-	    <classpath path="src/res"/>
-        <classpath refid="build.classpath"/>
-        <classpath refid="test.classpath"/>
-        <batchtest todir="${test.log.dir}">
-            <fileset refid="test.classes.files" />
-        </batchtest>
-        <formatter type="plain" usefile="false" />
+            <classpath path="build/class"/>
+            <classpath path="${test.classes.dir}"/>
+            <classpath path="src/res"/>
+            <classpath refid="build.classpath"/>
+            <classpath refid="test.classpath"/>
+            <batchtest todir="${test.log.dir}">
+                <fileset refid="test.classes.files" />
+            </batchtest>
+            <formatter type="plain" usefile="false" />
         </junit>
     </target>
 
