@@ -29,6 +29,8 @@ import java.text.ParsePosition;
  */
 public class SDimension implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * String constant for CSS dimension 'auto'.
      * This is the default width used by wings as well as by CSS capable browsers.
@@ -56,19 +58,19 @@ public class SDimension implements Serializable {
     /**
      * Immutable SDimension constants for a component taking up the full available width.
      */
-    public static final SDimension FULLWIDTH = new ImmutableSDimension("100%", null);
+    public static final SDimension FULLWIDTH = new UnmodifiableDimension("100%", null);
     /**
      * Immutable SDimension constants for a component taking up the full available height.
      */
-    public static final SDimension FULLHEIGHT = new ImmutableSDimension(null, "100%");
+    public static final SDimension FULLHEIGHT = new UnmodifiableDimension(null, "100%");
     /**
      * Immutable SDimension constants for a component taking up the full available area.
      */
-    public static final SDimension FULLAREA = new ImmutableSDimension("100%", "100%");
+    public static final SDimension FULLAREA = new UnmodifiableDimension("100%", "100%");
     /**
      * Immutable SDimension constants for a component taking up normal space
      */
-    public static final SDimension AUTOAREA = new ImmutableSDimension(AUTO, AUTO);
+    public static final SDimension AUTOAREA = new UnmodifiableDimension(AUTO, AUTO);
 
     private final transient static Log log = LogFactory.getLog(SDimension.class);
 
@@ -78,6 +80,10 @@ public class SDimension implements Serializable {
     private String heightUnit;
 
     public SDimension() {
+    }
+
+    public SDimension(SDimension dim) {
+        this(dim.getWidth(), dim.getHeight());
     }
 
     public SDimension(String width, String height) {
@@ -198,6 +204,17 @@ public class SDimension implements Serializable {
     }
 
     /**
+     * Set the size of this Dimension object to the specified width and height.
+     *
+     * @see #setHeight(String)
+     * @see #setWidth(String)
+     */
+    public void setSize(String width, String height) {
+        setWidth(width);
+        setHeight(height);
+    }
+
+    /**
      * Set the size of this Dimension object to the specified width and height
      * and append "px" to both values.
      *
@@ -288,12 +305,77 @@ public class SDimension implements Serializable {
         }
     }
 
-    private final static class ImmutableSDimension extends SDimension {
-        public ImmutableSDimension(String width, String height) {
+    private final static class UnmodifiableDimension extends SDimension {
+
+        private static final long serialVersionUID = 2933909201279046938L;
+
+        private static final String errorMsg =
+            "Predefined SDimension objects (FULLAREA, FULLWIDTH, ...) are unmodifiable! To change " +
+            "the size of a component with such a dimension a new SDimension object has to be set. ";
+
+        private boolean initialized = false;
+
+        public UnmodifiableDimension(String width, String height) {
             super(width, height);
+            initialized = true;
         }
+
+        @Override
+        public void setWidth(int width) {
+            if (!initialized) {
+                super.setWidth(width);
+            } else {
+                throw new UnsupportedOperationException(errorMsg);
+            }
+        }
+
+        @Override
+        public void setWidth(String width) {
+            if (!initialized) {
+                super.setWidth(width);
+            } else {
+                throw new UnsupportedOperationException(errorMsg);
+            }
+        }
+
+        @Override
+        public void setHeight(int height) {
+            if (!initialized) {
+                super.setHeight(height);
+            } else {
+                throw new UnsupportedOperationException(errorMsg);
+            }
+        }
+
+        @Override
+        public void setHeight(String height) {
+            if (!initialized) {
+                super.setHeight(height);
+            } else {
+                throw new UnsupportedOperationException(errorMsg);
+            }
+        }
+
+        @Override
+        public void setSize(String width, String height) {
+            if (!initialized) {
+                super.setSize(width, height);
+            } else {
+                throw new UnsupportedOperationException(errorMsg);
+            }
+        }
+
+        @Override
+        public void setSize(int width, int height) {
+            if (!initialized) {
+                super.setSize(width, height);
+            } else {
+                throw new UnsupportedOperationException(errorMsg);
+            }
+        }
+
     }
-    
+
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -320,5 +402,5 @@ public class SDimension implements Serializable {
     public int hashCode() {
         return widthInt;
     }
-    
+
 }

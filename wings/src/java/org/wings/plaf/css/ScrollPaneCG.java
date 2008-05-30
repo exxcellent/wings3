@@ -33,8 +33,8 @@ public class ScrollPaneCG extends org.wings.plaf.css.AbstractComponentCG impleme
             if (preferredSize == null) {
                 scrollpane.setPreferredSize(new SDimension(200, 400));
             } else {
-                if (preferredSize.getWidthInt() < 0) preferredSize.setWidth(200);
-                if (preferredSize.getHeightInt() < 0) preferredSize.setHeight(400);
+                if (preferredSize.getWidthInt() < 0) Utils.setPreferredSize(component, "200", preferredSize.getHeight());
+                if (preferredSize.getHeightInt() < 0) Utils.setPreferredSize(component, preferredSize.getWidth(), "400");;
             }
 
             ScriptManager.getInstance().addScriptListener(new LayoutScrollPaneScript(component.getName()));
@@ -58,13 +58,13 @@ public class ScrollPaneCG extends org.wings.plaf.css.AbstractComponentCG impleme
 
         if (clientLayout) {
             Utils.optAttribute(device, "layoutHeight", height);
-            preferredSize.setHeight(null);
+            Utils.setPreferredSize(scrollPane, preferredSize.getWidth(), null);
         }
 
         Utils.writeAllAttributes(device, scrollPane);
 
         if (clientLayout) {
-            preferredSize.setHeight(height);
+            Utils.setPreferredSize(scrollPane, preferredSize.getWidth(), height);
             scrollPane.getSession().getScriptManager().addScriptListener(new LayoutFillScript(scrollPane.getName()));
         }
         else if (clientFix)

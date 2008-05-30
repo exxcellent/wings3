@@ -34,14 +34,14 @@ public class ContainerCG extends AbstractComponentCG implements org.wings.plaf.P
 
         if (clientLayout) {
             Utils.optAttribute(device, "layoutHeight", height);
-            preferredSize.setHeight(null);
+            Utils.setPreferredSize(component, preferredSize.getWidth(), null);
         }
 
         Utils.writeAllAttributes(device, component);
         Utils.writeEvents(device, component, null);
 
         if (clientLayout) {
-            preferredSize.setHeight(height);
+            Utils.setPreferredSize(component, preferredSize.getWidth(), height);
             ScriptManager.getInstance().addScriptListener(new LayoutFillScript(component.getName()));
         }
 

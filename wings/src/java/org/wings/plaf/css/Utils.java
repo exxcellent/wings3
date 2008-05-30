@@ -1168,6 +1168,40 @@ public final class Utils {
         return insets != null && (insets.top > 0 || insets.left > 0 || insets.right > 0 || insets.bottom > 0);
     }
 
+    /**
+     * Sets the preferred size of the given component. In case the component's current
+     * dimension is unmodifiable (e.g. FULLAREA, FULLWIDTH, ...) a new dimension object
+     * with the desired initial values is created and set for the component.
+     *
+     * @param component the component which needs to be changed in size
+     * @param width the new width for the given component
+     * @param height the new height for the given component
+     */
+    public static void setPreferredSize(SComponent component, String width, String height) {
+        try {
+            component.getPreferredSize().setSize(width, height);
+        } catch(UnsupportedOperationException e) {
+            component.setPreferredSize(new SDimension(width, height));
+        }
+    }
+
+    /**
+     * Sets the preferred size of the given component. In case the component's current
+     * dimension is unmodifiable (e.g. FULLAREA, FULLWIDTH, ...) a new dimension object
+     * with the desired initial values is created and set for the component.
+     *
+     * @param component the component which needs to be changed in size
+     * @param width the new width for the given component
+     * @param height the new height for the given component
+     */
+    public static void setPreferredSize(SComponent component, int width, int height) {
+        try {
+            component.getPreferredSize().setSize(width, height);
+        } catch(UnsupportedOperationException e) {
+            component.setPreferredSize(new SDimension(width, height));
+        }
+    }
+
     public static void optFullSize(Device device, SComponent component) throws IOException {
         SDimension dim = component.getPreferredSize();
         if (dim != null) {

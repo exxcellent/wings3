@@ -72,7 +72,7 @@ public final class TextAreaCG extends AbstractComponentCG implements
         String actualWidth = null;
         if (tableWrapping) {
             actualWidth = preferredSize.getWidth();
-            preferredSize.setWidth("100%");
+            Utils.setPreferredSize(component, "100%", preferredSize.getHeight());
             device.print("<table style=\"table-layout: fixed; width: " + actualWidth + "\"><tr>");
             device.print("<td style=\"padding-right: " + Utils.calculateHorizontalOversize(component, true) + "px\">");
         }
@@ -114,7 +114,7 @@ public final class TextAreaCG extends AbstractComponentCG implements
         Utils.quote(device, component.getText(), false, false, false);
         device.print("</textarea>\n");
         if (tableWrapping) {
-            preferredSize.setWidth(actualWidth);
+            Utils.setPreferredSize(component, actualWidth, preferredSize.getHeight());
             device.print("</td></tr></table>");
         }
     }

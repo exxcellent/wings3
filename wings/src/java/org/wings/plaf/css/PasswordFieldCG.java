@@ -43,13 +43,13 @@ public final class PasswordFieldCG extends AbstractComponentCG implements
                       final SComponent _c)
             throws IOException {
         final SPasswordField component = (SPasswordField) _c;
-        
+
         SDimension preferredSize = component.getPreferredSize();
         boolean tableWrapping = Utils.isMSIE(component) && preferredSize != null && "%".equals(preferredSize.getWidthUnit());
         String actualWidth = null;
         if (tableWrapping) {
             actualWidth = preferredSize.getWidth();
-            preferredSize.setWidth("100%");
+            Utils.setPreferredSize(component, "100%", preferredSize.getHeight());
             device.print("<table style=\"table-layout: fixed; width: " + actualWidth + "\"><tr>");
             device.print("<td style=\"padding-right: " + Utils.calculateHorizontalOversize(component, true) + "px\">");
         }
@@ -81,7 +81,7 @@ public final class PasswordFieldCG extends AbstractComponentCG implements
         Utils.optAttribute(device, "value", component.getText());
         device.print("/>");
         if (tableWrapping) {
-            preferredSize.setWidth(actualWidth);
+            Utils.setPreferredSize(component, actualWidth, preferredSize.getHeight());
             device.print("</td></tr></table>");
         }
     }
