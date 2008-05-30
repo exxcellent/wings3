@@ -13,6 +13,7 @@ import org.wings.plaf.css.AbstractUpdate;
 import org.wings.plaf.css.UpdateHandler;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.sql.Date;
@@ -112,9 +113,14 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 			device.print(">");
 			
 			device.print("<div class=\"weekdaytitle\">");
-			device.print(tempCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, calendar.getLocale()));
-			DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT, calendar.getLocale());
-			device.print(" ");
+
+            DateFormat format = new SimpleDateFormat("EE", calendar.getLocale());
+            device.print(format.format(tempCal.getTime()));
+			// jdk 1.6
+            //device.print(tempCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, calendar.getLocale()));
+			
+            DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT, calendar.getLocale());
+			device.print(", ");
 			device.print(formatter.format(tempCal.getTime()));
 			device.print("</div>");
 
@@ -162,7 +168,11 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 			
 			DateFormat formatter = DateFormat.getDateInstance(DateFormat.LONG, calendar.getLocale());
 			
-			String dayTitle = tempCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, calendar.getCalendarModel().getLocale()) + ", " + formatter.format(calendar.getCalendarModel().getDate());
+            DateFormat format = new SimpleDateFormat("EEEEEEE", calendar.getLocale());
+            String dayTitle = format.format(calendar.getDate()) + ", " + formatter.format(calendar.getCalendarModel().getDate());
+
+            // jdk 1.6
+            // String dayTitle = tempCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, calendar.getCalendarModel().getLocale()) + ", " + formatter.format(calendar.getCalendarModel().getDate());
 			
 			device.print("<div class=\"daytitle\">" + dayTitle + "</div>");
 			device.print("<div class=\"dayappcontainer\"");
@@ -248,10 +258,16 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 		
 		for(int column = 0; column < model.getColumnCount(); column++)
 		{
-			device.print("<th>" + tempCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, calendar.getLocale()));
+            DateFormat format = new SimpleDateFormat("EE", calendar.getLocale());
+            device.print("<th>" + format.format(tempCal.getTime()));
+            
+            // jdk 1.6
+            // device.print("<th>" + tempCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, calendar.getLocale()));
             if(isThisDayMerged(model, tempCal, column)) {
                 tempCal.add(Calendar.DAY_OF_MONTH, 1);
-                device.print("/" + tempCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, calendar.getLocale()));
+                format.format(tempCal.getTime());
+                // jdk1.6
+                //device.print("/" + tempCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, calendar.getLocale()));
                 column += 1;
             }
             tempCal.add(Calendar.DAY_OF_MONTH, 1);

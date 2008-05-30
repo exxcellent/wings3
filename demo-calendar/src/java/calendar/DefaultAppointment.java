@@ -6,6 +6,7 @@ import java.util.EnumSet;
 import java.util.Calendar;
 import java.util.Locale;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * Class that represents an Appointment in the Calendar
@@ -271,7 +272,11 @@ public class DefaultAppointment implements Appointment {
 		for(Weekday weekday:weekdays)
 		{
 			tempCal.set(Calendar.DAY_OF_WEEK, getCalendarWeekdayFromWeekday(weekday));
-			recurringDays += ((i>0)?", ":"") + tempCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, locale);
+			DateFormat format = new SimpleDateFormat("EE", locale);
+
+            recurringDays += ((i>0)?", ":"") + format.format(tempCal.getTime());
+            // jdk 1.6
+            //recurringDays += ((i>0)?", ":"") + tempCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, locale);
 			
 			i++;
 		}

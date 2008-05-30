@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.EnumSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -144,7 +146,11 @@ public class CalendarExample {
 		monthLabel.setFont(font);
 		Calendar tempCal = Calendar.getInstance();
 		tempCal.setTime(calendar.getDate());
-		monthLabel.setText(tempCal.getDisplayName(Calendar.MONTH, Calendar.LONG, calendar.getLocale()).trim() + " " + tempCal.get(Calendar.YEAR));
+
+        DateFormat format = new SimpleDateFormat("MMMMMMM yyyy", calendar.getLocale());
+        monthLabel.setText(format.format(tempCal.getTime()));
+// jdk 1.6
+//		monthLabel.setText(tempCal.getDisplayName(Calendar.MONTH, Calendar.LONG, calendar.getLocale()).trim() + " " + tempCal.get(Calendar.YEAR));
 		
 		calendar.addCalendarViewChangeListener(
 				new CalendarViewChangeListener()
@@ -156,7 +162,11 @@ public class CalendarExample {
 							case DATE:
 								Calendar tempCal = Calendar.getInstance();
 								tempCal.setTime(e.getDate());
-								monthLabel.setText(tempCal.getDisplayName(Calendar.MONTH, Calendar.LONG, calendar.getLocale()).trim() + " " + tempCal.get(Calendar.YEAR));
+
+                                DateFormat format = new SimpleDateFormat("MMMMMMMM yyyy", calendar.getLocale());
+                                monthLabel.setText(format.format(tempCal.getTime()));
+								// jdk1.6
+                                //monthLabel.setText(tempCal.getDisplayName(Calendar.MONTH, Calendar.LONG, calendar.getLocale()).trim() + " " + tempCal.get(Calendar.YEAR));
 							break;
 						}
 					}
