@@ -14,7 +14,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * The Default Calendar Model for the AppointmentCalendar
- * 
+ *
  * @author Florian Roks
  *
  */
@@ -39,8 +39,7 @@ public class DefaultCalendarModel implements CalendarModel {
 		setLocale(Locale.getDefault());
 		setView(CalendarView.MONTH);
     }
-	
-	@Override
+
 	public CalendarView getView() {
 		return view;
 	}
@@ -49,16 +48,16 @@ public class DefaultCalendarModel implements CalendarModel {
 	 * Sets the date
 	 * @param date Date
 	 */
-	public void setDate(Date date) 
+	public void setDate(Date date)
 	{
 		if(date == null)
 			throw new IllegalArgumentException("date must be not null");
-		
+
 		Date oldVal = this.date;
 		this.date = date;
 
 		updateVisibleDates();
-		
+
 		if(oldVal != date)
 			fireViewChangeEvent(new CalendarViewChangeEvent(this, date));
 	}
@@ -67,15 +66,15 @@ public class DefaultCalendarModel implements CalendarModel {
 	{
 		return this.date;
 	}
-	
+
 	public Collection<Appointment> getAppointments()
 	{
 		return appointments;
 	}
-	
+
 	/**
 	 * Sets the type of view on this calendar (e.g. MONTH, DAY, WEEK)
-	 * @param view The view to be set  
+	 * @param view The view to be set
 	 */
 	public void setView(CalendarView view) {
 		CalendarView oldVal = this.view;
@@ -83,40 +82,40 @@ public class DefaultCalendarModel implements CalendarModel {
 
 		if(date == null)
 			return;
-		
+
 		updateVisibleDates();
-		
+
 		if(oldVal != view)
 			fireViewChangeEvent(new CalendarViewChangeEvent(this, view));
 	}
- 
+
 	private void updateVisibleDates()
 	{
 		if(this.view == null)
 			return;
-		
+
 		switch(this.view)
 		{
 			case MONTH:
 				Calendar calendar = Calendar.getInstance();
-				
+
 				calendar.setTime(this.date);
 				calendar.set(java.util.Calendar.DAY_OF_MONTH, 1);
-				
+
 				Calendar begin = (Calendar)calendar.clone();
-				begin.add(Calendar.DAY_OF_YEAR, -1);		
+				begin.add(Calendar.DAY_OF_YEAR, -1);
 				begin.add(Calendar.DAY_OF_YEAR, -((begin.get(Calendar.DAY_OF_WEEK) + 5) % 7));
-				
+
 				Calendar end = (Calendar)calendar.clone();
 				end.add(Calendar.WEEK_OF_YEAR, 5);
 				end.add(Calendar.DAY_OF_YEAR, ((8 - end.get(Calendar.DAY_OF_WEEK)) % 7));
-				
+
 				if(locale == Locale.US)
 				{
 					begin.add(Calendar.DAY_OF_YEAR, -1);
 					end.add(Calendar.DAY_OF_YEAR, -1);
 				}
-			
+
 				setVisibleFrom(new Date(begin.getTimeInMillis()));
 				setVisibleUntil(new Date(end.getTimeInMillis()));
 			break;
@@ -126,7 +125,7 @@ public class DefaultCalendarModel implements CalendarModel {
 
 				calendar2.add(Calendar.DAY_OF_YEAR, -2);
 				setVisibleFrom(new Date(calendar2.getTimeInMillis()));
-				
+
 				calendar2.setTime(this.date);
 				calendar2.add(Calendar.DAY_OF_YEAR, +5);
 				setVisibleUntil(new Date(calendar2.getTimeInMillis()));
@@ -136,7 +135,7 @@ public class DefaultCalendarModel implements CalendarModel {
 		}
 	}
 	/**
-	 * Returns if the appointment is on the day of date 
+	 * Returns if the appointment is on the day of date
 	 * @param appointment
 	 * @param date
 	 * @return
@@ -145,7 +144,7 @@ public class DefaultCalendarModel implements CalendarModel {
 	{
 		Calendar calTestDate = Calendar.getInstance();
 		calTestDate.setTime(date);
-		
+
 		Calendar appStartDate = Calendar.getInstance();
 		Date startDate = appointment.getAppointmentStartDate();
 		if(startDate == null) {
@@ -153,7 +152,7 @@ public class DefaultCalendarModel implements CalendarModel {
 			return false;
 		}
 		appStartDate.setTime(startDate);
-		
+
 		Calendar appEndDate = Calendar.getInstance();
 		Date endDate = appointment.getAppointmentEndDate();
 		if(endDate == null) {
@@ -161,8 +160,8 @@ public class DefaultCalendarModel implements CalendarModel {
 			return false;
 		}
 		appEndDate.setTime(endDate);
-		
-		if(appStartDate.get(Calendar.YEAR) <= calTestDate.get(Calendar.YEAR) && 
+
+		if(appStartDate.get(Calendar.YEAR) <= calTestDate.get(Calendar.YEAR) &&
 				appEndDate.get(Calendar.YEAR) >= calTestDate.get(Calendar.YEAR))
 		{
 			// date is in the correct year
@@ -173,10 +172,10 @@ public class DefaultCalendarModel implements CalendarModel {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	private boolean isAppointmentAdded(Appointment appointment, Date date)
 	{
 		if(isAppointmentOnDateDay(appointment, date))
@@ -191,27 +190,27 @@ public class DefaultCalendarModel implements CalendarModel {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
-	 * Compares a Date Timestamps 
+	 * Compares a Date Timestamps
 	 * @author Florian Roks
 	 *
 	 */
 	private class TimeComparator implements Comparator<Appointment>
 	{
-		@Override
+
 		public int compare(Appointment arg0, Appointment arg1) {
 			Date date0 = arg0.getAppointmentStartDate();
 			Date date1 = arg1.getAppointmentStartDate();
-			 
+
 			// this will fail if the dates are to far apart
 			return (int)(date0.getTime()-date1.getTime());
 		}
 	}
-	
+
 	protected Comparator<Appointment> timeComparator = new TimeComparator();
 
 
@@ -219,14 +218,13 @@ public class DefaultCalendarModel implements CalendarModel {
     /**
 	 * Returns the appointments on date
 	 */
-	@Override
 	public Collection<Appointment> getAppointments(Date date) {
 		if(appointments == null)
 			return null;
-		
+
 		ArrayList<Appointment> eventListAllDay = new ArrayList<Appointment>();
 		ArrayList<Appointment> eventListNormal = new ArrayList<Appointment>();
-		
+
 		// TODO: Pregenerate this data from visiblefrom to visibleuntil on setAppointments
 		for(Appointment appointment:appointments)
 		{
@@ -241,29 +239,25 @@ public class DefaultCalendarModel implements CalendarModel {
 		}
 		Collections.sort(eventListAllDay, timeComparator);
 		Collections.sort(eventListNormal, timeComparator);
-		
-		
+
+
 		eventListAllDay.addAll(eventListNormal);
-		
+
 		return eventListAllDay;
 	}
 
-	@Override
 	public Date getVisibleFrom() {
 		return visibleFrom;
 	}
 
-	@Override
 	public Date getVisibleUntil() {
 		return visibleUntil;
 	}
 
-	@Override
 	public void setVisibleFrom(Date visibleFrom) {
 		this.visibleFrom = visibleFrom;
 	}
 
-	@Override
 	public void setVisibleUntil(Date visibleUntil) {
 		this.visibleUntil = visibleUntil;
 	}
@@ -273,15 +267,14 @@ public class DefaultCalendarModel implements CalendarModel {
 	 * @param appointments
 	 */
 	public void setAppointments(Collection<Appointment> appointments) {
-	    // if only properties of objects in the list changed, this.appointments.equals(appointments) 
+	    // if only properties of objects in the list changed, this.appointments.equals(appointments)
         propertyChangeSupport.firePropertyChange("preAppointmentsChange", null, appointments);
 
         this.appointments = appointments;
-		
+
 		fireViewChangeEvent(new CalendarViewChangeEvent(this, appointments));
 	}
 
-	@Override
 	public int getColumnCount() {
 		switch(this.view)
 		{
@@ -293,7 +286,6 @@ public class DefaultCalendarModel implements CalendarModel {
 		return 0;
 	}
 
-	@Override
 	public int getRowCount() {
 		switch(this.view)
 		{
@@ -302,16 +294,14 @@ public class DefaultCalendarModel implements CalendarModel {
 			case MONTH:
 				return 6;
 		}
-		
+
 		return 0;
 	}
 
-	@Override
 	public CustomCellRenderer getCustomCellRenderer() {
 		return null;
 	}
 
-	@Override
 	public int getMaxNumberAppointmentsPerCell(boolean isMerged) {
 		switch(this.view)
 		{
@@ -324,7 +314,7 @@ public class DefaultCalendarModel implements CalendarModel {
 			case DAY:
 				return 1000;
 		}
-		
+
 		return 1000;
 	}
 
@@ -334,8 +324,7 @@ public class DefaultCalendarModel implements CalendarModel {
 			listener.valueChanged(e);
 		}
 	}
-	
-	@Override
+
 	public String getUniqueAppointmentID(Date date, Appointment appointmentToGetIDFrom) {
 		Calendar tempCal = Calendar.getInstance();
 		tempCal.setTime(date);
@@ -349,14 +338,13 @@ public class DefaultCalendarModel implements CalendarModel {
 			}
 			i++;
 		}
-		
+
 		return null;
 	}
-	
-	@Override
+
 	public Appointment getAppointmentFromID(String uniqueID) {
 		String[] values = uniqueID.split(":"); // year:day_of_year:appointmentNR
-		
+
 		Calendar tempCal = Calendar.getInstance();
 		tempCal.set(Calendar.YEAR, Integer.parseInt(values[0]));
 		tempCal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(values[1]));
@@ -372,7 +360,7 @@ public class DefaultCalendarModel implements CalendarModel {
 			}
 			i++;
 		}
-		
+
 		return null;
 	}
 
@@ -384,38 +372,32 @@ public class DefaultCalendarModel implements CalendarModel {
     }
 
     public boolean isMergeWeekendsEnabled() {
-        return this.mergeWeekends; 
+        return this.mergeWeekends;
     }
 
-    @Override
 	public void addCalendarViewChangeListener(CalendarViewChangeListener listener) {
 		viewChangeListener.add(listener);
 	}
 
-	@Override
 	public void removeCalendarViewChangeListener(CalendarViewChangeListener listener) {
 		viewChangeListener.add(listener);
 	}
 
-	@Override
 	public Locale getLocale() {
 		return this.locale;
 	}
 
-	@Override
 	public void setLocale(Locale locale) {
 		Locale oldVal = this.locale;
 		this.locale = locale;
-		
+
 		propertyChangeSupport.firePropertyChange("locale", oldVal, locale);
 	}
 
-	@Override
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		propertyChangeSupport.addPropertyChangeListener(listener);
 	}
 
-	@Override
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		propertyChangeSupport.removePropertyChangeListener(listener);
 	}

@@ -38,7 +38,7 @@ public class CalendarExample {
 	private static final Log LOG = LogFactory.getLog(CalendarExample.class);
 	final AppointmentCalendar calendar = new AppointmentCalendar();
 	private final String iCalURL = null;
-	
+
 	/**
 	 * Constructs the Calendar Example
 	 */
@@ -55,25 +55,25 @@ public class CalendarExample {
             model.setMergeWeekends(false);
             calendar.setCalendarModel(model);
 		}
-		
+
 		SFrame rootFrame = new SFrame();
 		rootFrame.setTitle("Demo Event-Calendar!");
 		rootFrame.setBackground(Color.LIGHT_GRAY);
-		
+
 		SPanel mainPanel = new SPanel();
 		mainPanel.setLayout(new SBorderLayout());
 
 		SLabel titleLabel = new SLabel("Calendar Example!");
 		mainPanel.add(titleLabel, SBorderLayout.NORTH);
-		
+
 		calendar.setBorder(SBorderFactory.createSLineBorder(new java.awt.Color(100, 100, 255), 2));
 		calendar.setPreferredSize(new SDimension("100%", "600"));
 		calendar.setHorizontalAlignment(SConstants.CENTER);
-		 
+
 		mainPanel.add(calendar, SBorderLayout.CENTER);
 		mainPanel.add(getBottomPanel(), SBorderLayout.SOUTH);
 		mainPanel.add(getNavigationPanel(), SBorderLayout.NORTH);
-		
+
 		rootFrame.getContentPane().add(mainPanel);
 		rootFrame.setVisible(true);
 	}
@@ -87,10 +87,10 @@ public class CalendarExample {
 		forwardButton.setShowAsFormComponent(false);
 		forwardButton.addActionListener(
 					new ActionListener() {
-						@Override
+
 						public void actionPerformed(ActionEvent e) {
 							Calendar tempCal = Calendar.getInstance();
-							
+
 							tempCal.setTime(calendar.getDate());
 							switch(calendar.getCalendarModel().getView())
 							{
@@ -116,10 +116,10 @@ public class CalendarExample {
 		backButton.setShowAsFormComponent(false);
 		backButton.addActionListener(
 				new ActionListener() {
-					@Override
+
 					public void actionPerformed(ActionEvent e) {
 						Calendar tempCal = Calendar.getInstance();
-						
+
 						tempCal.setTime(calendar.getDate());
 						switch(calendar.getCalendarModel().getView())
 						{
@@ -137,7 +137,7 @@ public class CalendarExample {
 					}
 				}
 		);
-		
+
 		SPanel navigationPanel = new SPanel();
 
 		final SLabel monthLabel = new SLabel();
@@ -151,11 +151,11 @@ public class CalendarExample {
         monthLabel.setText(format.format(tempCal.getTime()));
 // jdk 1.6
 //		monthLabel.setText(tempCal.getDisplayName(Calendar.MONTH, Calendar.LONG, calendar.getLocale()).trim() + " " + tempCal.get(Calendar.YEAR));
-		
+
 		calendar.addCalendarViewChangeListener(
 				new CalendarViewChangeListener()
 				{
-					@Override
+
 					public void valueChanged(CalendarViewChangeEvent e) {
 						switch(e.getType())
 						{
@@ -172,7 +172,7 @@ public class CalendarExample {
 					}
 				}
 			);
-		
+
 		/*
 		calendar.addSelectionChangeListener(
 				new SelectionChangeListener()
@@ -191,7 +191,7 @@ public class CalendarExample {
 					public void cellDeselected(Date date) {
 						LOG.info("Cell deselected: " + date.toString());
 					}
-					
+
 				}
 			);
 		*/
@@ -202,23 +202,23 @@ public class CalendarExample {
 		navigationPanel.add(monthLabel);
 		navigationPanel.add(forwardButton);
 		navigationPanel.setHorizontalAlignment(SBoxLayout.CENTER_ALIGN);
-		
+
 		return navigationPanel;
 	}
-	
+
 	private SPanel getBottomPanel()
 	{
 		SPanel panel = new SPanel();
 		SBoxLayout layout = new SBoxLayout(panel, SBoxLayout.HORIZONTAL);
 		layout.setHgap(4);
 		panel.setLayout(layout);
-		
+
         SButton button0 = new SButton("Delete Events");
         button0.addActionListener(
                 new ActionListener()
                 {
 
-                    @Override
+
                     public void actionPerformed(ActionEvent e) {
                         deleteAppointments();
                     }
@@ -227,23 +227,23 @@ public class CalendarExample {
 
 		SButton button1 = new SButton("Generate Random Events");
 		button1.addActionListener(
-				new ActionListener() 
+				new ActionListener()
 				{
 
-					@Override
+
 					public void actionPerformed(ActionEvent e) {
 						generateAndSetTestAppointments2();
 					}
-					
+
 				});
-		
+
 		String[] array = {"Monat", "Woche", "Tag"};
 		SComboBox comboBox1 = new SComboBox(array);
 		comboBox1.addActionListener(
-					new ActionListener() 
+					new ActionListener()
 					{
 
-						@Override
+
 						public void actionPerformed(ActionEvent arg0) {
 							int selection = ((SComboBox)arg0.getSource()).getSelectedIndex();
 							if(selection == 0)
@@ -253,19 +253,19 @@ public class CalendarExample {
 							if(selection == 2)
 								calendar.getCalendarModel().setView(CalendarView.DAY);
 						}
-						
+
 					}
 				);
-		
+
 		String[] dateArray = {"NONE", "SINGLE_DATE", "MULTIPLE_DATE", "DESELECT_APPOINTMENT_ON_DATE|SINGLE_DATE"};
 		SComboBox comboBox2 = new SComboBox(dateArray);
 		comboBox2.addActionListener(
 				new ActionListener()
 				{
-					@Override
+
 					public void actionPerformed(ActionEvent e) {
 						int oldVal = calendar.getSelectionModel().getSelectionMode();
-						// preserve all bits not reserved for dates 
+						// preserve all bits not reserved for dates
 						int newVal = oldVal & ~CalendarSelectionModel.DATE_BITMASK;
 						int selection = ((SComboBox)e.getSource()).getSelectedIndex();
 						if(selection == 1)
@@ -285,10 +285,10 @@ public class CalendarExample {
 		comboBox3.addActionListener(
 				new ActionListener()
 				{
-					@Override
+
 					public void actionPerformed(ActionEvent e) {
 						int oldVal = calendar.getSelectionModel().getSelectionMode();
-						// preserve all bits not reserved for appointments 
+						// preserve all bits not reserved for appointments
 						int newVal = oldVal & ~CalendarSelectionModel.APPOINTMENT_BITMASK;
 						int selection = ((SComboBox)e.getSource()).getSelectedIndex();
 						if(selection == 1)
@@ -297,12 +297,12 @@ public class CalendarExample {
 							newVal |= CalendarSelectionModel.MULTIPLE_APPOINTMENT_SELECTION;
 						if(selection == 3)
 							newVal |= CalendarSelectionModel.DESELECT_DATE_ON_APPOINTMENT_SELECTION | CalendarSelectionModel.SINGLE_APPOINTMENT_SELECTION;
-						
+
 						calendar.getSelectionModel().setSelectionMode(newVal);
 					}
 				}
 			);
-		
+
 		panel.setHorizontalAlignment(SConstants.CENTER);
         panel.add(button0);
 		panel.add(button1);
@@ -321,11 +321,11 @@ public class CalendarExample {
 	 */
 	private void generateAndSetTestAppointments2()
 	{
-		final long ONE_MINUTE_IN_MILLISECONDS = 60*1000; 
+		final long ONE_MINUTE_IN_MILLISECONDS = 60*1000;
 		Collection<Appointment> appointments = new ArrayList<Appointment>();
-		
+
 		Calendar todayCal = Calendar.getInstance();
-		
+
 		Date startDate = new Date(todayCal.getTime().getTime());
 		Date endDate = new Date(todayCal.getTime().getTime()+120*ONE_MINUTE_IN_MILLISECONDS);
 		DefaultAppointment simpleEvent = new DefaultAppointment("NormalEvent lang lang lang lang lang lang lang", null, Appointment.AppointmentType.NORMAL, startDate, endDate);
@@ -333,7 +333,7 @@ public class CalendarExample {
 		simpleEvent.setBackgroundColor(Color.MAGENTA);
 		appointments.add(simpleEvent);
 
-		
+
 		startDate = new Date(todayCal.getTime().getTime()+-3*24*60*ONE_MINUTE_IN_MILLISECONDS);
 		endDate = new Date(todayCal.getTime().getTime()+2*24*60*ONE_MINUTE_IN_MILLISECONDS);
 		DefaultAppointment alldayEvent = new DefaultAppointment("AlldayEvent", "Description", Appointment.AppointmentType.ALLDAY, startDate, endDate);
@@ -343,7 +343,7 @@ public class CalendarExample {
 
 		startDate = new Date(todayCal.getTime().getTime()+ -10*24*60*ONE_MINUTE_IN_MILLISECONDS);
 		endDate = new Date(todayCal.getTime().getTime()+10*24*60*ONE_MINUTE_IN_MILLISECONDS + 90*ONE_MINUTE_IN_MILLISECONDS);
-		
+
 		EnumSet<Appointment.Weekday> weekdays = EnumSet.<Appointment.Weekday>of(Appointment.Weekday.FRIDAY, Appointment.Weekday.TUESDAY);
 		DefaultAppointment recurringEvent = new DefaultAppointment("RecurringNormalEvent", "lang lang lang lang lang lang lagn", Appointment.AppointmentType.NORMAL, startDate, endDate, weekdays);
 		recurringEvent.setForegroundColor(null);

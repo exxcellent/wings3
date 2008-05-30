@@ -24,17 +24,17 @@ import org.wings.*;
 public class AppointmentCalendar extends SComponent implements LowLevelEventListener {
 	private static final long serialVersionUID = 2537490018780756796L;
 	//private static final Log LOG = LogFactory.getLog(CalendarExample.class);
-    
+
 	private CalendarModel model;
     private CalendarSelectionModel selectionModel;
-    
+
     private ModifierKeyStatus modifierKeyStatus = new ModifierKeyStatus();
-    
+
     /**
      * Forwards Selection Events to the CG
      */
     private CalendarSelectionListener fwdSelectionEvents = new CalendarSelectionListener() {
-		@Override
+
 		public void valueChanged(CalendarSelectionEvent e) {
 			if(isUpdatePossible() && AppointmentCalendar.class.isAssignableFrom(AppointmentCalendar.this.getClass()))
 			{
@@ -52,9 +52,9 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 			}
 		}
     };
-    
+
     private PropertyChangeListener fwdSelectionModeChange = new PropertyChangeListener() {
-		@Override
+
 		public void propertyChange(PropertyChangeEvent evt) {
 			// reload the page to remove/add the onClick event handlers to the calendar
 			// and/or change the selections (i.e. if the user switches from multiple appointments to single)
@@ -62,11 +62,11 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 				reload();
 			}
 		}
-    
+
     };
-    
+
     private CalendarViewChangeListener fwdCalendarViewEvents = new CalendarViewChangeListener() {
-		@Override
+
 		public void valueChanged(CalendarViewChangeEvent e) {
 			switch(e.getType())
 			{
@@ -82,12 +82,12 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 				break;
 			}
 		}
-    	
-    	
+
+
     };
-    
+
     private PropertyChangeListener fwdPropChangeCalModel = new PropertyChangeListener() {
-		@Override
+
 		public void propertyChange(PropertyChangeEvent evt) {
 			// Reload the component if the locale changes
             if(evt.getPropertyName().equals("locale")) {
@@ -100,25 +100,25 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
                 getSelectionModel().clearAppointmentSelection();
             }
         }
-    	
+
     };
-    
+
     /**
      * Constructs the Calendar component using the current (Server) Time/Date for the current Day/Month/Year and the Servers locale with the DefaultCalendarModel
      */
 	public AppointmentCalendar() {
 		this(Locale.getDefault());
 	}
-	
+
 	/**
-	 * Constructs the Calendar component using the current (Server) Time/Date for the current Day/Month/Year with the DefaultCalendarModel 
-	 * @param locale Locale 
+	 * Constructs the Calendar component using the current (Server) Time/Date for the current Day/Month/Year with the DefaultCalendarModel
+	 * @param locale Locale
 	 * @param model CalendarModel to use
 	 */
 	public AppointmentCalendar(Locale locale, CalendarModel model) {
 		this(new Date(Calendar.getInstance().getTimeInMillis()), locale, model);
 	}
-	
+
     /**
      * Constructs the Calendar component using the current (Server) Time/Date for the current Day/Month/Year and given Locale with the DefaultCalendarModel
      * @param locale Locale to create the calendar with
@@ -126,8 +126,8 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	public AppointmentCalendar(Locale locale) {
 		this(Calendar.getInstance().getTime(), locale);
 	}
-	
-	
+
+
 	/**
 	 * Constructs the Calendar component using the given date and locale with the DefaultCalendarModel
 	 * @param date Date to build the calendar around
@@ -141,14 +141,14 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	/**
 	 * Constructs the Calendar component using the given <code>java.sql.Date</code>
 	 * @param date <code>Date</code> to be used for the Calendar
-	 * @param locale Locale to be used for the calendar instance 
+	 * @param locale Locale to be used for the calendar instance
 	 */
 	public AppointmentCalendar(Date date, Locale locale)
 	{
 		this(date, locale, null);
-		
+
 	}
-	
+
 	/**
 	 * Constructs the Calendar component using the given parameters
 	 * @param date
@@ -162,14 +162,14 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
         // TODO: do this in the default.properties
 		CalendarCG calCG = new CalendarCG();
 		this.setCG(calCG);
-		
+
 		this.setName("AppointmentCalendar");
-		
+
 		if(model == null)
 			setCalendarModel(new DefaultCalendarModel());
 		else
 			setCalendarModel(model);
-		
+
 		setSelectionModel(new DefaultCalendarSelectionModel(this));
 		setDate(date);
         setLocale(locale);
@@ -177,9 +177,9 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
         this.getSession().getDispatcher().register(this);
 
 		//getSelectionModel().setSelectionMode(CalendarSelectionModel.SINGLE_EXCLUSIVE_DATE_OR_APPOINTMENT_SELECTION);
-		//getSelectionModel().setSelectionMode(CalendarSelectionModel.MULTIPLE_APPOINTMENT_SELECTION | CalendarSelectionModel.MULTIPLE_DATE_SELECTION);		
+		//getSelectionModel().setSelectionMode(CalendarSelectionModel.MULTIPLE_APPOINTMENT_SELECTION | CalendarSelectionModel.MULTIPLE_DATE_SELECTION);
 	}
-	
+
 	/**
 	 * Sets the CalendarModel
 	 * @param model
@@ -191,7 +191,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
         }
 
         CalendarModel oldVal = this.model;
-		
+
 		if(oldVal == null) {
 			this.model = model;
 			this.model.addPropertyChangeListener(fwdPropChangeCalModel);
@@ -203,12 +203,12 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 			this.model.addPropertyChangeListener(fwdPropChangeCalModel);
 			this.model.addCalendarViewChangeListener(fwdCalendarViewEvents);
 		}
-		
+
 		propertyChangeSupport.firePropertyChange("model", oldVal, model);
 	}
-	
+
 	/**
-	 * Sets the Date this calendar is build around 
+	 * Sets the Date this calendar is build around
 	 * @param date Sets the date this calendar is build around
 	 */
 	public void setDate(java.util.Date date) {
@@ -217,7 +217,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	}
 
 	/**
-	 * Sets the Date this calendar is build around 
+	 * Sets the Date this calendar is build around
 	 * @param date Sets the date this calendar is build around
 	 */
 	public void setDate(Date date) {
@@ -239,7 +239,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	public CalendarModel getCalendarModel() {
 		return model;
 	}
-	
+
 	/**
 	 * Sets the Locale of the Calendar
 	 * @param locale Locale to be set
@@ -248,7 +248,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	{
 		getCalendarModel().setLocale(locale);
 	}
-	
+
 	/**
 	 * Returns the locale of the Calendar
 	 * @return
@@ -266,7 +266,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	{
 		return this.selectionModel;
 	}
-	
+
 	/**
 	 * Sets the SelectionMOdel of this calendar
 	 * @param selectionModel
@@ -276,22 +276,22 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 		if(selectionModel == null) {
 			throw new IllegalArgumentException("selectionModel must be non null");
 		}
-		
+
 		CalendarSelectionModel oldVal = this.selectionModel;
 		this.selectionModel = selectionModel;
-		
+
 		if(oldVal == null) {
 			selectionModel.addCalendarSelectionListener(fwdSelectionEvents);
 			selectionModel.addPropertyChangeListener(this.fwdSelectionModeChange);
 		}
-		
+
 		if(oldVal != null && oldVal != selectionModel) {
 			oldVal.removePropertyChangeListener(this.fwdSelectionModeChange);
 			oldVal.removeCalendarSelectionListener(fwdSelectionEvents);
 			selectionModel.addCalendarSelectionListener(fwdSelectionEvents);
 			selectionModel.addPropertyChangeListener(this.fwdSelectionModeChange);
 		}
-		
+
 		propertyChangeSupport.firePropertyChange("selectionModel", oldVal, this.selectionModel);
 	}
 
@@ -303,7 +303,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	{
 		getCalendarModel().addCalendarViewChangeListener(listener);
 	}
-	
+
 	/**
 	 * Removes a CalendarViewChangeListener
 	 * @param listener Listener to be removed
@@ -312,8 +312,8 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	{
 		getCalendarModel().removeCalendarViewChangeListener(listener);
 	}
-	
-	
+
+
 	/**
 	 * Adds a selection Change Listener to the Component
 	 * @param listener The SelectionChangeListener to be added
@@ -322,9 +322,9 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	{
 		getSelectionModel().addCalendarSelectionListener(listener);
 	}
-	
+
 	/**
-	 * Remove a selection Change Listener from the Component 
+	 * Remove a selection Change Listener from the Component
 	 * @param listener The SelectionChangeListener to be removed
 	 */
 	public void removeCalendarSelectionChangeListener(CalendarSelectionListener listener)
@@ -335,13 +335,13 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	@Override
 	public void processLowLevelEvent(String componentName, String[] values)
 	{
-		String[] processedValues; 
-		
+		String[] processedValues;
+
 		if(values[0].contains(";"))
 			processedValues = values[0].split(";");
 		else
 			processedValues = values;
-			
+
 		SForm.addArmedComponent(this);
 
 		for(int i=0; i<processedValues.length; i++)
@@ -351,7 +351,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 				continue;
 
 			getSelectionModel().setDelayEvents(true);
-			
+
 			if(value.startsWith("q:")) {
 				// q: means update the popup window for more information
 				Update update = ((CalendarCG)this.getCG()).getPopupUpdate(this, value.substring(2));
@@ -387,17 +387,15 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	public void fireFinalEvents() {
 		super.fireFinalEvents();
 	}
-	
-	@Override
+
 	public void fireIntermediateEvents() {
 		SForm.addArmedComponent(this);
-		
+
 		// all state changes are done, fire the events to get updates
 		getSelectionModel().fireDelayedFinalEvents();
 		getSelectionModel().setDelayEvents(false);
 	}
 
-	@Override
 	public boolean isEpochCheckEnabled() {
 		return false;
 	}
