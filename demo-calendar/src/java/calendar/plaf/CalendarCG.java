@@ -120,7 +120,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
             //device.print(tempCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, calendar.getLocale()));
 			
             DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT, calendar.getLocale());
-			device.print(", ");
+			device.print(" ");
 			device.print(formatter.format(tempCal.getTime()));
 			device.print("</div>");
 
