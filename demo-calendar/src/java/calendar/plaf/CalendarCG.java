@@ -32,7 +32,6 @@ import calendar.*;
  *
  */
 public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
-	private final Calendar tempCal = new java.util.GregorianCalendar();
 	private static final long serialVersionUID = -1466863715729057747L;
 	private final transient static Log LOG = LogFactory.getLog(CalendarCG.class);
 	
@@ -85,7 +84,8 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	
 	private void writeWeekInternal(final Device device, final AppointmentCalendar calendar) throws IOException
 	{
-		writeHeader(device, calendar);
+        Calendar tempCal = Calendar.getInstance();
+        writeHeader(device, calendar);
 		
 		tempCal.setTimeInMillis(calendar.getCalendarModel().getVisibleFrom().getTime());
 		
@@ -153,7 +153,8 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	
 	private void writeDayInternal(final Device device, final AppointmentCalendar calendar) throws IOException
 	{
-		writeHeader(device, calendar);
+        Calendar tempCal = Calendar.getInstance();
+        writeHeader(device, calendar);
 		
 		tempCal.setTimeInMillis(calendar.getCalendarModel().getVisibleFrom().getTime());
 		
@@ -247,7 +248,8 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	
 	private void writeMonthInternal(final Device device, final AppointmentCalendar calendar) throws IOException
 	{
-		CalendarModel model = calendar.getCalendarModel();
+        Calendar tempCal = Calendar.getInstance();
+        CalendarModel model = calendar.getCalendarModel();
 		
 		tempCal.setTimeInMillis(calendar.getCalendarModel().getVisibleFrom().getTime());
 		

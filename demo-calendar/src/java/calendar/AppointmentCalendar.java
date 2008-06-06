@@ -66,7 +66,6 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
     };
 
     private CalendarViewChangeListener fwdCalendarViewEvents = new CalendarViewChangeListener() {
-
 		public void valueChanged(CalendarViewChangeEvent e) {
 			switch(e.getType())
 			{
