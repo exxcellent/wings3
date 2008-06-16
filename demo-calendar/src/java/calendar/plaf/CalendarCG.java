@@ -50,19 +50,6 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 		SessionHeaders.getInstance().registerHeaders(headers);
 	}
 	
-	Calendar today = Calendar.getInstance();
-	Calendar viewToday = Calendar.getInstance();
-	
-	/**
-	 * Sets the "Today-Date" for the View (The Date the view is constructed around)
-	 * This may be removed later 
-	 * @param todayDate The Date the view is constructed around 
-	 */
-	public void setToday(java.util.Date todayDate)
-	{
-		this.viewToday.setTime(todayDate);
-	}
-	
 	private void writeHeader(final Device device, final AppointmentCalendar calendar) throws IOException
 	{
 		device.print("<table");
@@ -213,14 +200,15 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	
 	private String getCellClassname(final AppointmentCalendar calendar, final Calendar cellCal, final Calendar viewDate)
 	{
+        Calendar today = Calendar.getInstance();
 		java.sql.Date sqlCellDate = new java.sql.Date(cellCal.getTimeInMillis());
 		switch(calendar.getCalendarModel().getView())
 		{
 			case MONTH:
 				if(calendar.getSelectionModel().isSelected(sqlCellDate))
 					return "selected";
-				
-				if(cellCal.get(Calendar.DAY_OF_YEAR) == viewDate.get(Calendar.DAY_OF_YEAR) &&
+
+                if(cellCal.get(Calendar.DAY_OF_YEAR) == viewDate.get(Calendar.DAY_OF_YEAR) &&
 					cellCal.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR))
 							return "today";
 					else
@@ -232,7 +220,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 				if(calendar.getSelectionModel().isSelected(sqlCellDate))
 					return "selected";
 				
-				if(cellCal.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
+                if(cellCal.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
 					cellCal.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR))
 				{
 					return "container-today";
@@ -290,6 +278,8 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 				}
 				
                 if(isThisDayMerged(model, tempCal, column)) {
+                    Calendar viewToday = Calendar.getInstance();
+                    viewToday.setTime(calendar.getCalendarModel().getDate());
                     device.print("<td class=\"" + this.getCellClassname(calendar, tempCal, viewToday) + "\">");
                     
                     // begin inner double-cell
@@ -344,6 +334,9 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 
                     tempCal.add(Calendar.DAY_OF_MONTH, 1);
                 } else {
+                    Calendar viewToday = Calendar.getInstance();
+                    viewToday.setTime(calendar.getCalendarModel().getDate());
+                    
                     device.print("<td class=\"" + this.getCellClassname(calendar, tempCal, viewToday) + "\"");
 
                     String uniqueID = tempCal.get(Calendar.YEAR) + ":" + tempCal.get(Calendar.DAY_OF_YEAR);

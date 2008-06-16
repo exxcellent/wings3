@@ -25,7 +25,9 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	private static final long serialVersionUID = 2537490018780756796L;
 	//private static final Log LOG = LogFactory.getLog(CalendarExample.class);
 
-	private CalendarModel model;
+    private static final CalendarCG calCG = new CalendarCG();
+
+    private CalendarModel model;
     private CalendarSelectionModel selectionModel;
 
     private ModifierKeyStatus modifierKeyStatus = new ModifierKeyStatus();
@@ -70,14 +72,14 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 			switch(e.getType())
 			{
 				case DATE:
-					((CalendarCG)getCG()).setToday(e.getDate());
 					reload();
 				break;
 				case APPOINTMENT:
 					reload();
 				break;
 				case VIEW:
-					reload();
+                    getSelectionModel().clearAppointmentSelection(); getSelectionModel().clearDateSelection();
+                    reload();
 				break;
 			}
 		}
@@ -158,8 +160,6 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	{
 		super();
 
-        // TODO: do this in the default.properties
-		CalendarCG calCG = new CalendarCG();
 		this.setCG(calCG);
 
 		this.setName("AppointmentCalendar");
