@@ -207,6 +207,7 @@
 	vertical-align:top;
 	border:none; /* 1px solid white; */
 	cursor:pointer;
+    background-color:#eeeeee;
 	-moz-user-select:none;
 }
 
@@ -243,6 +244,7 @@
 	background-color:white;
 }
 
+.AppointmentCalendar .dayview td.selected,
 .AppointmentCalendar .dayview td div.selected
 {
 	background-color:#ff9900;

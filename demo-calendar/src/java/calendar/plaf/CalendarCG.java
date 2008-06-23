@@ -145,8 +145,15 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 		
 		tempCal.setTimeInMillis(calendar.getCalendarModel().getVisibleFrom().getTime());
 		
-		device.print("<table class=\"dayview\"><tr><td>");
-		device.print("<div class=\"daycontainer\">");
+		device.print("<table class=\"dayview\"><tr><td");
+        if((calendar.getSelectionModel().getSelectionMode()&CalendarSelectionModel.DATE_BITMASK) != 0) {
+            writeClickability(device, "Date", calendar);
+        }
+        device.print(" id=\"" + calendar.getName() + "_" + tempCal.get(Calendar.YEAR) + ":" + tempCal.get(Calendar.DAY_OF_YEAR) + "\"");
+        device.print(" class=\"" + getCellClassname(calendar, tempCal, tempCal) + "\""); 
+        device.print(">");
+        
+        device.print("<div class=\"daycontainer\">");
 
 		if(calendar.getCalendarModel().getCustomCellRenderer() != null)
 		{
@@ -175,7 +182,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 			
 			
 			Collection<Appointment> appointments = calendar.getCalendarModel().getAppointments(new java.sql.Date(tempCal.getTimeInMillis()));
-			if(appointments != null)
+            if(appointments != null)
 			{
 				int i = 0;
 				for(Appointment appointment:appointments)
@@ -229,7 +236,12 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 				{
 					return "container";
 				}
-		}
+            case DAY:
+                if(calendar.getSelectionModel().isSelected(sqlCellDate))
+                    return "selected";
+
+                return "container";
+        }
 		
 		return "";
 	}

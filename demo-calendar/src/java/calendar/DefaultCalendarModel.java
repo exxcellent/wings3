@@ -130,7 +130,11 @@ public class DefaultCalendarModel implements CalendarModel {
 				setVisibleUntil(new Date(calendar2.getTimeInMillis()));
 			break;
 			case DAY:
-			break;
+                Calendar calendar1 = Calendar.getInstance();
+                calendar1.setTime(this.date);
+                setVisibleFrom(new Date(calendar1.getTimeInMillis()));
+                setVisibleUntil(new Date(calendar1.getTimeInMillis()));
+            break;
 		}
 	}
 	/**
