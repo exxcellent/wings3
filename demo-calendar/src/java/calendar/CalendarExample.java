@@ -37,7 +37,7 @@ import calendar.RemoteCalendar.RemoteCalendar;
 public class CalendarExample {
 	private static final Log LOG = LogFactory.getLog(CalendarExample.class);
 	final AppointmentCalendar calendar = new AppointmentCalendar();
-	private final String iCalURL = null;
+	private final String iCalURL = null; //"http://www.google.com/calendar/ical/nn4ucvrich7gnedk1al8l7vu48%40group.calendar.google.com/private-9196b23d4fab909a7c40ea46496cb27c/basic.ics";
 
 	/**
 	 * Constructs the Calendar Example
@@ -47,7 +47,7 @@ public class CalendarExample {
 		LOG.info("Calendar Example startup");
 
 		if(iCalURL != null) {
-			RemoteCalendar remoteCal = new RemoteCalendar(RemoteCalendar.CalendarType.ICAL, iCalURL);
+			RemoteCalendar remoteCal = new RemoteCalendar(RemoteCalendar.CalendarType.ICAL, iCalURL, "10.1.0.13", 5000);
 			this.calendar.setCalendarModel(remoteCal.getModel());
 			this.calendar.setDate(Calendar.getInstance().getTime());
 		} else {

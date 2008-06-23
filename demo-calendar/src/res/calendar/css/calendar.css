@@ -1,12 +1,12 @@
-#AppointmentCalendar td
+.AppointmentCalendar td
 {
 	height:100%; /* ie fix! */
 }
 
 /* Shared */
-#AppointmentCalendar #monthview,
-#AppointmentCalendar #weekview,
-#AppointmentCalendar #dayview
+.AppointmentCalendar .monthview,
+.AppointmentCalendar .weekview,
+.AppointmentCalendar .dayview
 { 
 	width:100%;
 	height:100%;
@@ -14,7 +14,7 @@
 }
 
 /* Month View */
-#AppointmentCalendar #monthview thead th
+.AppointmentCalendar .monthview thead th
 {
 	background-color:#fff;
 	font-style:italic;
@@ -25,7 +25,7 @@
 	height:1px;
 }
 
-#AppointmentCalendar #monthview tbody td
+.AppointmentCalendar .monthview tbody td
 {
 	background-color:#eee;
 	border:1px solid white;
@@ -40,30 +40,30 @@
 	-moz-user-select:none;
 }
 
-#AppointmentCalendar #monthview tbody td span.dayofmonth
+.AppointmentCalendar .monthview tbody td span.dayofmonth
 {
 	font-weight:bold;
 }
 
-#AppointmentCalendar #monthview tbody td.notthismonth span.dayofmonth
+.AppointmentCalendar .monthview tbody td.notthismonth span.dayofmonth
 {
 	font-style:italic;
 	font-weight:normal;
 }
 
-#AppointmentCalendar #monthview tbody td:hover,
-#AppointmentCalendar #monthview tbody td.today:hover,
-#AppointmentCalendar #monthview tbody td.notthismonth:hover
+.AppointmentCalendar .monthview tbody td:hover,
+.AppointmentCalendar .monthview tbody td.today:hover,
+.AppointmentCalendar .monthview tbody td.notthismonth:hover
 {
 	background-color:#fafafa;
 }
 
-#AppointmentCalendar #monthview tbody td.today
+.AppointmentCalendar .monthview tbody td.today
 {
 	background-color:#bfbfbf;
 }
 
-#AppointmentCalendar #monthview tbody td div.event
+.AppointmentCalendar .monthview tbody td div.event
 {
 	border:1px solid black;
 	margin-bottom:2px;
@@ -78,23 +78,23 @@
 	cursor:pointer;
 }
 
-#AppointmentCalendar #monthview tbody td div.event:hover
+.AppointmentCalendar .monthview tbody td div.event:hover
 {
 	background-color:black;
 	color:white;
 }
  
-#AppointmentCalendar #monthview tbody td.notthismonth
+.AppointmentCalendar .monthview tbody td.notthismonth
 {
 	background-color:#e0e0e0;
 }
 
-#AppointmentCalendar #monthview tbody td.selected
+.AppointmentCalendar .monthview tbody td.selected
 {
 	background-color:#ff9900;
 }
 
-#AppointmentCalendar #monthview tbody td div.selected
+.AppointmentCalendar .monthview tbody td div.selected
 {
 	border:1px solid black;
 	margin-bottom:2px;
@@ -109,7 +109,7 @@
 }
 
 /* Weekview */
-#AppointmentCalendar #weekview td
+.AppointmentCalendar .weekview td
 {
 	width:14%;
 	height:100%;
@@ -119,24 +119,24 @@
 	-moz-user-select:none;
 }
 
-#AppointmentCalendar #weekview td.container
+.AppointmentCalendar .weekview td.container
 {
 	background-color:#eee;
 }
 
-#AppointmentCalendar #weekview td.container-today
+.AppointmentCalendar .weekview td.container-today
 {
 	background-color:#bfbfbf;
 }
 
 
-#AppointmentCalendar #weekview td.container-today:hover,
-#AppointmentCalendar #weekview td.container:hover
+.AppointmentCalendar .weekview td.container-today:hover,
+.AppointmentCalendar .weekview td.container:hover
 {
 	background-color:white;
 }
 
-#AppointmentCalendar #weekview div.weekdaytitle
+.AppointmentCalendar .weekview div.weekdaytitle
 {
 	width:100%;
 	font-size:larger;
@@ -146,9 +146,9 @@
 	background-color:#fff;
 }
 
-#AppointmentCalendar #weekview div.normalappointment,
-#AppointmentCalendar #weekview div.recurringappointment,
-#AppointmentCalendar #weekview div.alldayappointment
+.AppointmentCalendar .weekview div.normalappointment,
+.AppointmentCalendar .weekview div.recurringappointment,
+.AppointmentCalendar .weekview div.alldayappointment
 {
 	width:98%;
 	text-align:left;
@@ -161,12 +161,12 @@
 	color:black;
 }
 
-#AppointmentCalendar #weekview td.selected /* cell */
+.AppointmentCalendar .weekview td.selected /* cell */
 {
 	background-color:#ff9900;
 }
 
-#AppointmentCalendar #weekview div.selected  /* appointment */
+.AppointmentCalendar .weekview div.selected  /* appointment */
 {
 	width:98%;
 	text-align:left;
@@ -179,28 +179,28 @@
 	color:black;
 }
 
-#AppointmentCalendar #weekview div.time
+.AppointmentCalendar .weekview div.time
 {
 	font-weight:bold;
 }
 
-#AppointmentCalendar #weekview div.name,
-#AppointmentCalendar #weekview div.date
+.AppointmentCalendar .weekview div.name,
+.AppointmentCalendar .weekview div.date
 {
 }
 
-#AppointmentCalendar #weekview div.additional
+.AppointmentCalendar .weekview div.additional
 {
 	display:none;
 }
 
-#AppointmentCalendar #weekview div.recurringweekdays
+.AppointmentCalendar .weekview div.recurringweekdays
 {
 	font-size:smaller;
 }
 
 /* Day View */
-#AppointmentCalendar #dayview td
+.AppointmentCalendar .dayview td
 {
 	width:100%;
 	height:100%;
@@ -210,18 +210,18 @@
 	-moz-user-select:none;
 }
 
-#AppointmentCalendar #dayview td div.daycontainer
+.AppointmentCalendar .dayview td div.daycontainer
 {	
 	border-collapse:collapse;
 }
 
-#AppointmentCalendar #dayview td div.daytitle
+.AppointmentCalendar .dayview td div.daytitle
 {
 	background-color:white;
 	width:100%;
 }
 
-#AppointmentCalendar #dayview td div.dayappcontainer
+.AppointmentCalendar .dayview td div.dayappcontainer
 {
 	background-color:#fafafa;
 	width:100%;
@@ -229,21 +229,21 @@
 	border:1px solid white;
 }
 
-#AppointmentCalendar #dayview td div.normalappointment,
-#AppointmentCalendar #dayview td div.alldayappointment,
-#AppointmentCalendar #dayview td div.recurringappointment
+.AppointmentCalendar .dayview td div.normalappointment,
+.AppointmentCalendar .dayview td div.alldayappointment,
+.AppointmentCalendar .dayview td div.recurringappointment
 {
 	border:1px solid white;
 }
 
-#AppointmentCalendar #dayview td div.normalappointment:hover,
-#AppointmentCalendar #dayview td div.alldayappointment:hover,
-#AppointmentCalendar #dayview td div.recurringappointment:hover
+.AppointmentCalendar .dayview td div.normalappointment:hover,
+.AppointmentCalendar .dayview td div.alldayappointment:hover,
+.AppointmentCalendar .dayview td div.recurringappointment:hover
 {
 	background-color:white;
 }
 
-#AppointmentCalendar #dayview td div.selected
+.AppointmentCalendar .dayview td div.selected
 {
 	background-color:#ff9900;
 }

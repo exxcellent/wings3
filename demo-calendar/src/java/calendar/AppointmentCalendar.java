@@ -25,6 +25,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	private static final long serialVersionUID = 2537490018780756796L;
 	//private static final Log LOG = LogFactory.getLog(CalendarExample.class);
 
+    // TODO: default.properties when moving to wingx
     private static final CalendarCG calCG = new CalendarCG();
 
     private CalendarModel model;
@@ -36,11 +37,13 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
      * Forwards Selection Events to the CG
      */
     private CalendarSelectionListener fwdSelectionEvents = new CalendarSelectionListener() {
-
 		public void valueChanged(CalendarSelectionEvent e) {
-			if(isUpdatePossible() && AppointmentCalendar.class.isAssignableFrom(AppointmentCalendar.this.getClass()))
+            if(!AppointmentCalendar.this.getCalendarModel().isVisible(e.getDate()))
+                return;
+
+            if(isUpdatePossible() && AppointmentCalendar.class.isAssignableFrom(AppointmentCalendar.this.getClass()))
 			{
-				Update update = ((CalendarCG)getCG()).getSelectionUpdate(AppointmentCalendar.this, selectionModel, e);
+                Update update = ((CalendarCG)getCG()).getSelectionUpdate(AppointmentCalendar.this, selectionModel, e);
                 if(update == null)
                 {
                     System.out.println("selection update is null!");
@@ -78,7 +81,17 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 					reload();
 				break;
 				case VIEW:
-                    getSelectionModel().clearAppointmentSelection(); getSelectionModel().clearDateSelection();
+                    CalendarSelectionModel model = AppointmentCalendar.this.getSelectionModel();
+                    if(model != null) {
+                        Date lastSelected = model.getLastSelectedDate();
+                        if(lastSelected == null) {
+                            UniqueAppointment app = model.getLastSelectedAppointment();
+                            if(app != null)
+                                lastSelected = app.getDate();
+                        }
+                        if(lastSelected != null)
+                            AppointmentCalendar.this.setDate(lastSelected);
+                    }
                     reload();
 				break;
 			}
@@ -160,20 +173,20 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	{
 		super();
 
-		this.setCG(calCG);
-
-		this.setName("AppointmentCalendar");
+        // TODO: default.properties when moving to wingx
+        this.setCG(calCG);
 
 		if(model == null)
 			setCalendarModel(new DefaultCalendarModel());
 		else
 			setCalendarModel(model);
 
+        setStyle(this.getClass().getSimpleName());
 		setSelectionModel(new DefaultCalendarSelectionModel(this));
 		setDate(date);
         setLocale(locale);
 
-        this.getSession().getDispatcher().register(this);
+        getSession().getDispatcher().register(this);
 
 		//getSelectionModel().setSelectionMode(CalendarSelectionModel.SINGLE_EXCLUSIVE_DATE_OR_APPOINTMENT_SELECTION);
 		//getSelectionModel().setSelectionMode(CalendarSelectionModel.MULTIPLE_APPOINTMENT_SELECTION | CalendarSelectionModel.MULTIPLE_DATE_SELECTION);
@@ -351,9 +364,9 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 
 			getSelectionModel().setDelayEvents(true);
 
-			if(value.startsWith("q:")) {
+            if(value.startsWith("q:")) {
 				// q: means update the popup window for more information
-				Update update = ((CalendarCG)this.getCG()).getPopupUpdate(this, value.substring(2));
+                Update update = ((CalendarCG)this.getCG()).getPopupUpdate(this, value.substring(2).split("_")[1]);
 				if(update != null && isUpdatePossible())
 					update(update);
 			} else if(value.startsWith("ctrlKey")) {
@@ -364,17 +377,17 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 				modifierKeyStatus.altKey = Boolean.parseBoolean(value.split("=")[1]);
 			} else if(value.startsWith("d:")) {
 				Calendar cal = Calendar.getInstance();
-				String[] data = value.split(":");
-				cal.set(Calendar.YEAR, Integer.parseInt(data[1]));
-				cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(data[2]));
+                String[] data = value.substring(2).split("_")[1].split(":");
+                cal.set(Calendar.YEAR, Integer.parseInt(data[0]));
+				cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(data[1]));
 
 				this.getSelectionModel().clickDate(new java.sql.Date(cal.getTimeInMillis()), modifierKeyStatus);
 			} else if(value.startsWith("a:")) {
 				Calendar cal = Calendar.getInstance();
-				String[] data = value.split(":");
-				cal.set(Calendar.YEAR, Integer.parseInt(data[1]));
-				cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(data[2]));
-				Appointment appointment = getCalendarModel().getAppointmentFromID(value.substring(2));
+				String[] data = value.substring(2).split("_")[1].split(":");
+				cal.set(Calendar.YEAR, Integer.parseInt(data[0]));
+				cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(data[1]));
+				Appointment appointment = getCalendarModel().getAppointmentFromID(value.split("_")[1]);
 
 				this.getSelectionModel().clickAppointment(appointment, new Date(cal.getTimeInMillis()), modifierKeyStatus);
 			}

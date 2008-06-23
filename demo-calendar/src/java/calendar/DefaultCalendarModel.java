@@ -3,12 +3,8 @@ package calendar;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Locale;
+import java.util.*;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -29,6 +25,9 @@ public class DefaultCalendarModel implements CalendarModel {
 	private ArrayList<CalendarViewChangeListener> viewChangeListener = new ArrayList<CalendarViewChangeListener>();
 	private Locale locale;
     private boolean mergeWeekends;
+    private Map<Integer, Collection<Appointment>> dateAppointmentsMap = new LinkedHashMap<Integer, Collection<calendar.Appointment>>();
+    private Calendar tempCalFrom = Calendar.getInstance();
+    private Calendar tempCalUntil = Calendar.getInstance();
 
     /**
 	 * Constructs the DefaultCalendarModel
@@ -83,7 +82,7 @@ public class DefaultCalendarModel implements CalendarModel {
 		if(date == null)
 			return;
 
-		updateVisibleDates();
+        updateVisibleDates();
 
 		if(oldVal != view)
 			fireViewChangeEvent(new CalendarViewChangeEvent(this, view));
@@ -164,7 +163,7 @@ public class DefaultCalendarModel implements CalendarModel {
 		if(appStartDate.get(Calendar.YEAR) <= calTestDate.get(Calendar.YEAR) &&
 				appEndDate.get(Calendar.YEAR) >= calTestDate.get(Calendar.YEAR))
 		{
-			// date is in the correct year
+            // date is in the correct year
 			if(appStartDate.get(Calendar.DAY_OF_YEAR) <= calTestDate.get(Calendar.DAY_OF_YEAR) &&
 					appEndDate.get(Calendar.DAY_OF_YEAR) >= calTestDate.get(Calendar.DAY_OF_YEAR)
 					)
@@ -180,7 +179,7 @@ public class DefaultCalendarModel implements CalendarModel {
 	{
 		if(isAppointmentOnDateDay(appointment, date))
 		{
-			if(appointment.isAppointmentRecurring())
+            if(appointment.isAppointmentRecurring())
 			{
 				if(appointment.getAppointmentRecurringDays().contains(DefaultAppointment.getWeekdayFromDate(date)))
 					return true;
@@ -219,32 +218,9 @@ public class DefaultCalendarModel implements CalendarModel {
 	 * Returns the appointments on date
 	 */
 	public Collection<Appointment> getAppointments(Date date) {
-		if(appointments == null)
-			return null;
-
-		ArrayList<Appointment> eventListAllDay = new ArrayList<Appointment>();
-		ArrayList<Appointment> eventListNormal = new ArrayList<Appointment>();
-
-		// TODO: Pregenerate this data from visiblefrom to visibleuntil on setAppointments
-		for(Appointment appointment:appointments)
-		{
-			// this should add all appointments that are active on this day
-			if(isAppointmentAdded(appointment, date))
-			{
-				if(appointment.getAppointmentType() == Appointment.AppointmentType.NORMAL)
-					eventListNormal.add(appointment);
-				if(appointment.getAppointmentType() == Appointment.AppointmentType.ALLDAY)
-					eventListAllDay.add(appointment);
-			}
-		}
-		Collections.sort(eventListAllDay, timeComparator);
-		Collections.sort(eventListNormal, timeComparator);
-
-
-		eventListAllDay.addAll(eventListNormal);
-
-		return eventListAllDay;
-	}
+        tempCalUntil.setTimeInMillis(date.getTime());
+        return dateAppointmentsMap.get(tempCalUntil.get(Calendar.DAY_OF_YEAR));
+    }
 
 	public Date getVisibleFrom() {
 		return visibleFrom;
@@ -256,11 +232,78 @@ public class DefaultCalendarModel implements CalendarModel {
 
 	public void setVisibleFrom(Date visibleFrom) {
 		this.visibleFrom = visibleFrom;
+
+        if(getVisibleFrom() != null && getAppointments() != null)
+            updateDateAppointmentMapping();
 	}
 
 	public void setVisibleUntil(Date visibleUntil) {
 		this.visibleUntil = visibleUntil;
+
+        if(getVisibleUntil() != null && getAppointments() != null)
+            updateDateAppointmentMapping();
 	}
+
+    public boolean isVisible(Date date) {
+        Calendar from = Calendar.getInstance();
+        Calendar until = (Calendar)from.clone();
+        Calendar checkDate = (Calendar)from.clone();
+
+        from.setTime(visibleFrom);
+        until.setTime(visibleUntil);
+        checkDate.setTime(date);
+
+        if(from.get(Calendar.YEAR) <= checkDate.get(Calendar.YEAR) &&
+                until.get(Calendar.YEAR) >= checkDate.get(Calendar.YEAR))
+        {
+            // date is in the correct year
+            if(from.get(Calendar.DAY_OF_YEAR) <= checkDate.get(Calendar.DAY_OF_YEAR) &&
+                    until.get(Calendar.DAY_OF_YEAR) >= checkDate.get(Calendar.DAY_OF_YEAR)
+                    )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void updateDateAppointmentMapping()
+    {
+        tempCalUntil.setTime(getVisibleUntil());
+        tempCalFrom.setTime(getVisibleFrom());
+        dateAppointmentsMap.clear();
+        
+        while(tempCalFrom.before(tempCalUntil) || tempCalFrom.equals(tempCalUntil))
+        {
+            ArrayList<calendar.Appointment> eventListAllDay = new ArrayList<calendar.Appointment>();
+            ArrayList<calendar.Appointment> eventListNormal = new ArrayList<calendar.Appointment>();
+
+            if(appointments == null)
+                break;
+
+            for(calendar.Appointment appointment:appointments)
+            {
+                // this should add all appointments that are active on this day
+                if(isAppointmentAdded(appointment, new java.sql.Date(tempCalFrom.getTimeInMillis())))
+                {
+                    if(appointment.getAppointmentType() == calendar.Appointment.AppointmentType.NORMAL)
+                        eventListNormal.add(appointment);
+                    if(appointment.getAppointmentType() == calendar.Appointment.AppointmentType.ALLDAY)
+                        eventListAllDay.add(appointment);
+                }
+            }
+            Collections.sort(eventListAllDay, timeComparator);
+            Collections.sort(eventListNormal, timeComparator);
+
+
+            eventListAllDay.addAll(eventListNormal);
+
+            dateAppointmentsMap.put(tempCalFrom.get(Calendar.DAY_OF_YEAR), eventListAllDay);
+
+            tempCalFrom.add(Calendar.DAY_OF_YEAR, 1);
+        }
+    }
 
 	/**
 	 * Sets the Appointments for this CalendarModel
@@ -271,6 +314,9 @@ public class DefaultCalendarModel implements CalendarModel {
         propertyChangeSupport.firePropertyChange("preAppointmentsChange", null, appointments);
 
         this.appointments = appointments;
+
+        if(getVisibleUntil() != null && getVisibleFrom() != null)
+            updateDateAppointmentMapping();
 
 		fireViewChangeEvent(new CalendarViewChangeEvent(this, appointments));
 	}

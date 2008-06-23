@@ -66,7 +66,14 @@ public abstract interface CalendarModel {
 	 */
 	public abstract Date getVisibleUntil();
 
-	/**
+    /**
+     * Returns if date is visible in the current view
+     * @param date
+     * @return
+     */
+    public abstract boolean isVisible(Date date);
+
+    /**
 	 * Should return the row count of the selected calendar view
 	 * @return
 	 */
@@ -143,6 +150,7 @@ public abstract interface CalendarModel {
 	 * Must return a unique String for the appointment on date, to be used as a identifier 
 	 * looks in DefaultCalendarModel like: "YEAR:DAY_OF_YEAR:appointment_number_on_this_day"
 	 * NOTE: It isn't allowed to contain the semicolon ';', as it is used as seperator between values
+     * must only be unique withing the current instance of calendar
 	 * @param date
 	 * @param appointment
 	 * @return
@@ -150,7 +158,8 @@ public abstract interface CalendarModel {
 	public String getUniqueAppointmentID(Date date, Appointment appointment);
 	
 	/**
-	 * Must return a Appointment for a Unique ID created by getUniqueAppointmentID(...)
+	 * Must return a Appointment for a Unique ID created by getUniqueAppointmentID(...) - must only be unique within
+     * the current instance of calendar
 	 * @param uniqueID
 	 * @return
 	 */

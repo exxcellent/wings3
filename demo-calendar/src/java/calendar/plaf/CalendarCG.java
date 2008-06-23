@@ -38,9 +38,9 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	protected final static List<Header> headers;
 	static {
 		headers = new ArrayList<Header>();
+        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DOM));
 		headers.add(Utils.createExternalizedCSSHeader("calendar/css/calendar.css"));
 		headers.add(Utils.createExternalizedJSHeader("calendar/js/calendar.js"));
-		headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DOM));
 	}
 	
 	@Override
@@ -76,7 +76,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 		
 		tempCal.setTimeInMillis(calendar.getCalendarModel().getVisibleFrom().getTime());
 		
-		device.print("<table id=\"weekview\"><tr>");
+		device.print("<table class=\"weekview\"><tr>");
 		while(tempCal.getTime().before(calendar.getCalendarModel().getVisibleUntil()))
 		{
 			CustomCellRenderer cellRenderer = calendar.getCalendarModel().getCustomCellRenderer();
@@ -88,7 +88,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 
 			device.print("<td class=\"" + this.getCellClassname(calendar, tempCal, null) + "\"");
 			
-			String uniqueID = tempCal.get(Calendar.YEAR) + ":" + tempCal.get(Calendar.DAY_OF_YEAR);
+			String uniqueID = calendar.getName() + "_" + tempCal.get(Calendar.YEAR) + ":" + tempCal.get(Calendar.DAY_OF_YEAR);
 			device.print(" id=\"");
 			Utils.quote(device, uniqueID, true, false, true);
 			device.print("\"");
@@ -145,7 +145,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 		
 		tempCal.setTimeInMillis(calendar.getCalendarModel().getVisibleFrom().getTime());
 		
-		device.print("<table id=\"dayview\"><tr><td>");
+		device.print("<table class=\"dayview\"><tr><td>");
 		device.print("<div class=\"daycontainer\">");
 
 		if(calendar.getCalendarModel().getCustomCellRenderer() != null)
@@ -164,7 +164,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 			
 			device.print("<div class=\"daytitle\">" + dayTitle + "</div>");
 			device.print("<div class=\"dayappcontainer\"");
-			String uniqueID = tempCal.get(Calendar.YEAR) + ":" + tempCal.get(Calendar.DAY_OF_YEAR);
+			String uniqueID = calendar.getName() + "_" + tempCal.get(Calendar.YEAR) + ":" + tempCal.get(Calendar.DAY_OF_YEAR);
 			device.print(" id=\"");
 			Utils.quote(device, uniqueID, true, false, true);
 			device.print("\"");
@@ -243,7 +243,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 		
 		writeHeader(device, calendar);
 		
-		device.print("<table id=\"monthview\">");
+		device.print("<table class=\"monthview\">");
 		device.print("<thead>");
 		
 		for(int column = 0; column < model.getColumnCount(); column++)
@@ -288,7 +288,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
                     // upper-cell
                     device.print("<tr style=\"height:50%; overflow:hidden;\"><td style=\"overflow:hidden;\" class=\"" + this.getCellClassname(calendar, tempCal, viewToday) + "\"");
 
-                    String uniqueID = tempCal.get(Calendar.YEAR) + ":" + tempCal.get(Calendar.DAY_OF_YEAR);
+                    String uniqueID = calendar.getName() + "_" + tempCal.get(Calendar.YEAR) + ":" + tempCal.get(Calendar.DAY_OF_YEAR);
                     device.print(" id=\"");
                     Utils.quote(device, uniqueID, true, false, true);
                     device.print("\"");
@@ -310,7 +310,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
                     // bottom-cell
                     device.print("<tr style=\"height:50%; overflow:hidden;\"><td style=\"overflow:hidden;\" class=\"" + this.getCellClassname(calendar, tempCal, viewToday) + "\"");
 
-                    uniqueID = tempCal.get(Calendar.YEAR) + ":" + tempCal.get(Calendar.DAY_OF_YEAR);
+                    uniqueID = calendar.getName() + "_" + tempCal.get(Calendar.YEAR) + ":" + tempCal.get(Calendar.DAY_OF_YEAR);
                     device.print(" id=\"");
                     Utils.quote(device, uniqueID, true, false, true);
                     device.print("\"");
@@ -339,7 +339,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
                     
                     device.print("<td class=\"" + this.getCellClassname(calendar, tempCal, viewToday) + "\"");
 
-                    String uniqueID = tempCal.get(Calendar.YEAR) + ":" + tempCal.get(Calendar.DAY_OF_YEAR);
+                    String uniqueID = calendar.getName() + "_" + tempCal.get(Calendar.YEAR) + ":" + tempCal.get(Calendar.DAY_OF_YEAR);
                     device.print(" id=\"");
                     Utils.quote(device, uniqueID, true, false, true);
                     device.print("\"");
@@ -438,7 +438,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	public void writeAppointment(final Device device, final AppointmentCalendar calendar, final Appointment appointment, final Calendar today) throws IOException
 	{	
 		java.sql.Date sqlDate = new Date(today.getTimeInMillis());
-		String uniqueID = calendar.getCalendarModel().getUniqueAppointmentID(sqlDate, appointment);
+		String uniqueID = calendar.getName() + "_" + calendar.getCalendarModel().getUniqueAppointmentID(sqlDate, appointment);
 		
 		switch(calendar.getCalendarModel().getView())
 		{
@@ -708,7 +708,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.YEAR, Integer.parseInt(data[0]));
 		cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(data[1]));
-
+        
         try {
             Collection<Appointment> appointments = calendar.getCalendarModel().getAppointments(new Date(cal.getTimeInMillis()));
             if(appointments != null)
@@ -719,7 +719,8 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
         } catch(ArrayIndexOutOfBoundsException e) {
             LOG.debug("A Popup was requested for a non-existing appointment.");
         }
-		
+
+        //System.out.println("no appointments on that day - should not happen");
         return null;
 	}
 	
@@ -789,10 +790,17 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 		public Handler getHandler() {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(event.getDate());
-			switch(event.getAffectedComponent())
+            Date visibleFrom = ((AppointmentCalendar)getComponent()).getCalendarModel().getVisibleFrom();
+            Date visibleUntil = ((AppointmentCalendar)getComponent()).getCalendarModel().getVisibleUntil();
+            Calendar from = Calendar.getInstance();
+            Calendar until = Calendar.getInstance();
+            from.setTime(visibleFrom);
+            until.setTime(visibleUntil);
+            
+            switch(event.getAffectedComponent())
 			{
 				case DATE:
-					String elementID = cal.get(Calendar.YEAR) + ":" + cal.get(Calendar.DAY_OF_YEAR);
+					String elementID = getComponent().getName() + "_" + cal.get(Calendar.YEAR) + ":" + cal.get(Calendar.DAY_OF_YEAR);
 					Calendar viewCal = Calendar.getInstance();
 					viewCal.setTime(this.calendar.getDate());
 					UpdateHandler chandler = new UpdateHandler("className");
@@ -803,10 +811,10 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 				case APPOINTMENT:
 					UpdateHandler handler = new UpdateHandler("component");
 					// add the component id
-					String uniqueAppointmentID = calendar.getCalendarModel().getUniqueAppointmentID(event.getDate(), event.getAppointment());
+					String uniqueAppointmentID = getComponent().getName() + "_" + calendar.getCalendarModel().getUniqueAppointmentID(event.getDate(), event.getAppointment());
 					if(uniqueAppointmentID == null)
 					{
-                        LOG.info("invalid appointment was sent: date:" + event.getDate() + " app: " + event.getAppointment());
+                        LOG.info("valid appointment was sent: date:" + event.getDate() + " app: " + event.getAppointment());
                         handler.addParameter("invalid appointment");
                         //calendar.getSelectionModel().removeSelection(event.getAppointment(), event.getDate());
                         return handler;
