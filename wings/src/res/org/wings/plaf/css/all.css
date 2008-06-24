@@ -603,6 +603,12 @@ table.XPageScroller table.pages td:hover {
 .SScrollBar * {
     box-sizing: border-box;
 }
+/*
+  .SScrollBar_vertical * { }
+    is defined in gecko.css, msie.css and msie6.css due to problems with SScrollbar in internet explorer 7 in
+    themed windows environments
+*/
+
 .SScrollBar_vertical .outer {
     overflow-y: scroll;
     overflow-x: hidden;

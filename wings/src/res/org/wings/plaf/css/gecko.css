@@ -47,6 +47,9 @@ div, input, select, textarea, table {
     margin-left: 0px;
 }
 
+/*
+  This is a definition  
+*/
 .SScrollBar_vertical * {
     width:17px;
 }
