@@ -1,0 +1,3 @@
+.SScrollBar_vertical * { /* ie6 doesn't support min/max-width, therefore set width to 18px in case of windows xp-theme */
+    width:17px;
+}

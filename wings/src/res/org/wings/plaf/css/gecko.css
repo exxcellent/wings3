@@ -47,6 +47,10 @@ div, input, select, textarea, table {
     margin-left: 0px;
 }
 
+.SScrollBar_vertical * {
+    width:17px;
+}
+
 .SButton,
 .SButton_disabled,
 .SButton_form,

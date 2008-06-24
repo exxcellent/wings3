@@ -324,14 +324,17 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         Session session = SessionManager.getSession();
         final CGManager cgManager = session.getCGManager();
         final String browserName = session.getUserAgent().getBrowserType().getShortName();
+        final String browserVersion = ""+session.getUserAgent().getMajorVersion();
 
-        String cssClassPaths = (String) cgManager.getObject(PROPERTY_STYLESHEET + browserName, String.class);
-        if (cssClassPaths == null) {
+        String cssClassPaths = (String) cgManager.getObject(PROPERTY_STYLESHEET + browserName + browserVersion, String.class);
+        if(cssClassPaths == null)
+            cssClassPaths = (String) cgManager.getObject(PROPERTY_STYLESHEET + browserName, String.class);
+        if (cssClassPaths == null)
             cssClassPaths = (String) cgManager.getObject(PROPERTY_STYLESHEET + BROWSER_DEFAULT, String.class);
-        }
 
         List<Header> browserStylesheets = new ArrayList<Header>();
         StringTokenizer tokenizer = new StringTokenizer(cssClassPaths, ",");
+
         while (tokenizer.hasMoreTokens()) {
             browserStylesheets.add(Utils.createExternalizedCSSHeader(tokenizer.nextToken()));
         }

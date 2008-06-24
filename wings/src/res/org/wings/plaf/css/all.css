@@ -603,9 +603,6 @@ table.XPageScroller table.pages td:hover {
 .SScrollBar * {
     box-sizing: border-box;
 }
-.SScrollBar_vertical * {
-    width: 17px;
-}
 .SScrollBar_vertical .outer {
     overflow-y: scroll;
     overflow-x: hidden;

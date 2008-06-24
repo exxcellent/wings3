@@ -136,6 +136,11 @@ TABLE.formbutton_hover {
     padding-bottom: 0px;
 }
 
+.SScrollBar_vertical * {
+    max-width:18px;
+    min-width:17px;
+}
+
 .DivisionControl {
     width: 0%;
 }
