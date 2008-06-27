@@ -7,6 +7,7 @@ import org.wings.io.DeviceOutputStream;
 import org.wings.template.parser.ParseContext;
 
 import java.io.OutputStream;
+import java.util.*;
 
 /**
  * <code>CmsTemplateParseContext<code>.
@@ -23,6 +24,7 @@ public class CmsTemplateParseContext implements ParseContext {
     private final OutputStream myOut;
     private final Device sink;
     private final STemplateLayout layout;
+    private final Set<SComponent> containedComponents = new HashSet<SComponent>();
 
     public CmsTemplateParseContext(final Device sink, STemplateLayout layout) {
         this.sink = sink;
@@ -53,5 +55,13 @@ public class CmsTemplateParseContext implements ParseContext {
 
     public SComponent[] getComponents() {
         return layout.getContainer().getComponents();
+    }
+
+    public void addContainedComponent(SComponent component) {
+        containedComponents.add(component);
+    }
+
+    public Set<SComponent> getContainedComponents() {
+        return containedComponents;
     }
 }

@@ -9,6 +9,9 @@
         <webroots>
           <root url="file://$MODULE_DIR$/src/web" relative="/" />
         </webroots>
+        <sourceRoots>
+          <root url="file://$MODULE_DIR$/src/java" />
+        </sourceRoots>
         <building>
           <setting name="EXPLODED_URL" value="file://$MODULE_DIR$/../build/exploded/demo-wingsetWeb" />
           <setting name="EXPLODED_ENABLED" value="true" />

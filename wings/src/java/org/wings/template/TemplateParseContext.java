@@ -19,6 +19,7 @@ import org.wings.io.DeviceOutputStream;
 import org.wings.template.parser.ParseContext;
 
 import java.io.OutputStream;
+import java.util.*;
 
 /**
  * @author <a href="mailto:H.Zeller@acm.org">Henner Zeller</a>
@@ -27,6 +28,7 @@ public final class TemplateParseContext implements ParseContext {
     private final OutputStream myOut;
     private final Device sink;
     private final STemplateLayout layout;
+    private final Set<SComponent> containedComponents = new HashSet<SComponent>();
 
     public TemplateParseContext(final Device sink, STemplateLayout layout) {
         this.sink = sink;
@@ -42,6 +44,14 @@ public final class TemplateParseContext implements ParseContext {
     }
 
     public void doneTag(int number) {
+    }
+
+    public void addContainedComponent(SComponent component) {
+        containedComponents.add(component);
+    }
+
+    public Set<SComponent> getContainedComponents() {
+        return containedComponents;
     }
 
     /*

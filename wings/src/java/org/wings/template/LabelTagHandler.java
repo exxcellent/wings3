@@ -69,9 +69,8 @@ public class LabelTagHandler
         endPos = input.getPosition();  // in case </label> is missing
 
         SGMLTag endTag;
-        int len;
         do {
-            len = readContent(input, content);
+            readContent(input, content);
             endTag = new SGMLTag(input, false);
         } while (!endTag.finished() && !endTag.isNamed(endTagName));
 

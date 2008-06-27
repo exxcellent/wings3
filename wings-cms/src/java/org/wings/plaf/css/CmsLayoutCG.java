@@ -12,10 +12,7 @@
  */
 package org.wings.plaf.css;
 
-import org.wings.CmsLayout;
-import org.wings.DebugTagHandler;
-import org.wings.MacroTagHandler;
-import org.wings.SLayoutManager;
+import org.wings.*;
 import org.wings.io.Device;
 import org.wings.template.CmsTemplateParseContext;
 import org.wings.template.TemplateSource;
@@ -23,6 +20,7 @@ import org.wings.template.RangeTagHandler;
 import org.wings.template.parser.PageParser;
 
 import java.io.IOException;
+import java.util.*;
 
 /**
  * <code>CmsLayoutCG<code>.
@@ -60,7 +58,11 @@ public class CmsLayoutCG implements org.wings.plaf.CmsLayoutCG {
             device.print("The cms server is not reachable at the moment or the connection data is wrong. Please check your <em>wings-2-cms.xml</em>");
         }
         else {
-            parser.process(source, new CmsTemplateParseContext(device, layout));
+            CmsTemplateParseContext context = new CmsTemplateParseContext(device, layout);
+            parser.process(source, context);
+            Set<SComponent> containedCmponents = context.getContainedComponents();
+            for (SComponent component : layout.getContainer().getComponents())
+                component.setVisible(containedCmponents.contains(component));
         }
     }
 

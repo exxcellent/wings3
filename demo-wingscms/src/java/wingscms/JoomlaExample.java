@@ -52,6 +52,7 @@ public class JoomlaExample {
 
         // Result label
         final SLabel message = new SLabel("Test Message");
+        message.setName("MESSAGE");
 
         // Products
         final LinkedList<Product> PRODUCTS = new LinkedList<Product>();

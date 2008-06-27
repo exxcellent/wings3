@@ -1,4 +1,4 @@
-package calendar.RemoteCalendar;
+package calendar.remote;
 
 import calendar.CalendarModel;
 

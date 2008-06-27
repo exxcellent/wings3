@@ -9,9 +9,7 @@ import org.wings.header.Link;
 import org.wings.header.Script;
 import org.wings.conf.CmsDetail;
 import org.wings.adapter.CmsAdapter;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.util.DateParser;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -115,6 +113,11 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
             }
         }
         HttpClient httpclient = new HttpClient();
+        String host = System.getProperty("http.proxyHost");
+        String port = System.getProperty("http.proxyPort");
+        if (host != null && port != null)
+            method.getHostConfiguration().setProxy(host, Integer.valueOf(port));
+
         String templateString = null;
 
         // Sets the "If-Modified-Since" header to the date in cache

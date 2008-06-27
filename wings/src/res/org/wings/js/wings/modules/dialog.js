@@ -15,7 +15,6 @@ wingS.namespace("dialog");
 wingS.dialog.SDialog = function(el, userConfig) {
     wingS.dialog.SDialog.superclass.constructor.call(this, el, userConfig);    
     wingS.global.overlayManager.register(this);
-    this.focus();
 };
 
 /**

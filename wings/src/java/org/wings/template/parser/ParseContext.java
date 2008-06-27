@@ -66,7 +66,10 @@
  */
 package org.wings.template.parser;
 
+import org.wings.SComponent;
+
 import java.io.OutputStream;
+import java.util.*;
 
 /**
  * A parse context is generated for each
@@ -82,6 +85,10 @@ public interface ParseContext {
     void startTag(int number);
 
     void doneTag(int number);
+
+    void addContainedComponent(SComponent component);
+
+    Set<SComponent> getContainedComponents();
 }
 
 

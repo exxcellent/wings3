@@ -69,6 +69,8 @@ abstract class TemplateTagHandler implements SpecialTagHandler {
          * been set as Layout Manager Constraint.
          */
         SComponent c = tcontext.getComponent(name);
+        context.addContainedComponent(c);
+
         if (c == null) {
             sink.print("<!-- Template: '" + name + "' Component not given -->");
         } else {

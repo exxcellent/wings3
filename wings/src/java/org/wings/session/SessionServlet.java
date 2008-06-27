@@ -368,7 +368,8 @@ final class SessionServlet
             // their epoch and inform the dispatcher which will then be
             // able to check if the request is valid and processed. If
             // this is not the case, we force a complete page reload.
-            session.getDispatcher().setEventEpoch(req.getParameter("event_epoch"));
+            LowLevelEventDispatcher eventDispatcher = session.getDispatcher();
+            eventDispatcher.setEventEpoch(req.getParameter("event_epoch"));
 
             Enumeration en = req.getParameterNames();
             final Cookie[] cookies = req.getCookies();
@@ -405,6 +406,7 @@ final class SessionServlet
                 // only fire DISPATCH_START if we have parameters to dispatch
                 session.fireRequestEvent(SRequestEvent.DISPATCH_START);
 
+                eventDispatcher.startLowLevelEventPhase();
                 if (cookiesToDispatch != null) {
                     //dispatch cookies
                     for (Cookie cookie : cookiesToDispatch) {
@@ -414,7 +416,7 @@ final class SessionServlet
                         if (log.isDebugEnabled())
                             log.debug("dispatching cookie " + paramName + " = " + value);
                         
-                        session.getDispatcher().dispatch(paramName, new String[] { value });
+                        eventDispatcher.dispatch(paramName, new String[] { value });
                     }
                 }
 
@@ -463,8 +465,9 @@ final class SessionServlet
                     if (log.isDebugEnabled())
                         log.debug("dispatching " + paramName + " = " + Arrays.asList(values));
 
-                    session.getDispatcher().dispatch(paramName, values);
+                    eventDispatcher.dispatch(paramName, values);
                 }
+                eventDispatcher.endLowLevelEventPhase();
 
                 SForm.fireEvents();
 
@@ -473,7 +476,7 @@ final class SessionServlet
             }
 
             session.fireRequestEvent(SRequestEvent.PROCESS_REQUEST);
-            session.getDispatcher().invokeRunnables();
+            eventDispatcher.invokeRunnables();
 
             // if the user chose to exit the session as a reaction on an
             // event, we got an URL to redirect after the session.

@@ -516,43 +516,36 @@ public class SOptionPane extends SDialog implements ActionListener {
         switch (newType) {
             case DEFAULT_OPTION:
                 optionOK.setVisible(true);
-                optionOK.requestFocus();
                 break;
 
             case OK_CANCEL_OPTION:
                 optionOK.setVisible(true);
-                optionOK.requestFocus();
                 optionCancel.setVisible(true);
                 break;
 
             case OK_CANCEL_RESET_OPTION:
                 optionOK.setVisible(true);
-                optionOK.requestFocus();
                 optionCancel.setVisible(true);
                 break;
 
             case YES_NO_OPTION:
                 optionYes.setVisible(true);
-                optionYes.requestFocus();
                 optionNo.setVisible(true);
                 break;
 
             case YES_NO_RESET_OPTION:
                 optionYes.setVisible(true);
-                optionYes.requestFocus();
                 optionNo.setVisible(true);
                 break;
 
             case YES_NO_CANCEL_OPTION:
                 optionYes.setVisible(true);
-                optionYes.requestFocus();
                 optionNo.setVisible(true);
                 optionCancel.setVisible(true);
                 break;
 
             case YES_NO_CANCEL_RESET_OPTION:
                 optionYes.setVisible(true);
-                optionYes.requestFocus();
                 optionNo.setVisible(true);
                 optionCancel.setVisible(true);
                 break;

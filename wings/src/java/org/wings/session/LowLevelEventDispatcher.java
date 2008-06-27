@@ -117,6 +117,20 @@ public final class LowLevelEventDispatcher
         }
     }
 
+    boolean lowLevelEventPhase;
+
+    void startLowLevelEventPhase() {
+        lowLevelEventPhase = true;
+    }
+
+    void endLowLevelEventPhase() {
+        lowLevelEventPhase = false;
+    }
+
+    public boolean isLowLevelEventPhase() {
+        return lowLevelEventPhase;
+    }
+
     /**
      * dispatch the events, encoded as [name/(multiple)values]
      * in the HTTP request. the part in front of the UID_DIVIDER ('-') is removed, first.
