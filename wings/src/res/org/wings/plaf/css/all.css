@@ -868,4 +868,10 @@ table.DivisionContent {
 	right:0px !important;
 }
 
+/* --- ZOOMABLE IMAGE -------------------------------------------- */
+
+.XZoomableImage {
+	cursor:url("../../../../-org/wingx/zoomableimage/zoomable_image_cursor.gif"), pointer;
+}
+
 /* ------------------------------------------------------------------------- */

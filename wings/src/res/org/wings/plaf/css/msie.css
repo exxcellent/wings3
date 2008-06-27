@@ -187,4 +187,10 @@ TABLE.formbutton_hover {
 	right:0px !important;
 }
 
+/* --- ZOOMABLE IMAGE -------------------------------------------- */
+
+.XZoomableImage {
+	cursor:url("../../../../-org/wingx/zoomableimage/zoomable_image_cursor.cur"), pointer;
+}
+
 /* ------------------------------------------------------------------------- */
