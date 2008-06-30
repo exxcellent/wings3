@@ -47,7 +47,7 @@ public class ScrollPaneCG extends org.wings.plaf.css.AbstractComponentCG impleme
         
         Adjustable sb = scrollpane.getVerticalScrollBar();
         SComponent viewport = (SComponent)scrollpane.getScrollable();
-        if (sb instanceof SScrollBar && viewport != null) {
+        if ( viewport != null && sb != null && sb instanceof SScrollBar) {
             final JavaScriptDOMListener handleMouseWheel = new JavaScriptDOMListener(
                     "DOMMouseScroll",
                     "wingS.scrollbar.handleMouseWheel", "'"+((SScrollBar)sb).getName()+"'", viewport);
