@@ -28,7 +28,7 @@ public final class TemplateParseContext implements ParseContext {
     private final OutputStream myOut;
     private final Device sink;
     private final STemplateLayout layout;
-    private final Set<SComponent> containedComponents = new HashSet<SComponent>();
+    private final Set<String> containedComponents = new HashSet<String>();
 
     public TemplateParseContext(final Device sink, STemplateLayout layout) {
         this.sink = sink;
@@ -46,11 +46,11 @@ public final class TemplateParseContext implements ParseContext {
     public void doneTag(int number) {
     }
 
-    public void addContainedComponent(SComponent component) {
+    public void addContainedComponent(String component) {
         containedComponents.add(component);
     }
 
-    public Set<SComponent> getContainedComponents() {
+    public Set<String> getContainedComponents() {
         return containedComponents;
     }
 

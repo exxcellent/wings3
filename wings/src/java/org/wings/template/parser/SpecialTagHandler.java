@@ -141,12 +141,3 @@ public interface SpecialTagHandler {
     void executeTag(ParseContext context, InputStream input)
             throws Exception;
 }
-
-/* 
- * Local variables:
- * c-basic-offset: 4
- * compile-command: "ant -emacs -find build.xml"
- * End:
- */
-
-

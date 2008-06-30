@@ -350,6 +350,14 @@ final class SessionServlet
             // Retrieve externalized resource
             ExternalizedResource extInfo = extManager.getExternalizedResource(externalizeIdentifier);
 
+            ResourceMapper mapper = session.getResourceMapper();
+            if (extInfo == null && mapper != null) {
+                Resource res = mapper.mapResource(req.getPathInfo());
+                if (res != null) {
+                    extInfo = extManager.getExternalizedResource(res.getId());
+                }
+            }
+
             // Special case handling: We request a .html resource of a session which is not accessible.
             // This happens some times and leads to a 404, though it should not be possible.
             if (extInfo == null && pathInfo != null && pathInfo.endsWith(".html")) {
@@ -521,15 +529,6 @@ final class SessionServlet
 
             reloadManager.notifyCGs();
             reloadManager.invalidateFrames();
-
-            // TODO ResourceMapper
-            ResourceMapper mapper = session.getResourceMapper();
-            if (extInfo == null && mapper != null) {
-                Resource res = mapper.mapResource(req.getPathInfo());
-                if (res != null) {
-                    extInfo = extManager.getExternalizedResource(res.getId());
-                }
-            }
 
             if (extInfo != null) {
                 outputDevice = DeviceFactory.createDevice(extInfo);

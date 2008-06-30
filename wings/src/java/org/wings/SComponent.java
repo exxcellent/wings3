@@ -692,6 +692,8 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
         String oldVal = this.name;
         reloadIfChange(this.name, uncheckedName);
         this.name = uncheckedName;
+        unregister();
+        register();
         propertyChangeSupport.firePropertyChange("name", oldVal, this.name);
     }
 

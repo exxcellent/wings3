@@ -14,6 +14,7 @@ package org.wings.plaf.css;
 
 import org.wings.*;
 import org.wings.io.Device;
+import org.wings.io.NullDevice;
 import org.wings.template.CmsTemplateParseContext;
 import org.wings.template.TemplateSource;
 import org.wings.template.RangeTagHandler;
@@ -49,7 +50,6 @@ public class CmsLayoutCG implements org.wings.plaf.CmsLayoutCG {
         parser.addTagHandler("DEBUG", DebugTagHandler.class);
     }
 
-
     private void write(Device device, CmsLayout layout)
             throws IOException {
         final TemplateSource source = layout.getTemplateSource();
@@ -60,9 +60,6 @@ public class CmsLayoutCG implements org.wings.plaf.CmsLayoutCG {
         else {
             CmsTemplateParseContext context = new CmsTemplateParseContext(device, layout);
             parser.process(source, context);
-            Set<SComponent> containedCmponents = context.getContainedComponents();
-            for (SComponent component : layout.getContainer().getComponents())
-                component.setVisible(containedCmponents.contains(component));
         }
     }
 
@@ -74,5 +71,11 @@ public class CmsLayoutCG implements org.wings.plaf.CmsLayoutCG {
     public void write(Device device, SLayoutManager manager)
             throws IOException {
         write(device, (CmsLayout) manager);
+    }
+
+    public static Set<String> getContainedComponents(CmsLayout layout) throws IOException {
+        final TemplateSource source = layout.getTemplateSource();
+        CmsTemplateParseContext context = new CmsTemplateParseContext(new NullDevice(), layout);
+        return CmsLayoutCG.parser.getContainedComponents(source, context);
     }
 }

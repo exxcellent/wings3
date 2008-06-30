@@ -25,6 +25,7 @@ import org.wings.template.propertymanagers.STextAreaPropertyManager;
 import org.wings.template.parser.PageParser;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -143,7 +144,7 @@ public class STemplateLayout extends SAbstractLayoutManager {
      *
      * @param source the TemplateSource this template is to be read from.
      */
-    public STemplateLayout(TemplateSource source) {
+    public STemplateLayout(TemplateSource source) throws IOException {
         setTemplate(source);
     }
 
@@ -269,7 +270,7 @@ public class STemplateLayout extends SAbstractLayoutManager {
      * @param source the source this template is to be read.
      * @see org.wings.template.TemplateSource
      */
-    public void setTemplate(TemplateSource source) {
+    public void setTemplate(TemplateSource source) throws IOException {
         templateSource = source;
     }
 

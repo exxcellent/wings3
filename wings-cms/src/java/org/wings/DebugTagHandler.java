@@ -106,6 +106,8 @@ public class DebugTagHandler implements SpecialTagHandler {
         if (name == null)
             return null;
 
+        context.addContainedComponent(name);
+
         endPos = input.getPosition();  // in case </component> is missing
 
         while (!startTag.finished()) {

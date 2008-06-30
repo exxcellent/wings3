@@ -59,7 +59,9 @@ public class SimpleTagHandler extends TemplateTagHandler {
         name = tag.value("NAME", null);
         if (name == null)
             return null;
-        
+
+        context.addContainedComponent(name);
+
         /*
          * special handling for radio buttons. They react on the
          * constraint name "NAME=VALUE"
@@ -81,5 +83,3 @@ public class SimpleTagHandler extends TemplateTagHandler {
         return tag;
     }
 }
-
-

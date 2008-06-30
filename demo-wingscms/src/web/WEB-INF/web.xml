@@ -10,7 +10,7 @@
         <servlet-class>org.wings.session.WingServlet</servlet-class>
         <init-param>
             <param-name>wings.mainclass</param-name>
-            <param-value>wingscms.JoomlaExample</param-value>
+            <param-value>wingscms.ShopExample</param-value>
         </init-param>
 
         <!-- NOTE: The entries below are optionally. We included them mainly for documentation purpose -->

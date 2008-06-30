@@ -1,4 +1,4 @@
-/*
+        /*
  * Copyright 2000,2005 wingS development team.
  *
  * This file is part of wingS (http://wingsframework.org).
@@ -67,8 +67,6 @@ public class MacroTagHandler implements SpecialTagHandler {
          * been set as Layout Manager Constraint.
          */
         SComponent c = tcontext.getComponent(name);
-        context.addContainedComponent(c);
-
         if (c == null) {
             sink.print("<!-- Template: '" + name + "' Component not given -->");
         } else {
@@ -152,6 +150,7 @@ public class MacroTagHandler implements SpecialTagHandler {
 
     public SGMLTag parseTag(ParseContext context, PositionReader input, long startPosition, SGMLTag startTag)
             throws IOException {
+        CmsTemplateParseContext tcontext = (CmsTemplateParseContext) context;
 
         final String startTagName = startTag.getName();
         final String endTagName = "/" + startTagName;
@@ -180,6 +179,8 @@ public class MacroTagHandler implements SpecialTagHandler {
         name = startTag.value("NAME", null);
         if (name == null)
             return null;
+
+        tcontext.addContainedComponent(name);
 
         endPos = input.getPosition();  // in case </component> is missing
 

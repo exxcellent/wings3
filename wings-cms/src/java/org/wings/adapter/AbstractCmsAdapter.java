@@ -1,9 +1,12 @@
 package org.wings.adapter;
 
 import org.wings.*;
+import org.wings.event.*;
+import org.wings.plaf.css.CmsLayoutCG;
 import org.wings.resource.DynamicResource;
 import org.wings.resource.ReloadResource;
 import org.wings.template.StringTemplateSource;
+import org.wings.template.TemplateSource;
 import org.wings.session.SessionManager;
 import org.wings.header.Link;
 import org.wings.header.Script;
@@ -16,6 +19,7 @@ import org.apache.commons.httpclient.methods.PostMethod;
 
 import java.util.*;
 import java.text.SimpleDateFormat;
+import java.io.IOException;
 
 import au.id.jericho.lib.html.*;
 
@@ -83,7 +87,7 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
         return defaultResource;
     }
 
-    private void navigate(String url) {
+    protected void navigate(String url) {
 
         HttpServletRequest request = SessionManager.getSession().getServletRequest();
 
@@ -162,13 +166,17 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
 
             method.releaseConnection();
 
-            layout.setTemplate(new StringTemplateSource(templateString));
+            setTemplate(new StringTemplateSource(templateString));
         }
         catch (Exception ex) {
             // Http get request failed or can't set template --> Invoke handleUnknownResourceRequested
             ex.printStackTrace();
             System.err.println(templateString);
         }
+    }
+
+    protected void setTemplate(TemplateSource templateSource) throws IOException {
+        layout.setTemplate(templateSource);
     }
 
     protected String process(String templateString) {

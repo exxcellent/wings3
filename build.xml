@@ -216,7 +216,7 @@
         <ant dir="wings-tests" target="run-demo-wingset"/>
     </target>
 
-    <target name="deploy-demo-wingcms" description="deploy demo-wingcms">
+    <target name="deploy-demo-wingscms" description="deploy demo-wingcms">
         <ant dir="wings" target="build"/>
         <ant dir="wingx" target="build"/>
         <ant dir="wings-cms" target="build"/>

@@ -95,17 +95,11 @@ public class PageParser {
         interpretPage(source, getPageParts(source, context), context);
     }
 
-    /**
-     * Processes a file.
-     *
-     * @param file    The file containing SGML markup
-     * @param context The context used while parsing; contains
-     *                at least the HttpServletRequest and HttpServletResponse.
-     * @see ParseContext
-     */
-    public void process(File file, ParseContext context)
-            throws IOException {
-        process(new FileTemplateSource(file), context);
+    public Set<String> getContainedComponents(TemplateSource source, ParseContext context) throws IOException {
+        getPageParts(source, context);
+        String cName = source.getCanonicalName();
+        TemplateSourceInfo sourceInfo = (TemplateSourceInfo)pages.get(cName);
+        return sourceInfo.containedComponents;
     }
 
     public Map getLabels(TemplateSource source) {
@@ -366,6 +360,7 @@ public class PageParser {
                     }
                 }
             } while (!tag.finished());
+            sourceInfo.containedComponents = context.getContainedComponents();
             /***
              sourceInfo.parseTime = System.currentTimeMillis() - startTime;
              System.err.println ("PageParser: parsing '" +
@@ -389,16 +384,9 @@ public class PageParser {
         ArrayList parts;
         Map labels;
         long lastModified;
+        Set<String> containedComponents;
 //	long      parseTime;
 
         public TemplateSourceInfo() {}
     }
 }
-
-/* 
- * Local variables:
- * c-basic-offset: 4
- * compile-command: "ant -emacs -find build.xml"
- * End:
- */
-

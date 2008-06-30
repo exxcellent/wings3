@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <cms-detail adapter="org.wings.adapter.Joomla10Adapter">
+    <!--cms-detail adapter="org.wings.adapter.Joomla10Adapter">
         <protocol>http</protocol>
         <server>www.wingsframework.org</server>
         <port>80</port>
         <base-path>joomla</base-path>
+    </cms-detail-->
+
+    <cms-detail adapter="org.wings.adapter.LocalAdapter">
+        <base-path>/template</base-path>
     </cms-detail>
 
     <template-detail processor="org.wings.macro.MacroProcessor">

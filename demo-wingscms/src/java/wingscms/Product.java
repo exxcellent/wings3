@@ -1,5 +1,7 @@
 package wingscms;
 
+import java.math.BigDecimal;
+
 /**
  * Class represents a single Product
  * 
@@ -7,29 +9,50 @@ package wingscms;
  */
 public class Product {
 
-    final private Integer itemnumber;
-    final private String description;
-    private double price; 
-    
-    public Integer getItemnumber() {
-        return itemnumber;
+    private Integer id;
+    private String name;
+    private String description;
+    private BigDecimal price;
+
+    public Product() {
     }
-    
+
+    public Product(Integer id, String name, String description, BigDecimal price) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getDescription() {
         return description;
     }
-    
-    public double getPrice() {
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public BigDecimal getPrice() {
         return price;
     }
-    
-    public void setPrice(double price) {
+
+    public void setPrice(BigDecimal price) {
         this.price = price;
-    }
-    
-    public Product(Integer itemnumber, String description, double initialprice) {
-        this.itemnumber = itemnumber;
-        this.description = description;
-        setPrice(initialprice);
     }
 }

@@ -86,13 +86,7 @@ public interface ParseContext {
 
     void doneTag(int number);
 
-    void addContainedComponent(SComponent component);
+    void addContainedComponent(String component);
 
-    Set<SComponent> getContainedComponents();
+    Set<String> getContainedComponents();
 }
-
-
-
-
-
-

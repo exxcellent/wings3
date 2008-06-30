@@ -40,7 +40,8 @@ public class RangeTagHandler extends TemplateTagHandler {
                             PositionReader input,
                             long startPosition,
                             SGMLTag startTag)
-            throws IOException {
+            throws IOException
+    {
         final String startTagName = startTag.getName();
         final String endTagName = "/" + startTagName;
 
@@ -68,6 +69,8 @@ public class RangeTagHandler extends TemplateTagHandler {
         name = startTag.value("NAME", null);
         if (name == null)
             return null;
+
+        context.addContainedComponent(name);
 
         endPos = input.getPosition();  // in case </component> is missing
 
