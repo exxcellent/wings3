@@ -13,16 +13,11 @@
 package wingscms;
 
 import org.wings.CmsFrame;
-import org.wingx.table.EditableTableCellRenderer;
 import org.wingx.table.XTableClickListener;
 import org.wingx.XTable;
 import org.wings.*;
-import org.wings.session.SessionManager;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 
 /**
  * @author hengels
@@ -44,7 +39,6 @@ public class ShopExample
         productModel.getRows().add(new Product(2, "Samsung Syncmaster 223BW", "Widescreen TFT", new BigDecimal("249.00")));
         productTable.setModel(productModel);
         productTable.setSelectionMode(SListSelectionModel.NO_SELECTION);
-        //productTable.setEditable(false);
         productTable.addClickListener(0, new XTableClickListener() {
             public void clickOccured(int row, int column) {
                 productDetails.setText(productModel.getRows().get(row).getDescription());
@@ -58,6 +52,7 @@ public class ShopExample
         });
 
         cartTable.setModel(cartModel);
+        cartTable.setSelectionMode(SListSelectionModel.NO_SELECTION);
         cartTable.getColumnModel().getColumn(1).setCellRenderer(new IntegerCellRenderer());
 
         productDetails.setWordWrap(true);
@@ -71,34 +66,4 @@ public class ShopExample
         rootFrame.setVisible(true);
     }
 
-    private static class IntegerCellRenderer
-        extends SFormattedTextField
-        implements EditableTableCellRenderer
-    {
-        private IntegerCellRenderer() {
-            super(NumberFormat.getIntegerInstance(SessionManager.getSession().getLocale()));
-            addActionListener(new NoAction());
-        }
-
-        public Object getValue() {
-            String s = getText();
-            if ("".equals(s))
-                return null;
-            return new Integer(((Long)super.getValue()).intValue());
-        }
-
-        public SComponent getTableCellRendererComponent(STable table, Object value, boolean isSelected, int row, int column) {
-            setText(value != null ? value.toString() : null);
-            return this;
-        }
-
-        public LowLevelEventListener getLowLevelEventListener(STable table, int row, int column) {
-            return this;
-        }
-    }
-
-    static class NoAction implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-        }
-    }
 }
