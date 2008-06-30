@@ -12,6 +12,7 @@
  */
 package org.wings.plaf.css;
 
+import java.awt.Adjustable;
 import java.io.IOException;
 
 import org.wings.*;
@@ -19,6 +20,7 @@ import org.wings.io.Device;
 import org.wings.plaf.css.script.LayoutFillScript;
 import org.wings.plaf.css.script.LayoutFixScript;
 import org.wings.plaf.css.script.LayoutScrollPaneScript;
+import org.wings.script.JavaScriptDOMListener;
 import org.wings.session.ScriptManager;
 
 public class ScrollPaneCG extends org.wings.plaf.css.AbstractComponentCG implements org.wings.plaf.ScrollPaneCG {
@@ -42,6 +44,16 @@ public class ScrollPaneCG extends org.wings.plaf.css.AbstractComponentCG impleme
         } else {
             writeContent(device, component);
         }
+        
+        Adjustable sb = scrollpane.getVerticalScrollBar();
+        SComponent viewport = (SComponent)scrollpane.getScrollable();
+        if (sb instanceof SScrollBar && viewport != null) {
+            final JavaScriptDOMListener handleMouseWheel = new JavaScriptDOMListener(
+                    "DOMMouseScroll",
+                    "wingS.scrollbar.handleMouseWheel", "'"+((SScrollBar)sb).getName()+"'", viewport);
+            viewport.addScriptListener(handleMouseWheel);            
+        }
+
     }
 
     public void writeContent(Device device, SComponent c) throws IOException {
@@ -69,9 +81,9 @@ public class ScrollPaneCG extends org.wings.plaf.css.AbstractComponentCG impleme
         }
         else if (clientFix)
             scrollPane.getSession().getScriptManager().addScriptListener(new LayoutFixScript(scrollPane.getName()));
-
+   
         device.print(">");
-
+       
         Utils.renderContainer(device, scrollPane);
         device.print("</table>");
     }

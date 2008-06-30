@@ -41,6 +41,34 @@ wingS.scrollbar.layout_vertical = function(id) {
     YAHOO.util.Event.addListener(outer, 'scroll', table.callbackObject.adjust);
 };
 
+wingS.scrollbar.handleMouseWheel = function(event, scrollbar) {
+     var delta = 0;
+     if (event.wheelDelta) {
+        delta = event.wheelDelta/120;
+        if (window.opera) delta = -delta;
+     } else if (event.detail) {
+        delta = -event.detail/3;
+     }
+
+     var table = document.getElementById(scrollbar);
+     var outer = table.getElementsByTagName("DIV")[0];
+     var inner = outer.getElementsByTagName("DIV")[0];
+
+     var scrollTop = outer.scrollTop;
+     var innerHeight = inner.clientHeight;
+     var size = parseInt(outer.getAttribute("size"));
+
+     var position = scrollTop * size / innerHeight;
+    
+     if (delta > 0) {
+        outer.scrollTop = innerHeight * ( position-1 ) / size;
+     }
+     if (delta < 0) { 
+        outer.scrollTop = innerHeight * ( position+1 ) / size;
+     }
+
+}
+
 wingS.scrollbar.set_vertical = function(id, position, extent, size) {
     var table = document.getElementById(id);
     var outer = table.getElementsByTagName("DIV")[0];
