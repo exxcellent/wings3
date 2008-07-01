@@ -19,13 +19,7 @@ import java.util.*;
 import java.io.IOException;
 
 /**
- * <code>CmsLayout<code>.
- * <p/>
- * User: raedler
- * Date: 08.08.2007
- * Time: 13:08:30
- *
- * @author raedler
+ * @author hengels
  * @version $Id
  */
 public class CmsLayout extends STemplateLayout {
@@ -36,15 +30,31 @@ public class CmsLayout extends STemplateLayout {
         super.setCG(cg);
     }
 
-    public void addComponent(SComponent c, Object constraint, int index) {
-        c.setName((String)constraint);
-        componentSets.clear();
-        super.addComponent(c, constraint, index);
+    public void addComponent(SComponent component, Object constraint, int index) {
+        component.setName((String)constraint);
+        super.addComponent(component, constraint, index);
+
+        TemplateSource source = getTemplateSource();
+        if (source != null) {
+            CmsLayout.ComponentSet componentSet = componentSets.get(source);
+            boolean contained = componentSet.names.contains(component.getName());
+            component.setVisible(contained);
+            if (contained)
+                componentSet.contained.add(component);
+            else
+                componentSet.notContained.add(component);
+        }
     }
 
-    public void removeComponent(SComponent comp) {
-        componentSets.clear();
-        super.removeComponent(comp);
+    public void removeComponent(SComponent component) {
+        super.removeComponent(component);
+
+        TemplateSource source = getTemplateSource();
+        if (source != null) {
+            CmsLayout.ComponentSet componentSet = componentSets.get(source);
+            componentSet.contained.remove(component);
+            componentSet.notContained.remove(component);
+        }
     }
 
     public void setTemplate(TemplateSource source) throws IOException {
@@ -55,6 +65,7 @@ public class CmsLayout extends STemplateLayout {
         CmsLayout.ComponentSet componentSet = componentSets.get(source);
         if (componentSet == null) {
             componentSet = new ComponentSet();
+            componentSet.names = names;
             for (SComponent component : container.getComponents()) {
                 if (names.contains(component.getName()))
                     componentSet.contained.add(component);
@@ -72,6 +83,7 @@ public class CmsLayout extends STemplateLayout {
 
     private class ComponentSet
     {
+        Set<String> names;
         Set<SComponent> contained = new HashSet<SComponent>();
         Set<SComponent> notContained = new HashSet<SComponent>();
     }

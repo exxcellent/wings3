@@ -115,6 +115,7 @@ public class LocalAdapter extends AbstractCmsAdapter {
 
     public void parseImages(Source source, OutputDocument output) {
 
+        /*
         String cmsServerPath = getConfiguration().getServerPath();
 
         List<StartTag> imgTags = source.findAllStartTags(Tag.IMG);
@@ -130,6 +131,7 @@ public class LocalAdapter extends AbstractCmsAdapter {
                 output.replace(attribute.getValueSegment(), value);
             }
         }
+        */
     }
 
     /**

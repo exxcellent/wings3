@@ -12,29 +12,21 @@
  */
 package wingscms;
 
-import java.awt.Image;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.net.URL;
+import org.wings.CmsFrame;
+import org.wingx.table.XTableClickListener;
+import org.wingx.XTable;
+import org.wingx.XZoomableImage;
+import org.wings.*;
+import org.wings.table.STableCellRenderer;
+import org.wings.session.SessionManager;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-
-import org.wings.CmsFrame;
-import org.wings.SButton;
-import org.wings.SComponent;
-import org.wings.SConstants;
-import org.wings.SDimension;
-import org.wings.SImageIcon;
-import org.wings.SLabel;
-import org.wings.SListSelectionModel;
-import org.wings.STable;
-import org.wings.session.SessionManager;
-import org.wings.table.STableCellRenderer;
-import org.wingx.XTable;
-import org.wingx.XZoomableImage;
-import org.wingx.table.XTableClickListener;
+import java.math.BigDecimal;
+import java.awt.Image;
+import java.io.IOException;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 /**
  * @author hengels
@@ -46,21 +38,8 @@ public class ShopExample
     CartModel cartModel = new CartModel();
     ProductModel productModel = new ProductModel();
 
-    private XTable productTable = new XTable() {
+    private ProductTable productTable = new ProductTable();
 
-		/* (non-Javadoc)
-		 * @see org.wings.STable#getColumnClass(int)
-		 */
-		@Override
-		public Class getColumnClass(int col) {
-			if (col == 0) {
-				return Image.class;
-			}
-			
-			return super.getColumnClass(col);
-		}
-    };
-    
     private XTable cartTable = new XTable();
     private SLabel productDetails = new SLabel();
     private SButton addButton = new SButton("add");
@@ -73,10 +52,9 @@ public class ShopExample
 			img2 = ImageIO.read(buildURLContext("samsung.jpg"));
 		}
 		catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	
+
         productModel.getRows().add(new Product(1, img1, "TEO-X Media", "Mediacenter", new BigDecimal("549.00")));
         productModel.getRows().add(new Product(2, img2, "Samsung Syncmaster 223BW", "Widescreen TFT", new BigDecimal("249.00")));
         productTable.setModel(productModel);
@@ -90,20 +68,23 @@ public class ShopExample
             public void clickOccured(int row, int column) {
                 Product product = productModel.getRows().get(row);
                 cartModel.addProduct(product, 1);
+                String redirect = productTable.getOnAddToCart();
+                if (redirect != null)
+                    SessionManager.getSession().setRedirectAddress(redirect);
             }
         });
-        
+
         productTable.setDefaultRenderer(Image.class, new STableCellRenderer() {
 
         	private XZoomableImage zoomableImage;
-        	
+
 			/* (non-Javadoc)
 			 * @see org.wings.table.STableCellRenderer#getTableCellRendererComponent(org.wings.STable, java.lang.Object, boolean, int, int)
 			 */
 			public SComponent getTableCellRendererComponent(STable table, Object value, boolean isSelected, int row,
 					int column) {
 		    	zoomableImage = new XZoomableImage();
-				
+
 				if (value instanceof Image) {
 					zoomableImage.setPreviewImageMaxDimension(new SDimension(100, 80));
 					zoomableImage.setDetailImage((Image) value);
@@ -128,15 +109,39 @@ public class ShopExample
     }
 
     private URL buildURLContext(String image) {
-    	
     	HttpServletRequest request = SessionManager.getSession().getServletRequest();
-    	
+
     	try {
 			return new URL(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/" + request.getContextPath() + "/images/" + image);
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
+		}
+        catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
 		return null;
+    }
+
+    private static class ProductTable extends XTable
+    {
+        String onAddToCart;
+
+        public String getOnAddToCart() {
+            return onAddToCart;
+        }
+
+        public void setOnAddToCart(String onAddToCart) {
+            this.onAddToCart = onAddToCart;
+        }
+
+        /* (non-Javadoc)
+           * @see org.wings.STable#getColumnClass(int)
+           */
+		@Override
+		public Class getColumnClass(int col) {
+			if (col == 0) {
+				return Image.class;
+			}
+
+			return super.getColumnClass(col);
+		}
     }
 }
