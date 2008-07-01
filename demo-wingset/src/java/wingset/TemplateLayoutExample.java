@@ -12,17 +12,29 @@
  */
 package wingset;
 
-import org.wings.*;
-import org.wings.style.CSSProperty;
-import org.wings.border.SLineBorder;
-import org.wings.template.StringTemplateSource;
-import org.wings.template.propertymanagers.DefaultPropertyManager;
-
-import javax.swing.tree.DefaultTreeModel;
-import java.awt.*;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+
+import javax.swing.tree.DefaultTreeModel;
+
+import org.wings.SButton;
+import org.wings.SComponent;
+import org.wings.SConstants;
+import org.wings.SDimension;
+import org.wings.SLabel;
+import org.wings.SPanel;
+import org.wings.SScrollPane;
+import org.wings.STemplateLayout;
+import org.wings.STextArea;
+import org.wings.STextField;
+import org.wings.STree;
+import org.wings.border.SLineBorder;
+import org.wings.style.CSSProperty;
+import org.wings.template.StringTemplateSource;
+import org.wings.template.propertymanagers.DefaultPropertyManager;
 
 /**
  * @author <a href="mailto:armin.haaf@mercatis.de">Armin Haaf</a>
@@ -93,8 +105,12 @@ public class TemplateLayoutExample
         scrollPane.setPreferredSize(new SDimension("320px", "180px"));
         panel.add(scrollPane, "TREE");
         panel.setVerticalAlignment(SConstants.TOP_ALIGN);
-        panel.setLayout(new STemplateLayout(templateSource));
-        panel.add(templateInput, "TemplateInput");
+        try {
+			panel.setLayout(new STemplateLayout(templateSource));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		panel.add(templateInput, "TemplateInput");
         panel.add(applyButton, "Apply");
         panel.add(label, "Label");
         panel.setVerticalAlignment(SConstants.TOP_ALIGN);

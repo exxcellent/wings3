@@ -1,5 +1,6 @@
 package wingscms;
 
+import java.awt.Image;
 import java.math.BigDecimal;
 
 /**
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 public class Product {
 
     private Integer id;
+    private Image image;
     private String name;
     private String description;
     private BigDecimal price;
@@ -17,8 +19,9 @@ public class Product {
     public Product() {
     }
 
-    public Product(Integer id, String name, String description, BigDecimal price) {
+    public Product(Integer id, Image image, String name, String description, BigDecimal price) {
         this.id = id;
+        this.image = image;
         this.name = name;
         this.description = description;
         this.price = price;
@@ -32,7 +35,15 @@ public class Product {
         this.id = id;
     }
 
-    public String getName() {
+	public Image getImage() {
+		return image;
+	}
+
+	public void setImage(Image image) {
+		this.image = image;
+	}
+
+	public String getName() {
         return name;
     }
 
@@ -55,4 +66,16 @@ public class Product {
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(name).append(", ").append(description).append(" (").append(price).append(")");
+		
+		return sb.toString();
+	}
 }

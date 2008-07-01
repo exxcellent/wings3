@@ -12,17 +12,21 @@
  */
 package org.wings.plaf;
 
-import org.wings.plaf.css.Utils;
-import org.wings.*;
-import org.wings.table.STableCellRenderer;
-import org.wings.io.Device;
-import org.wings.macro.MacroContext;
-import org.wings.macro.MacroContainer;
-import org.wings.macro.MacroTag;
-
+import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.List;
-import java.awt.*;
+
+import org.wings.SCellRendererPane;
+import org.wings.SClickable;
+import org.wings.SComponent;
+import org.wings.SListSelectionModel;
+import org.wings.STable;
+import org.wings.io.Device;
+import org.wings.macro.MacroContainer;
+import org.wings.macro.MacroContext;
+import org.wings.macro.MacroTag;
+import org.wings.plaf.css.Utils;
+import org.wings.table.STableCellRenderer;
 
 /**
  * <code>CmsTableCG<code>.
@@ -36,149 +40,151 @@ import java.awt.*;
  */
 public class CmsTableCG implements TableCG, CmsCG {
 
-    private MacroContainer macros;
+	private MacroContainer macros;
 
-    /**
-     * {@inheritDoc}
-     */
-    public void setMacros(MacroContainer macros) {
-        this.macros = macros;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setMacros(MacroContainer macros) {
+		this.macros = macros;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public Update getTableCellUpdate(STable table, int row, int col) {
-        // can be ignored at the moment
-        return null;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public Update getTableCellUpdate(STable table, int row, int col) {
+		// can be ignored at the moment
+		return null;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public void installCG(SComponent c) {
-        // ignore
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void installCG(SComponent c) {
+		// ignore
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public void uninstallCG(SComponent c) {
-        // ignore
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void uninstallCG(SComponent c) {
+		// ignore
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public void componentChanged(SComponent c) {
-        // can be ignored at the moment
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void componentChanged(SComponent c) {
+		// can be ignored at the moment
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public void write(Device device, SComponent component) throws IOException {
-        macros.execute();
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void write(Device device, SComponent component) throws IOException {
+		macros.execute();
+	}
 
-    public void writeTableEvent(Device device, SComponent component) throws IOException {
-        System.out.println("CmsTableCG.writeTableEvent");
-        
-        Utils.writeEvents(device, component, null);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public Update getComponentUpdate(SComponent component) {
+		// can be ignored at the moment
+		return null;
+	}
 
-    public void writeCellEvent(Device device, SComponent _c, Integer row, Integer col) throws IOException {
-        System.out.println("CmsTableCG.writeCellEvent");
+	public Update getTableScrollUpdate(STable table, Rectangle newViewport, Rectangle oldViewport) {
+		return null;
+	}
 
-        STable table = (STable) _c;
+	public Update getSelectionUpdate(STable table, List deselectedIndices, List selectedIndices) {
+		return null;
+	}
 
-        final boolean isEditingCell =
-                table.isEditing() && row == table.getEditingRow() && col == table.getEditingColumn();
-        final boolean editableCell = table.isCellEditable(row, col);
-        final boolean selectableCell = table.getSelectionMode() != SListSelectionModel.NO_SELECTION &&
-                !table.isEditable() && table.isSelectable();
+	public Update getEditCellUpdate(STable sTable, int row, int column) {
+		return null;
+	}
 
-        final SComponent component;
-        if (isEditingCell) {
-            component = table.getEditorComponent();
-        } else {
-            STableCellRenderer renderer = table.getCellRenderer(row.intValue(), col.intValue());
-            if (renderer != null) {
-                component = table.prepareRenderer(renderer, row.intValue(), col.intValue());
-            }
-            else {
-                device.print(table.getValueAt(row.intValue(), col.intValue()));
-                return;
-            }
-        }
+	public Update getRenderCellUpdate(STable sTable, int row, int column) {
+		return null;
+	}
 
-        final boolean isClickable = component instanceof SClickable;
+	@MacroTag
+	public void id(MacroContext context) throws IOException {
+		context.getDevice().print("id=\"" + context.getComponent().getName() + "\"");
+	}
 
-        String parameter = null;
-        if (table.isEditable() && !isEditingCell && editableCell)
-            parameter = table.getEditParameter(row.intValue(), col.intValue());
-        else if (selectableCell)
-            parameter = table.getToggleSelectionParameter(row.intValue(), col.intValue());
+	@MacroTag
+	public void toggleSelection(MacroContext context, int row) throws IOException {
+		context.getDevice().print(
+				"wingS.request.sendEvent(event,true,true,'c','t" + row
+						+ ":0;shiftKey='+event.shiftKey+';ctrlKey='+event.ctrlKey+''); return false;");
+	}
 
-        if (parameter != null && !isEditingCell && (selectableCell || editableCell) && !isClickable) {
-            Utils.printClickability(device, table, parameter, true, table.getShowAsFormComponent());
-        }
-    }
+	@MacroTag
+	public void cell(MacroContext context, int row, int col) throws IOException {
 
-    /**
-     * {@inheritDoc}
-     */
-    public Update getComponentUpdate(SComponent component) {
-        // can be ignored at the moment
-        return null;
-    }
+		Device device = context.getDevice();
+		SComponent component = context.getComponent();
 
-    public Update getTableScrollUpdate(STable table, Rectangle newViewport, Rectangle oldViewport) {
-        return null;
-    }
+		// RenderHelper.getInstance(component).forbidCaching();
 
-    public Update getSelectionUpdate(STable table, List deselectedIndices, List selectedIndices) {
-        return null;
-    }
+		STable table = (STable) component;
+		STableCellRenderer renderer = table.getCellRenderer(row, col);
 
-    public Update getEditCellUpdate(STable sTable, int row, int column) {
-        return null;
-    }
+		if (renderer != null) {
+			SComponent cellComponent = table.prepareRenderer(renderer, row, col);
+			SCellRendererPane rendererPane = table.getCellRendererPane();
+			rendererPane.writeComponent(device, cellComponent, table);
+		} else {
+			device.print(table.getValueAt(row, col));
+		}
+		// RenderHelper.getInstance(component).allowCaching();
+	}
 
-    public Update getRenderCellUpdate(STable sTable, int row, int column) {
-        return null;
-    }
+	@MacroTag
+	public void tableEvent(MacroContext context) throws IOException {
+		Utils.writeEvents(context.getDevice(), context.getComponent(), null);
+	}
 
-    @MacroTag
-    public void id(MacroContext context) throws IOException {
-        context.getDevice().print("id=\"" + context.getComponent().getName() + "\"");
-    }
+	@MacroTag
+	public void cellEvent(MacroContext context, int row, int col) throws IOException {
 
-    @MacroTag
-    public void toggleSelection(MacroContext context, int row) throws IOException {
-        context.getDevice().print("wingS.request.sendEvent(event,true,true,'c','t" + row + ":0;shiftKey='+event.shiftKey+';ctrlKey='+event.ctrlKey+''); return false;");
-    }
+		Device device = context.getDevice();
+		SComponent _c = context.getComponent();
 
-    @MacroTag
-    public void cell(MacroContext context, int row, int col) throws IOException {
-        throw new UnsupportedOperationException("Currently not supported.");
-        /*
-        Device device = context.getDevice();
-        SComponent component = context.getComponent();
+		STable table = (STable) _c;
 
-        RenderHelper.getInstance(component).forbidCaching();
+		final boolean isEditingCell = table.isEditing() && row == table.getEditingRow()
+				&& col == table.getEditingColumn();
+		final boolean editableCell = table.isCellEditable(row, col);
+		final boolean selectableCell = table.getSelectionMode() != SListSelectionModel.NO_SELECTION
+				&& !table.isEditable() && table.isSelectable();
 
-        STable table = (STable) component;
-        STableCellRenderer renderer = table.getCellRenderer(row, col);
+		final boolean isClickable = _c instanceof SClickable;
 
-        if (renderer != null) {
-            SComponent cellComponent = table.prepareRenderer(renderer, row, col);
-            SCellRendererPane rendererPane = table.getCellRendererPane();
-            rendererPane.writeComponent(device, cellComponent, table);
-        } else {
-            device.print(table.getValueAt(row, col));
-        }
-        RenderHelper.getInstance(component).allowCaching();
-        */
-    }
+		String parameter = null;
+		if (table.isEditable() && !isEditingCell && editableCell)
+			parameter = table.getEditParameter(row, col);
+		else if (selectableCell)
+			parameter = table.getToggleSelectionParameter(row, col);
+
+		if (parameter != null && !isEditingCell && (selectableCell || editableCell) && !isClickable) {
+			Utils.printClickability(device, table, parameter, true, table.getShowAsFormComponent());
+		}
+	}
+
+	// public static void printClickability(final Device device, final
+	// SComponent component, final String eventValue,
+	// final boolean formComponent) throws IOException {
+	// device.print(" onclick=\"return wingS.table.cellClick(");
+	// device.print("event,this,");
+	// device.print(formComponent + ",");
+	// device.print(!component.isReloadForced() + ",'");
+	// device.print(Utils.event(component));
+	// device.print("','");
+	// device.print(eventValue == null ? "" : eventValue);
+	// device.print("'");
+	// device.print(");\"");
+	// }
 }

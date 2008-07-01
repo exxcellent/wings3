@@ -44,10 +44,11 @@ public class MacroProcessor {
     private Macro createMacro(Reader reader, Macro parent) throws Exception {
 
         StringBuilder characters = new StringBuilder();
+        int prev = -1;
         int c;
         while ((c = reader.read()) != -1) {
             // begin macro
-            if ('#' == c) {
+            if ('#' == c && prev != '\\') {
                 addStringInstruction(parent, characters.toString());
                 characters = new StringBuilder();
 
@@ -65,6 +66,8 @@ public class MacroProcessor {
                 return parent;
             }
             characters.append((char) c);
+            
+            prev = c;
         }
 
         addStringInstruction(parent, characters.toString());
@@ -104,7 +107,7 @@ public class MacroProcessor {
     private Macro initializeMacro(String type, String instructions) {
 
         if ("if".equals(type)) {
-
+        	return new IfMacro(instructions);
         } else if ("else if".equals(type)) {
 
         } else if ("else".equals(type)) {

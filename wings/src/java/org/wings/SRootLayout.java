@@ -36,9 +36,15 @@ public class SRootLayout extends STemplateLayout {
      * Use the default template.
      */
     public SRootLayout() {
-        setTemplate(new StringTemplateSource(
-                "<object name=\"frame\"></object>\n"
-                +"<object name=\"windows\"></object>"));
+        try {
+			setTemplate(new StringTemplateSource(
+			        "<object name=\"frame\"></object>\n"
+			        +"<object name=\"windows\"></object>"));
+		} catch (IOException e) {
+			if (LOG.isErrorEnabled()) {
+				LOG.error(e.getMessage(), e);
+			}
+		}
     }
 
     /**

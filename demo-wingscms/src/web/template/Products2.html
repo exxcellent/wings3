@@ -7,16 +7,28 @@
 <body>
 
 <object name="products">
-    <table>
+    <table #id(){} #tableEvent(){}>
+        #for (i = 0 ; i < 2 ; i++) {
         <tr>
-            <th>Produkt</th>
-            <th>Preis</th>
+        	<td>
+        		<table onmouseover="this.style.backgroundColor='\#c3c3c3';" onmouseout="this.style.backgroundColor='\#ffffff';" style="width:300px; border:1px dashed black; padding:5px; margin:5px; text-align:center;">
+					#for (j = 0; j < 3; j++) {
+					<tr>
+						#if (j == 0) {
+            			<td #cellEvent(i, j){}><span style="text-align:center;">#cell(i, j){}</td>
+						}
+						#if (j == 1) {
+            			<td #cellEvent(i, j){}><span style="font-weight:bold;">#cell(i, j){}</span></td>
+						}
+						#if (j == 2) {
+            			<td #cellEvent(i, j){}><span style="font-style:italic;">&euro; #cell(i, j){}</span></td>
+						}
+					</tr>
+					}
+				</table>
+			</td>
         </tr>
-        for ...
-        <tr>
-            for ...
-            <td># ...</td>
-        </tr>
+		}
     </table>
 </object>
 <hr/>
