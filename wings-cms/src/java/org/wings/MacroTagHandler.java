@@ -130,11 +130,10 @@ public class MacroTagHandler implements SpecialTagHandler {
                 //sink.print(result);
             }
             else {
-                /*
                 CGManager cgManager = SessionManager.getSession().getCGManager();
                 ComponentCG cg = cgManager.getCG(c);
                 c.setCG(cg);
-                */
+
                 properties(c);
                 c.write(sink);
             }

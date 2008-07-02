@@ -7,25 +7,19 @@
 <body>
 
 Products
-<object name="products">
+<object name="products" onAddToCart="Cart2.html">
     <table #id(){} #tableEvent(){}>
         #for (i = 0 ; i < 2 ; i++) {
         <tr>
         	<td>
         		<table onmouseover="this.style.backgroundColor='\#c3c3c3';" onmouseout="this.style.backgroundColor='\#ffffff';" style="width:300px; border:1px dashed black; padding:5px; margin:5px; text-align:center;">
-					#for (j = 0; j < 3; j++) {
 					<tr>
-						#if (j == 0) {
-            			<td #cellEvent(i, j){}><span style="text-align:center;">#cell(i, j){}</span></td>
-						}
-						#if (j == 1) {
-            			<td #cellEvent(i, j){}><span style="font-weight:bold;">#cell(i, j){}</span>&nbsp;&nbsp;<img src="../icon/details.png"/></td>
-						}
-						#if (j == 2) {
-            			<td #cellEvent(i, j){}><span style="font-style:italic;">&euro; #cell(i, j){}</span>&nbsp;&nbsp;<img src="../icon/cart_add.png"/></td>
-						}
+            			<td width="0%" rowspan="2" #cellEvent(i, 0){}><span style="text-align:center;">#cell(i, 0){}</span></td>
+                        <td align="left" width="100%">&nbsp;<span #cellEvent(i, 1){} style="font-weight:bold;">#cell(i, 1){}</span></td>
+                    </tr>
+                    <tr>
+            			<td align="right"><span style="font-style:italic;">&euro; #cell(i, 2){}</span>&nbsp;&nbsp;<img #cellEvent(i, 2){} src="../icon/cart_add.png"/></td>
 					</tr>
-					}
 				</table>
 			</td>
         </tr>
