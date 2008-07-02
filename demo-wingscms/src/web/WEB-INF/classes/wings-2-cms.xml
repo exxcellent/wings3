@@ -9,7 +9,7 @@
     </cms-detail-->
 
     <cms-detail adapter="org.wings.adapter.LocalAdapter">
-        <base-path>/template</base-path>
+        <base-path>/template/</base-path>
     </cms-detail>
 
     <template-detail processor="org.wings.macro.MacroProcessor">

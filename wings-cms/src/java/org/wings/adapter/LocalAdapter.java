@@ -26,6 +26,13 @@ public class LocalAdapter extends AbstractCmsAdapter {
         super(frame, layout, cfg);
     }
 
+    public Resource mapResource(String url) {
+        if (!url.endsWith("html"))
+            return null;
+
+        return super.mapResource(url);
+    }
+
     protected void navigate(String url) {
         ServletContext context = SessionManager.getSession().getServletContext();
 
@@ -41,24 +48,22 @@ public class LocalAdapter extends AbstractCmsAdapter {
         }
         try {
             // Load the template from cache or use the response body as new template
+            StringTemplateSource templateSource;
             if (cached) {
-                templateString = contentMap.get(url);
+                templateSource = contentMap.get(url);
             }
             else {
-                FileReader reader = new FileReader(file);
-                StringBuilder builder = new StringBuilder();
-                char[] buffer = new char[4096];
-                int len;
-                while ((len = reader.read(buffer)) != -1)
-                    builder.append(buffer, 0, len);
-                templateString = builder.toString();
-                templateString = process(templateString);
+                int length = (int)file.length();
+                byte[] bytes = new byte[length];
+                new FileInputStream(file).read(bytes, 0, length);
+                templateString = new String(bytes, "UTF-8");
 
                 // Add template to cache
-                contentMap.put(url, templateString);
+                templateSource = new StringTemplateSource(templateString);
+                contentMap.put(url, templateSource);
                 obtainedMap.put(url, new Date());
             }
-            setTemplate(new StringTemplateSource(templateString));
+            setTemplate(templateSource);
         }
         catch (Exception ex) {
             // Http get context failed or can't set template --> Invoke handleUnknownResourceRequested

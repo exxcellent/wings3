@@ -27,8 +27,7 @@ import org.wings.template.parser.PositionReader;
 import org.wings.template.parser.SGMLTag;
 import org.wings.template.parser.SpecialTagHandler;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -49,6 +48,7 @@ public class MacroTagHandler implements SpecialTagHandler {
     long endPos;
     Map properties;
     String name;
+    private String macroTemplate;
 
     public long getTagStart() {
         return startPos;
@@ -68,13 +68,22 @@ public class MacroTagHandler implements SpecialTagHandler {
          */
         SComponent c = tcontext.getComponent(name);
         if (c == null) {
-            sink.print("<!-- Template: '" + name + "' Component not given -->");
-        } else {
+            sink.print("<!-- Template: Component '" + name + "' is unknown -->");
+            input.skip(getTagLength());
+        }
+        else {
+            properties(c);
 
-            StringBuilder sb = new StringBuilder();
-            for (long i = getTagLength(); i > 0; i--) {
-                sb.append((char) input.read());
+            if (macroTemplate == null) {
+                int length = (int)getTagLength();
+                byte[] bytes = new byte[length];
+                input.read(bytes, 0, length);
+                macroTemplate = new String(bytes, "UTF-8");
+                macroTemplate = macroTemplate.substring(macroTemplate.indexOf('>') + 1, macroTemplate.lastIndexOf('<'));
             }
+            else
+                input.skip(getTagLength());
+
 //            String content = sb.toString().replaceAll(System.getProperty("line.separator"), "");
 //            content = content.replaceAll("\n", "");
 //            Pattern pattern = Pattern.compile("<object[\\s]*name[\\s]*=[\\s]*\\\".*\\\"[\\s]*>\\n*(.*\\n)*\\n*<[\\s]*/object[\\s]*>");
@@ -86,8 +95,6 @@ public class MacroTagHandler implements SpecialTagHandler {
 //                macroTemplate = macroTemplate.substring(macroTemplate.indexOf('>') + 1, macroTemplate.lastIndexOf('<'));
 //            }
 
-            String macroTemplate = sb.toString();
-            macroTemplate = macroTemplate.substring(macroTemplate.indexOf('>') + 1, macroTemplate.lastIndexOf('<'));
 
             if (macroTemplate != null && !"".equals(macroTemplate.trim())) {
                 MacroProcessor macroProcessor = MacroProcessor.getInstance();
@@ -121,30 +128,33 @@ public class MacroTagHandler implements SpecialTagHandler {
 
                 //String result = macroProcessor.handle(macroTemplate, name, tcontext);
                 //sink.print(result);
-            } else {
-
+            }
+            else {
+                /*
                 CGManager cgManager = SessionManager.getSession().getCGManager();
                 ComponentCG cg = cgManager.getCG(c);
                 c.setCG(cg);
-
-                // set properties; the STemplateLayout knows how
-                if (properties.size() > 0) {
-                    PropertyManager propManager =
-                            CmsLayout.getPropertyManager(c.getClass());
-
-                    if (propManager != null) {
-                        Iterator iter = properties.keySet().iterator();
-                        while (iter.hasNext()) {
-                            String key = (String) iter.next();
-                            String value = (String) properties.get(key);
-                            // System.out.println("set Property " + key + "=" +value + "  for " + name);
-                            propManager.setProperty(c, key, value);
-                        }
-                    }
-                }
+                */
+                properties(c);
                 c.write(sink);
             }
-//            input.skip(getTagLength());
+        }
+    }
+
+    private void properties(SComponent c) {
+        if (properties.size() > 0) {
+            PropertyManager propManager =
+                    CmsLayout.getPropertyManager(c.getClass());
+
+            if (propManager != null) {
+                Iterator iter = properties.keySet().iterator();
+                while (iter.hasNext()) {
+                    String key = (String) iter.next();
+                    String value = (String) properties.get(key);
+                    // System.out.println("set Property " + key + "=" +value + "  for " + name);
+                    propManager.setProperty(c, key, value);
+                }
+            }
         }
     }
 

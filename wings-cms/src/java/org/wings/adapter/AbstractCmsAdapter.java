@@ -44,7 +44,7 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
     private CmsDetail cfg;
 
     DynamicResource defaultResource;
-    Map<String, String> contentMap = new HashMap<String, String>();
+    Map<String, StringTemplateSource> contentMap = new HashMap<String, StringTemplateSource>();
     Map<String, Date> obtainedMap = new HashMap<String, Date>();
     SimpleDateFormat httpdate;
     private String path;
@@ -88,7 +88,6 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
     }
 
     protected void navigate(String url) {
-
         HttpServletRequest request = SessionManager.getSession().getServletRequest();
 
         String methodName = request.getMethod();
@@ -106,7 +105,8 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
             url = url.substring(0, url.length() - 1);
 
             method = new GetMethod(cfg.getServerPath() + url);
-        } else if ("POST".equals(methodName)) {
+        }
+        else if ("POST".equals(methodName)) {
             method = new PostMethod(cfg.getServerPath() + url);
 
             Enumeration enumeration = request.getParameterNames();
@@ -152,21 +152,22 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
                 }
             }
 
+            StringTemplateSource templateSource;
             // Load the template from cache or use the response body as new template
             if (cached) {
-                templateString = contentMap.get(url);
+                templateSource = contentMap.get(url);
             } else {
                 templateString = method.getResponseBodyAsString();
                 templateString = process(templateString);
 
                 // Add template to cache
-                contentMap.put(url, templateString);
+                templateSource = new StringTemplateSource(templateString);
+                contentMap.put(url, templateSource);
                 obtainedMap.put(url, new Date());
             }
+            setTemplate(templateSource);
 
             method.releaseConnection();
-
-            setTemplate(new StringTemplateSource(templateString));
         }
         catch (Exception ex) {
             // Http get request failed or can't set template --> Invoke handleUnknownResourceRequested

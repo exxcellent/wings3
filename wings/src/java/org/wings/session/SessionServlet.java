@@ -337,27 +337,21 @@ final class SessionServlet
             if (log.isDebugEnabled())
                 log.debug("pathInfo: " + pathInfo);
 
-            // If we have no path info, or the special '_' path info (that should be explained
-            // somewhere, Holger), then we deliver the top-level frame of this application.
-            String externalizeIdentifier = null;
-            if (pathInfo == null || pathInfo.length() == 0 || "_".equals(pathInfo) || firstRequest) {
-                externalizeIdentifier = retrieveCurrentRootFrameResource().getId();
-                firstRequest = false;
-            } else {
-                externalizeIdentifier = pathInfo;
-            }
-
-            // Retrieve externalized resource
-            ExternalizedResource extInfo = extManager.getExternalizedResource(externalizeIdentifier);
-
             ResourceMapper mapper = session.getResourceMapper();
-            if (extInfo == null && mapper != null) {
-                Resource res = mapper.mapResource(req.getPathInfo());
-                if (res != null) {
-                    extInfo = extManager.getExternalizedResource(res.getId());
-                }
-            }
 
+            ExternalizedResource extInfo;
+            Resource resource;
+            if (pathInfo == null || pathInfo.length() == 0)
+                extInfo = extManager.getExternalizedResource(retrieveCurrentRootFrameResource().getId());
+            else if (mapper != null && (resource = mapper.mapResource(pathInfo)) != null)
+                extInfo = extManager.getExternalizedResource(resource.getId());
+            else if (firstRequest)
+                extInfo = extManager.getExternalizedResource(retrieveCurrentRootFrameResource().getId());
+            else
+                extInfo = extManager.getExternalizedResource(pathInfo);
+
+            firstRequest = false;
+            /*
             // Special case handling: We request a .html resource of a session which is not accessible.
             // This happens some times and leads to a 404, though it should not be possible.
             if (extInfo == null && pathInfo != null && pathInfo.endsWith(".html")) {
@@ -365,6 +359,7 @@ final class SessionServlet
                 response.sendRedirect(retrieveCurrentRootFrameResource().getURL().toString());
                 return;
             }
+            */
 
             if (extInfo != null && extInfo.getObject() instanceof UpdateResource) {
                 reloadManager.setUpdateMode(true);

@@ -160,8 +160,9 @@ public class WingSet {
                 WingSetExample pane = exampleByName.get(name);
                 if (pane != null) {
                     show(pane.getExample());
+                    return frame.getDynamicResource(ReloadResource.class);
                 }
-                return frame.getDynamicResource(ReloadResource.class);
+                return null;
             }
         });
     }
