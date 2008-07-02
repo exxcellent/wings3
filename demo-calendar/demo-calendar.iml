@@ -9,9 +9,6 @@
         <webroots>
           <root url="file://$MODULE_DIR$/src/web" relative="/" />
         </webroots>
-        <sourceRoots>
-          <root url="file://$MODULE_DIR$/src/java" />
-        </sourceRoots>
         <building>
           <setting name="EXPLODED_URL" value="file://" />
           <setting name="EXPLODED_ENABLED" value="false" />
@@ -88,6 +85,15 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../dist/doc/web/WEB-INF/lib/wings.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/thirdparty/lib/ical4j-1.0-beta4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

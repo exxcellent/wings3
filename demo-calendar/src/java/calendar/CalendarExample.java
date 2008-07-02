@@ -27,7 +27,7 @@ import org.wings.SURLIcon;
 import org.wings.SFont;
 
 import calendar.CalendarModel.CalendarView;
-import calendar.RemoteCalendar.RemoteCalendar;
+import calendar.remote.RemoteCalendar;
 
 /**
  * Simple Example to show the Calendar Component
