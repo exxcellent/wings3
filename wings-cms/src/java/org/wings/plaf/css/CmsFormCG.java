@@ -93,12 +93,12 @@ public class CmsFormCG extends FormCG implements org.wings.plaf.CmsFormCG {
             Utils.optAttribute(device, "layoutHeight", height);
             form.getSession().getScriptManager().addScriptListener(new LayoutFillScript(tableName));
         }
-        device.print(">");
+        device.print("><tr><td>");
 
         // Render the container itself
         Utils.renderContainer(device, form);
 
-        device.print("</table>");
+        device.print("</td></tr></table>");
 
         if (formTagRequired) {
             writeCapture(device, form);
