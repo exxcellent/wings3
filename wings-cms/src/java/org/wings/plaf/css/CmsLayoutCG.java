@@ -78,4 +78,10 @@ public class CmsLayoutCG implements org.wings.plaf.CmsLayoutCG {
         CmsTemplateParseContext context = new CmsTemplateParseContext(new NullDevice(), layout);
         return CmsLayoutCG.parser.getContainedComponents(source, context);
     }
+
+    public static Map<String, Map<String, String>> getComponentProperties(CmsLayout layout) throws IOException {
+        final TemplateSource source = layout.getTemplateSource();
+        CmsTemplateParseContext context = new CmsTemplateParseContext(new NullDevice(), layout);
+        return CmsLayoutCG.parser.getComponentProperties(source, context);
+    }
 }

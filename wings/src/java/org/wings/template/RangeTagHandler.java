@@ -91,6 +91,7 @@ public class RangeTagHandler extends TemplateTagHandler {
         // remove properties, which are not necessary for the PropertyManager
         properties.remove("NAME");
         properties.remove("TYPE");
+        context.setProperties(name, properties);
 
         return startTag;
     }

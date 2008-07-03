@@ -133,8 +133,6 @@ public class MacroTagHandler implements SpecialTagHandler {
                 CGManager cgManager = SessionManager.getSession().getCGManager();
                 ComponentCG cg = cgManager.getCG(c);
                 c.setCG(cg);
-
-                properties(c);
                 c.write(sink);
             }
         }
@@ -210,6 +208,7 @@ public class MacroTagHandler implements SpecialTagHandler {
         // remove properties, which are not necessary for the PropertyManager
         properties.remove("NAME");
         properties.remove("TYPE");
+        context.setProperties(name, properties);
 
         return startTag;
     }

@@ -14,6 +14,7 @@ package org.wings;
 
 import org.wings.plaf.CmsLayoutCG;
 import org.wings.template.TemplateSource;
+import org.wings.template.PropertyManager;
 
 import java.util.*;
 import java.io.IOException;
@@ -66,6 +67,7 @@ public class CmsLayout extends STemplateLayout {
         if (componentSet == null) {
             componentSet = new ComponentSet();
             componentSet.names = names;
+            componentSet.componentProperties = org.wings.plaf.css.CmsLayoutCG.getComponentProperties(this);
             for (SComponent component : container.getComponents()) {
                 if (names.contains(component.getName()))
                     componentSet.contained.add(component);
@@ -79,6 +81,23 @@ public class CmsLayout extends STemplateLayout {
             containedComponent.setVisible(true);
         for (SComponent notContainedComponent : componentSet.notContained)
             notContainedComponent.setVisible(false);
+
+        for (SComponent component : componentSet.contained) {
+            Map<String, String> properties = componentSet.componentProperties.get(component.getName());
+            if (properties.size() > 0) {
+                PropertyManager propManager = CmsLayout.getPropertyManager(component.getClass());
+
+                if (propManager != null) {
+                    Iterator iter = properties.keySet().iterator();
+                    while (iter.hasNext()) {
+                        String key = (String) iter.next();
+                        String value = (String) properties.get(key);
+                        // System.out.println("set Property " + key + "=" +value + "  for " + name);
+                        propManager.setProperty(component, key, value);
+                    }
+                }
+            }
+        }
     }
 
     private class ComponentSet
@@ -86,5 +105,6 @@ public class CmsLayout extends STemplateLayout {
         Set<String> names;
         Set<SComponent> contained = new HashSet<SComponent>();
         Set<SComponent> notContained = new HashSet<SComponent>();
+        Map<String, Map<String, String>> componentProperties;
     }
 }

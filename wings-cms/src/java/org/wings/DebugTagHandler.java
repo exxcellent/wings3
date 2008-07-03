@@ -128,6 +128,7 @@ public class DebugTagHandler implements SpecialTagHandler {
         // remove properties, which are not necessary for the PropertyManager
         properties.remove("NAME");
         properties.remove("TYPE");
+        context.setProperties(name, properties);
 
         return startTag;
     }

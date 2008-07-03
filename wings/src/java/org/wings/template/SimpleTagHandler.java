@@ -79,6 +79,7 @@ public class SimpleTagHandler extends TemplateTagHandler {
         properties.remove("NAME");
         properties.remove("TYPE");
         properties.remove("VALUE");
+        context.setProperties(name, properties);
 
         return tag;
     }

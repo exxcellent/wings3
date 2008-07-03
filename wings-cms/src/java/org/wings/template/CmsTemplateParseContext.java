@@ -25,6 +25,7 @@ public class CmsTemplateParseContext implements ParseContext {
     private final Device sink;
     private final STemplateLayout layout;
     private final Set<String> containedComponents = new HashSet<String>();
+    private final Map<String,Map<String,String>> componentProperties = new HashMap<String, Map<String, String>>();
 
     public CmsTemplateParseContext(final Device sink, STemplateLayout layout) {
         this.sink = sink;
@@ -63,5 +64,13 @@ public class CmsTemplateParseContext implements ParseContext {
 
     public Set<String> getContainedComponents() {
         return containedComponents;
+    }
+
+    public void setProperties(String name, Map<String,String> properties) {
+        componentProperties.put(name, properties);
+    }
+
+    public Map<String, Map<String, String>> getComponentProperties() {
+        return componentProperties;
     }
 }

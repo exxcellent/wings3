@@ -89,4 +89,8 @@ public interface ParseContext {
     void addContainedComponent(String component);
 
     Set<String> getContainedComponents();
+
+    void setProperties(String name, Map<String,String> properties);
+
+    Map<String, Map<String, String>> getComponentProperties();
 }

@@ -102,6 +102,13 @@ public class PageParser {
         return sourceInfo.containedComponents;
     }
 
+    public Map<String, Map<String, String>> getComponentProperties(TemplateSource source, ParseContext context) throws IOException {
+        getPageParts(source, context);
+        String cName = source.getCanonicalName();
+        TemplateSourceInfo sourceInfo = (TemplateSourceInfo)pages.get(cName);
+        return sourceInfo.componentProperties;
+    }
+
     public Map getLabels(TemplateSource source) {
         String cName = source.getCanonicalName();
         if (cName == null)
@@ -259,7 +266,6 @@ public class PageParser {
         out.flush();
     }
 
-
     /**
      * copies an InputStream to an OutputStream. copies max. length
      * bytes.
@@ -361,6 +367,7 @@ public class PageParser {
                 }
             } while (!tag.finished());
             sourceInfo.containedComponents = context.getContainedComponents();
+            sourceInfo.componentProperties = context.getComponentProperties();
             /***
              sourceInfo.parseTime = System.currentTimeMillis() - startTime;
              System.err.println ("PageParser: parsing '" +
@@ -385,7 +392,8 @@ public class PageParser {
         Map labels;
         long lastModified;
         Set<String> containedComponents;
-//	long      parseTime;
+        Map<String, Map<String, String>> componentProperties;
+
 
         public TemplateSourceInfo() {}
     }
