@@ -84,8 +84,8 @@ public class CmsFormCG extends FormCG implements org.wings.plaf.CmsFormCG {
         boolean clientLayout = isMSIE(form) && height != null && !"auto".equals(height)
             && (layout instanceof SBorderLayout || layout instanceof SGridBagLayout);
 
-        String tableName = form.getName() + "_table";
-        device.print("<table id=\"");
+        String tableName = form.getName() + "_div";
+        device.print("<div id=\"");
         device.print(tableName);
         device.print("\"");
 
@@ -93,12 +93,12 @@ public class CmsFormCG extends FormCG implements org.wings.plaf.CmsFormCG {
             Utils.optAttribute(device, "layoutHeight", height);
             form.getSession().getScriptManager().addScriptListener(new LayoutFillScript(tableName));
         }
-        device.print("><tr><td>");
+        device.print(">");
 
         // Render the container itself
         Utils.renderContainer(device, form);
 
-        device.print("</td></tr></table>");
+        device.print("</div>");
 
         if (formTagRequired) {
             writeCapture(device, form);
