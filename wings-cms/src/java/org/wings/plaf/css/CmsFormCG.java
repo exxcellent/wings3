@@ -35,7 +35,7 @@ public class CmsFormCG extends FormCG implements org.wings.plaf.CmsFormCG {
                 device.print("get");
             }
             device.print("\"");
-            writeAllAttributes(device, form);
+            Utils.writeAllAttributes(device, form);
             Utils.optAttribute(device, "name", form.getName());
             Utils.optAttribute(device, "enctype", form.getEncodingType());
             Utils.optAttribute(device, "action", form.getRequestURL());
@@ -69,15 +69,15 @@ public class CmsFormCG extends FormCG implements org.wings.plaf.CmsFormCG {
             device.print("'); return false;\">");
 
             writeCapture(device, form);
-        }
 
-        // This code is needed to trigger form events
-        device.print("<input type=\"hidden\" name=\"");
-        Utils.write(device, Utils.event(form));
-        device.print("\" value=\"");
-        Utils.write(device, form.getName());
-        device.print(SConstants.UID_DIVIDER);
-        device.print("\" />");
+            // This code is needed to trigger form events
+            device.print("<input type=\"hidden\" name=\"");
+            Utils.write(device, Utils.event(form));
+            device.print("\" value=\"");
+            Utils.write(device, form.getName());
+            device.print(SConstants.UID_DIVIDER);
+            device.print("\" />");
+        }
 
         SDimension preferredSize = form.getPreferredSize();
         String height = preferredSize != null ? preferredSize.getHeight() : null;
@@ -90,9 +90,13 @@ public class CmsFormCG extends FormCG implements org.wings.plaf.CmsFormCG {
         device.print("\"");
 
         if (clientLayout) {
+            device.print(" style=\"width:100%\"");
             Utils.optAttribute(device, "layoutHeight", height);
             form.getSession().getScriptManager().addScriptListener(new LayoutFillScript(tableName));
         }
+        else
+            Utils.printCSSInlineFullSize(device, form.getPreferredSize());
+
         device.print(">");
 
         // Render the container itself
@@ -133,22 +137,7 @@ public class CmsFormCG extends FormCG implements org.wings.plaf.CmsFormCG {
         // don't even name it - would be useless anyway...
         device.print("<input type=\"image\" border=\"0\" ");
         Utils.optAttribute(device, "src", getBlindIcon().getURL());
-//        device.print(" width=\"0\" height=\"0\" tabindex=\"-1\"" +
-//                " style=\"border:none;padding:0px;margin:0px;position:absolute\"/>");
-        device.print("/>");
-    }
-
-    public static void writeAllAttributes(Device device, SComponent component) throws IOException {
-        Utils.optAttribute(device, "id", component.getName());
-
-        if (component instanceof LowLevelEventListener) {
-            Utils.optAttribute(device, "eid", component.getLowLevelEventId());
-        }
-
-        // Tooltip handling
-        writeTooltipMouseOver(device, component);
-
-        // Component popup menu
-        writeContextMenu(device, component);
+        device.print(" width=\"0\" height=\"0\" tabindex=\"-1\"" +
+                " style=\"border:none;padding:0px;margin:0px;position:absolute\"/>");
     }
 }
