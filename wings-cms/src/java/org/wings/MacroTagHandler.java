@@ -122,6 +122,8 @@ public class MacroTagHandler implements SpecialTagHandler {
                 if (c instanceof STable) {
                     CmsTableCG cg = new CmsTableCG();
                     cg.setMacros(macroContainer);
+                    if (c.getClientProperty("cg") == null)
+                        c.putClientProperty("cg", c.getCG());
                     c.setCG(cg);
                     c.write(sink);
                 }
@@ -130,9 +132,9 @@ public class MacroTagHandler implements SpecialTagHandler {
                 //sink.print(result);
             }
             else {
-                CGManager cgManager = SessionManager.getSession().getCGManager();
-                ComponentCG cg = cgManager.getCG(c);
-                c.setCG(cg);
+                ComponentCG cg = (ComponentCG)c.getClientProperty("cg");
+                if (cg != null)
+                    c.setCG(cg);
                 c.write(sink);
             }
         }
