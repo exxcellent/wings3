@@ -40,7 +40,7 @@ public class DialogCG extends WindowCG implements org.wings.plaf.DialogCG {
                 "</div>\n");
 
         StringBuilder sb = new StringBuilder();
-        sb.append("var dialog_").append(name).append(" = new wingS.dialog.SDialog(\"").append(name).append("\"")
+        sb.append("dialog_").append(name).append(" = new wingS.dialog.SDialog(\"").append(name).append("\"")
                 .append(", {");
         
         if (dialog.getX() > -1 && dialog.getY() > -1) {

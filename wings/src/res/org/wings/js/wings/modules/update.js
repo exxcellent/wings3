@@ -366,6 +366,7 @@ wingS.update.removeWindow = function(componentId) {
     if (dialog != null) {
 		dialog.hideMask();
         dialog.destroy();
+        window["dialog_" + componentId] = null;     // clear global variable
     }
 	
 	table.removeChild(tr);
