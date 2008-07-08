@@ -14,7 +14,6 @@ import org.wings.style.Style;
  * User: hengels
  * Date: Aug 27, 2006
  * Time: 9:58:56 PM
- * To change this template use File | Settings | File Templates.
  */
 public class XDivision
     extends SContainer
