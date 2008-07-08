@@ -43,7 +43,7 @@ public class DivisionCG
         Utils.writeEvents(device, component, null);
         device.print("><colgroup><col width=\"0%\"/><col width=\"100%\"></colgroup><tr ");
         if (division.isTitleClickable() && division.isEnabled()) {
-            Utils   .printClickability(device, division, "t", division.isEnabled(), true);
+            Utils.printClickability(device, division, "t", division.isEnabled(), true);
         }
         device.print("><td class=\"DivisionControl\"");
         SIcon icon = division.isShaded() ? closedIcon : openIcon;
