@@ -890,7 +890,8 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 			{
 				LOG.fatal("An error occured during rendering of AppointmentCalendar-Popup");
 				exception = t.getClass().getName();
-			}
+                t.printStackTrace();
+            }
             
             handler.addParameter("Tip(\"" + htmlCode +  "\", DELAY, 0, FADEIN, 0, FADEOUT, 0, OPACITY, 100, FOLLOWMOUSE, true, DURATION, 0, BGCOLOR, 'white');");
 			
