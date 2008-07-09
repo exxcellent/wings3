@@ -25,7 +25,7 @@ import java.io.IOException;
  */
 public class CmsLayout extends STemplateLayout {
 
-    Map<TemplateSource,ComponentSet> componentSets = new HashMap<TemplateSource, ComponentSet>();
+    Map<String, ComponentSet> componentSets = new HashMap<String, ComponentSet>();
 
     protected void setCG(CmsLayoutCG cg) {
         super.setCG(cg);
@@ -37,7 +37,7 @@ public class CmsLayout extends STemplateLayout {
 
         TemplateSource source = getTemplateSource();
         if (source != null) {
-            CmsLayout.ComponentSet componentSet = componentSets.get(source);
+            CmsLayout.ComponentSet componentSet = componentSets.get(source.getCanonicalName());
             boolean contained = componentSet.names.contains(component.getName());
             component.setVisible(contained);
             if (contained)
@@ -52,7 +52,7 @@ public class CmsLayout extends STemplateLayout {
 
         TemplateSource source = getTemplateSource();
         if (source != null) {
-            CmsLayout.ComponentSet componentSet = componentSets.get(source);
+            CmsLayout.ComponentSet componentSet = componentSets.get(source.getCanonicalName());
             componentSet.contained.remove(component);
             componentSet.notContained.remove(component);
         }
@@ -63,7 +63,7 @@ public class CmsLayout extends STemplateLayout {
         Set<String> names = org.wings.plaf.css.CmsLayoutCG.getContainedComponents(this);
         final SContainer container = getContainer();
 
-        CmsLayout.ComponentSet componentSet = componentSets.get(source);
+        CmsLayout.ComponentSet componentSet = componentSets.get(source.getCanonicalName());
         if (componentSet == null) {
             componentSet = new ComponentSet();
             componentSet.names = names;
@@ -74,7 +74,7 @@ public class CmsLayout extends STemplateLayout {
                 else
                     componentSet.notContained.add(component);
             }
-            componentSets.put(source, componentSet);
+            componentSets.put(source.getCanonicalName(), componentSet);
         }
 
         for (SComponent containedComponent : componentSet.contained)
