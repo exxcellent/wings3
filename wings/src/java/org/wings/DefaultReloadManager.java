@@ -156,7 +156,6 @@ public class DefaultReloadManager implements ReloadManager {
 
     public void clear() {
         updateCount = 0;
-        updateMode = false;
         acceptChanges = true;
         fullReplaceUpdates.clear();
         fineGrainedUpdates.clear();

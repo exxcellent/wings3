@@ -16,6 +16,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.*;
 import org.wings.script.JavaScriptListener;
+import org.wings.script.ScriptListener;
 import org.wings.event.ExitVetoException;
 import org.wings.event.SRequestEvent;
 import org.wings.externalizer.ExternalizeManager;
@@ -495,7 +496,6 @@ final class SessionServlet
              *      not have sent anything to the output stream).
              */
             if (session.getExitAddress() != null) {
-
                 try {
                     session.firePrepareExit();
                     session.fireRequestEvent(SRequestEvent.REQUEST_END);
@@ -507,11 +507,20 @@ final class SessionServlet
                     } else {
                         // redirect to a fresh session.
                         redirectAddress = req.getRequestURL().toString();
-                }
-                    req.getSession().invalidate(); // calls destroy implicitly
-                    response.sendRedirect(redirectAddress);
+                    }
+
                     exitSessionWorkaround = redirectAddress;
-                    return;
+
+                    if (reloadManager.isUpdateMode()) {
+                        ScriptListener listener = new JavaScriptListener(null, null, "location.href='" + redirectAddress + "'");
+                        ScriptManager.getInstance().addScriptListener(listener);
+                        req.getSession().invalidate(); // calls destroy implicitly
+                    }
+                    else {
+                        response.sendRedirect(redirectAddress);
+                        req.getSession().invalidate(); // calls destroy implicitly
+                        return;
+                    }
                 } catch (ExitVetoException ex) {
                     session.exit(null);
                 } // end of try-catch
@@ -766,20 +775,10 @@ final class SessionServlet
      */
     public void destroy() {
         log.info("destroy called");
-        try {
-            if (session != null) {
-                // Session is needed on destroying the session
-                SessionManager.setSession(session);
-                session.destroy();
-            }
-
-            // hint the gc.
-            parent = null;
-            session = null;
-        } catch (Exception ex) {
-            log.error("destroy", ex);
-        } finally {
-            SessionManager.removeSession();
+        if (session != null) {
+            // Session is needed on destroying the session
+            SessionManager.setSession(session);
+            session.destroy();
         }
     }
 

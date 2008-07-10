@@ -783,6 +783,7 @@ public class Session implements PropertyService, Serializable {
         } // end of if ()
 
 
+        /*
         Iterator it = frames.iterator();
         while (it.hasNext()) {
             SContainer container = ((SFrame) it.next()).getContentPane();
@@ -800,7 +801,7 @@ public class Session implements PropertyService, Serializable {
 
         frames.clear();
         props.clear();
-
+        */
 
         Object[] listeners = listenerList.getListenerList();
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
