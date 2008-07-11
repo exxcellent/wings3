@@ -258,16 +258,16 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 		device.print("<table class=\"monthview\">");
 		device.print("<thead>");
 		
+        DateFormat format = new SimpleDateFormat("EE", calendar.getLocale());
 		for(int column = 0; column < model.getColumnCount(); column++)
 		{
-            DateFormat format = new SimpleDateFormat("EE", calendar.getLocale());
             device.print("<th>" + format.format(tempCal.getTime()));
             
             // jdk 1.6
             // device.print("<th>" + tempCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, calendar.getLocale()));
             if(isThisDayMerged(model, tempCal, column)) {
                 tempCal.add(Calendar.DAY_OF_MONTH, 1);
-                format.format(tempCal.getTime());
+                device.print("/" + format.format(tempCal.getTime()));
                 // jdk1.6
                 //device.print("/" + tempCal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, calendar.getLocale()));
                 column += 1;
