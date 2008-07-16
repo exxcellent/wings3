@@ -13,8 +13,8 @@
 package org.wings;
 
 import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.datatransfer.Transferable;
+import java.util.*;
 
 import javax.swing.event.EventListenerList;
 import javax.swing.event.TreeExpansionEvent;
@@ -32,6 +32,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import javax.swing.tree.VariableHeightLayoutCache;
+import javax.swing.*;
 
 import org.wings.event.SMouseEvent;
 import org.wings.event.SMouseListener;
@@ -41,6 +42,10 @@ import org.wings.plaf.TreeCG;
 import org.wings.tree.SDefaultTreeSelectionModel;
 import org.wings.tree.STreeCellRenderer;
 import org.wings.tree.STreeSelectionModel;
+import org.wings.sdnd.TextAndHTMLTransferable;
+import org.wings.sdnd.CustomDragHandler;
+import org.wings.sdnd.CustomDropStayHandler;
+import org.wings.sdnd.SDropMode;
 
 /**
  * Swing-like tree widget.
@@ -150,6 +155,7 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
                 TreePath[] affectedPaths = e.getPaths();
                 List deselectedRows = new ArrayList();
                 List selectedRows = new ArrayList();
+
                 for (int i = 0; i < affectedPaths.length; ++i) {
                     int row = treeState.getRowForPath(affectedPaths[i]);
                     if (row == -1)
@@ -160,6 +166,7 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
                         if (visibleRow < 0 || visibleRow >= getViewportSize().height)
                             continue;
                     }
+                    
                     if (e.isAddedPath(affectedPaths[i])) {
                         selectedRows.add(new Integer(visibleRow));
                     } else {
@@ -178,6 +185,7 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
         setModel(model);
         setRootVisible(true);
         setSelectionModel(new SDefaultTreeSelectionModel());
+        installTransferHandler();
     }
 
     public STree() {
@@ -408,15 +416,61 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
         getSelectionModel().setDelayEvents(false);
     }
 
+    private int lastSelectedRow;
+
+    protected void addSelectionEvent(int row, boolean ctrlKey, boolean shiftKey) {
+        TreePath path = getPathForRow(row);
+        if (path != null) {
+            if(!shiftKey && !ctrlKey) {
+                getSelectionModel().clearSelection();
+                togglePathSelection(path);
+
+                lastSelectedRow = row;
+            } else if(ctrlKey && !shiftKey) {
+                togglePathSelection(path);
+
+                lastSelectedRow = row;
+            } else if(!ctrlKey && shiftKey) {
+                int start = lastSelectedRow;
+                int end = row;
+                if(start > end) {
+                    int temp = end;
+                    end = start;
+                    start = temp;
+                }
+                getSelectionModel().clearSelection();
+                for(int temp=start; temp<=end; ++temp) {
+                    getSelectionModel().addSelectionPath(getPathForRow(temp));
+                }
+            }
+        }
+    }
+
     public void fireIntermediateEvents() {
         getSelectionModel().setDelayEvents(true);
         for (int i = 0; i < lowLevelEvents.length; i++) {
-            String value = lowLevelEvents[i];
-            if (value.length() < 2) continue; // incorrect format
+            String values = lowLevelEvents[i];
+            if (values.length() < 2) continue; // incorrect format
 
+            String[] params = values.split(";");
+
+            boolean ctrlKey = false;
+            boolean shiftKey = false;
+            for(int j=1; j<params.length; ++j) {
+                String[] tempVals = params[j].split("=");
+                if("ctrlKey".equals(tempVals[0])) {
+                    ctrlKey = Boolean.parseBoolean(tempVals[1]);
+                } else if("shiftKey".equals(tempVals[0])) {
+                    shiftKey = Boolean.parseBoolean(tempVals[1]);
+                }
+            }
+
+            String value = params[0];
             SPoint point = new SPoint(value.substring(1));
             int row = getRowForLocation(point);
             if (row < 0) continue; // row not found...
+
+            TreePath path;
 
             switch (value.charAt(0)) {
                 case 'b':
@@ -425,10 +479,7 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
                     if (event.isConsumed())
                         continue;
 
-                    TreePath path = getPathForRow(row);
-                    if (path != null) {
-                        togglePathSelection(path);
-                    }
+                    addSelectionEvent(row, ctrlKey, shiftKey);
                     break;
                 case 'a':
                     event = new SMouseEvent(this, 0, point);
@@ -1231,6 +1282,172 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
                 SViewportChangeEvent event = new SViewportChangeEvent(this, horizontal);
                 ((SViewportChangeListener) listeners[i + 1]).viewportChanged(event);
             }
+        }
+    }
+
+    /**
+     * Drag and Drop stuff
+     */
+    private SDropMode dropMode = null;
+    private boolean dragEnabled = false;
+
+    protected static final class DropLocation extends STransferHandler.DropLocation {
+        private int row = -1;
+        private TreePath path = null;
+
+        public DropLocation(STree tree, SPoint point) {
+            super(point);
+
+            try {
+                row = Integer.parseInt(point.getCoordinates());
+                path = tree.getPathForRow(row);
+            } catch(Exception e) {
+            }
+        }
+
+        public int getRow() {
+            return row;
+        }
+
+        public TreePath getPath() {
+            return path;
+        }
+    }
+
+    public void setDropMode(SDropMode dropMode) {
+        this.dropMode = dropMode;
+
+        getSession().getSDragAndDropManager().addDropTarget(this);
+    }
+
+    public SDropMode getDropMode() {
+        return this.dropMode;
+    }
+
+    protected DropLocation dropLocationForPoint(SPoint p) {
+        if(p.getCoordinates() == null)
+            return null;
+        return new STree.DropLocation(this, p);
+    }
+
+    private void installTransferHandler() {
+        if(getTransferHandler() == null) {
+            setTransferHandler(new DefaultTransferHandler());
+        }
+    }
+
+    public void setDragEnabled(boolean dragEnabled) {
+        if(getSelectionModel() == null && dragEnabled == true)
+            throw new IllegalStateException("Unable to enable DND - no selection mode set in " + this);
+
+        if(dragEnabled != this.dragEnabled) {
+            if(dragEnabled) {
+                this.getSession().getSDragAndDropManager().addDragSource(this);
+            } else {
+                this.getSession().getSDragAndDropManager().removeDragSource(this);
+            }
+
+            this.dragEnabled = dragEnabled;
+        }
+    }
+
+    protected static class DefaultTransferHandler extends STransferHandler implements Comparator<TreePath>, CustomDragHandler, CustomDropStayHandler {
+        private STree tree;
+
+        public DefaultTransferHandler() {
+            super(null);
+        }
+
+        public int compare(TreePath o1, TreePath o2) {
+            return tree.getRowForPath(o1) - tree.getRowForPath(o2);
+        }
+
+        private TreePath[] getPathsOrdered(TreePath[] paths) {
+            if(paths == null)
+                return new TreePath[0];
+            
+            List<TreePath> retPaths = Arrays.asList(paths);
+            Collections.sort(retPaths, this);
+
+            return retPaths.toArray(new TreePath[0]);
+        }
+
+        protected Transferable createTransferable(SComponent component) {
+            tree = (STree)component;
+            String htmlData = "<html><body><ul>";
+            String plainTextData = "";
+            TreePath[] selectedPaths = getPathsOrdered(tree.getSelectionPaths());
+            
+            for(TreePath path:selectedPaths) {
+                Object node = path.getLastPathComponent();
+
+                plainTextData += node.toString() + "\n";
+                htmlData += "<li>" + node.toString() + "</li>";
+            }
+
+            htmlData += "</ul></body></html>";
+            return new TextAndHTMLTransferable(plainTextData, htmlData);
+        }
+
+        public int getSourceActions(SComponent component) {
+            return COPY;
+        }
+
+        public boolean dragStart(SComponent source, SComponent target, int action, SMouseEvent event) {
+            try {
+                String[] coords = event.getPoint().getCoordinates().split(":");
+                int row = Integer.parseInt(coords[0]);
+                if(coords.length < 3)
+                    return false;
+
+                boolean ctrlKey = false;
+                boolean shiftKey = false;
+                for(int i=1; i<coords.length; ++i) {
+                    String[] keyVal = coords[i].split("=");
+                    if("ctrlKey".equals(keyVal[0])) {
+                        ctrlKey = Boolean.parseBoolean(keyVal[1]);
+                    } else if("shiftKey".equals(keyVal[0])) {
+                        shiftKey = Boolean.parseBoolean(keyVal[1]);
+                    }
+                }
+
+                if(row != -1) {
+                    if(source instanceof STree) {
+                        STree tree = (STree)source;
+                        if(tree.isPathSelected(tree.getPathForRow(row)))
+                            return false;
+
+                        tree.addSelectionEvent(row, ctrlKey, shiftKey);
+                    }
+                }
+            } catch(Exception e) {
+
+            }
+            return false;
+        }
+
+        public void dropStay(SComponent source, SComponent target, int action, SMouseEvent event) {
+            if(!(target instanceof STree))
+                return;
+
+            String[] coords = event.getPoint().getCoordinates().split(":");
+            int row = Integer.parseInt(coords[0]);
+
+            STree tree = (STree)target;
+            TreePath path = tree.getPathForRow(row);
+            if(path != null && !tree.isExpanded(path)) {
+                tree.expandPath(path);
+            }
+        }
+
+        private static Map<String, Object> dropStayConfiguration;
+        static {
+            dropStayConfiguration = new HashMap<String, Object>();
+            dropStayConfiguration.put("stayOnElementTimeout", 1500);
+        }
+
+        public Map<String, Object> getDropStayConfiguration() {
+            return dropStayConfiguration;
         }
     }
 }

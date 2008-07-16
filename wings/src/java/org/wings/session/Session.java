@@ -21,6 +21,7 @@ import org.wings.SComponent;
 import org.wings.SContainer;
 import org.wings.SFrame;
 import org.wings.SToolTipManager;
+import org.wings.sdnd.SDragAndDropManager;
 import org.wings.dnd.DragAndDropManager;
 import org.wings.event.ExitVetoException;
 import org.wings.event.SExitEvent;
@@ -53,6 +54,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.awt.datatransfer.Clipboard;
 
 /**
  * This class represents a wingS session meaning an application user session instance.
@@ -129,8 +131,12 @@ public class Session implements PropertyService, Serializable {
     private boolean localeFromHeader = true;
 
     private DragAndDropManager dndManager;
-
+    private SDragAndDropManager sDndManager;
+    private Clipboard clipboard;
+    private SCursor cursor;
+    
     private ScriptManager scriptManager;
+
 
     /**
      * Which locales are supported by this servlet. If null, every locale from
@@ -955,6 +961,29 @@ public class Session implements PropertyService, Serializable {
         } // end of if ()
     }
 
+    public SCursor getCursor() {
+        if(this.cursor == null)
+            this.cursor = new SCursor();
+        return this.cursor;
+    }
+
+    public Clipboard getClipboard() {
+        if(this.clipboard == null)
+            this.clipboard = new Clipboard("wingS Clipboard");
+
+        return this.clipboard;
+    }
+    
+    public boolean hasSDragAndDropManager() {
+        return sDndManager != null;
+    }
+
+    public SDragAndDropManager getSDragAndDropManager() {
+        if(sDndManager == null)
+            sDndManager = new SDragAndDropManager();
+        return sDndManager;
+    }
+    
     public boolean hasDragAndDropManager() {
         return dndManager != null;
     }

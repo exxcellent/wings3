@@ -173,7 +173,7 @@ public final class TableCG
         if (table.isEditable() && editableCell)
             parameter = table.getEditParameter(row, col);
         else if (selectableCell)
-            parameter = table.getToggleSelectionParameter(row, col);
+            parameter = table.getToggleSelectionParameter(row, col) + ";shiftKey='+event.shiftKey+';ctrlKey='+event.ctrlKey+'";
 
         if (parameter != null && (selectableCell || editableCell) && !isClickable) {
             printClickability(device, table, parameter, table.getShowAsFormComponent());
@@ -403,7 +403,7 @@ public final class TableCG
             device.print("<td valign=\"top\" align=\"right\"");
             Utils.optAttribute(device, "width", selectionColumnWidth);
 
-            String value = table.getToggleSelectionParameter(row, -1);
+            String value = table.getToggleSelectionParameter(row, -1) + ";shiftKey='+event.shiftKey+';ctrlKey='+event.ctrlKey+'";
             if (table.getSelectionMode() != SListSelectionModel.NO_SELECTION) {
                 printClickability(device, table, value, table.getShowAsFormComponent());
                 device.print(" class=\"clickable ");
@@ -427,7 +427,7 @@ public final class TableCG
     private SComponent getRowSelectionRenderer(final STable table, final int row) {
         final STableCellRenderer rowSelectionRenderer = table.getRowSelectionRenderer();
         final SComponent comp = rowSelectionRenderer.getTableCellRendererComponent(table,
-                                                                                   table.getToggleSelectionParameter(row, -1),
+                                                                                   table.getToggleSelectionParameter(row, -1) + ";shiftKey='+event.shiftKey+';ctrlKey='+event.ctrlKey+'",
                                                                                    table.isRowSelected(row),
                                                                                    row, -1);
         return comp;

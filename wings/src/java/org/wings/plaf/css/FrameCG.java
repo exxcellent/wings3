@@ -17,6 +17,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.plaf.Update;
 import org.wings.*;
+import org.wings.sdnd.SDragAndDropManager;
 import org.wings.event.SRequestListener;
 import org.wings.event.SRequestEvent;
 import org.wings.externalizer.AbstractExternalizeManager;
@@ -383,7 +384,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         device.print("\n");
 
         // <html> tag
-        device.print("<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"");
+        device.print("<html onselectstart=\"if(window.event && window.event.ctrlKey == true) return false; else return true;\" xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"");
         Utils.write(device, language);
         device.print("\" lang=\"");
         Utils.write(device, language);
@@ -478,6 +479,22 @@ public class FrameCG implements org.wings.plaf.FrameCG {
 
             DragAndDropManager dndManager = frame.getSession().getDragAndDropManager();
             dndManager.getCG().write(device, dndManager);
+
+            if(frame.getSession().hasSDragAndDropManager()) {
+                SDragAndDropManager sDndManager = frame.getSession().getSDragAndDropManager();
+                sDndManager.getCG().write(device, sDndManager);
+            }
+
+            SCursor cursor = frame.getSession().getCursor();
+            if(cursor != null) {
+                CursorCG cg = (CursorCG)cursor.getCG();
+                if(cg == null) {
+                    System.out.println("cg is null!!");
+
+                } else {
+                    cg.write(device, cursor);
+                }
+            }
 
             handleScripts(device, frame);
         }

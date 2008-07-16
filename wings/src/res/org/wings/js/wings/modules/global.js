@@ -41,9 +41,9 @@ wingS.global.init =  function(configObject) {
     // Initialize -wingS.ajax-
     wingS.ajax.requestIsActive = false;
     wingS.ajax.requestQueue = new Array();
-    if (wingS.global.updateCursor.enabled) {
+/*    if (wingS.global.updateCursor.enabled) {
         wingS.ajax.activityCursor = new wingS.ajax.ActivityCursor();
-    }
+    }*/
 
     wingS.ajax.callbackObject = {
         success : function(request) { wingS.ajax.processRequestSuccess(request); },

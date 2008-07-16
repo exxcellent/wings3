@@ -14,11 +14,17 @@ package org.wings;
 
 import org.wings.event.SViewportChangeEvent;
 import org.wings.event.SViewportChangeListener;
+import org.wings.event.SMouseEvent;
 import org.wings.plaf.ListCG;
 import org.wings.style.CSSAttributeSet;
 import org.wings.style.CSSProperty;
 import org.wings.style.CSSStyleSheet;
 import org.wings.style.Selector;
+import org.wings.sdnd.TextAndHTMLTransferable;
+import org.wings.sdnd.CustomDragHandler;
+import org.wings.sdnd.SDropMode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -27,6 +33,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import java.awt.*;
+import java.awt.datatransfer.Transferable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +68,7 @@ import java.util.List;
  * @see SListCellRenderer
  */
 public class SList extends SComponent implements Scrollable, LowLevelEventListener, ListDataListener {
+    private static final Log LOG = LogFactory.getLog(SList.class);
 
     /**
      * The type for an ordered list. See {@link #setType(String)} and ORDER_TYPE_xxx
@@ -225,6 +233,7 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
         this.dataModel = dataModel;
         this.dataModel.addListDataListener(this);
         setSelectionModel(createSelectionModel());
+        installTransferHandler();
     }
 
 
@@ -1008,6 +1017,25 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
         propertyChangeSupport.firePropertyChange("epochCheckEnabled", oldVal, this.epochCheckEnabled);
     }
 
+    private int lastSelectedIndex;
+
+    protected void addSelectionEvent(int index, boolean ctrlKey, boolean shiftKey) {
+        if(index != -1) {
+            if(shiftKey == false && ctrlKey == false) {
+                setSelectionInterval(index, index);
+                lastSelectedIndex = index;
+            } else if(ctrlKey == true && shiftKey == false) {
+                if(!isSelectedIndex(index))
+                    addSelectionInterval(index, index);
+                else
+                    removeSelectionInterval(index, index);
+                lastSelectedIndex = index;
+            } else if(ctrlKey == false && shiftKey == true) {
+                setSelectionInterval(lastSelectedIndex, index);
+            }
+        }
+    }
+
     /*
      * Implement {@link LowLevelEventListener} interface.
      * @param action the name
@@ -1025,10 +1053,8 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
         // in a form, we only get events for selected items, so for every
         // selected item, which is not in values, deselect it...
         if (getShowAsFormComponent()) {
-
             ArrayList selectedIndices = new ArrayList();
             for (int i = 0; i < values.length; i++) {
-
                 String indexString = values[i];
                 if (indexString.length() < 1) continue; // false format
 
@@ -1048,22 +1074,31 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
                 }
             }
         } else {
+            int index = -1;
             for (int i = 0; i < values.length; i++) {
+                String[] paramVals = values[i].split(";");
+                boolean shiftKey = false;
+                boolean ctrlKey = false;
+                for(int j = 0; j < paramVals.length; j++) {
+                    String indexString = paramVals[j];
+                    if (indexString.length() < 1) continue; // false format
 
-                String indexString = values[i];
-                if (indexString.length() < 1) continue; // false format
+                    if(indexString.startsWith("ctrlKey=")) {
+                        ctrlKey = Boolean.parseBoolean(indexString.substring(indexString.indexOf("=") + 1));
+                        continue;
+                    } else if(indexString.startsWith("shiftKey=")) {
+                        shiftKey = Boolean.parseBoolean(indexString.substring(indexString.indexOf("=") + 1));
+                        continue;
+                    }
 
-                try {
-                    int index = Integer.parseInt(indexString);
-
-                    // toggle selection for given index
-                    if (isSelectedIndex(index))
-                        removeSelectionInterval(index, index);
-                    else
-                        addSelectionInterval(index, index);
-                } catch (Exception ex) {
+                    try {
+                        index = Integer.parseInt(indexString);
+                        // toggle selection for given index
+                    } catch (Exception ex) {
+                    }
                 }
 
+                addSelectionEvent(index, ctrlKey, shiftKey);
             }
         }
         getSelectionModel().setValueIsAdjusting(false);
@@ -1185,7 +1220,7 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
     }
 
     public String getDeselectionParameter(int index) {
-        return Integer.toString(index);
+        return Integer.toString(index); 
     }
 
     // Changes to the model should force a reload.
@@ -1202,5 +1237,138 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
     public void intervalRemoved(javax.swing.event.ListDataEvent e) {
         fireViewportChanged(false);
         reload();
+    }
+
+    /**
+     * Drag and Drop stuff
+     */
+    private SDropMode dropMode = null;
+    private boolean dragEnabled = false;
+
+    protected static final class DropLocation extends STransferHandler.DropLocation {
+        private int index;
+
+        public DropLocation(SList list, SPoint point) {
+            super(point);
+
+            try {
+                index = Integer.parseInt(point.getCoordinates());
+                Rectangle currentViewport = list.getViewportSize();
+                if(currentViewport != null)
+                    index += currentViewport.y;
+            } catch(Exception e) {
+                index = 0;
+            }
+        }
+
+        public int getIndex() {
+            return index;
+        }
+    }
+
+    public void setDropMode(SDropMode dropMode) {
+        this.dropMode = dropMode;
+        
+        getSession().getSDragAndDropManager().addDropTarget(this);
+    }
+
+    public SDropMode getDropMode() {
+        return this.dropMode;
+    }
+
+    protected DropLocation dropLocationForPoint(SPoint p) {
+        if(p.getCoordinates() == null)
+            return null;
+        return new SList.DropLocation(this, p);
+    }
+
+    private void installTransferHandler() {
+        if(getTransferHandler() == null) {
+            setTransferHandler(new DefaultTransferHandler());
+        }
+    }
+    
+    public void setDragEnabled(boolean dragEnabled) {
+        if(getSelectionModel() == null && dragEnabled == true)
+            throw new IllegalStateException("Unable to enable DND - no selection mode set in " + this);
+        
+        if(getShowAsFormComponent() && dragEnabled == true) {
+            LOG.warn("NOTE: setDragEnabled(true) called when getShowAsFormComponent was false - dragging won't work in internet explorer");
+            return;
+        }
+
+        if(dragEnabled != this.dragEnabled) {
+            if(dragEnabled) {
+                this.getSession().getSDragAndDropManager().addDragSource(this);
+            } else {
+                this.getSession().getSDragAndDropManager().removeDragSource(this);
+            }
+            
+            this.dragEnabled = dragEnabled;
+        }
+    }
+
+    protected static class DefaultTransferHandler extends STransferHandler implements CustomDragHandler {
+        public DefaultTransferHandler() {
+            super(null);
+        }
+
+        protected Transferable createTransferable(SComponent component) {
+            SList list = (SList)component;
+            String htmlData = "<html><body><ul>";
+            String plainTextData = "";
+            for(Object obj:list.getSelectedValues()) {
+                plainTextData += obj.toString() + "\n";
+                htmlData += "<li>" + obj.toString() + "</li>";
+            }
+            
+            htmlData += "</ul></body></html>";
+            return new TextAndHTMLTransferable(plainTextData, htmlData);
+        }
+
+        public int getSourceActions(SComponent component) {
+            return COPY;
+        }
+
+        public boolean dragStart(SComponent source, SComponent target, int action, SMouseEvent event) {
+            try {
+                String[] coords = event.getPoint().getCoordinates().split(":");
+                int index = Integer.parseInt(coords[0]);
+                if(coords.length < 3)
+                    return false;
+
+                boolean ctrlKey = false;
+                boolean shiftKey = false;
+                for(int i=1; i<coords.length; ++i) {
+                    String[] keyVal = coords[i].split("=");
+                    if("ctrlKey".equals(keyVal[0])) {
+                        ctrlKey = Boolean.parseBoolean(keyVal[1]);
+                    } else if("shiftKey".equals(keyVal[0])) {
+                        shiftKey = Boolean.parseBoolean(keyVal[1]);
+                    }
+                }
+
+
+                if(index != -1) {
+                    if(source instanceof SList) {
+                        if(source.getShowAsFormComponent())
+                            return false;
+                        SList list = (SList)source;
+                        
+                        Rectangle currentViewport = list.getViewportSize();
+                        if(currentViewport != null)
+                            index += currentViewport.y;
+
+                        if(list.isSelectedIndex(index))
+                            return false;
+
+                        list.addSelectionEvent(index, ctrlKey, shiftKey);
+                    }
+                }
+            } catch(Exception e) {
+
+            }
+            return false;
+        }
     }
 }

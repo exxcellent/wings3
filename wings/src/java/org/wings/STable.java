@@ -18,12 +18,17 @@ package org.wings;
  import org.wings.plaf.TableCG;
  import org.wings.style.*;
  import org.wings.table.*;
+ import org.wings.sdnd.TextAndHTMLTransferable;
+ import org.wings.sdnd.CustomDragHandler;
+ import org.wings.sdnd.SDropMode;
 
  import javax.swing.event.*;
  import javax.swing.table.DefaultTableModel;
  import javax.swing.table.TableModel;
+ import javax.swing.*;
  import java.awt.*;
-import java.util.*;
+ import java.awt.datatransfer.Transferable;
+ import java.util.*;
 import java.util.List;
 
 /**
@@ -310,6 +315,8 @@ public class STable extends SComponent
         if (model == null)
             model = createDefaultDataModel();
         setModel(model); // the resulting tableChanged event will update the default column mdoel
+
+        installTransferHandler();
     }
 
     /**
@@ -1247,6 +1254,25 @@ public class STable extends SComponent
         }
     }
 
+    private int lastSelectedIndex;
+
+    protected void addSelectionEvent(int row, boolean ctrlKey, boolean shiftKey) {
+        if ( ctrlKey == true && shiftKey == false && getSelectionModel().isSelectedIndex(row)) {
+            getSelectionModel().removeSelectionInterval(row, row);
+            lastSelectedIndex = row;
+        } else {
+            if ( shiftKey == true ) {
+                getSelectionModel().setSelectionInterval( lastSelectedIndex, row );
+            } else if ( ctrlKey == true ) {
+                getSelectionModel().addSelectionInterval( row, row );
+                lastSelectedIndex = row;
+            } else {
+                getSelectionModel().setSelectionInterval(row, row);
+                lastSelectedIndex = row;
+            }
+        }
+    }
+
     public void fireIntermediateEvents() {
         if (lastReceivedLowLevelEvents == null)
             return;
@@ -1283,25 +1309,26 @@ public class STable extends SComponent
                             editCellAt(row, col, null);
                             break;
                         case 't':
-                            boolean shiftKey    = Boolean.parseBoolean( values[1].split("=")[1] );
-                            boolean ctrlKey     = Boolean.parseBoolean( values[2].split("=")[1] );
-                            if ( ctrlKey == true && shiftKey == false && getSelectionModel().isSelectedIndex(row))
-                                getSelectionModel().removeSelectionInterval(row, row);
-                            else {
-                                if ( shiftKey == true ) {
-                                    getSelectionModel().setSelectionInterval( getSelectionModel().getLeadSelectionIndex(), row );
-                                } else if ( ctrlKey == true ) {
-                                    getSelectionModel().addSelectionInterval( row, row );
-                                } else {
-                                    getSelectionModel().setSelectionInterval(row, row);
-                                }
+                            boolean shiftKey = false;
+                            boolean ctrlKey = false;
+                            for(String val:values) {
+                                String[] parts = val.split("=");
+                                if(parts.length != 2)
+                                    continue;
+                                if("shiftKey".equals(parts[0]))
+                                    shiftKey = Boolean.parseBoolean( parts[1] );
+                                else if("ctrlKey".equals(parts[0]))
+                                    ctrlKey = Boolean.parseBoolean( parts[1] );
                             }
+                            addSelectionEvent(row, ctrlKey, shiftKey);
                             break;
                         case 's':
                             getSelectionModel().addSelectionInterval(row, row);
+                            lastSelectedIndex = row;
                             break;
                         case 'd':
                             getSelectionModel().removeSelectionInterval(row, row);
+                            lastSelectedIndex = row;
                             break;
                     }
                 } catch (NumberFormatException ex) {
@@ -1672,7 +1699,7 @@ public class STable extends SComponent
      * wingS internal method used to create specific HTTP request parameter names.
      */
     public String getToggleSelectionParameter(int row, int col) {
-        return "t" + row + ":" + col + ";shiftKey='+event.shiftKey+';ctrlKey='+event.ctrlKey+'";
+        return "t" + row + ":" + col;
     }
 
     /**
@@ -1926,6 +1953,158 @@ public class STable extends SComponent
             removeEditor();
             fireViewportChanged(true);
             reload();
+        }
+    }
+
+    /**
+     * Drag and Drop stuff
+     */
+    private SDropMode dropMode = null;
+    private boolean dragEnabled = false;
+
+    protected static class DropLocation extends STransferHandler.DropLocation {
+        private int row, col;
+
+        public DropLocation(STable table, SPoint point) {
+            super(point);
+
+            try {
+                String[] vals = point.getCoordinates().split(":");
+                row = Integer.parseInt(vals[0]);
+                col = Integer.parseInt(vals[1]);
+                Rectangle viewport = table.getViewportSize();
+                if(viewport != null) {
+                    row += viewport.y;
+                    col += viewport.x;
+                }
+            } catch(Exception e) {
+                row = -1;
+                col = -1;
+            }
+        }
+
+        public int getRow() {
+            return row;
+        }
+
+        public int getCol() {
+            return col;
+        }
+    }
+
+    public void setDropMode(SDropMode dropMode) {
+        this.dropMode = dropMode;
+
+        getSession().getSDragAndDropManager().addDropTarget(this);
+    }
+
+    public SDropMode getDropMode() {
+        return this.dropMode;
+    }
+
+    protected DropLocation dropLocationForPoint(SPoint p) {
+        if(p.getCoordinates() == null)
+            return null;
+        return new DropLocation(this, p);
+    }
+
+    private void installTransferHandler() {
+        if(getTransferHandler() == null) {
+            setTransferHandler(new DefaultTransferHandler());
+        }
+    }
+
+    public void setDragEnabled(boolean dragEnabled) {
+        if(getSelectionModel() == null && dragEnabled == true) {
+            throw new IllegalStateException("no selection model in stable " + this);
+        }
+
+        if(dragEnabled != this.dragEnabled) {
+            if(dragEnabled) {
+                this.getSession().getSDragAndDropManager().addDragSource(this);
+            } else {
+                this.getSession().getSDragAndDropManager().removeDragSource(this);
+            }
+
+            this.dragEnabled = dragEnabled;
+        }
+    }
+
+    protected static class DefaultTransferHandler extends STransferHandler implements CustomDragHandler {
+        public DefaultTransferHandler() {
+            super(null);
+        }
+
+        protected Transferable createTransferable(SComponent component) {
+            STable table = (STable)component;
+
+            String htmlText = "<html><body><table>";
+            String plainText = "";
+            
+            for(int row:table.getSelectedRows()) {
+                htmlText += "<tr>";
+                for(int col=0; col<table.getRowCount(); ++col) {
+                    Object object = table.getModel().getValueAt(row, col);
+
+                    htmlText += "<td>" + object.toString() + "</td>";
+                    if(col == (table.getRowCount()-1))
+                        plainText += object.toString();
+                    else
+                        plainText += object.toString() + "\t";
+                }
+                
+                plainText += "\n";
+                htmlText += "</tr>";
+            }
+            htmlText += "</table></body></html>";
+            
+
+            return new TextAndHTMLTransferable(plainText, htmlText);
+        }
+
+        public int getSourceActions(SComponent component) {
+            return COPY;
+        }
+
+        public boolean dragStart(SComponent source, SComponent target, int action, SMouseEvent event) {
+            try {
+                String[] coords = event.getPoint().getCoordinates().split(":");
+                int row = Integer.parseInt(coords[0]);
+                int col = Integer.parseInt(coords[1]);
+                if(coords.length < 4)
+                    return false;
+
+                boolean ctrlKey = false;
+                boolean shiftKey = false;
+                for(int i=2; i<coords.length; ++i) {
+                    String[] keyVal = coords[i].split("=");
+                    if("ctrlKey".equals(keyVal[0])) {
+                        ctrlKey = Boolean.parseBoolean(keyVal[1]);
+                    } else if("shiftKey".equals(keyVal[0])) {
+                        shiftKey = Boolean.parseBoolean(keyVal[1]);
+                    }
+                }
+
+                if(row != -1 && col != -1) {
+                    if(source instanceof STable) {
+                        STable table = (STable)source;
+
+                        Rectangle viewport = table.getViewportSize();
+                        if(viewport != null) {
+                            row += viewport.y;
+                            col += viewport.x;
+                        }
+
+                        if(table.isRowSelected(row))
+                            return false;
+                        
+                        table.addSelectionEvent(row, ctrlKey, shiftKey);
+                    }
+                }
+            } catch(Exception e) {
+                
+            }
+            return false;
         }
     }
 }

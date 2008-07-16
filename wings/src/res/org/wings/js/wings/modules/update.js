@@ -201,6 +201,8 @@ wingS.update.element = function(element, html) {
             }
         }
     }
+
+    wingS.sdnd.elementUpdated(element);
 };
 
 /**
@@ -543,9 +545,21 @@ wingS.update.alertException = function(exception, details) {
 };
 
 /**
+ * Updates a component's visibility
+ * @param componentId (HTML)-id of the component
+ * @param display New Setting of the element.style.display parameter
+ * @param visibility New Setting of the element.style.visibility parameter
+ */
+wingS.update.visibility = function(componentId, display, visibility) {
+    var elt = document.getElementById(componentId);
+    elt.style.display = display;
+    elt.style.visibility = visibility;
+};
+
+/**
  * Runs the script in the given parameter.
  * @param scriptToEval Script to run
  */
 wingS.update.runScript = function(scriptToEval) {
     eval(scriptToEval);
-}
+};

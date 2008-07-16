@@ -181,8 +181,8 @@ public class XTableCG
         if (table.isEditable() && editableCell)
             parameter = table.getEditParameter(row, col);
         else if (selectableCell)
-            parameter = table.getToggleSelectionParameter(row, col);
-
+            parameter = table.getToggleSelectionParameter(row, col) + ";shiftKey='+event.shiftKey+';ctrlKey='+event.ctrlKey+'";
+        
         if (parameter != null && (selectableCell || editableCell) && !isClickable) {
             printClickability(device, table, parameter, table.getShowAsFormComponent());
             device.print(isEditingCell || isEditableCellRenderer ? " editing=\"true\"" : " editing=\"false\"");
@@ -556,7 +556,7 @@ public class XTableCG
             device.print("<td valign=\"top\" align=\"right\"");
             Utils.optAttribute(device, "width", selectionColumnWidth);
 
-            String value = table.getToggleSelectionParameter(row, -1);
+            String value = table.getToggleSelectionParameter(row, -1) + ";shiftKey='+event.shiftKey+';ctrlKey='+event.ctrlKey+'";
             if (table.getSelectionMode() != SListSelectionModel.NO_SELECTION) {
                 printClickability(device, table, value, table.getShowAsFormComponent());
                 device.print(" class=\"clickable ");

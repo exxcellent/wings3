@@ -200,21 +200,22 @@ wingS.ajax.dequeueNextRequest = function() {
  */
 wingS.ajax.setActivityIndicatorsVisible = function(visible) {
     if (wingS.global.updateCursor.enabled) {
-        wingS.ajax.activityCursor.setVisible(visible);
+		wingS.cursor.setAjaxActivityIndicatorVisible(visible);
         // An alternative to the cursor might be something like
         // if (visible) document.body.style.cursor = "progress";
         // else document.body.style.cursor = "default";
     }
+	/*
     var indicator = document.getElementById("ajaxActivityIndicator");
     if (indicator != null) {
         if (visible) indicator.style.visibility = "visible";
         else indicator.style.visibility = "hidden";
-    }
+    } */
 };
 
 /**
  * Initializes the appearance of the activity cursor.
- */
+ */ /*
 wingS.ajax.ActivityCursor = function() {
     this.dx = wingS.global.updateCursor.dx;
     this.dy = wingS.global.updateCursor.dy;
@@ -225,12 +226,12 @@ wingS.ajax.ActivityCursor = function() {
     this.div.innerHTML = "<img src=\"" + wingS.global.updateCursor.image + "\"/>";
     document.body.insertBefore(this.div, document.body.firstChild);
     document.onmousemove = this.followMouse.bind(this);
-};
+};*/
 
 /**
  * Calculates the new position of the activity cursor.
  * @param {Object} event - the event object
- */
+ */ /*
 wingS.ajax.ActivityCursor.prototype.followMouse = function(event) {
     event = wingS.event.getEvent(event);
     var target = wingS.event.getTarget(event);
@@ -257,16 +258,16 @@ wingS.ajax.ActivityCursor.prototype.followMouse = function(event) {
     if (newY > 0 && newY < (YAHOO.util.Dom.getDocumentHeight() - wingS.global.updateCursor.height - 2)) {
         this.div.style.top = newY + "px";
     }
-};
+};    */
 
 /**
  * Sets the activity cursor either visible or invisible.
  * @param {boolean} visible - true to set cursor visible
- */
+ *//*
 wingS.ajax.ActivityCursor.prototype.setVisible = function(visible) {
     if (visible) this.div.style.display = "block";
     else this.div.style.display = "none";
-};
+};*/
 
 /**
  * Prints some debug information about the given AJAX request.

@@ -26,7 +26,7 @@ public class SPoint implements Serializable {
      * The 'conceptual' coordinates. Content depends on source component. Look in source component for conversion methods.
      * @return The 'conceptual' coordinates
      */
-    String getCoordinates() {
+    public String getCoordinates() {
         return coordinates;
     }
 

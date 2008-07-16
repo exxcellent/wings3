@@ -162,7 +162,7 @@ public final class TreeCG extends AbstractComponentCG implements org.wings.plaf.
             Utils.optAttribute(device, "class", "norm");
         }
         if (isSelectable) {
-            final String selectionParameter = component.getSelectionParameter(row, false);
+            final String selectionParameter = component.getSelectionParameter(row, false) + ";shiftKey='+event.shiftKey+';ctrlKey='+event.ctrlKey+'";
             Utils.printClickability(device, component, selectionParameter, true, component.getShowAsFormComponent());
             Utils.optAttribute(device, "tabindex", component.getFocusTraversalIndex());
         }
@@ -297,6 +297,27 @@ public final class TreeCG extends AbstractComponentCG implements org.wings.plaf.
             return handler;
         }
 
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            if (!super.equals(o)) return false;
+
+            SelectionUpdate that = (SelectionUpdate) o;
+
+            if (deselectedRows != null ? !deselectedRows.equals(that.deselectedRows) : that.deselectedRows != null)
+                return false;
+            if (selectedRows != null ? !selectedRows.equals(that.selectedRows) : that.selectedRows != null)
+                return false;
+
+            return true;
+        }
+
+        public int hashCode() {
+            int result = super.hashCode();
+            result = 31 * result + (deselectedRows != null ? deselectedRows.hashCode() : 0);
+            result = 31 * result + (selectedRows != null ? selectedRows.hashCode() : 0);
+            return result;
+        }
     }
 
 }

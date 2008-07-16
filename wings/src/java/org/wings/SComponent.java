@@ -220,6 +220,10 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      */
     protected final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
+
+    private STransferHandler transferHandler = null;
+
+
     /**
      * Default empty constructor.
      * The method updateCG is called during construction time to get a cg delegate installed (renderer).
@@ -2006,6 +2010,22 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
             log.warn("Unexpected Exception", e);
             throw e;
         }
+    }
+
+    public void setTransferHandler(STransferHandler newHandler) {
+        STransferHandler oldHandler = this.transferHandler;
+        this.transferHandler = newHandler;
+
+        propertyChangeSupport.firePropertyChange("transferHandler", oldHandler, this.transferHandler);
+
+    }
+
+    public STransferHandler getTransferHandler() {
+        return this.transferHandler;
+    }
+
+    protected STransferHandler.DropLocation dropLocationForPoint(SPoint p) {
+        return null;
     }
 
     /**

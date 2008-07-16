@@ -51,6 +51,8 @@ wingS.scrollbar.handleMouseWheel = function(event, scrollbar) {
      }
 
      var table = document.getElementById(scrollbar);
+    if(table == null)
+        return;
      var outer = table.getElementsByTagName("DIV")[0];
      var inner = outer.getElementsByTagName("DIV")[0];
 

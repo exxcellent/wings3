@@ -27,12 +27,32 @@ wingS.keyboard.handler = function(event) {
     return true;
 };
 
+wingS.keyboard.uphandler = function(event) {
+    if (window.event) {
+        event = window.event;
+    }
+    var shiftKey = event.shiftKey;
+    var ctrlKey = event.ctrlKey;
+
+    if(wingS.sdnd.isDragging()) { // don't process keyboard operations while dragging - forward them to sdnd.js
+        wingS.sdnd.keyChange(ctrlKey, shiftKey);
+        return false;
+    }
+
+    return false;
+}
+
 wingS.keyboard.handler.match = function(event, element) {
     var keyCode = event.keyCode;
     var shiftKey = event.shiftKey;
     var ctrlKey = event.ctrlKey;
     var altKey = event.altKey;
     var keyStrokes = wingS.keyboard.keyStrokes;
+
+    if(wingS.sdnd.isDragging()) { // don't process keyboard operations while dragging - forward them to sdnd.js
+        wingS.sdnd.keyChange(ctrlKey, shiftKey);
+        return false;
+    }
 
     if (!keyStrokes)
         return false;
@@ -71,4 +91,4 @@ wingS.keyboard.KeyStroke = function(component, focussed, command, keyCode, shift
 }
 
 document.onkeydown = wingS.keyboard.handler;
-
+document.onkeyup = wingS.keyboard.uphandler;

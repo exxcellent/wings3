@@ -15,12 +15,22 @@ package org.wings;
 
 import org.wings.event.SDocumentEvent;
 import org.wings.event.SDocumentListener;
+import org.wings.event.SMouseEvent;
 import org.wings.plaf.TextAreaCG;
 import org.wings.plaf.TextFieldCG;
 import org.wings.text.DefaultDocument;
 import org.wings.text.SDocument;
+import org.wings.sdnd.TextAndHTMLTransferable;
+import org.wings.sdnd.SDropMode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.swing.text.BadLocationException;
+import javax.swing.*;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 
 /**
  * Abstract base class of input text components like {@link STextArea} and {@link STextField}.
@@ -30,6 +40,7 @@ import javax.swing.text.BadLocationException;
  * @version $Revision$
  */
 public abstract class STextComponent extends SComponent implements LowLevelEventListener, SDocumentListener {
+    private static final Log LOG = LogFactory.getLog(STextComponent.class);
 
     private boolean editable = true;
 
@@ -55,6 +66,10 @@ public abstract class STextComponent extends SComponent implements LowLevelEvent
     public STextComponent(SDocument document, boolean editable) {
         setDocument(document);
         setEditable(editable);
+        installTransferHandler();
+        if(!(this instanceof STextField)) {
+            setDropMode(SDropMode.USE_SELECTION);
+        }
     }
 
     public SDocument getDocument() {
@@ -202,6 +217,261 @@ public abstract class STextComponent extends SComponent implements LowLevelEvent
             reload();
         }
     }
+
+    /**
+     * Drag and Drop stuff
+     */
+    private int selectionStart;
+    private int selectionEnd;
+
+    /**
+     * Internal Selection Mechanism for Drag and Drop - may be made public if a real selection support is introduced
+     * @return
+     */
+    protected int getSelectionStart() {
+        return selectionStart;
+    }
+
+    /**
+     * Internal Selection Mechanism for Drag and Drop - may be made public if a real selection support is introduced
+     * @param selectionStart
+     */
+    protected void setSelectionStart(int selectionStart) {
+        this.selectionStart = selectionStart;
+    }
+
+    /**
+     * Internal Selection Mechanism for Drag and Drop - may be made public if a real selection support is introduced
+     * @return
+     */
+    protected int getSelectionEnd() {
+        return selectionEnd;
+    }
+
+    /**
+     * Internal Selection Mechanism for Drag and Drop - may be made public if a real selection support is introduced
+     * @param selectionEnd
+     */
+    protected void setSelectionEnd(int selectionEnd) {
+        this.selectionEnd = selectionEnd;
+    }
+
+    /**
+     * Internal Selection Mechanism for Drag and Drop - may be made public if a real selection support is introduced
+     * @return
+     */
+    protected String getSelectedText() {
+        String text = getText();
+        return text.substring(getSelectionStart(), getSelectionEnd());
+    }
+
+    protected boolean dragEnabled = false;
+    protected SDropMode dropMode = null;
+
+    /**
+     * Sets the DropMode for this component - supports USE_SELECTION and INSERT
+     * @param dropMode
+     */
+    public void setDropMode(SDropMode dropMode) {
+        if(dropMode == null || (dropMode != SDropMode.USE_SELECTION))
+            throw new IllegalArgumentException(dropMode + " - unsupported DropMode");
+
+        if(this instanceof STextField) {
+            LOG.warn("setDropMode: STextField as DropTarget will show different drop-behaviour in IE than in FF");
+        }
+        this.dropMode = dropMode;
+        getSession().getSDragAndDropManager().addDropTarget(this);
+    }
+
+    private void installTransferHandler() {
+        if(getTransferHandler() == null) {
+            setTransferHandler(new DefaultTransferHandler());
+        }
+    }
+
+    public SDropMode getDropMode() {
+        return this.dropMode;
+    }
+
+    public void setDragEnabled(boolean dragEnabled) {
+        if(dragEnabled != this.dragEnabled) {
+            if(dragEnabled)
+                this.getSession().getSDragAndDropManager().addDragSource(this);
+            else
+                this.getSession().getSDragAndDropManager().removeDragSource(this);
+
+            this.dragEnabled = dragEnabled;
+        }
+    }
+
+    public boolean getDragEnabled() {
+        return this.dragEnabled;
+    }
+
+    protected DropLocation dropLocationForPoint(SPoint point) {
+        if(point.getCoordinates() == null)
+            return null;
+        if(point.getCoordinates().indexOf("-") != -1 && point.getCoordinates().indexOf("-1") != 0) // dragstart => dragenter event
+            return null;
+        return new DropLocation(point);
+    }
+
+    protected static final class DropLocation extends STransferHandler.DropLocation {
+        private int index;
+
+        public DropLocation(SPoint point) {
+            super(point);
+
+            try {
+                this.index = Integer.parseInt(point.getCoordinates());
+                if(this.index == -1)
+                    this.index = 0;
+            } catch(NumberFormatException e) {
+                this.index = -1;
+                e.printStackTrace();
+            }
+        }
+
+        public int getIndex() {
+            return this.index;
+        }
+    }
+
+    private static class TextTransferable extends TextAndHTMLTransferable {
+        private int startPos, endPos;
+        private STextComponent component;
+        private int insertIndex;
+
+        protected TextTransferable(STextComponent component, int startPos, int endPos) {
+            super(null, null);
+
+            this.startPos = startPos;
+            this.endPos = endPos;
+            this.component = component;
+
+            this.plainTextData = component.getSelectedText();
+        }
+
+        public void setInsertIndex(int insertIndex) {
+            this.insertIndex = insertIndex;
+        }
+
+        protected void removeText() {
+            String newtext = this.component.getText();
+            try {
+                component.getDocument().remove(this.startPos+((insertIndex<=startPos)?this.endPos - this.startPos:-(this.endPos - this.startPos)), this.endPos - this.startPos);
+                component.reload();
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    protected static class DefaultTransferHandler extends STransferHandler {
+        public DefaultTransferHandler() {
+            super("text");
+        }
+        
+        public void exportDone(SComponent source, Transferable transferable, int action) {
+            if(action == MOVE) {
+                if(transferable instanceof TextTransferable) {
+                    ((TextTransferable)transferable).removeText();
+                }
+            }
+
+            super.exportDone(source, transferable, action);
+        }
+
+        protected Transferable createTransferable(SComponent component) {
+            if(component instanceof STextComponent) {
+                STextComponent textComponent = (STextComponent)component;
+                return new TextTransferable(textComponent, textComponent.getSelectionStart(), textComponent.getSelectionEnd());
+            }
+            
+            return null;
+        }
+
+        protected Transferable createTransferable(SComponent component, SMouseEvent event) {
+            if(component instanceof STextComponent) {
+                STextComponent textComponent = (STextComponent)component;
+
+                String[] stringArray = event.getPoint().getCoordinates().split("-");
+            
+                int startIndex = Integer.parseInt(stringArray[0]);
+                int endIndex = Integer.parseInt(stringArray[1]);
+                textComponent.setSelectionStart(startIndex);
+                textComponent.setSelectionEnd(endIndex);
+            }
+
+            return super.createTransferable(component, event);
+        }
+
+        protected static DataFlavor getImportFlavor(STextComponent component, DataFlavor[] flavors) {
+            for(DataFlavor flavor:flavors) {
+                if(flavor.getMimeType().startsWith("text/plain")) {
+                    return flavor;
+                } else if(flavor.getMimeType().startsWith(DataFlavor.javaJVMLocalObjectMimeType) && flavor.getRepresentationClass() == String.class) {
+                    return flavor;
+                }
+            }
+            return null;
+        }
+
+        public boolean canImport(SComponent component, DataFlavor[] transferFlavors) {
+            STextComponent textComponent = (STextComponent)component;
+            if(!textComponent.isEditable() || !textComponent.isEnabled()) // if the component is not editable
+                return false;                                               // or disabled, don't allow imports
+
+            if(getImportFlavor(textComponent, transferFlavors) != null) {
+                return true;
+            }
+
+            return false;
+        }
+
+        private int insertIndex = 0;
+
+        public boolean importData(SComponent component, Transferable transferable) {
+            try {
+                STextComponent textComponent = (STextComponent)component;
+
+                String data = (String)(transferable.getTransferData(getImportFlavor((STextComponent)component, transferable.getTransferDataFlavors())));
+                String text = textComponent.getText();
+
+                if(insertIndex == -1) { // in case we couldn't determine a drop position, append
+                    textComponent.setText(text + data);
+                    return true;
+                }
+                if(insertIndex > text.length())
+                    return false;
+
+                String firstPart = text.substring(0, insertIndex);
+                String secondPart = text.substring(insertIndex); 
+
+                if(transferable instanceof TextTransferable) {
+                    ((TextTransferable)transferable).setInsertIndex(insertIndex);
+                }
+                textComponent.setText(firstPart + data + secondPart);
+                return true;
+            } catch (UnsupportedFlavorException e) {
+            } catch (IOException e) {
+            }
+            return false;
+        }
+
+        public boolean importData(TransferSupport support) {
+            insertIndex = ((STextComponent.DropLocation)support.getDropLocation()).getIndex();
+            return super.importData(support);
+        }
+
+        public int getSourceActions(SComponent component) {
+            if(component instanceof SPasswordField) // don't allow drag/drop from password fields
+                return NONE;
+
+            if(!((STextComponent)component).isEditable()) // don't allow MOVE when the component isn't editable
+                return COPY;
+            
+            return COPY_OR_MOVE;
+        }
+    }
 }
-
-

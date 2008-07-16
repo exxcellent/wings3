@@ -189,7 +189,7 @@ public final class ListCG extends AbstractComponentCG<SList> implements org.wing
             SComponent renderer = cellRenderer.getListCellRendererComponent(list, model.getElementAt(i), selected, i);
 
             if (renderSelection) {
-                Utils.printClickability(device, list, list.getToggleSelectionParameter(i), true, list.getShowAsFormComponent());
+                Utils.printClickability(device, list, list.getToggleSelectionParameter(i) + ";shiftKey='+event.shiftKey+';ctrlKey='+event.ctrlKey+'", true, list.getShowAsFormComponent());
                 Utils.optAttribute(device, "foc", renderer.getName());
             }
             device.print(">");
