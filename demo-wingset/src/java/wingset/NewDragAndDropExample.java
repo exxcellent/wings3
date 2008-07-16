@@ -2,11 +2,11 @@ package wingset;
 
 import org.wings.*;
 import org.wings.sdnd.DefaultTransferable;
+import org.wings.sdnd.SDropMode;
 import org.wings.style.CSSProperty;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.DataFlavor;
@@ -102,7 +102,7 @@ public class NewDragAndDropExample extends WingSetPane {
         for (int i = 0; i < puzzleIcons.length; i++) {
             puzzleIcons[i].setTransferHandler(new DragDropLabelTransferHandler());
             puzzleIcons[i].setDragEnabled(true);
-            puzzleIcons[i].setDropMode(DropMode.USE_SELECTION);
+            puzzleIcons[i].setDropMode(SDropMode.USE_SELECTION);
         }
 
         for(int i=0; i<20; ++i) {
@@ -283,7 +283,7 @@ public class NewDragAndDropExample extends WingSetPane {
             this.dragEnabled = dragEnabled;
         }
 
-        public void setDropMode(DropMode dropMode) {
+        public void setDropMode(SDropMode dropMode) {
             getSession().getSDragAndDropManager().addDropTarget(this);
         }
 
