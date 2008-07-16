@@ -193,7 +193,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	}
 
 	/**
-	 * Sets the CalendarModel
+	 * Sets the CalendarModel - please note that all previously added CalendarViewChangeListener have to reregister
 	 * @param model
 	 */
 	public void setCalendarModel(CalendarModel model)
