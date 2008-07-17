@@ -150,10 +150,10 @@ public class ServletPreferences
     
 
     private static File setupUserRoot(String userName) {
-         
-        File userRootDir = new File("./Prefs/" + userName);
-//                      new File(System.getProperty("java.util.prefs.userRoot",
-//                      System.getProperty("user.home")), ".java/.userPrefs");
+        String baseDir = System.getProperty("java.util.prefs.userRoot",
+                System.getProperty("user.home"));
+        
+        File userRootDir = new File(baseDir, ".java/userPrefs/" + (userName != null ? userName.trim() : ""));
         // Attempt to create root dir if it does not yet exist.
         if (!userRootDir.exists()) {
             if (userRootDir.mkdirs()) {
