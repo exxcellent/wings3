@@ -20,6 +20,13 @@ import org.wings.plaf.LabelCG;
  * You can specify where in the label's display area  the label's contents
  * are aligned by setting the vertical and horizontal alignment.
  * You can also specify the position of the text relative to the image.
+ * <p/>
+ * This component will take best efforts to quote the text accordingly to the needs of the end platform.
+ * So special characters i.e. like <code>\n</code>  and <code>\u0123</code> should work without any further actions.
+ * To disable quoting and i.e. include custom HTML tags you may disable quoting by prefixing "&lt;html&gt;"
+ * on you payload text equivalent to the behaviour within Swing.
+ * <p/>
+ * To enable wordwrapping refer to {@link #setWordWrap(boolean)}.  
  *
  * @author <a href="mailto:haaf@mercatis.de">Armin Haaf</a>
  */
@@ -223,7 +230,10 @@ public class SLabel extends SComponent {
     }
 
     /**
-     * Sets the text of the label. Nothing will be displayed if the text is an empty string or null.
+     * Sets the text of the label. Nothing will be displayed if the text is an empty string or <code>null</code>.
+     * Use &lt;html&gt; as prefix to disable implicit
+     * quoting of the payload text. By default the component should handle and quote special characters as <code>\n</code>
+     * and <code>\u0123</code> correctly.
      *
      * @param t The new text
      */
