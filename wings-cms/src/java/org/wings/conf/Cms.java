@@ -2,6 +2,8 @@ package org.wings.conf;
 
 import java.net.URL;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -20,6 +22,7 @@ import org.wings.adapter.CmsAdapter;
  * @version $Id
  */
 @XmlRootElement(name = "cms")
+@XmlAccessorType(XmlAccessType.NONE)
 public class Cms {
 
     public static final String DEFAULT_PROTOCOL = "http";
@@ -29,6 +32,7 @@ public class Cms {
     public static final int DEFAULT_PORT = 80;
 
     @XmlAttribute(name = "adapter", required = true)
+    @XmlJavaTypeAdapter(ClassAdapter.class)
     private Class<? extends CmsAdapter> adapter;
 
     public Class<? extends CmsAdapter> getAdapter() {
@@ -40,6 +44,7 @@ public class Cms {
     }
 
     @XmlElement(name = "base-url", required = true)
+    @XmlJavaTypeAdapter(UrlAdapter.class)
     private URL baseUrl;
 
 	/**

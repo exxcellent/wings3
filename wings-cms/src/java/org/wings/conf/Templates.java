@@ -9,9 +9,12 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.wings.macro.MacroProcessor;
 
@@ -27,9 +30,11 @@ import org.wings.macro.MacroProcessor;
  * @version $Id
  */
 @XmlType(name = "template")
+@XmlAccessorType(XmlAccessType.NONE)
 public class Templates {
 
 	@XmlAttribute(name = "processor", required = true)
+	@XmlJavaTypeAdapter(ClassAdapter.class)
 	private Class<? extends MacroProcessor> macroProcessor;
 
 	/**
