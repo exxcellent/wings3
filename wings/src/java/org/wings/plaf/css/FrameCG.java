@@ -25,11 +25,7 @@ import org.wings.externalizer.ExternalizeManager;
 import org.wings.dnd.DragAndDropManager;
 import org.wings.header.*;
 import org.wings.io.Device;
-import org.wings.io.StringBuilderDevice;
 import org.wings.plaf.CGManager;
-import org.wings.plaf.Update.Handler;
-import org.wings.plaf.css.InternalFrameCG.AddWindowUpdate;
-import org.wings.plaf.css.InternalFrameCG.RemoveWindowUpdate;
 import org.wings.plaf.css.script.OnPageRenderedScript;
 import org.wings.resource.ClassPathResource;
 import org.wings.resource.ReloadResource;
@@ -451,6 +447,8 @@ public class FrameCG implements org.wings.plaf.FrameCG {
             String script = "wingS.util.requestFocus('" + frame.getFocus().getName() + "');";
             ScriptManager.getInstance().addScriptListener(new OnPageRenderedScript(script));
         }
+        
+        writeHeadExtension(device, frame);
 
         device.print("</head>\n");
         device.print("<body");
@@ -498,6 +496,8 @@ public class FrameCG implements org.wings.plaf.FrameCG {
 
             handleScripts(device, frame);
         }
+        
+        wirteBodyExtension(device, frame);
 
         device.print("</body>\n</html>\n");
 
@@ -540,6 +540,14 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         scriptManager.clearScriptListeners();
 
         device.print("</script>\n");
+    }
+    
+    protected void writeHeadExtension(Device out, SFrame frame) throws IOException {
+        // Hook for subclasses
+    }
+    
+    protected void wirteBodyExtension(Device out, SFrame frame) throws IOException {
+        // Hook for subclasses
     }
 
     private void writeGlobalInitScript(Device out, SFrame frame) throws IOException {
