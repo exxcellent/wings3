@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="lib/bsh-core.jar"/>
-	<classpathentry exported="true" kind="lib" path="/Users/colossus/Documents/Projects/wingS/wings3/thirdparty/lib/commons-httpclient-3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-httpclient-3.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/dwr.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jetty-6.1.6rc0.jar"/>
