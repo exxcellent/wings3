@@ -1,9 +1,12 @@
 package org.wings.adapter.impl;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -63,10 +66,21 @@ public class Joomla15Adapter extends AbstractCmsAdapter {
             if (attribute != null) {
                 String value = attribute.getValue();
 
-                String replacedValue = value.replaceFirst(cmsServerPath, wingsServerPath);
-                if (!replacedValue.equals(value)) {
-                    output.replace(attribute.getValueSegment(), replacedValue);
-                }
+                if (!value.startsWith("http")) {
+					
+                	boolean changed = false;
+                	Pattern pattern = Pattern.compile(getCms().getBaseUrl().getPath());
+                	Matcher matcher = pattern.matcher(value);
+                	if (matcher.find()) {
+                		changed = true;
+                		value = matcher.replaceFirst(wingsServerPath);
+                	}
+                	
+					//                String replacedValue = value.replaceFirst(cmsServerPath, wingsServerPath);
+					if (changed) {
+						output.replace(attribute.getValueSegment(), value);
+					}
+				}
             }
         }
 
@@ -96,10 +110,21 @@ public class Joomla15Adapter extends AbstractCmsAdapter {
             if (attribute != null) {
                 String value = attribute.getValue();
 
-                if (!value.startsWith(getCms().getBaseUrl().getProtocol())) {
-                    value = cmsServerPath + "/" + value;
-                }
-                output.replace(attribute.getValueSegment(), value);
+                if (!value.startsWith("http")) {
+					
+                	boolean changed = false;
+                	Pattern pattern = Pattern.compile(getCms().getBaseUrl().getPath());
+                	Matcher matcher = pattern.matcher(value);
+                	if (matcher.find()) {
+                		changed = true;
+                		value = matcher.replaceFirst(cmsServerPath);
+                	}
+                	
+					//                String replacedValue = value.replaceFirst(cmsServerPath, wingsServerPath);
+					if (changed) {
+						output.replace(attribute.getValueSegment(), value);
+					}
+				}
             }
         }
     }

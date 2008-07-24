@@ -233,10 +233,14 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
         return templateString;
     }
 
+    public Source resolveIncludes(Source source) {
+    	return resolveIncludes0(source);
+    }
+    
     /* (non-Javadoc)
 	 * @see org.wings.adapter.CmsAdapter#resolveIncludes(au.id.jericho.lib.html.Source)
 	 */
-	public Source resolveIncludes(Source source) {
+	private Source resolveIncludes0(Source source) {
 		List templates = source.findAllElements("include");
 		
 		List<String> variables = getCms().getTemplates().getUrlExtensionVariables();
@@ -248,7 +252,13 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
 			Attributes attributes = template.getAttributes();
 			for (String variable : variables) {
 				Attribute attribute = attributes.get(variable);
-				values.add(attribute.getValue());
+				
+				if (attribute != null) {
+					values.add(attribute.getValue());
+				}
+				else {
+					System.out.println("No attribute " + variable + " has been found within element \"" + template + "\".");
+				}
 			}
 			
 			String extension = getCms().getTemplates().getUrlExtension(values.toArray(new String[values.size()]));
@@ -262,12 +272,14 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
 			
 			StringBuffer sb = new StringBuffer();
 			sb.append(source.subSequence(0, begin));
-			sb.append(requestInclude(url));
+			
+			// Resolves nested of includes.
+			sb.append(resolveIncludes0(new Source(requestInclude(url))).toString());
+			
 			sb.append(source.subSequence(end, end2));
 			
 			source = new Source(sb);
 		}
-		
 		
 		return source;
 	}
