@@ -1,20 +1,32 @@
-package org.wings.adapter;
+package org.wings.adapter.impl;
 
-import org.wings.*;
-import org.wings.template.StringTemplateSource;
-import org.wings.template.TemplateSource;
-import org.wings.session.SessionManager;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+
+import org.wings.Resource;
+import org.wings.SFrame;
+import org.wings.STemplateLayout;
+import org.wings.adapter.AbstractCmsAdapter;
+import org.wings.conf.Cms;
 import org.wings.header.Link;
 import org.wings.header.Script;
-import org.wings.conf.CmsDetail;
-import org.apache.commons.httpclient.*;
-import au.id.jericho.lib.html.*;
+import org.wings.session.SessionManager;
+import org.wings.template.StringTemplateSource;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.ServletContext;
-import java.util.*;
-import java.io.*;
-import java.nio.CharBuffer;
+import au.id.jericho.lib.html.Attribute;
+import au.id.jericho.lib.html.Attributes;
+import au.id.jericho.lib.html.Element;
+import au.id.jericho.lib.html.OutputDocument;
+import au.id.jericho.lib.html.Source;
+import au.id.jericho.lib.html.StartTag;
+import au.id.jericho.lib.html.Tag;
 
 /**
  * @author hengels
@@ -22,8 +34,8 @@ import java.nio.CharBuffer;
  */
 public class LocalAdapter extends AbstractCmsAdapter {
 
-    public LocalAdapter(SFrame frame, STemplateLayout layout, CmsDetail cfg) {
-        super(frame, layout, cfg);
+    public LocalAdapter(SFrame frame, STemplateLayout layout, Cms cms) {
+        super(frame, layout, cms);
     }
 
     public Resource mapResource(String url) {
@@ -36,7 +48,7 @@ public class LocalAdapter extends AbstractCmsAdapter {
     protected void navigate(String url) {
         ServletContext context = SessionManager.getSession().getServletContext();
 
-        String path = context.getRealPath(getConfiguration().getBasePath() + url);
+        String path = context.getRealPath(getCms().getBaseUrl() + url);
         File file = new File(path);
         String templateString = null;
 
@@ -87,7 +99,7 @@ public class LocalAdapter extends AbstractCmsAdapter {
     public void parseAnchors(Source source, OutputDocument output) {
 
         String wingsServerPath = getPath();
-        String cmsServerPath = getConfiguration().getServerPath();
+        String cmsServerPath = getCms().getBaseUrl().toExternalForm();
 
         List<StartTag> anchorTags = source.findAllStartTags(Tag.A);
         for (StartTag anchorTag : anchorTags) {
@@ -145,7 +157,7 @@ public class LocalAdapter extends AbstractCmsAdapter {
     public void parseLinks(Source source) {
 
         HttpServletRequest request = SessionManager.getSession().getServletRequest();
-        CmsDetail cfg = getConfiguration();
+        Cms cms = getCms();
 
         Collection<Link> newLinks = new ArrayList<Link>();
         Collection<StartTag> linkTags = source.findAllStartTags("link");
@@ -159,7 +171,7 @@ public class LocalAdapter extends AbstractCmsAdapter {
             if (!href.startsWith("http")) {
                 String pathInfo = request.getPathInfo();
                 if (pathInfo.contains(".php")) pathInfo = pathInfo.substring(0, pathInfo.lastIndexOf("/"));
-                href = cfg.getServerPath() + pathInfo + "/" + href;
+                href = cms.getBaseUrl().toExternalForm() + pathInfo + "/" + href;
             }
 
             newLinks.add(new Link(rel, rev, type, target, new Url(href)));

@@ -12,24 +12,23 @@
  */
 package org.wings;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.wings.io.Device;
 import org.wings.macro.MacroContainer;
 import org.wings.macro.MacroContext;
-import org.wings.macro.MacroProcessor;
-import org.wings.plaf.CGManager;
+import org.wings.macro.impl.VelocityMacroProcessor;
 import org.wings.plaf.CmsTableCG;
 import org.wings.plaf.ComponentCG;
-import org.wings.session.SessionManager;
 import org.wings.template.CmsTemplateParseContext;
 import org.wings.template.PropertyManager;
 import org.wings.template.parser.ParseContext;
 import org.wings.template.parser.PositionReader;
 import org.wings.template.parser.SGMLTag;
 import org.wings.template.parser.SpecialTagHandler;
-
-import java.io.*;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * <code>CmsObjectTagHandler<code>.
@@ -97,7 +96,7 @@ public class MacroTagHandler implements SpecialTagHandler {
 
 
             if (macroTemplate != null && !"".equals(macroTemplate.trim())) {
-                MacroProcessor macroProcessor = MacroProcessor.getInstance();
+                VelocityMacroProcessor macroProcessor = VelocityMacroProcessor.getInstance();
 
                 MacroContainer macroContainer = macroProcessor.buildMacro(macroTemplate);
 

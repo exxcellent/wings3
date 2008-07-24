@@ -27,7 +27,8 @@ public class ForMacro extends AbstractMacro {
         statement = instr[2].replaceAll("\\+\\+", "+1").replaceAll("--", "-1");
     }
 
-    private void initialize(MacroContext ctx) {
+    @SuppressWarnings("unchecked")
+	private void initialize(MacroContext ctx) {
         String[] init = initialize.split("=");
 
         variable = init[0].trim();
@@ -40,7 +41,6 @@ public class ForMacro extends AbstractMacro {
             // do nothing
         }
 
-        // noinspection unchecked
         ctx.put(variable, value);
     }
 
@@ -48,10 +48,10 @@ public class ForMacro extends AbstractMacro {
         return MVEL.evalToBoolean(condition, ctx);
     }
 
+    @SuppressWarnings("unchecked")
     private void statement(MacroContext ctx) {
         Object result = MVEL.eval(statement, ctx);
 
-        // noinspection unchecked
         ctx.put(variable, result);
     }
 

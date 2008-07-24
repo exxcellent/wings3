@@ -1,10 +1,11 @@
 package org.wings.adapter;
 
-import org.wings.session.ResourceMapper;
 import org.wings.SFrame;
-import org.wings.conf.CmsDetail;
-import au.id.jericho.lib.html.Source;
+import org.wings.conf.Cms;
+import org.wings.session.ResourceMapper;
+
 import au.id.jericho.lib.html.OutputDocument;
+import au.id.jericho.lib.html.Source;
 
 /**
  * <code>JoomlaIntegration<code>.
@@ -20,8 +21,10 @@ public interface CmsAdapter extends ResourceMapper {
 
     void setFrame(SFrame frame);
 
-    void setConfiguration(CmsDetail cfg);
+    void setCms(Cms cms);
 
+    Source resolveIncludes(Source source);
+    
     void parseTitle(Source source);
 
     void parseAnchors(Source source, OutputDocument output);

@@ -1,30 +1,46 @@
 package org.wings.adapter;
 
-import org.wings.*;
-import org.wings.event.*;
-import org.wings.plaf.css.CmsLayoutCG;
-import org.wings.resource.DynamicResource;
-import org.wings.resource.ReloadResource;
-import org.wings.template.StringTemplateSource;
-import org.wings.template.TemplateSource;
-import org.wings.session.SessionManager;
-import org.wings.header.Link;
-import org.wings.header.Script;
-import org.wings.conf.CmsDetail;
-import org.wings.adapter.CmsAdapter;
-import org.apache.commons.httpclient.*;
-import org.apache.commons.httpclient.util.DateParser;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-
-import java.util.*;
-import java.text.SimpleDateFormat;
 import java.io.IOException;
-
-import au.id.jericho.lib.html.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.ServletRequest;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.util.DateParser;
+import org.wings.Resource;
+import org.wings.SFrame;
+import org.wings.STemplateLayout;
+import org.wings.SimpleURL;
+import org.wings.URLResource;
+import org.wings.conf.Cms;
+import org.wings.header.Link;
+import org.wings.header.Script;
+import org.wings.resource.DynamicResource;
+import org.wings.resource.ReloadResource;
+import org.wings.session.SessionManager;
+import org.wings.template.StringTemplateSource;
+import org.wings.template.TemplateSource;
+
+import au.id.jericho.lib.html.Attribute;
+import au.id.jericho.lib.html.Attributes;
+import au.id.jericho.lib.html.Element;
+import au.id.jericho.lib.html.OutputDocument;
+import au.id.jericho.lib.html.Segment;
+import au.id.jericho.lib.html.Source;
 
 /**
  * <code>AbstractCMSAdapter<code>.
@@ -37,24 +53,24 @@ import javax.servlet.ServletRequest;
  * @version $Id
  */
 public abstract class AbstractCmsAdapter implements CmsAdapter {
-
+	
     private SFrame frame;
     private STemplateLayout layout;
 
-    private CmsDetail cfg;
+    private Cms cms;
 
     DynamicResource defaultResource;
-    Map<String, StringTemplateSource> contentMap = new HashMap<String, StringTemplateSource>();
-    Map<String, Date> obtainedMap = new HashMap<String, Date>();
+    protected Map<String, StringTemplateSource> contentMap = new HashMap<String, StringTemplateSource>();
+    protected Map<String, Date> obtainedMap = new HashMap<String, Date>();
     SimpleDateFormat httpdate;
     private String path;
 
     protected Collection<Link> links = new ArrayList<Link>();
     protected Collection<Script> scripts = new ArrayList<Script>();
 
-    public AbstractCmsAdapter(SFrame frame, STemplateLayout layout, CmsDetail cfg) {
+    public AbstractCmsAdapter(SFrame frame, STemplateLayout layout, Cms cms) {
         setFrame(frame);
-        setConfiguration(cfg);
+        setCms(cms);
         this.layout = layout;
         defaultResource = frame.getDynamicResource(ReloadResource.class);
 
@@ -73,12 +89,12 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
         this.frame = frame;
     }
 
-    public CmsDetail getConfiguration() {
-        return cfg;
+    public Cms getCms() {
+        return cms;
     }
 
-    public void setConfiguration(CmsDetail cfg) {
-        this.cfg = cfg;
+    public void setCms(Cms cms) {
+        this.cms = cms;
     }
 
 
@@ -103,11 +119,15 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
                 url += name + "=" + value + "&";
             }
             url = url.substring(0, url.length() - 1);
+            
+            if (!url.startsWith("/")) {
+            	url = "/" + url;
+            }
 
-            method = new GetMethod(cfg.getServerPath() + url);
+            method = new GetMethod(cms.getBaseUrl().toExternalForm() + url);
         }
         else if ("POST".equals(methodName)) {
-            method = new PostMethod(cfg.getServerPath() + url);
+            method = new PostMethod(cms.getBaseUrl() + url);
 
             Enumeration enumeration = request.getParameterNames();
             while (enumeration.hasMoreElements()) {
@@ -165,6 +185,7 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
                 contentMap.put(url, templateSource);
                 obtainedMap.put(url, new Date());
             }
+            
             setTemplate(templateSource);
 
             method.releaseConnection();
@@ -187,6 +208,8 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
 
         Source source = new Source(templateString);
 
+        source = resolveIncludes(source);
+        
         parseTitle(source);
         parseLinks(source);
         parseScripts(source);
@@ -210,7 +233,66 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
         return templateString;
     }
 
-    public String getPath() {
+    /* (non-Javadoc)
+	 * @see org.wings.adapter.CmsAdapter#resolveIncludes(au.id.jericho.lib.html.Source)
+	 */
+	public Source resolveIncludes(Source source) {
+		List templates = source.findAllElements("include");
+		
+		List<String> variables = getCms().getTemplates().getUrlExtensionVariables();
+		List<String> values = new ArrayList<String>();
+		
+		for (Object o : templates) {
+			Element template = (Element) o;
+			
+			Attributes attributes = template.getAttributes();
+			for (String variable : variables) {
+				Attribute attribute = attributes.get(variable);
+				values.add(attribute.getValue());
+			}
+			
+			String extension = getCms().getTemplates().getUrlExtension(values.toArray(new String[values.size()]));
+			
+			String url = getCms().getBaseUrl().toExternalForm() + "/" + extension;
+			System.out.println(url);
+			
+			int begin = template.getBegin();
+			int end = template.getEnd();
+			int end2 = source.length();
+			
+			StringBuffer sb = new StringBuffer();
+			sb.append(source.subSequence(0, begin));
+			sb.append(requestInclude(url));
+			sb.append(source.subSequence(end, end2));
+			
+			source = new Source(sb);
+		}
+		
+		
+		return source;
+	}
+	
+	private String requestInclude(String url) {
+		HttpClient httpClient = new HttpClient();
+		
+		GetMethod method = new GetMethod(url);
+		
+		try {
+			int status = httpClient.executeMethod(method);
+			if (status == HttpStatus.SC_OK) {
+				return method.getResponseBodyAsString();
+			}
+		} catch (HttpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "";
+	}
+
+	public String getPath() {
         if (path == null) {
             //path = SessionManager.getSession().getServletRequest().getContextPath() + SessionManager.getSession().getServletRequest().getServletPath();
             HttpServletRequest request = SessionManager.getSession().getServletRequest();

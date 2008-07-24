@@ -1,0 +1,7 @@
+<!-- TODO: currently not working (throws a MalformedURLException -->
+<cms adapter="org.wings.adapter.impl.LocalAdapter">
+	<base-url>{fix me}</base-url>
+	<templates processor="org.wings.macro.impl.VelocityMacroProcessor" cache="true">
+		<url-extension type="article">/template/{templateName}</url-extension>
+    </templates>
+</cms>

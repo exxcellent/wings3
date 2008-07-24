@@ -12,15 +12,16 @@
  */
 package org.wings.recorder;
 
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
-
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author hengels
@@ -74,8 +75,8 @@ public abstract class Script {
         int result = client.executeMethod(post);
         return post.getResponseBodyAsString();
     }
-
-    private void addHeaders(Request request, GetMethod post) {
+    
+    private void addHeaders(Request request, HttpMethodBase post) {
         List headers = request.getHeaders();
         for (Iterator iterator = headers.iterator(); iterator.hasNext();) {
             Request.Header header = (Request.Header) iterator.next();

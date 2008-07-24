@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
  * @author rrd
  * @version $Id
  */
-public class StringToClassAdapter extends XmlAdapter<String, Class> {
+public class ClassAdapter extends XmlAdapter<String, Class> {
 
     /**
      * {@inheritDoc}
