@@ -27,6 +27,7 @@ import org.wings.STemplateLayout;
 import org.wings.SimpleURL;
 import org.wings.URLResource;
 import org.wings.conf.Cms;
+import org.wings.conf.UrlExtension;
 import org.wings.header.Link;
 import org.wings.header.Script;
 import org.wings.resource.DynamicResource;
@@ -48,256 +49,270 @@ import au.id.jericho.lib.html.Source;
  * User: rrd
  * Date: 08.08.2007
  * Time: 09:03:52
- *
+ * 
  * @author rrd
  * @version $Id
  */
 public abstract class AbstractCmsAdapter implements CmsAdapter {
-	
-    private SFrame frame;
-    private STemplateLayout layout;
 
-    private Cms cms;
+	private SFrame frame;
+	private STemplateLayout layout;
 
-    DynamicResource defaultResource;
-    protected Map<String, StringTemplateSource> contentMap = new HashMap<String, StringTemplateSource>();
-    protected Map<String, Date> obtainedMap = new HashMap<String, Date>();
-    SimpleDateFormat httpdate;
-    private String path;
+	private Cms cms;
 
-    protected Collection<Link> links = new ArrayList<Link>();
-    protected Collection<Script> scripts = new ArrayList<Script>();
+	DynamicResource defaultResource;
+	protected Map<String, StringTemplateSource> contentMap = new HashMap<String, StringTemplateSource>();
+	protected Map<String, Date> obtainedMap = new HashMap<String, Date>();
+	SimpleDateFormat httpdate;
+	private String path;
 
-    public AbstractCmsAdapter(SFrame frame, STemplateLayout layout, Cms cms) {
-        setFrame(frame);
-        setCms(cms);
-        this.layout = layout;
-        defaultResource = frame.getDynamicResource(ReloadResource.class);
+	protected Collection<Link> links = new ArrayList<Link>();
+	protected Collection<Script> scripts = new ArrayList<Script>();
 
-        // httpdate parses and formats dates in HTTP Date Format (RFC1123)
-        httpdate = new SimpleDateFormat(DateParser.PATTERN_RFC1123, Locale.ENGLISH);
-        httpdate.setTimeZone(TimeZone.getTimeZone("GMT"));
+	public AbstractCmsAdapter(SFrame frame, STemplateLayout layout, Cms cms) {
+		setFrame(frame);
+		setCms(cms);
+		this.layout = layout;
+		defaultResource = frame.getDynamicResource(ReloadResource.class);
 
-        navigate(SessionManager.getSession().getServletRequest().getPathInfo());
-    }
+		// httpdate parses and formats dates in HTTP Date Format (RFC1123)
+		httpdate = new SimpleDateFormat(DateParser.PATTERN_RFC1123, Locale.ENGLISH);
+		httpdate.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-    public SFrame getFrame() {
-        return frame;
-    }
+		navigate(SessionManager.getSession().getServletRequest().getPathInfo());
+	}
 
-    public void setFrame(SFrame frame) {
-        this.frame = frame;
-    }
+	public SFrame getFrame() {
+		return frame;
+	}
 
-    public Cms getCms() {
-        return cms;
-    }
+	public void setFrame(SFrame frame) {
+		this.frame = frame;
+	}
 
-    public void setCms(Cms cms) {
-        this.cms = cms;
-    }
+	public Cms getCms() {
+		return cms;
+	}
 
+	public void setCms(Cms cms) {
+		this.cms = cms;
+	}
 
-    public Resource mapResource(String url) {
-        navigate(url);
-        return defaultResource;
-    }
+	public Resource mapResource(String url) {
+		navigate(url);
+		return defaultResource;
+	}
 
-    protected void navigate(String url) {
-        HttpServletRequest request = SessionManager.getSession().getServletRequest();
+	protected void navigate(String url) {
+		HttpServletRequest request = SessionManager.getSession().getServletRequest();
 
-        String methodName = request.getMethod();
-        HttpMethod method = null;
-        if ("GET".equals(methodName)) {
-            url += "?";
+		String methodName = request.getMethod();
+		HttpMethod method = null;
+		if ("GET".equals(methodName)) {
+			url += "?";
 
-            Enumeration enumeration = request.getParameterNames();
-            while (enumeration.hasMoreElements()) {
-                String name = (String) enumeration.nextElement();
-                String value = request.getParameter(name);
+			Enumeration enumeration = request.getParameterNames();
+			while (enumeration.hasMoreElements()) {
+				String name = (String) enumeration.nextElement();
+				String value = request.getParameter(name);
 
-                url += name + "=" + value + "&";
-            }
-            url = url.substring(0, url.length() - 1);
-            
-            if (!url.startsWith("/")) {
-            	url = "/" + url;
-            }
+				url += name + "=" + value + "&";
+			}
+			url = url.substring(0, url.length() - 1);
 
-            method = new GetMethod(cms.getBaseUrl().toExternalForm() + url);
-        }
-        else if ("POST".equals(methodName)) {
-            method = new PostMethod(cms.getBaseUrl() + url);
+			if (!url.startsWith("/")) {
+				url = "/" + url;
+			}
 
-            Enumeration enumeration = request.getParameterNames();
-            while (enumeration.hasMoreElements()) {
-                String name = (String) enumeration.nextElement();
-                String value = request.getParameter(name);
-                ((PostMethod) method).addParameter(name, value);
-            }
-        }
-        HttpClient httpclient = new HttpClient();
-        String host = System.getProperty("http.proxyHost");
-        String port = System.getProperty("http.proxyPort");
-        if (host != null && port != null)
-            method.getHostConfiguration().setProxy(host, Integer.valueOf(port));
+			method = new GetMethod(cms.getBaseUrl().toExternalForm() + url);
+		}
+		else if ("POST".equals(methodName)) {
+			method = new PostMethod(cms.getBaseUrl() + url);
 
-        String templateString = null;
+			Enumeration enumeration = request.getParameterNames();
+			while (enumeration.hasMoreElements()) {
+				String name = (String) enumeration.nextElement();
+				String value = request.getParameter(name);
+				((PostMethod) method).addParameter(name, value);
+			}
+		}
+		HttpClient httpclient = new HttpClient();
+		String host = System.getProperty("http.proxyHost");
+		String port = System.getProperty("http.proxyPort");
+		if (host != null && port != null) method.getHostConfiguration().setProxy(host, Integer.valueOf(port));
 
-        // Sets the "If-Modified-Since" header to the date in cache
-        if (obtainedMap.containsKey(url)) {
-            method.addRequestHeader("If-Modified-Since", httpdate.format(obtainedMap.get(url)));
-        }
+		String templateString = null;
 
-        try {
-            // Execute http request
-            int httpstatus = httpclient.executeMethod(method);
+		// Sets the "If-Modified-Since" header to the date in cache
+		if (obtainedMap.containsKey(url)) {
+			method.addRequestHeader("If-Modified-Since", httpdate.format(obtainedMap.get(url)));
+		}
 
-            // Invoke handleUnknownResourceRequested
-            if (httpstatus != HttpStatus.SC_OK && httpstatus != HttpStatus.SC_NOT_MODIFIED)
-                return;
+		try {
+			// Execute http request
+			int httpstatus = httpclient.executeMethod(method);
 
-            // If the 'If-Modified-Since' header is sent, the server should set the status to
-            // SC_NOT_MODIFIED (304). Sometimes this does not work. In this case we try to compare the
-            // 'Last-Modified' response header with the date in cache ourselves.
-            boolean cached = true;
-            if (httpstatus == HttpStatus.SC_OK) {
-                try {
-                    Date httplastmodified = httpdate.parse(method.getResponseHeader("Last-Modified").getValue());
-                    if (!httplastmodified.before(obtainedMap.get(url))) cached = false;
-                }
-                catch (Exception ex) {
-                    // Cannot parse the Last-Modified header or file is not in cache --> Don't use caching
-                    cached = false;
-                }
-            }
+			// Invoke handleUnknownResourceRequested
+			if (httpstatus != HttpStatus.SC_OK && httpstatus != HttpStatus.SC_NOT_MODIFIED) return;
 
-            StringTemplateSource templateSource;
-            // Load the template from cache or use the response body as new template
-            if (cached) {
-                templateSource = contentMap.get(url);
-            } else {
-                templateString = method.getResponseBodyAsString();
-                templateString = process(templateString);
+			// If the 'If-Modified-Since' header is sent, the server should set
+			// the status to
+			// SC_NOT_MODIFIED (304). Sometimes this does not work. In this case
+			// we try to compare the
+			// 'Last-Modified' response header with the date in cache ourselves.
+			boolean cached = true;
+			if (httpstatus == HttpStatus.SC_OK) {
+				try {
+					Date httplastmodified = httpdate.parse(method.getResponseHeader("Last-Modified").getValue());
+					if (!httplastmodified.before(obtainedMap.get(url))) cached = false;
+				}
+				catch (Exception ex) {
+					// Cannot parse the Last-Modified header or file is not in
+					// cache --> Don't use caching
+					cached = false;
+				}
+			}
 
-                // Add template to cache
-                templateSource = new StringTemplateSource(templateString);
-                contentMap.put(url, templateSource);
-                obtainedMap.put(url, new Date());
-            }
-            
-            setTemplate(templateSource);
+			StringTemplateSource templateSource;
+			// Load the template from cache or use the response body as new
+			// template
+			if (cached) {
+				templateSource = contentMap.get(url);
+			}
+			else {
+				templateString = method.getResponseBodyAsString();
+				templateString = process(templateString);
 
-            method.releaseConnection();
-        }
-        catch (Exception ex) {
-            // Http get request failed or can't set template --> Invoke handleUnknownResourceRequested
-            ex.printStackTrace();
-            System.err.println(templateString);
-        }
-    }
+				// Add template to cache
+				templateSource = new StringTemplateSource(templateString);
+				contentMap.put(url, templateSource);
+				obtainedMap.put(url, new Date());
+			}
 
-    protected void setTemplate(TemplateSource templateSource) throws IOException {
-        layout.setTemplate(templateSource);
-    }
+			setTemplate(templateSource);
 
-    protected String process(String templateString) {
+			method.releaseConnection();
+		}
+		catch (Exception ex) {
+			// Http get request failed or can't set template --> Invoke
+			// handleUnknownResourceRequested
+			ex.printStackTrace();
+			System.err.println(templateString);
+		}
+	}
 
-//        String wingsServerPath = getPath();
-//        String cmsServerPath = cfg.getServerPath();
+	protected void setTemplate(TemplateSource templateSource) throws IOException {
+		layout.setTemplate(templateSource);
+	}
 
-        Source source = new Source(templateString);
+	protected String process(String templateString) {
 
-        source = resolveIncludes(source);
-        
-        parseTitle(source);
-        parseLinks(source);
-        parseScripts(source);
+		// String wingsServerPath = getPath();
+		// String cmsServerPath = cfg.getServerPath();
 
-//            Segment content = source.getElementById("body").getContent();
+		Source source = new Source(templateString);
 
-        Element body = source.findNextElement(0, "body");
-        if (body == null) {
-            return templateString;
-        }
+		source = resolveIncludes(source);
 
-        Segment content = body.getContent();
-        source = new Source(content.toString());
+		parseTitle(source);
+		parseLinks(source);
+		parseScripts(source);
 
-        OutputDocument outputDocument = new OutputDocument(source);
+		// Segment content = source.getElementById("body").getContent();
 
-        parseAnchors(source, outputDocument);
-        parseImages(source, outputDocument);
+		Element body = source.findNextElement(0, "body");
+		if (body == null) {
+			return templateString;
+		}
 
-        templateString = outputDocument.toString();
-        return templateString;
-    }
+		Segment content = body.getContent();
+		source = new Source(content.toString());
 
-    public Source resolveIncludes(Source source) {
-    	return resolveIncludes0(source);
-    }
-    
-    /* (non-Javadoc)
-	 * @see org.wings.adapter.CmsAdapter#resolveIncludes(au.id.jericho.lib.html.Source)
+		OutputDocument outputDocument = new OutputDocument(source);
+
+		parseAnchors(source, outputDocument);
+		parseImages(source, outputDocument);
+
+		templateString = outputDocument.toString();
+		return templateString;
+	}
+
+	public Source resolveIncludes(Source source) {
+		return resolveIncludes0(source);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.wings.adapter.CmsAdapter#resolveIncludes(au.id.jericho.lib.html.Source
+	 * )
 	 */
 	private Source resolveIncludes0(Source source) {
-		List templates = source.findAllElements("include");
-		
-		List<String> variables = getCms().getTemplates().getUrlExtensionVariables();
-		List<String> values = new ArrayList<String>();
-		
-		for (Object o : templates) {
-			Element template = (Element) o;
+
+		Element include;
+		while ((include = source.findNextElement(0, "include")) != null) {
 			
-			Attributes attributes = template.getAttributes();
+			// Get the URL (default) extension.
+			Attribute type = include.getAttributes().get("type");
+			UrlExtension urlExtension = getCms().getTemplates()
+					.getUrlExtension((type != null ? type.getValue() : null));
+
+			List<String> variables = urlExtension.getVariables();
+			List<String> values = new ArrayList<String>();
+
+			Attributes attributes = include.getAttributes();
 			for (String variable : variables) {
 				Attribute attribute = attributes.get(variable);
-				
+
 				if (attribute != null) {
 					values.add(attribute.getValue());
 				}
 				else {
-					System.out.println("No attribute " + variable + " has been found within element \"" + template + "\".");
+					System.out.println("No attribute " + variable + " has been found within element \"" + include
+							+ "\".");
 				}
 			}
-			
-			String extension = getCms().getTemplates().getUrlExtension(values.toArray(new String[values.size()]));
-			
+
+			String extension = urlExtension.getReplacedValue(values.toArray(new String[values.size()]));
+
 			String url = getCms().getBaseUrl().toExternalForm() + "/" + extension;
 			System.out.println(url);
-			
-			int begin = template.getBegin();
-			int end = template.getEnd();
+
+			int begin = include.getBegin();
+			int end = include.getEnd();
 			int end2 = source.length();
-			
+
 			StringBuffer sb = new StringBuffer();
 			sb.append(source.subSequence(0, begin));
-			
+
 			// Resolves nested of includes.
 			sb.append(resolveIncludes0(new Source(requestInclude(url))).toString());
-			
+
 			sb.append(source.subSequence(end, end2));
-			
+
 			source = new Source(sb);
 		}
-		
+
 		return source;
 	}
-	
+
 	private String requestInclude(String url) {
 		HttpClient httpClient = new HttpClient();
-		
+
 		GetMethod method = new GetMethod(url);
-		
+
 		try {
 			int status = httpClient.executeMethod(method);
 			if (status == HttpStatus.SC_OK) {
 				return method.getResponseBodyAsString();
 			}
-		} catch (HttpException e) {
+		}
+		catch (HttpException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -305,27 +320,30 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
 	}
 
 	public String getPath() {
-        if (path == null) {
-            //path = SessionManager.getSession().getServletRequest().getContextPath() + SessionManager.getSession().getServletRequest().getServletPath();
-            HttpServletRequest request = SessionManager.getSession().getServletRequest();
+		if (path == null) {
+			// path =
+			// SessionManager.getSession().getServletRequest().getContextPath()
+			// +
+			// SessionManager.getSession().getServletRequest().getServletPath();
+			HttpServletRequest request = SessionManager.getSession().getServletRequest();
 
-            String path = request.getRequestURL().toString();
-            String pathInfo = request.getPathInfo();
-            this.path = path.substring(0, path.lastIndexOf(pathInfo));
-        }
+			String path = request.getRequestURL().toString();
+			String pathInfo = request.getPathInfo();
+			this.path = path.substring(0, path.lastIndexOf(pathInfo));
+		}
 
-        return path;
-    }
+		return path;
+	}
 
-    protected class Url implements URLResource {
-        private SimpleURL url;
+	protected class Url implements URLResource {
+		private SimpleURL url;
 
-        public Url(String href) {
-            this.url = new SimpleURL(href);
-        }
+		public Url(String href) {
+			this.url = new SimpleURL(href);
+		}
 
-        public SimpleURL getURL() {
-            return url;
-        }
-    }
+		public SimpleURL getURL() {
+			return url;
+		}
+	}
 }

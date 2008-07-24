@@ -5,6 +5,7 @@ package org.wings.conf;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,7 +26,7 @@ import org.wings.macro.MacroProcessor;
  * Date: Jul 23, 2008
  * Time: 5:32:54 PM
  * </pre>
- *
+ * 
  * @author <a href="mailto:Roman.Raedle@uni-konstanz.de">Roman R&auml;dle</a>
  * @version $Id
  */
@@ -45,12 +46,13 @@ public class Templates {
 	}
 
 	/**
-	 * @param macroProcessor the macroProcessor to set
+	 * @param macroProcessor
+	 *            the macroProcessor to set
 	 */
 	public void setMacroProcessor(Class<? extends MacroProcessor> macroProcessor) {
 		this.macroProcessor = macroProcessor;
 	}
-	
+
 	@XmlAttribute(name = "cache")
 	private Boolean cache;
 
@@ -62,59 +64,62 @@ public class Templates {
 	}
 
 	/**
-	 * @param cache the cache to set
+	 * @param cache
+	 *            the cache to set
 	 */
 	public void setCache(Boolean cache) {
 		this.cache = cache;
 	}
-	
+
 	@XmlElement(name = "url-extension", required = false)
-	private String urlExtension;
+	private Set<UrlExtension> urlExtensions;
 
 	/**
-	 * @return the urlExtension
+	 * @return the urlExtensions
 	 */
-	public String getUrlExtension() {
-		return urlExtension;
+	public Set<UrlExtension> getUrlExtensions() {
+		return urlExtensions;
 	}
 
 	/**
-	 * @param urlExtension the urlExtension to set
+	 * @param urlExtensions
+	 *            the urlExtensions to set
 	 */
-	public void setUrlExtension(String urlExtension) {
-		this.urlExtension = urlExtension;
+	public void setUrlExtensions(Set<UrlExtension> urlExtensions) {
+		this.urlExtensions = urlExtensions;
 	}
 	
-	public List<String> getUrlExtensionVariables() {
-		List<String> variables = new ArrayList<String>();
-		
-		Pattern pattern = Pattern.compile("(\\{.*?\\})");
-		Matcher matcher = pattern.matcher(urlExtension);
-		while (matcher.find()) {
-			MatchResult matchResult = matcher.toMatchResult();
-			String match = matchResult.group();
-			
-			variables.add(match.substring(1, match.length() - 1));
-		}
-		
-		return variables;
+	/**
+	 * Returns the default URL extension (default: type == null).
+	 * 
+	 * @return The default URL extension.
+	 */
+	public UrlExtension getDefaultUrlExtension() {
+		return getUrlExtension(null);
 	}
-	
-	public String getUrlExtension(String[] values) {
-		
-		if (values.length == 0) {
-			return "";
+
+	/**
+	 * Either returns the URL extension of a matching type or null if
+	 * no extensions have been set or no matching type has been found.
+	 * 
+	 * @param type The type of the URL extension.
+	 * @return Either the matching URL extension or null.
+	 */
+	public UrlExtension getUrlExtension(String type) {
+		if (urlExtensions == null || urlExtensions.size() < 1) {
+			return null;
 		}
 		
-		Pattern pattern = Pattern.compile("(\\{.*?\\})");
-		Matcher matcher = pattern.matcher(urlExtension);
-		
-		StringBuffer urlExtension = new StringBuffer();
-		for (int i = 0 ; matcher.find(); i++) {
-			matcher.appendReplacement(urlExtension, values[i]);
+		String extensionType;
+		for (UrlExtension urlExtension : urlExtensions) {
+			extensionType = urlExtension.getType();
+			if (type == null && extensionType == null) {
+				return urlExtension;
+			}
+			else if (extensionType != null && urlExtension.getType().equals(type)) {
+				return urlExtension;
+			}
 		}
-		matcher.appendTail(urlExtension);
-		
-		return urlExtension.toString();
+		return null;
 	}
 }
