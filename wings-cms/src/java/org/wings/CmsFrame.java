@@ -36,7 +36,13 @@ import org.wings.session.SessionManager;
  */
 public class CmsFrame extends SFrame {
 
+    private static final long serialVersionUID = 1L;
+
     private CmsLayout layout = new CmsLayout();
+    
+    private String headExtension;
+    
+    private String bodyExtension;
 
     /**
      * Default constructor
@@ -120,5 +126,21 @@ public class CmsFrame extends SFrame {
     @Override
     public void add(SComponent c, Object constraint, int index) {
         throw new UnsupportedOperationException("This method won't be supported by CmsFrame. Use add(SComponent c, Object constraint) instead.");
+    }
+    
+    public String getHeadExtension() {
+        return headExtension;
+    }
+
+    public void setHeadExtension(String headExtension) {
+        this.headExtension = headExtension;
+    }
+
+    public String getBodyExtension() {
+        return bodyExtension;
+    }
+
+    public void setBodyExtension(String bodyExtension) {
+        this.bodyExtension = bodyExtension;
     }
 }
