@@ -2,7 +2,7 @@
 <cms adapter="org.wings.adapter.impl.Joomla15Adapter">
 	<base-url>http://localhost/joomla15</base-url>
 	<templates processor="org.wings.macro.impl.VelocityMacroProcessor" cache="true">
-		<url-extension type="article">index.php?option=com_wings&amp;type=article&amp;alias={templateName}&amp;format=raw</url-extension>
-		<!--<url-extension type="module">index.php?option=com_wings&amp;type=module&amp;alias={templateName}&amp;format=raw</url-extension>-->
+        <url-extension>index.php?option=com_wings&amp;type=article&amp;alias={templateName}&amp;format=raw</url-extension>
+		<url-extension type="module">index.php?option=com_wings&amp;type=module&amp;alias={templateName}&amp;format=raw</url-extension>
     </templates>
 </cms>
