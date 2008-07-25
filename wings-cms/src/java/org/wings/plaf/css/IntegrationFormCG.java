@@ -16,7 +16,7 @@ import java.io.IOException;
  * @author rrd
  * @version $Id
  */
-public class CmsFormCG extends FormCG implements org.wings.plaf.CmsFormCG {
+public class IntegrationFormCG extends FormCG implements org.wings.plaf.IntegrationFormCG {
 
 
     @Override

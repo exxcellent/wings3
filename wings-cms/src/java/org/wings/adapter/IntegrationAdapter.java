@@ -1,9 +1,9 @@
 package org.wings.adapter;
 
 import org.wings.SFrame;
-import org.wings.conf.Cms;
+import org.wings.conf.Integration;
 import org.wings.session.ResourceMapper;
-import org.wings.template.TemplateResolver;
+import org.wings.template.ResourceResolver;
 
 import au.id.jericho.lib.html.Source;
 
@@ -17,15 +17,9 @@ import au.id.jericho.lib.html.Source;
  * @author rrd
  * @version $Id
  */
-public interface CmsAdapter extends ResourceMapper, TemplateResolver {
+public interface IntegrationAdapter extends ResourceMapper, ResourceResolver {
 
     void setFrame(SFrame frame);
 
-    void setCms(Cms cms);
-
-    Source parseHead(Source headSource);
-    
-    Source parseBody(Source bodySource);
-    
-    Source resolveIncludes(Source source);
+    void setIntegration(Integration integration);
 }

@@ -49,8 +49,6 @@ public class DialogExample extends WingSetPane {
         private STextField email;
 
         DialogControls() {
-            globalControls.setVisible(false);
-
             final SComboBox modality = new SComboBox(TRUE_FALSE);
             addControl(new SLabel("Modal:"));
             addControl(modality);

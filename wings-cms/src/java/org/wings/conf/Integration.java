@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.wings.adapter.CmsAdapter;
+import org.wings.adapter.IntegrationAdapter;
 
 /**
  * <code>Configuration<code>.
@@ -21,9 +21,9 @@ import org.wings.adapter.CmsAdapter;
  * @author rrd
  * @version $Id
  */
-@XmlRootElement(name = "cms")
+@XmlRootElement(name = "integration")
 @XmlAccessorType(XmlAccessType.NONE)
-public class Cms {
+public class Integration {
 
     public static final String DEFAULT_PROTOCOL = "http";
 
@@ -33,13 +33,13 @@ public class Cms {
 
     @XmlAttribute(name = "adapter", required = true)
     @XmlJavaTypeAdapter(ClassAdapter.class)
-    private Class<? extends CmsAdapter> adapter;
+    private Class<? extends IntegrationAdapter> adapter;
 
-    public Class<? extends CmsAdapter> getAdapter() {
+    public Class<? extends IntegrationAdapter> getAdapter() {
         return adapter;
     }
 
-    public void setAdapter(Class<? extends CmsAdapter> adapter) {
+    public void setAdapter(Class<? extends IntegrationAdapter> adapter) {
         this.adapter = adapter;
     }
 
@@ -61,23 +61,23 @@ public class Cms {
 		this.baseUrl = baseUrl;
 	}
 	
-	@XmlElement(name = "templates", required = true)
-    private Templates templates;
-
-	/**
-	 * @return the templates
-	 */
-	public Templates getTemplates() {
-		return templates;
-	}
-
-	/**
-	 * @param templates the templates to set
-	 */
-	public void setTemplates(Templates templates) {
-		this.templates = templates;
-	}
+	@XmlElement(name = "resource", required = true)
+    private Resource resource;
 	
+	/**
+	 * @return the resource
+	 */
+	public Resource getResource() {
+		return resource;
+	}
+
+	/**
+	 * @param resource the resource to set
+	 */
+	public void setResource(Resource resource) {
+		this.resource = resource;
+	}
+
 	/**
 	 * Returns the server path e.g. http://localhost:8080/ including port if set and
 	 * a '/' at the end of the path.

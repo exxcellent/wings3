@@ -2,6 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/wings-cms"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wings-integration"/>
 	<classpathentry kind="output" path="build_eclipse/class"/>
 </classpath>

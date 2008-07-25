@@ -100,11 +100,15 @@ public class FrameCG implements org.wings.plaf.FrameCG {
     // JS_YUI_UTILITIES = aggregate: yahoo, dom, event, connection, animation, dragdrop, element
     final Script yuiUtilities = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_UTILITIES);
     final Script yuiContainer = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONTAINER);
+    final Script yuiEditor = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_EDITOR);
+    final Script yuiEditorSimple = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_EDITOR_SIMPLE);
     final Script wingsAll = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_WINGS_ALL);
 
     {
         compressedHeaders.add(yuiUtilities);
         compressedHeaders.add(yuiContainer);
+        compressedHeaders.add(yuiEditor);
+        compressedHeaders.add(yuiEditorSimple);
         compressedHeaders.add(wingsAll);
         debugReplacementJsHeaders.put(
                 yuiUtilities, new Script[] {
@@ -157,6 +161,8 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         // Add CSS headers of YUI components which should be included in every frames by default
         // (DO use files under "yui/assets" and DO NOT use those under "yui/<component>/assets")
         headers.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_CONTAINER));
+        headers.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_EDITOR));
+        headers.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_SIMPLE_EDITOR));
         // Common hack to externalize YUI's 'sprite.png' which contains most (if not all) images of the SAM skin
         new SResourceIcon((String) ResourceManager.getObject(Utils.IMG_YUI_ASSETS_SPRITE, String.class)).getId();
 

@@ -15,7 +15,7 @@ package org.wings.plaf.css;
 
 import java.io.IOException;
 
-import org.wings.CmsFrame;
+import org.wings.IntegrationFrame;
 import org.wings.SFrame;
 import org.wings.io.Device;
 
@@ -29,13 +29,13 @@ import org.wings.io.Device;
  * @author rrd
  * @version $Id
  */
-public class CmsFrameCG extends FrameCG implements org.wings.plaf.CmsFrameCG {
+public class IntegrationFrameCG extends FrameCG implements org.wings.plaf.IntegrationFrameCG {
 
     private static final long serialVersionUID = 1L;
 
     @Override
     protected void writeHeadExtension(Device out, SFrame frame) throws IOException {
-        String extension = ((CmsFrame) frame).getHeadExtension();
+        String extension = ((IntegrationFrame) frame).getHeadExtension();
         if (extension != null) {
             out.print(extension);
         }
@@ -43,7 +43,7 @@ public class CmsFrameCG extends FrameCG implements org.wings.plaf.CmsFrameCG {
     
     @Override
     protected void wirteBodyExtension(Device out, SFrame frame) throws IOException {
-        String extension = ((CmsFrame) frame).getBodyExtension();
+        String extension = ((IntegrationFrame) frame).getBodyExtension();
         if (extension != null) {
             out.print(extension);
         }

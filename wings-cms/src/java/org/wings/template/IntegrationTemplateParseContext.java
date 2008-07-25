@@ -19,7 +19,7 @@ import java.util.*;
  * @author raedler
  * @version $Id
  */
-public class CmsTemplateParseContext implements ParseContext {
+public class IntegrationTemplateParseContext implements ParseContext {
 
     private final OutputStream myOut;
     private final Device sink;
@@ -27,7 +27,7 @@ public class CmsTemplateParseContext implements ParseContext {
     private final Set<String> containedComponents = new HashSet<String>();
     private final Map<String,Map<String,String>> componentProperties = new HashMap<String, Map<String, String>>();
 
-    public CmsTemplateParseContext(final Device sink, STemplateLayout layout) {
+    public IntegrationTemplateParseContext(final Device sink, STemplateLayout layout) {
         this.sink = sink;
         this.layout = layout;
         myOut = new DeviceOutputStream(sink);

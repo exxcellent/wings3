@@ -15,7 +15,7 @@ package org.wings.plaf.css;
 import org.wings.*;
 import org.wings.io.Device;
 import org.wings.io.NullDevice;
-import org.wings.template.CmsTemplateParseContext;
+import org.wings.template.IntegrationTemplateParseContext;
 import org.wings.template.TemplateSource;
 import org.wings.template.RangeTagHandler;
 import org.wings.template.parser.PageParser;
@@ -33,7 +33,7 @@ import java.util.*;
  * @author raedler
  * @version $Id
  */
-public class CmsLayoutCG implements org.wings.plaf.CmsLayoutCG {
+public class IntegrationLayoutCG implements org.wings.plaf.IntegrationLayoutCG {
 
     /**
      *
@@ -50,7 +50,7 @@ public class CmsLayoutCG implements org.wings.plaf.CmsLayoutCG {
         parser.addTagHandler("DEBUG", DebugTagHandler.class);
     }
 
-    private void write(Device device, CmsLayout layout)
+    private void write(Device device, IntegrationLayout layout)
             throws IOException {
         final TemplateSource source = layout.getTemplateSource();
 
@@ -58,7 +58,7 @@ public class CmsLayoutCG implements org.wings.plaf.CmsLayoutCG {
             device.print("The cms server is not reachable at the moment or the connection data is wrong. Please check your <em>wings-2-cms.xml</em>");
         }
         else {
-            CmsTemplateParseContext context = new CmsTemplateParseContext(device, layout);
+            IntegrationTemplateParseContext context = new IntegrationTemplateParseContext(device, layout);
             parser.process(source, context);
         }
     }
@@ -70,18 +70,18 @@ public class CmsLayoutCG implements org.wings.plaf.CmsLayoutCG {
      */
     public void write(Device device, SLayoutManager manager)
             throws IOException {
-        write(device, (CmsLayout) manager);
+        write(device, (IntegrationLayout) manager);
     }
 
-    public static Set<String> getContainedComponents(CmsLayout layout) throws IOException {
+    public static Set<String> getContainedComponents(IntegrationLayout layout) throws IOException {
         final TemplateSource source = layout.getTemplateSource();
-        CmsTemplateParseContext context = new CmsTemplateParseContext(new NullDevice(), layout);
-        return CmsLayoutCG.parser.getContainedComponents(source, context);
+        IntegrationTemplateParseContext context = new IntegrationTemplateParseContext(new NullDevice(), layout);
+        return IntegrationLayoutCG.parser.getContainedComponents(source, context);
     }
 
-    public static Map<String, Map<String, String>> getComponentProperties(CmsLayout layout) throws IOException {
+    public static Map<String, Map<String, String>> getComponentProperties(IntegrationLayout layout) throws IOException {
         final TemplateSource source = layout.getTemplateSource();
-        CmsTemplateParseContext context = new CmsTemplateParseContext(new NullDevice(), layout);
-        return CmsLayoutCG.parser.getComponentProperties(source, context);
+        IntegrationTemplateParseContext context = new IntegrationTemplateParseContext(new NullDevice(), layout);
+        return IntegrationLayoutCG.parser.getComponentProperties(source, context);
     }
 }

@@ -13,7 +13,7 @@
 package org.wings;
 
 import org.wings.io.Device;
-import org.wings.template.CmsTemplateParseContext;
+import org.wings.template.IntegrationTemplateParseContext;
 import org.wings.template.parser.ParseContext;
 import org.wings.template.parser.PositionReader;
 import org.wings.template.parser.SGMLTag;
@@ -51,7 +51,7 @@ public class DebugTagHandler implements SpecialTagHandler {
     }
 
     public void executeTag(ParseContext context, InputStream input) throws Exception {
-        CmsTemplateParseContext tcontext = (CmsTemplateParseContext) context;
+        IntegrationTemplateParseContext tcontext = (IntegrationTemplateParseContext) context;
         Device sink = tcontext.getDevice();
 
         /*

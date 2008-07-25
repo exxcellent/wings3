@@ -21,9 +21,9 @@ import org.wings.io.Device;
 import org.wings.macro.MacroContainer;
 import org.wings.macro.MacroContext;
 import org.wings.macro.impl.VelocityMacroProcessor;
-import org.wings.plaf.CmsTableCG;
+import org.wings.plaf.IntegrationTableCG;
 import org.wings.plaf.ComponentCG;
-import org.wings.template.CmsTemplateParseContext;
+import org.wings.template.IntegrationTemplateParseContext;
 import org.wings.template.PropertyManager;
 import org.wings.template.parser.ParseContext;
 import org.wings.template.parser.PositionReader;
@@ -58,7 +58,7 @@ public class MacroTagHandler implements SpecialTagHandler {
     }
 
     public void executeTag(ParseContext context, InputStream input) throws Exception {
-        CmsTemplateParseContext tcontext = (CmsTemplateParseContext) context;
+        IntegrationTemplateParseContext tcontext = (IntegrationTemplateParseContext) context;
         Device sink = tcontext.getDevice();
 
         /*
@@ -119,7 +119,7 @@ public class MacroTagHandler implements SpecialTagHandler {
 //                }
 
                 if (c instanceof STable) {
-                    CmsTableCG cg = new CmsTableCG();
+                    IntegrationTableCG cg = new IntegrationTableCG();
                     cg.setMacros(macroContainer);
                     if (c.getClientProperty("cg") == null)
                         c.putClientProperty("cg", c.getCG());
@@ -142,7 +142,7 @@ public class MacroTagHandler implements SpecialTagHandler {
     private void properties(SComponent c) {
         if (properties.size() > 0) {
             PropertyManager propManager =
-                    CmsLayout.getPropertyManager(c.getClass());
+                    IntegrationLayout.getPropertyManager(c.getClass());
 
             if (propManager != null) {
                 Iterator iter = properties.keySet().iterator();
@@ -158,7 +158,7 @@ public class MacroTagHandler implements SpecialTagHandler {
 
     public SGMLTag parseTag(ParseContext context, PositionReader input, long startPosition, SGMLTag startTag)
             throws IOException {
-        CmsTemplateParseContext tcontext = (CmsTemplateParseContext) context;
+        IntegrationTemplateParseContext tcontext = (IntegrationTemplateParseContext) context;
 
         final String startTagName = startTag.getName();
         final String endTagName = "/" + startTagName;

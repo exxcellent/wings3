@@ -11,9 +11,9 @@
     <path id="build.classpath">
         <fileset dir="../wings/build/web/WEB-INF/lib" includes="*.jar"/>
         <fileset dir="../wingx/build/web/WEB-INF/lib" includes="*.jar"/>
-        <fileset dir="../wings-cms/build/web/WEB-INF/lib" includes="*.jar"/>
+        <fileset dir="../wings-integration/build/web/WEB-INF/lib" includes="*.jar"/>
         <fileset dir="../thirdparty/lib" includes="servlet.jar"/>
-    	<fileset dir="../wings-cms/lib" includes="*.jar"/>
+    	<fileset dir="../wings-integration/lib" includes="*.jar"/>
     </path>
 
 
@@ -53,10 +53,10 @@
             <fileset dir="build/class"/>
         </copy>
         <copy todir="build/web/WEB-INF/lib">
-            <fileset dir="../wings-cms/build/web/WEB-INF/lib">
-                <include name="wings-wingscms.jar"/>
+            <fileset dir="../wings-integration/build/web/WEB-INF/lib">
+                <include name="wings-integration.jar"/>
             </fileset>
-            <fileset dir="../wings-cms/lib">
+            <fileset dir="../wings-integration/lib">
                 <include name="*.jar"/>
             </fileset>
             <fileset dir="../thirdparty/lib">

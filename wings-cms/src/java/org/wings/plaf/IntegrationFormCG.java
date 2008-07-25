@@ -10,5 +10,5 @@ package org.wings.plaf;
  * @author rrd
  * @version $Id
  */
-public interface CmsFormCG extends FormCG {
+public interface IntegrationFormCG extends FormCG {
 }

@@ -1,4 +1,4 @@
-package org.wings.adapter;
+package org.wings.adapter.cms;
 
 import java.io.IOException;
 import java.net.URL;
@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -28,12 +27,12 @@ import org.wings.SFrame;
 import org.wings.STemplateLayout;
 import org.wings.SimpleURL;
 import org.wings.URLResource;
-import org.wings.conf.Cms;
+import org.wings.adapter.AbstractIntegrationAdapter;
+import org.wings.adapter.parser.HtmlParser;
+import org.wings.conf.Integration;
 import org.wings.conf.UrlExtension;
 import org.wings.header.Link;
 import org.wings.header.Script;
-import org.wings.resource.DynamicResource;
-import org.wings.resource.ReloadResource;
 import org.wings.session.SessionManager;
 import org.wings.template.StringTemplateSource;
 import org.wings.template.TemplateSource;
@@ -55,14 +54,10 @@ import au.id.jericho.lib.html.Tag;
  * @author rrd
  * @version $Id
  */
-public abstract class AbstractCmsAdapter implements CmsAdapter {
+public abstract class AbstractCmsAdapter extends AbstractIntegrationAdapter implements HtmlParser {
 
-	private SFrame frame;
 	private STemplateLayout layout;
 
-	private Cms cms;
-
-	DynamicResource defaultResource;
 	protected Map<String, StringTemplateSource> contentMap = new HashMap<String, StringTemplateSource>();
 	protected Map<String, Date> obtainedMap = new HashMap<String, Date>();
 	SimpleDateFormat httpdate;
@@ -71,11 +66,9 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
 	protected Collection<Link> links = new ArrayList<Link>();
 	protected Collection<Script> scripts = new ArrayList<Script>();
 
-	public AbstractCmsAdapter(SFrame frame, STemplateLayout layout, Cms cms) {
-		setFrame(frame);
-		setCms(cms);
+	public AbstractCmsAdapter(SFrame frame, Integration integration, STemplateLayout layout) {
+		super(frame, integration);
 		this.layout = layout;
-		defaultResource = frame.getDynamicResource(ReloadResource.class);
 
 		// httpdate parses and formats dates in HTTP Date Format (RFC1123)
 		httpdate = new SimpleDateFormat(DateParser.PATTERN_RFC1123, Locale.ENGLISH);
@@ -88,27 +81,14 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
 			e.printStackTrace();
 		}
 	}
-
-	public SFrame getFrame() {
-		return frame;
-	}
-
-	public void setFrame(SFrame frame) {
-		this.frame = frame;
-	}
-
-	public Cms getCms() {
-		return cms;
-	}
-
-	public void setCms(Cms cms) {
-		this.cms = cms;
-	}
 	
-	public URL getCmsBaseUrl() {
-		return cms.getBaseUrl();
+	public URL getIntegrationBaseUrl() {
+		return integration.getBaseUrl();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.wings.adapter.AbstractIntegrationAdapter#mapResource(java.lang.String)
+	 */
 	public Resource mapResource(String url) {
 		try {
 			navigate(url);
@@ -122,36 +102,14 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-		return defaultResource;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.wings.template.TemplateResolver#getTemplate(java.lang.String)
-	 */
-	public String getTemplate(String name) throws IOException {
-		// Returns a template using the default type.
-		return getTemplate(name, null);
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.wings.template.TemplateResolver#getTemplate(java.lang.String)
-	 */
-	public String getTemplate(String name, String type) throws IOException {
-
-		URL baseUrl = getCms().getBaseUrl();
-		
-		UrlExtension urlExtension = getCms().getTemplates().getUrlExtension(type);
-		
-		String url = baseUrl.toExternalForm() + "/" + urlExtension.getReplacedValue(new String[]{name});
-		
-		return request(new GetMethod(url));
+		return super.mapResource(url);
 	}
 	
 	/**
 	 * @param method
 	 * @return
 	 */
-	private String request(HttpMethod method) throws IOException {
+	protected String request(HttpMethod method) throws IOException {
 		
 		HttpClient httpClient = new HttpClient();
 		String host = System.getProperty("http.proxyHost");
@@ -205,10 +163,10 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
 				url = "/" + url;
 			}
 
-			method = new GetMethod(cms.getBaseUrl().toExternalForm() + url);
+			method = new GetMethod(integration.getBaseUrl().toExternalForm() + url);
 		}
 		else if ("POST".equals(methodName)) {
-			method = new PostMethod(cms.getBaseUrl() + url);
+			method = new PostMethod(integration.getBaseUrl() + url);
 
 			Enumeration enumeration = request.getParameterNames();
 			while (enumeration.hasMoreElements()) {
@@ -275,7 +233,7 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
 
 			// Get the URL (default) extension.
 			Attribute type = include.getAttributes().get("type");
-			UrlExtension urlExtension = getCms().getTemplates()
+			UrlExtension urlExtension = integration.getResource()
 					.getUrlExtension((type != null ? type.getValue() : null));
 
 			List<String> variables = urlExtension.getVariables();
@@ -296,7 +254,7 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
 
 			String extension = urlExtension.getReplacedValue(values.toArray(new String[values.size()]));
 
-			String url = getCms().getBaseUrl().toExternalForm() + "/" + extension;
+			String url = integration.getBaseUrl().toExternalForm() + "/" + extension;
 			System.out.println(url);
 
 			int begin = include.getBegin();

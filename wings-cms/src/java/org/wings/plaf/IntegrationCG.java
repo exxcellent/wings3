@@ -12,7 +12,7 @@ import org.wings.macro.MacroContainer;
  * @author rrd
  * @version $Id
  */
-public interface CmsCG {
+public interface IntegrationCG {
 
     /**
      * Set the macro to render the <code>SComponent</code>.

@@ -30,9 +30,9 @@ import org.wings.macro.MacroProcessor;
  * @author <a href="mailto:Roman.Raedle@uni-konstanz.de">Roman R&auml;dle</a>
  * @version $Id
  */
-@XmlType(name = "template")
+@XmlType(name = "resource")
 @XmlAccessorType(XmlAccessType.NONE)
-public class Templates {
+public class Resource {
 
 	@XmlAttribute(name = "processor", required = true)
 	@XmlJavaTypeAdapter(ClassAdapter.class)

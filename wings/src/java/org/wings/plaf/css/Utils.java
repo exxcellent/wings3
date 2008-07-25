@@ -1356,6 +1356,8 @@ public final class Utils {
     // CSS: public static final String CSS_YUI_ASSETS_... = "CSS.yuiAssets...";
     public static final String CSS_YUI_ASSETS_CALENDAR = "CSS.yuiAssetsCalendar";
     public static final String CSS_YUI_ASSETS_CONTAINER = "CSS.yuiAssetsContainer";
+    public static final String CSS_YUI_ASSETS_EDITOR = "CSS.yuiAssetsEditor";
+    public static final String CSS_YUI_ASSETS_SIMPLE_EDITOR = "CSS.yuiAssetsSimpleeditor";
     public static final String IMG_YUI_ASSETS_SPRITE = "IMG.yuiAssetsSprite";
     public static final String JS_YUI_AUTOCOMPLETE = "JS.yuiAutocomplete";
     // CSS: public static final String CSS_YUI_BASE = "CSS.yuiBase";
@@ -1371,8 +1373,8 @@ public final class Utils {
     // Beta: public static final String JS_YUI_DATATABLE = "JS.yuiDatatable";
     public static final String JS_YUI_DOM = "JS.yuiDom";
     public static final String JS_YUI_DRAGDROP = "JS.yuiDragdrop";
-    // Beta: public static final String JS_YUI_EDITOR = "JS.yuiEditor";
-    // Beta: public static final String JS_YUI_EDITOR_SIMPLE = "JS.yuiEditorSimple";
+    public static final String JS_YUI_EDITOR = "JS.yuiEditor";
+    public static final String JS_YUI_EDITOR_SIMPLE = "JS.yuiEditorSimple";
     // Beta: public static final String JS_YUI_ELEMENT = "JS.yuiElement";
     public static final String JS_YUI_EVENT = "JS.yuiEvent";
     // CSS: public static final String CSS_YUI_FONTS = "CSS.yuiFonts";

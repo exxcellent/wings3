@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project basedir="." default="build" name="wingX wingscms">
+<project basedir="." default="build" name="wingX integration">
 
     <!-- read properties from file -->
     <property file="../etc/custom-build.properties"/>
@@ -35,9 +35,9 @@
         </javac>
     </target>
 
-    <target name="build" depends="compile" description="builds all wings-wingscms artefacts">
+    <target name="build" depends="compile" description="builds all wings-integration artefacts">
         <mkdir dir="build/web/WEB-INF/lib"/>
-        <jar jarfile="build/web/WEB-INF/lib/wings-wingscms.jar">
+        <jar jarfile="build/web/WEB-INF/lib/wings-integration.jar">
             <fileset dir="build/class"/>
             <fileset dir="src/res" />
         </jar>

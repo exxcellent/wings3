@@ -12,7 +12,7 @@
  */
 package wingscms;
 
-import org.wings.CmsFrame;
+import org.wings.IntegrationFrame;
 import org.wingx.table.XTableClickListener;
 import org.wingx.XTable;
 import org.wingx.XZoomableImage;
@@ -34,7 +34,7 @@ import java.net.MalformedURLException;
  */
 public class ShopExample
 {
-    private CmsFrame rootFrame = new CmsFrame();
+    private IntegrationFrame rootFrame = new IntegrationFrame();
     CartModel cartModel = new CartModel();
     ProductModel productModel = new ProductModel();
 

@@ -38,6 +38,10 @@
     <logger name="org.directwebremoting">
         <level value="WARN" />
     </logger>
+	
+	<logger name="httpclient.wire">
+		<level value="DEBUG" />
+	</logger>
 
     <root>
         <level value="ALL" />

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<cms adapter="org.wings.adapter.impl.Joomla15Adapter">
+<integration adapter="org.wings.adapter.cms.joomla.Joomla15Adapter">
 	<base-url>http://localhost/joomla15</base-url>
-	<templates processor="org.wings.macro.impl.VelocityMacroProcessor" cache="true">
+	<resource processor="org.wings.macro.impl.VelocityMacroProcessor" cache="true">
 		<url-extension>index.php?option=com_wings&amp;type=article&amp;name={name}&amp;format=raw</url-extension>
 		<url-extension type="module">index.php?option=com_wings&amp;type=module&amp;name={name}&amp;format=raw</url-extension>
-    </templates>
-</cms>
+    </resource>
+</integration>

@@ -10,17 +10,23 @@
  *
  * Please see COPYING for the complete licence.
  */
-package org.wings.plaf;
+package org.wings;
+
+import org.wings.plaf.IntegrationFormCG;
 
 /**
- * <code>CmsLayoutCG<code>.
+ * <code>CmsForm<code>.
  * <p/>
  * User: raedler
- * Date: 08.08.2007
- * Time: 12:58:33
+ * Date: 14.08.2007
+ * Time: 16:58:29
  *
  * @author raedler
  * @version $Id
  */
-public interface CmsLayoutCG extends LayoutCG {
+public class IntegrationForm extends SForm {
+
+    public void setCG(IntegrationFormCG cg) {
+        super.setCG(cg);
+    }
 }

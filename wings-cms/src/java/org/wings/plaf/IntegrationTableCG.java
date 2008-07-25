@@ -38,7 +38,7 @@ import org.wings.table.STableCellRenderer;
  * @author raedler
  * @version $Id
  */
-public class CmsTableCG implements TableCG, CmsCG {
+public class IntegrationTableCG implements TableCG, IntegrationCG {
 
 	private MacroContainer macros;
 

@@ -1,13 +1,13 @@
-package org.wings.adapter.impl;
+package org.wings.adapter.cms.joomla;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.wings.CmsFrame;
+import org.wings.IntegrationFrame;
 import org.wings.SFrame;
 import org.wings.STemplateLayout;
-import org.wings.adapter.AbstractCmsAdapter;
-import org.wings.conf.Cms;
+import org.wings.adapter.cms.AbstractCmsAdapter;
+import org.wings.conf.Integration;
 import org.wings.header.Script;
 import org.wings.util.HtmlParserUtils;
 
@@ -28,15 +28,15 @@ import au.id.jericho.lib.html.Tag;
  * @author rrd
  * @version $Id
  */
-public class Joomla15Adapter extends AbstractCmsAdapter {
+public class Joomla15Adapter extends AbstactJoomlaAdapter {
 
 	/**
 	 * @param frame
 	 * @param layout
-	 * @param cms
+	 * @param integration
 	 */
-	public Joomla15Adapter(SFrame frame, STemplateLayout layout, Cms cms) {
-		super(frame, layout, cms);
+	public Joomla15Adapter(SFrame frame, Integration integration, STemplateLayout layout) {
+		super(frame, integration, layout);
 	}
 
 	/*
@@ -52,7 +52,7 @@ public class Joomla15Adapter extends AbstractCmsAdapter {
 		headSource = prepareLinks(headSource);
 		headSource = prepareScripts(headSource);
 
-		((CmsFrame) getFrame()).setHeadExtension(headSource.toString().trim());
+		((IntegrationFrame) frame).setHeadExtension(headSource.toString().trim());
 		
 		return headSource;
 	}
@@ -78,7 +78,7 @@ public class Joomla15Adapter extends AbstractCmsAdapter {
 
 		if (titleElement != null) {
 			String title = titleElement.getTextExtractor().toString();
-			getFrame().setTitle("Joomla15Adapter :: " + title);
+			frame.setTitle("Joomla15Adapter :: " + title);
 			
 			return HtmlParserUtils.removeAllTags(headSource, Tag.TITLE);
 		}
@@ -103,7 +103,7 @@ public class Joomla15Adapter extends AbstractCmsAdapter {
 			Attribute attribute = attributes.get("href");
 			if (attribute != null) {
 				String value = attribute.getValue();
-				outputDocument.replace(attribute.getValueSegment(), HtmlParserUtils.convertURLHost(value, getCmsBaseUrl().getPath(), getCmsBaseUrl().toExternalForm()));
+				outputDocument.replace(attribute.getValueSegment(), HtmlParserUtils.convertURLHost(value, getIntegrationBaseUrl().getPath(), getIntegrationBaseUrl().toExternalForm()));
 			}
 		}
 		return new Source(outputDocument.toString());
@@ -132,10 +132,10 @@ public class Joomla15Adapter extends AbstractCmsAdapter {
 		}
 		if (!newScripts.equals(this.scripts)) {
 			for (Script script : this.scripts) {
-				getFrame().removeHeader(script);
+				frame.removeHeader(script);
 			}
 			for (Script script : newScripts) {
-				getFrame().addHeader(script);
+				frame.addHeader(script);
 			}
 
 			this.scripts.clear();
@@ -161,7 +161,7 @@ public class Joomla15Adapter extends AbstractCmsAdapter {
 			Attribute attribute = attributes.get("href");
 			if (attribute != null) {
 				String value = attribute.getValue();
-				outputDocument.replace(attribute.getValueSegment(), HtmlParserUtils.convertURLHost(value, getCmsBaseUrl().getPath(), getPath()));
+				outputDocument.replace(attribute.getValueSegment(), HtmlParserUtils.convertURLHost(value, getIntegrationBaseUrl().getPath(), getPath()));
 			}
 		}
 		return new Source(outputDocument.toString());
@@ -185,7 +185,7 @@ public class Joomla15Adapter extends AbstractCmsAdapter {
 			Attribute attribute = attributes.get("src");
 			if (attribute != null) {
 				String value = attribute.getValue();
-				outputDocument.replace(attribute.getValueSegment(), HtmlParserUtils.convertURLHost(value, getCmsBaseUrl().getPath(), getCmsBaseUrl().toExternalForm()));
+				outputDocument.replace(attribute.getValueSegment(), HtmlParserUtils.convertURLHost(value, getIntegrationBaseUrl().getPath(), getIntegrationBaseUrl().toExternalForm()));
 			}
 		}
 		return new Source(outputDocument.toString());

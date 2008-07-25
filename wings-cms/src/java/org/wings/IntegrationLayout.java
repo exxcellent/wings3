@@ -12,7 +12,7 @@
  */
 package org.wings;
 
-import org.wings.plaf.CmsLayoutCG;
+import org.wings.plaf.IntegrationLayoutCG;
 import org.wings.template.TemplateSource;
 import org.wings.template.PropertyManager;
 
@@ -23,11 +23,11 @@ import java.io.IOException;
  * @author hengels
  * @version $Id
  */
-public class CmsLayout extends STemplateLayout {
+public class IntegrationLayout extends STemplateLayout {
 
     Map<String, ComponentSet> componentSets = new HashMap<String, ComponentSet>();
 
-    protected void setCG(CmsLayoutCG cg) {
+    protected void setCG(IntegrationLayoutCG cg) {
         super.setCG(cg);
     }
 
@@ -37,7 +37,7 @@ public class CmsLayout extends STemplateLayout {
 
         TemplateSource source = getTemplateSource();
         if (source != null) {
-            CmsLayout.ComponentSet componentSet = componentSets.get(source.getCanonicalName());
+            IntegrationLayout.ComponentSet componentSet = componentSets.get(source.getCanonicalName());
             boolean contained = componentSet.names.contains(component.getName());
             component.setVisible(contained);
             if (contained)
@@ -52,7 +52,7 @@ public class CmsLayout extends STemplateLayout {
 
         TemplateSource source = getTemplateSource();
         if (source != null) {
-            CmsLayout.ComponentSet componentSet = componentSets.get(source.getCanonicalName());
+            IntegrationLayout.ComponentSet componentSet = componentSets.get(source.getCanonicalName());
             componentSet.contained.remove(component);
             componentSet.notContained.remove(component);
         }
@@ -60,14 +60,14 @@ public class CmsLayout extends STemplateLayout {
 
     public void setTemplate(TemplateSource source) throws IOException {
         super.setTemplate(source);
-        Set<String> names = org.wings.plaf.css.CmsLayoutCG.getContainedComponents(this);
+        Set<String> names = org.wings.plaf.css.IntegrationLayoutCG.getContainedComponents(this);
         final SContainer container = getContainer();
 
-        CmsLayout.ComponentSet componentSet = componentSets.get(source.getCanonicalName());
+        IntegrationLayout.ComponentSet componentSet = componentSets.get(source.getCanonicalName());
         if (componentSet == null) {
             componentSet = new ComponentSet();
             componentSet.names = names;
-            componentSet.componentProperties = org.wings.plaf.css.CmsLayoutCG.getComponentProperties(this);
+            componentSet.componentProperties = org.wings.plaf.css.IntegrationLayoutCG.getComponentProperties(this);
             for (SComponent component : container.getComponents()) {
                 if (names.contains(component.getName()))
                     componentSet.contained.add(component);
@@ -85,7 +85,7 @@ public class CmsLayout extends STemplateLayout {
         for (SComponent component : componentSet.contained) {
             Map<String, String> properties = componentSet.componentProperties.get(component.getName());
             if (properties.size() > 0) {
-                PropertyManager propManager = CmsLayout.getPropertyManager(component.getClass());
+                PropertyManager propManager = IntegrationLayout.getPropertyManager(component.getClass());
 
                 if (propManager != null) {
                     Iterator iter = properties.keySet().iterator();

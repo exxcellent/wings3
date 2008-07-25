@@ -10,5 +10,5 @@ package org.wings.plaf;
  * @author rrd
  * @version $Id
  */
-public interface CmsFrameCG extends FrameCG {    
+public interface IntegrationFrameCG extends FrameCG {    
 }

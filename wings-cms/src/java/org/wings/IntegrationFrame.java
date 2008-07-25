@@ -19,9 +19,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.wings.adapter.CmsAdapter;
-import org.wings.conf.Cms;
-import org.wings.conf.Templates;
+import org.wings.adapter.IntegrationAdapter;
+import org.wings.conf.Integration;
+import org.wings.conf.Resource;
 import org.wings.session.SessionManager;
 
 /**
@@ -34,11 +34,11 @@ import org.wings.session.SessionManager;
  * @author raedler
  * @version $Id
  */
-public class CmsFrame extends SFrame {
+public class IntegrationFrame extends SFrame {
 
     private static final long serialVersionUID = 1L;
 
-    private CmsLayout layout = new CmsLayout();
+    private IntegrationLayout layout = new IntegrationLayout();
     
     private String headExtension;
     
@@ -47,15 +47,15 @@ public class CmsFrame extends SFrame {
     /**
      * Default constructor
      */
-    public CmsFrame() {
-        setContentPane(new CmsForm());
+    public IntegrationFrame() {
+        setContentPane(new IntegrationForm());
         getContentPane().setLayout(layout);
 
-        Cms cms = readCms();
+        Integration integration = readCms();
 
-        CmsAdapter adapter = createAdapter(cms);
+        IntegrationAdapter adapter = createAdapter(integration);
         adapter.setFrame(this);
-        adapter.setCms(cms);
+        adapter.setIntegration(integration);
 
         // Set the resource mapper which is the distinguishable cms adapter.
         SessionManager.getSession().setResourceMapper(adapter);
@@ -66,11 +66,11 @@ public class CmsFrame extends SFrame {
      *
      * @return A configuration object with all required data to access the cms.
      */
-    private Cms readCms() {
+    private Integration readCms() {
         try {
-            JAXBContext ctx = JAXBContext.newInstance(Cms.class, Templates.class);
+            JAXBContext ctx = JAXBContext.newInstance(Integration.class, Resource.class);
             Unmarshaller unmarshaller = ctx.createUnmarshaller();
-            return (Cms) unmarshaller.unmarshal(getClass().getClassLoader().getResourceAsStream("wings-2-cms.xml"));
+            return (Integration) unmarshaller.unmarshal(getClass().getClassLoader().getResourceAsStream("integration.xml"));
         }
         catch (JAXBException e) {
             e.printStackTrace();
@@ -78,18 +78,18 @@ public class CmsFrame extends SFrame {
         return null;
     }
 
-    private CmsAdapter createAdapter(Cms cms) {
-        Class<? extends CmsAdapter> type = cms.getAdapter();
+    private IntegrationAdapter createAdapter(Integration integration) {
+        Class<? extends IntegrationAdapter> type = integration.getAdapter();
 
         assert type != null : "Adapter class cannot be null.";
 
         try {
-            if (CmsAdapter.class.isAssignableFrom(type)) {
-                Constructor<? extends CmsAdapter> constructor = type.getConstructor(SFrame.class, STemplateLayout.class, Cms.class);
-                return (CmsAdapter) constructor.newInstance(this, layout, cms);
+            if (IntegrationAdapter.class.isAssignableFrom(type)) {
+                Constructor<? extends IntegrationAdapter> constructor = type.getConstructor(SFrame.class, Integration.class, STemplateLayout.class);
+                return (IntegrationAdapter) constructor.newInstance(this, integration, layout);
             }
             else {
-                return (CmsAdapter) type.newInstance();
+                return (IntegrationAdapter) type.newInstance();
             }
         }
         catch (NoSuchMethodException e) {

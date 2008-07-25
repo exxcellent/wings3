@@ -1,12 +1,12 @@
-package org.wings.adapter.impl;
+package org.wings.adapter.cms.joomla;
 
 import org.wings.SFrame;
 import org.wings.STemplateLayout;
 import org.wings.session.SessionManager;
 import org.wings.header.Link;
 import org.wings.header.Script;
-import org.wings.adapter.AbstractCmsAdapter;
-import org.wings.conf.Cms;
+import org.wings.adapter.cms.AbstractCmsAdapter;
+import org.wings.conf.Integration;
 
 import au.id.jericho.lib.html.*;
 
@@ -25,10 +25,10 @@ import java.util.List;
  * @author rrd
  * @version $Id
  */
-public class Joomla10Adapter extends AbstractCmsAdapter {
+public class Joomla10Adapter extends AbstactJoomlaAdapter {
 
-    public Joomla10Adapter(SFrame frame, STemplateLayout layout, Cms cms) {
-        super(frame, layout, cms);
+    public Joomla10Adapter(SFrame frame, Integration integration, STemplateLayout layout) {
+        super(frame, integration, layout);
     }
 
     /**
@@ -39,7 +39,7 @@ public class Joomla10Adapter extends AbstractCmsAdapter {
 
         if (titleElement != null) {
             String title = titleElement.getTextExtractor().toString();
-            getFrame().setTitle("JoomlaAdapter :: " + title);
+            frame.setTitle("JoomlaAdapter :: " + title);
         }
     }
 
@@ -60,7 +60,7 @@ public class Joomla10Adapter extends AbstractCmsAdapter {
 	public void parseAnchors(Source source, OutputDocument output) {
 
         String wingsServerPath = getPath();
-        String cmsServerPath = getCms().getBaseUrl().toExternalForm();
+        String cmsServerPath = integration.getBaseUrl().toExternalForm();
 
         List<StartTag> anchorTags = source.findAllStartTags(Tag.A);
         for (StartTag anchorTag : anchorTags) {
@@ -93,7 +93,7 @@ public class Joomla10Adapter extends AbstractCmsAdapter {
 
     public void parseImages(Source source, OutputDocument output) {
 
-        String cmsServerPath = getCms().getBaseUrl().toExternalForm();
+        String cmsServerPath = integration.getBaseUrl().toExternalForm();
 
         List<StartTag> imgTags = source.findAllStartTags(Tag.IMG);
         for (StartTag imgTag : imgTags) {
@@ -102,7 +102,7 @@ public class Joomla10Adapter extends AbstractCmsAdapter {
             if (attribute != null) {
                 String value = attribute.getValue();
 
-                if (!value.startsWith(getCms().getBaseUrl().getProtocol())) {
+                if (!value.startsWith(integration.getBaseUrl().getProtocol())) {
                     value = cmsServerPath + "/" + value;
                 }
                 output.replace(attribute.getValueSegment(), value);
@@ -167,9 +167,9 @@ public class Joomla10Adapter extends AbstractCmsAdapter {
 //            System.out.println("newScripts = " + newScripts);
 
             for (Script script : scripts)
-                getFrame().removeHeader(script);
+            	frame.removeHeader(script);
             for (Script script : newScripts)
-                getFrame().addHeader(script);
+            	frame.addHeader(script);
 
             scripts.clear();
             scripts.addAll(newScripts);
