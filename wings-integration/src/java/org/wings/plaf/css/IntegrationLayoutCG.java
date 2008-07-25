@@ -55,7 +55,7 @@ public class IntegrationLayoutCG implements org.wings.plaf.IntegrationLayoutCG {
         final TemplateSource source = layout.getTemplateSource();
 
         if (source == null) {
-            device.print("The cms server is not reachable at the moment or the connection data is wrong. Please check your <em>wings-2-cms.xml</em>");
+            device.print("The cms server is not reachable at the moment or the connection data is wrong. Please check your <em>integration.xml</em>");
         }
         else {
             IntegrationTemplateParseContext context = new IntegrationTemplateParseContext(device, layout);
