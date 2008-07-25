@@ -34,7 +34,7 @@ public class Joomla10Adapter extends AbstractCmsAdapter {
     /**
      * {@inheritDoc}
      */
-    public void parseTitle(Source source) {
+    public void parseTitle(Source source, OutputDocument output) {
         Element titleElement = source.findNextElement(0, "title");
 
         if (titleElement != null) {
@@ -44,11 +44,17 @@ public class Joomla10Adapter extends AbstractCmsAdapter {
     }
 
     /* (non-Javadoc)
-	 * @see org.wings.adapter.CmsAdapter#parseHeader(au.id.jericho.lib.html.Source)
+	 * @see org.wings.adapter.CmsAdapter#parseHead(au.id.jericho.lib.html.Source)
 	 */
-	public void parseHeader(Source source, OutputDocument output) {
-		// TODO Auto-generated method stub
-		
+	public Source parseHead(Source source) {
+		return source;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.wings.adapter.CmsAdapter#parseBody(au.id.jericho.lib.html.Source)
+	 */
+	public Source parseBody(Source source) {
+		return source;
 	}
 
 	public void parseAnchors(Source source, OutputDocument output) {

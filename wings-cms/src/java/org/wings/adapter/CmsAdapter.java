@@ -23,17 +23,9 @@ public interface CmsAdapter extends ResourceMapper {
 
     void setCms(Cms cms);
 
+    Source parseHead(Source headSource);
+    
+    Source parseBody(Source bodySource);
+    
     Source resolveIncludes(Source source);
-    
-    void parseTitle(Source source);
-    
-    void parseHeader(Source source, OutputDocument output);
-
-    void parseAnchors(Source source, OutputDocument output);
-
-    void parseImages(Source source, OutputDocument output);
-
-//    void parseLinks(Source source);
-
-    void parseScripts(Source source);
 }

@@ -1,6 +1,7 @@
 package org.wings.adapter;
 
 import java.io.IOException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,13 +36,13 @@ import org.wings.resource.ReloadResource;
 import org.wings.session.SessionManager;
 import org.wings.template.StringTemplateSource;
 import org.wings.template.TemplateSource;
+import org.wings.util.HtmlParserUtils;
 
 import au.id.jericho.lib.html.Attribute;
 import au.id.jericho.lib.html.Attributes;
 import au.id.jericho.lib.html.Element;
-import au.id.jericho.lib.html.OutputDocument;
-import au.id.jericho.lib.html.Segment;
 import au.id.jericho.lib.html.Source;
+import au.id.jericho.lib.html.Tag;
 
 /**
  * <code>AbstractCMSAdapter<code>.
@@ -79,7 +80,12 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
 		httpdate = new SimpleDateFormat(DateParser.PATTERN_RFC1123, Locale.ENGLISH);
 		httpdate.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-		navigate(SessionManager.getSession().getServletRequest().getPathInfo());
+		try {
+			navigate(SessionManager.getSession().getServletRequest().getPathInfo());
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public SFrame getFrame() {
@@ -97,13 +103,28 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
 	public void setCms(Cms cms) {
 		this.cms = cms;
 	}
+	
+	public URL getCmsBaseUrl() {
+		return cms.getBaseUrl();
+	}
 
 	public Resource mapResource(String url) {
-		navigate(url);
+		try {
+			navigate(url);
+		}
+		catch (HttpException e) {
+			switch (e.getReasonCode()) {
+			case HttpStatus.SC_NOT_FOUND:
+				return null;
+			}
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 		return defaultResource;
 	}
 
-	protected void navigate(String url) {
+	protected void navigate(String url) throws HttpException, IOException {
 		HttpServletRequest request = SessionManager.getSession().getServletRequest();
 
 		String methodName = request.getMethod();
@@ -141,101 +162,94 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
 		String port = System.getProperty("http.proxyPort");
 		if (host != null && port != null) method.getHostConfiguration().setProxy(host, Integer.valueOf(port));
 
-		String templateString = null;
+		String responseBody = null;
 
 		// Sets the "If-Modified-Since" header to the date in cache
 		if (obtainedMap.containsKey(url)) {
 			method.addRequestHeader("If-Modified-Since", httpdate.format(obtainedMap.get(url)));
 		}
 
-		try {
-			// Execute http request
-			int httpstatus = httpclient.executeMethod(method);
+		// Execute http request
+		int httpStatus = httpclient.executeMethod(method);
 
-			// Invoke handleUnknownResourceRequested
-			if (httpstatus != HttpStatus.SC_OK && httpstatus != HttpStatus.SC_NOT_MODIFIED) return;
+		// Invoke handleUnknownResourceRequested
+		// if (httpStatus != HttpStatus.SC_OK && httpStatus !=
+		// HttpStatus.SC_NOT_MODIFIED) return;
 
-			// If the 'If-Modified-Since' header is sent, the server should set
-			// the status to
-			// SC_NOT_MODIFIED (304). Sometimes this does not work. In this case
-			// we try to compare the
-			// 'Last-Modified' response header with the date in cache ourselves.
-			boolean cached = true;
-			if (httpstatus == HttpStatus.SC_OK) {
-				try {
-					Date httplastmodified = httpdate.parse(method.getResponseHeader("Last-Modified").getValue());
-					if (!httplastmodified.before(obtainedMap.get(url))) cached = false;
-				}
-				catch (Exception ex) {
-					// Cannot parse the Last-Modified header or file is not in
-					// cache --> Don't use caching
-					cached = false;
-				}
+		// If the 'If-Modified-Since' header is sent, the server should set
+		// the status to
+		// SC_NOT_MODIFIED (304). Sometimes this does not work. In this case
+		// we try to compare the
+		// 'Last-Modified' response header with the date in cache ourselves.
+		boolean cached = true;
+		if (httpStatus == HttpStatus.SC_OK) {
+			try {
+				Date httplastmodified = httpdate.parse(method.getResponseHeader("Last-Modified").getValue());
+				if (!httplastmodified.before(obtainedMap.get(url))) cached = false;
 			}
-
-			StringTemplateSource templateSource;
-			// Load the template from cache or use the response body as new
-			// template
-			if (cached) {
-				templateSource = contentMap.get(url);
+			catch (Exception ex) {
+				// Cannot parse the Last-Modified header or file is not in
+				// cache --> Don't use caching
+				cached = false;
 			}
-			else {
-				templateString = method.getResponseBodyAsString();
-				templateString = process(templateString);
-
-				// Add template to cache
-				templateSource = new StringTemplateSource(templateString);
-				contentMap.put(url, templateSource);
-				obtainedMap.put(url, new Date());
-			}
-
-			setTemplate(templateSource);
-
-			method.releaseConnection();
 		}
-		catch (Exception ex) {
-			// Http get request failed or can't set template --> Invoke
-			// handleUnknownResourceRequested
-			ex.printStackTrace();
-//			System.err.println(templateString);
+		else {
+			HttpException e = new HttpException();
+			e.setReasonCode(httpStatus);
+			throw e;
 		}
+
+		StringTemplateSource templateSource;
+		// Load the template from cache or use the response body as new
+		// template
+		if (cached) {
+			templateSource = contentMap.get(url);
+		}
+		else {
+			responseBody = method.getResponseBodyAsString();
+			responseBody = process(responseBody);
+
+			// Add template to cache
+			templateSource = new StringTemplateSource(responseBody);
+			contentMap.put(url, templateSource);
+			obtainedMap.put(url, new Date());
+		}
+
+		setTemplate(templateSource);
+
+		method.releaseConnection();
 	}
 
 	protected void setTemplate(TemplateSource templateSource) throws IOException {
 		layout.setTemplate(templateSource);
 	}
 
-	protected String process(String templateString) {
+	/**
+	 * @param responseBody
+	 * @return
+	 */
+	protected String process(String responseBody) {
 
-		// String wingsServerPath = getPath();
-		// String cmsServerPath = cfg.getServerPath();
+		Source source = new Source(responseBody);
 
-		Source source = new Source(templateString);
-
+		// Resolves all includes contained in source (recursive).
 		source = resolveIncludes(source);
 
-		parseTitle(source);
-//		parseLinks(source);
-		parseHeader(source, null);
-		parseScripts(source);
-
-		// Segment content = source.getElementById("body").getContent();
-
-		Element body = source.findNextElement(0, "body");
-		if (body == null) {
-			return templateString;
+		// Parses the head of the template if head tag is present.
+		if (HtmlParserUtils.isTagPresent(source, Tag.HEAD)) {
+			Source headSource = HtmlParserUtils.getSourcesForTag(source, Tag.HEAD)[0];
+			parseHead(headSource);
 		}
 
-		Segment content = body.getContent();
-		source = new Source(content.toString());
+		// Parses the head of the template if body tag is present.
+		if (HtmlParserUtils.isTagPresent(source, Tag.BODY)) {
+			Source bodySource = HtmlParserUtils.getSourcesForTag(source, Tag.BODY)[0];
+			bodySource = parseBody(bodySource);
+			
+			return bodySource.toString();
+		}
 
-		OutputDocument outputDocument = new OutputDocument(source);
-
-		parseAnchors(source, outputDocument);
-		parseImages(source, outputDocument);
-
-		templateString = outputDocument.toString();
-		return templateString;
+		return "";
 	}
 
 	public Source resolveIncludes(Source source) {
@@ -253,7 +267,7 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
 
 		Element include;
 		while ((include = source.findNextElement(0, "include")) != null) {
-			
+
 			// Get the URL (default) extension.
 			Attribute type = include.getAttributes().get("type");
 			UrlExtension urlExtension = getCms().getTemplates()
