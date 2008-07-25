@@ -3,8 +3,8 @@ package org.wings.adapter;
 import org.wings.SFrame;
 import org.wings.conf.Cms;
 import org.wings.session.ResourceMapper;
+import org.wings.template.TemplateResolver;
 
-import au.id.jericho.lib.html.OutputDocument;
 import au.id.jericho.lib.html.Source;
 
 /**
@@ -17,7 +17,7 @@ import au.id.jericho.lib.html.Source;
  * @author rrd
  * @version $Id
  */
-public interface CmsAdapter extends ResourceMapper {
+public interface CmsAdapter extends ResourceMapper, TemplateResolver {
 
     void setFrame(SFrame frame);
 

@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -124,6 +125,65 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
 		return defaultResource;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.wings.template.TemplateResolver#getTemplate(java.lang.String)
+	 */
+	public String getTemplate(String name) throws IOException {
+		// Returns a template using the default type.
+		return getTemplate(name, null);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.wings.template.TemplateResolver#getTemplate(java.lang.String)
+	 */
+	public String getTemplate(String name, String type) throws IOException {
+
+		URL baseUrl = getCms().getBaseUrl();
+		
+		UrlExtension urlExtension = getCms().getTemplates().getUrlExtension(type);
+		
+		String url = baseUrl.toExternalForm() + "/" + urlExtension.getReplacedValue(new String[]{name});
+		
+		return request(new GetMethod(url));
+	}
+	
+	/**
+	 * @param method
+	 * @return
+	 */
+	private String request(HttpMethod method) throws IOException {
+		
+		HttpClient httpClient = new HttpClient();
+		String host = System.getProperty("http.proxyHost");
+		String port = System.getProperty("http.proxyPort");
+		
+		if (host != null && port != null) method.getHostConfiguration().setProxy(host, Integer.valueOf(port));
+
+		String responseBody = null;
+
+		// Execute http request
+		int httpStatus = httpClient.executeMethod(method);
+
+		// TODO Invoke handleUnknownResourceRequested
+		if (HttpStatus.SC_OK == httpStatus) {
+			 responseBody = method.getResponseBodyAsString();
+		}
+		else {
+			HttpException e = new HttpException();
+			e.setReasonCode(httpStatus);
+			throw e;
+		}
+
+		method.releaseConnection();
+		
+		return responseBody;
+	}
+
+	/**
+	 * @param url
+	 * @throws HttpException
+	 * @throws IOException
+	 */
 	protected void navigate(String url) throws HttpException, IOException {
 		HttpServletRequest request = SessionManager.getSession().getServletRequest();
 
@@ -157,67 +217,12 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
 				((PostMethod) method).addParameter(name, value);
 			}
 		}
-		HttpClient httpclient = new HttpClient();
-		String host = System.getProperty("http.proxyHost");
-		String port = System.getProperty("http.proxyPort");
-		if (host != null && port != null) method.getHostConfiguration().setProxy(host, Integer.valueOf(port));
 
-		String responseBody = null;
+		String responseBody = process(request(method));
 
-		// Sets the "If-Modified-Since" header to the date in cache
-		if (obtainedMap.containsKey(url)) {
-			method.addRequestHeader("If-Modified-Since", httpdate.format(obtainedMap.get(url)));
-		}
-
-		// Execute http request
-		int httpStatus = httpclient.executeMethod(method);
-
-		// Invoke handleUnknownResourceRequested
-		// if (httpStatus != HttpStatus.SC_OK && httpStatus !=
-		// HttpStatus.SC_NOT_MODIFIED) return;
-
-		// If the 'If-Modified-Since' header is sent, the server should set
-		// the status to
-		// SC_NOT_MODIFIED (304). Sometimes this does not work. In this case
-		// we try to compare the
-		// 'Last-Modified' response header with the date in cache ourselves.
-		boolean cached = true;
-		if (httpStatus == HttpStatus.SC_OK) {
-			try {
-				Date httplastmodified = httpdate.parse(method.getResponseHeader("Last-Modified").getValue());
-				if (!httplastmodified.before(obtainedMap.get(url))) cached = false;
-			}
-			catch (Exception ex) {
-				// Cannot parse the Last-Modified header or file is not in
-				// cache --> Don't use caching
-				cached = false;
-			}
-		}
-		else {
-			HttpException e = new HttpException();
-			e.setReasonCode(httpStatus);
-			throw e;
-		}
-
-		StringTemplateSource templateSource;
-		// Load the template from cache or use the response body as new
-		// template
-		if (cached) {
-			templateSource = contentMap.get(url);
-		}
-		else {
-			responseBody = method.getResponseBodyAsString();
-			responseBody = process(responseBody);
-
-			// Add template to cache
-			templateSource = new StringTemplateSource(responseBody);
-			contentMap.put(url, templateSource);
-			obtainedMap.put(url, new Date());
-		}
+		TemplateSource templateSource = new StringTemplateSource(responseBody);
 
 		setTemplate(templateSource);
-
-		method.releaseConnection();
 	}
 
 	protected void setTemplate(TemplateSource templateSource) throws IOException {
@@ -249,7 +254,7 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
 			return bodySource.toString();
 		}
 
-		return "";
+		return source.toString();
 	}
 
 	public Source resolveIncludes(Source source) {
