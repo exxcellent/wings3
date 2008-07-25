@@ -1,0 +1,14 @@
+The joomla15-component.zip contains a Joomla component that is required to integrate Joomla into wingS.
+
+To install this component:
+
+1. Login at the Joomla admin panel
+2. Open menu "Extensions" -> "Install/Uninstall"
+3. Choose the joomla15-component.zip file with "Choose File"
+4. Press "Upload File & Install"
+
+The message "Install Component Success" indicates the component has been installed properly.
+
+Joomla is now ready to be integrated into wingS Cms!
+
+Have Fun!
