@@ -197,7 +197,7 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
 			// Http get request failed or can't set template --> Invoke
 			// handleUnknownResourceRequested
 			ex.printStackTrace();
-			System.err.println(templateString);
+//			System.err.println(templateString);
 		}
 	}
 
@@ -215,7 +215,8 @@ public abstract class AbstractCmsAdapter implements CmsAdapter {
 		source = resolveIncludes(source);
 
 		parseTitle(source);
-		parseLinks(source);
+//		parseLinks(source);
+		parseHeader(source, null);
 		parseScripts(source);
 
 		// Segment content = source.getElementById("body").getContent();

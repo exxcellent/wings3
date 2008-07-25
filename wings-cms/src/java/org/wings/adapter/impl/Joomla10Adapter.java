@@ -43,7 +43,15 @@ public class Joomla10Adapter extends AbstractCmsAdapter {
         }
     }
 
-    public void parseAnchors(Source source, OutputDocument output) {
+    /* (non-Javadoc)
+	 * @see org.wings.adapter.CmsAdapter#parseHeader(au.id.jericho.lib.html.Source)
+	 */
+	public void parseHeader(Source source, OutputDocument output) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void parseAnchors(Source source, OutputDocument output) {
 
         String wingsServerPath = getPath();
         String cmsServerPath = getCms().getBaseUrl().toExternalForm();
@@ -96,44 +104,44 @@ public class Joomla10Adapter extends AbstractCmsAdapter {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void parseLinks(Source source) {
-
-        HttpServletRequest request = SessionManager.getSession().getServletRequest();
-        Cms cms = getCms();
-
-        Collection<Link> newLinks = new ArrayList<Link>();
-        Collection<StartTag> linkTags = source.findAllStartTags("link");
-        for (StartTag linkTag : linkTags) {
-            Attributes attributes = linkTag.getAttributes();
-            String rel = attributes.getValue("rel");
-            String rev = attributes.getValue("rev");
-            String type = attributes.getValue("type");
-            String target = attributes.getValue("target");
-            String href = attributes.getValue("href");
-            if (!href.startsWith("http")) {
-                String pathInfo = request.getPathInfo();
-                if (pathInfo.contains(".php")) pathInfo = pathInfo.substring(0, pathInfo.lastIndexOf("/"));
-                href = cms.getBaseUrl() + pathInfo + "/" + href;
-            }
-
-            newLinks.add(new Link(rel, rev, type, target, new Url(href)));
-        }
-        if (!newLinks.equals(links)) {
-//            System.out.println("links    = " + links);
-//            System.out.println("newLinks = " + newLinks);
-
-            for (Link link : links)
-                getFrame().removeHeader(link);
-            for (Link link : newLinks)
-                getFrame().addHeader(link);
-
-            links.clear();
-            links.addAll(newLinks);
-        }
-    }
+//    /**
+//     * {@inheritDoc}
+//     */
+//    public void parseLinks(Source source) {
+//
+//        HttpServletRequest request = SessionManager.getSession().getServletRequest();
+//        Cms cms = getCms();
+//
+//        Collection<Link> newLinks = new ArrayList<Link>();
+//        Collection<StartTag> linkTags = source.findAllStartTags("link");
+//        for (StartTag linkTag : linkTags) {
+//            Attributes attributes = linkTag.getAttributes();
+//            String rel = attributes.getValue("rel");
+//            String rev = attributes.getValue("rev");
+//            String type = attributes.getValue("type");
+//            String target = attributes.getValue("target");
+//            String href = attributes.getValue("href");
+//            if (!href.startsWith("http")) {
+//                String pathInfo = request.getPathInfo();
+//                if (pathInfo.contains(".php")) pathInfo = pathInfo.substring(0, pathInfo.lastIndexOf("/"));
+//                href = cms.getBaseUrl() + pathInfo + "/" + href;
+//            }
+//
+//            newLinks.add(new Link(rel, rev, type, target, new Url(href)));
+//        }
+//        if (!newLinks.equals(links)) {
+////            System.out.println("links    = " + links);
+////            System.out.println("newLinks = " + newLinks);
+//
+//            for (Link link : links)
+//                getFrame().removeHeader(link);
+//            for (Link link : newLinks)
+//                getFrame().addHeader(link);
+//
+//            links.clear();
+//            links.addAll(newLinks);
+//        }
+//    }
 
     /**
      * {@inheritDoc}

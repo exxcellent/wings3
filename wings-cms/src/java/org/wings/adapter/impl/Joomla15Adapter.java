@@ -1,22 +1,17 @@
 package org.wings.adapter.impl;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.wings.CmsFrame;
 import org.wings.SFrame;
 import org.wings.STemplateLayout;
 import org.wings.adapter.AbstractCmsAdapter;
 import org.wings.conf.Cms;
-import org.wings.header.Link;
 import org.wings.header.Script;
-import org.wings.session.SessionManager;
 
 import au.id.jericho.lib.html.Attribute;
 import au.id.jericho.lib.html.Attributes;
@@ -50,11 +45,26 @@ public class Joomla15Adapter extends AbstractCmsAdapter {
 
         if (titleElement != null) {
             String title = titleElement.getTextExtractor().toString();
-            getFrame().setTitle("JoomlaAdapter :: " + title);
+            getFrame().setTitle("Joomla15Adapter :: " + title);
         }
     }
 
-    public void parseAnchors(Source source, OutputDocument output) {
+    /* (non-Javadoc)
+	 * @see org.wings.adapter.CmsAdapter#parseHeader(au.id.jericho.lib.html.Source)
+	 */
+	public void parseHeader(Source source, OutputDocument output) {
+		Element head = source.findNextElement(0, Tag.HEAD);
+		
+		source = new Source(head.getContent());
+		
+		output = new OutputDocument(source);
+		parseLinks(source, output);
+		parseScripts(source);
+		
+		((CmsFrame) getFrame()).setHeadExtension(String.valueOf(output.toString()));
+	}
+
+	public void parseAnchors(Source source, OutputDocument output) {
 
         String wingsServerPath = getPath();
         String cmsServerPath = getCms().getBaseUrl().toExternalForm();
@@ -66,20 +76,27 @@ public class Joomla15Adapter extends AbstractCmsAdapter {
             if (attribute != null) {
                 String value = attribute.getValue();
 
+                boolean changed = false;
                 if (!value.startsWith("http")) {
-					
-                	boolean changed = false;
+            		changed = true;
+            		
                 	Pattern pattern = Pattern.compile(getCms().getBaseUrl().getPath());
                 	Matcher matcher = pattern.matcher(value);
                 	if (matcher.find()) {
-                		changed = true;
                 		value = matcher.replaceFirst(wingsServerPath);
                 	}
-                	
-					//                String replacedValue = value.replaceFirst(cmsServerPath, wingsServerPath);
-					if (changed) {
-						output.replace(attribute.getValueSegment(), value);
-					}
+                	else {
+                		if (!value.startsWith("/")) {
+                			value = wingsServerPath + "/" + value;
+                		}
+                		else {
+                			value = wingsServerPath + value;
+                		}
+                    }
+				}
+            	
+				if (changed) {
+					output.replace(attribute.getValueSegment(), value);
 				}
             }
         }
@@ -91,17 +108,35 @@ public class Joomla15Adapter extends AbstractCmsAdapter {
             if (attribute != null) {
                 String value = attribute.getValue();
 
-                String replacedValue = value.replaceFirst(cmsServerPath, wingsServerPath);
-                if (!replacedValue.equals(value)) {
-                    output.replace(attribute.getValueSegment(), replacedValue);
-                }
+                boolean changed = false;
+                if (!value.startsWith("http")) {
+                	changed = true;
+                	
+                	Pattern pattern = Pattern.compile(getCms().getBaseUrl().getPath());
+                	Matcher matcher = pattern.matcher(value);
+                	if (matcher.find()) {
+                		value = matcher.replaceFirst(wingsServerPath);
+                	}
+                	else {
+                		if (!value.startsWith("/")) {
+                			value = wingsServerPath + "/" + value;
+                		}
+                		else {
+                			value = wingsServerPath + value;
+                		}
+                    }
+				}
+            	
+				if (changed) {
+					output.replace(attribute.getValueSegment(), value);
+				}
             }
         }
     }
 
     public void parseImages(Source source, OutputDocument output) {
 
-        String cmsServerPath = getCms().getBaseUrl().toExternalForm();
+    	String cmsServerPath = getCms().getBaseUrl().toExternalForm();
 
         List<StartTag> imgTags = source.findAllStartTags(Tag.IMG);
         for (StartTag imgTag : imgTags) {
@@ -110,20 +145,27 @@ public class Joomla15Adapter extends AbstractCmsAdapter {
             if (attribute != null) {
                 String value = attribute.getValue();
 
+                boolean changed = false;
                 if (!value.startsWith("http")) {
-					
-                	boolean changed = false;
+                	changed = true;
+                	
                 	Pattern pattern = Pattern.compile(getCms().getBaseUrl().getPath());
                 	Matcher matcher = pattern.matcher(value);
                 	if (matcher.find()) {
-                		changed = true;
                 		value = matcher.replaceFirst(cmsServerPath);
                 	}
-                	
-					//                String replacedValue = value.replaceFirst(cmsServerPath, wingsServerPath);
-					if (changed) {
-						output.replace(attribute.getValueSegment(), value);
-					}
+                	else {
+                		if (!value.startsWith("/")) {
+                			value = cmsServerPath + "/" + value;
+                		}
+                		else {
+                			value = cmsServerPath + value;
+                		}
+                    }
+				}
+                
+                if (changed) {
+					output.replace(attribute.getValueSegment(), value);
 				}
             }
         }
@@ -132,12 +174,10 @@ public class Joomla15Adapter extends AbstractCmsAdapter {
     /**
      * {@inheritDoc}
      */
-    public void parseLinks(Source source) {
+    private void parseLinks(Source source, OutputDocument output) {
 
-        HttpServletRequest request = SessionManager.getSession().getServletRequest();
-        Cms cms = getCms();
+    	String cmsServerPath = getCms().getBaseUrl().toExternalForm();
 
-        Collection<Link> newLinks = new ArrayList<Link>();
         Collection<StartTag> linkTags = source.findAllStartTags("link");
         for (StartTag linkTag : linkTags) {
             Attributes attributes = linkTag.getAttributes();
@@ -146,27 +186,29 @@ public class Joomla15Adapter extends AbstractCmsAdapter {
             String type = attributes.getValue("type");
             String target = attributes.getValue("target");
             String href = attributes.getValue("href");
+            
+            boolean changed = false;
             if (!href.startsWith("http")) {
-                String pathInfo = request.getPathInfo();
-                if (pathInfo.contains(".php")) pathInfo = pathInfo.substring(0, pathInfo.lastIndexOf("/"));
-                
-                URL url = cms.getBaseUrl();
-                href = url.getProtocol() + "://" + url.getHost() + ((url.getPort() != -1) ? ":" + url.getPort() : "") + "/" + href;
-            }
-
-            newLinks.add(new Link(rel, rev, type, target, new Url(href)));
-        }
-        if (!newLinks.equals(links)) {
-//            System.out.println("links    = " + links);
-//            System.out.println("newLinks = " + newLinks);
-
-            for (Link link : links)
-                getFrame().removeHeader(link);
-            for (Link link : newLinks)
-                getFrame().addHeader(link);
-
-            links.clear();
-            links.addAll(newLinks);
+            	changed = true;
+            	
+            	Pattern pattern = Pattern.compile(getCms().getBaseUrl().getPath());
+            	Matcher matcher = pattern.matcher(href);
+            	if (matcher.find()) {
+            		href = matcher.replaceFirst(cmsServerPath);
+            	}
+            	else {
+            		if (!href.startsWith("/")) {
+            			href = cmsServerPath + "/" + href;
+            		}
+            		else {
+            			href = cmsServerPath + href;
+            		}
+                }
+			}
+            
+            if (changed) {
+				output.replace(attributes.get("href").getValueSegment(), href);
+			}
         }
     }
 

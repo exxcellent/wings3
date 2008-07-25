@@ -26,12 +26,14 @@ public interface CmsAdapter extends ResourceMapper {
     Source resolveIncludes(Source source);
     
     void parseTitle(Source source);
+    
+    void parseHeader(Source source, OutputDocument output);
 
     void parseAnchors(Source source, OutputDocument output);
 
     void parseImages(Source source, OutputDocument output);
 
-    void parseLinks(Source source);
+//    void parseLinks(Source source);
 
     void parseScripts(Source source);
 }
