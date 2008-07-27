@@ -41,6 +41,7 @@ import au.id.jericho.lib.html.Attribute;
 import au.id.jericho.lib.html.Attributes;
 import au.id.jericho.lib.html.Element;
 import au.id.jericho.lib.html.Source;
+import au.id.jericho.lib.html.StartTagType;
 import au.id.jericho.lib.html.Tag;
 
 /**
@@ -70,7 +71,7 @@ public abstract class AbstractCmsAdapter extends AbstractTemplateIntegrationAdap
 		httpdate = new SimpleDateFormat(DateParser.PATTERN_RFC1123, Locale.ENGLISH);
 		httpdate.setTimeZone(TimeZone.getTimeZone("GMT"));
 	}
-	
+
 	public void initialize() {
 	    super.initialize();
 	    try {
@@ -85,9 +86,14 @@ public abstract class AbstractCmsAdapter extends AbstractTemplateIntegrationAdap
 		return integration.getBaseUrl();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.wings.adapter.AbstractIntegrationAdapter#mapResource(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.wings.adapter.AbstractIntegrationAdapter#mapResource(java.lang.String
+	 * )
 	 */
+	@SuppressWarnings("deprecation")
 	public Resource mapResource(String url) {
 		try {
 			navigate(url);
@@ -103,17 +109,18 @@ public abstract class AbstractCmsAdapter extends AbstractTemplateIntegrationAdap
 		}
 		return super.mapResource(url);
 	}
-	
+
 	/**
 	 * @param method
 	 * @return
 	 */
+	@SuppressWarnings("deprecation")
 	protected String request(HttpMethod method) throws IOException {
-		
+
 		HttpClient httpClient = new HttpClient();
 		String host = System.getProperty("http.proxyHost");
 		String port = System.getProperty("http.proxyPort");
-		
+
 		if (host != null && port != null) method.getHostConfiguration().setProxy(host, Integer.valueOf(port));
 
 		String responseBody = null;
@@ -123,7 +130,7 @@ public abstract class AbstractCmsAdapter extends AbstractTemplateIntegrationAdap
 
 		// TODO Invoke handleUnknownResourceRequested
 		if (HttpStatus.SC_OK == httpStatus) {
-			 responseBody = method.getResponseBodyAsString();
+			responseBody = method.getResponseBodyAsString();
 		}
 		else {
 			HttpException e = new HttpException();
@@ -132,7 +139,7 @@ public abstract class AbstractCmsAdapter extends AbstractTemplateIntegrationAdap
 		}
 
 		method.releaseConnection();
-		
+
 		return responseBody;
 	}
 
@@ -149,7 +156,7 @@ public abstract class AbstractCmsAdapter extends AbstractTemplateIntegrationAdap
 		if ("GET".equals(methodName)) {
 			url += "?";
 
-			Enumeration enumeration = request.getParameterNames();
+			Enumeration<?> enumeration = request.getParameterNames();
 			while (enumeration.hasMoreElements()) {
 				String name = (String) enumeration.nextElement();
 				String value = request.getParameter(name);
@@ -167,7 +174,7 @@ public abstract class AbstractCmsAdapter extends AbstractTemplateIntegrationAdap
 		else if ("POST".equals(methodName)) {
 			method = new PostMethod(integration.getBaseUrl() + url);
 
-			Enumeration enumeration = request.getParameterNames();
+			Enumeration<?> enumeration = request.getParameterNames();
 			while (enumeration.hasMoreElements()) {
 				String name = (String) enumeration.nextElement();
 				String value = request.getParameter(name);
@@ -193,6 +200,10 @@ public abstract class AbstractCmsAdapter extends AbstractTemplateIntegrationAdap
 		// Resolves all includes contained in source (recursive).
 		source = resolveIncludes(source);
 
+		// Removes all wingS integration comments like <!-- IGNORE BEGIN --> and
+		// <!-- IGNORE END -->
+		source = removeIgnoreComments(source);
+
 		// Parses the head of the template if head tag is present.
 		if (HtmlParserUtils.isTagPresent(source, Tag.HEAD)) {
 			Source headSource = HtmlParserUtils.getSourcesForTag(source, Tag.HEAD)[0];
@@ -203,13 +214,20 @@ public abstract class AbstractCmsAdapter extends AbstractTemplateIntegrationAdap
 		if (HtmlParserUtils.isTagPresent(source, Tag.BODY)) {
 			Source bodySource = HtmlParserUtils.getSourcesForTag(source, Tag.BODY)[0];
 			bodySource = parseBody(bodySource);
-			
+
 			return bodySource.toString();
 		}
 
 		return source.toString();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.wings.adapter.parser.HtmlParser#resolveIncludes(au.id.jericho.lib
+	 * .html.Source)
+	 */
 	public Source resolveIncludes(Source source) {
 		return resolveIncludes0(source);
 	}
@@ -228,8 +246,8 @@ public abstract class AbstractCmsAdapter extends AbstractTemplateIntegrationAdap
 
 			// Get the URL (default) extension.
 			Attribute type = include.getAttributes().get("type");
-			UrlExtension urlExtension = integration.getResource()
-					.getUrlExtension((type != null ? type.getValue() : null));
+			UrlExtension urlExtension = integration.getResource().getUrlExtension(
+					(type != null ? type.getValue() : null));
 
 			List<String> variables = urlExtension.getVariables();
 			List<String> values = new ArrayList<String>();
@@ -272,16 +290,15 @@ public abstract class AbstractCmsAdapter extends AbstractTemplateIntegrationAdap
 		return source;
 	}
 
+	/**
+	 * @param url
+	 * @return
+	 */
 	private String requestInclude(String url) {
-		HttpClient httpClient = new HttpClient();
-
 		GetMethod method = new GetMethod(url);
 
 		try {
-			int status = httpClient.executeMethod(method);
-			if (status == HttpStatus.SC_OK) {
-				return method.getResponseBodyAsString();
-			}
+			return request(method);
 		}
 		catch (HttpException e) {
 			e.printStackTrace();
@@ -292,12 +309,66 @@ public abstract class AbstractCmsAdapter extends AbstractTemplateIntegrationAdap
 		return "";
 	}
 
+	/**
+	 * @param source
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private Source removeIgnoreComments(Source source) {
+		List<Element> comments = source.findAllElements(StartTagType.COMMENT);
+		if (comments.size() < 1) {
+			return source;
+		}
+
+		List<Element> ignoreBeginComments = new ArrayList<Element>();
+		List<Element> ignoreEndComments = new ArrayList<Element>();
+		for (Element comment : comments) {
+			String commentContent = comment.toString().trim();
+
+			if ("<!-- IGNORE BEGIN -->".equalsIgnoreCase(commentContent)) {
+				ignoreBeginComments.add(comment);
+			}
+			else if ("<!-- IGNORE END -->".equalsIgnoreCase(commentContent)) {
+				ignoreEndComments.add(comment);
+			}
+		}
+
+		// Throw an exception if size of ignore begin and size of ignore end
+		// doesn't match.
+		if (ignoreBeginComments.size() != ignoreEndComments.size()) {
+			throw new IllegalStateException("Amount of <!-- IGNORE BEGIN --> (" + ignoreBeginComments.size()
+					+ ") doesn't match amount of <!-- IGNORE END --> (" + ignoreEndComments.size() + ") comments.");
+		}
+		
+		// Return immediately if no ignore comment has been found.
+		if (ignoreBeginComments.size() < 1) {
+			return source;
+		}
+
+		// Removes ignore comments.
+		// TODO: Tweak approach to achieve performance upgrade.
+		StringBuilder withoutIgnoreComments = new StringBuilder();
+		int length = ignoreBeginComments.size();
+		for (int i = 0; i < length; i++) {
+			Element ignoreBegin = ignoreBeginComments.get(i);
+			Element ignoreEnd = ignoreEndComments.get(i);
+			
+			withoutIgnoreComments.append(source.subSequence(0, ignoreBegin.getBegin()));
+			
+			if ((i + 1) == length) {
+				withoutIgnoreComments.append(source.subSequence(ignoreEnd.getEnd(), source.length()));
+			}
+			else {
+				Element nextIgnoreBegin = ignoreBeginComments.get(i + 1);
+				withoutIgnoreComments.append(source.subSequence(ignoreEnd.getEnd(), nextIgnoreBegin.getBegin()));
+			}		
+		}
+		
+		return new Source(withoutIgnoreComments);
+	}
+
 	public String getPath() {
 		if (path == null) {
-			// path =
-			// SessionManager.getSession().getServletRequest().getContextPath()
-			// +
-			// SessionManager.getSession().getServletRequest().getServletPath();
 			HttpServletRequest request = SessionManager.getSession().getServletRequest();
 
 			String path = request.getRequestURL().toString();
