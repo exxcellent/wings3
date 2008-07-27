@@ -68,11 +68,10 @@ package org.wings.template.parser;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringReader;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * Convenient class for parsing SGML tokens from a page.
@@ -135,42 +134,15 @@ public class SGMLTag {
      */
     private int offset = 0;
 
-    /* These attributes are to be compatible with the 'old'
-     * SGMLTag using Strings
-     */
-    private int start = 0;
-    private int end = 0;
-
     // private stuff
-    private LinkedList attrs = null;            // tag attributes (mixed)
-    private LinkedHashMap values = null;        // tag attribute values (uc)
+    private LinkedList<String> attrs = null;            // tag attributes (mixed)
+    private LinkedHashMap<String, String> values = null;        // tag attribute values (uc)
     private boolean wellFormed = true;      // looks good?
     private boolean attr_ready = false;
 
     // comment delimitation
     static final String COMMENT_START = "!--", COMMENT_END = "-->";
     static final String SSI_START = COMMENT_START + "#", SSI_END = COMMENT_END;
-
-    /**
-     * for historical reasons only; behaves like the
-     * old SGMLTag().
-     */
-    private SGMLTag(String textContent, int begin) {
-        PositionReader r = new PositionReader(new StringReader(textContent));
-        try {
-            r.skip(begin);
-            offset = begin;
-            searchStart(r);
-            start = offset;
-            // do a full parse here; since the usage of the
-            // String based SGMLTag() is deprecated this
-            // performance penalty doesn't matter
-            parse(r);
-        } catch (IOException reading_from_string_should_never_fail) {
-            offset = -1;
-        }
-        end = (int) r.getPosition();
-    }
 
     /**
      * Create new SGML tag reference, starting at current location
@@ -378,7 +350,7 @@ public class SGMLTag {
      * @return enumeration of attribute names specified as strings,
      *         or null if this tag is poorly formed
      */
-    public Iterator attributes(boolean upperCase) {
+    public Iterator<String> attributes(boolean upperCase) {
         // check to make sure attributes have been read
         if (!isWellFormed())
             return null;
@@ -425,8 +397,8 @@ public class SGMLTag {
         if (values == null && wellFormed) {
             String key = null, token;
             wellFormed = false;
-            attrs = new LinkedList();
-            values = new LinkedHashMap();
+            attrs = new LinkedList<String>();
+            values = new LinkedHashMap<String, String>();
 
             while (true) {
                 // check for valid value tag (or end delimiter)
@@ -628,7 +600,7 @@ public class SGMLTag {
      * @see #attributes
      * @see #value
      */
-    public HashMap getAttributes() {
+    public Map<String, String> getAttributes() {
         return isWellFormed() ? values : null;
     }
 
@@ -651,9 +623,9 @@ public class SGMLTag {
         StringBuilder str = new StringBuilder();
         str.append("[SGMLTag ").append(name).append(": (").append(getOffset()).append(",---)");
         if (attrs != null && wellFormed) {
-            Iterator iter = attributes(true);
+            Iterator<String> iter = attributes(true);
             while (iter.hasNext()) {
-                String key = (String) iter.next();
+                String key = iter.next();
                 str.append(" ").append(key).append("=\"").append(value(key, null)).append("\"");
             }
         } else {
@@ -663,6 +635,3 @@ public class SGMLTag {
         return str.toString();
     }
 }
-
-
-
