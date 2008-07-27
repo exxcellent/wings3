@@ -34,7 +34,7 @@ import java.net.MalformedURLException;
  */
 public class ShopExample
 {
-    private IntegrationFrame rootFrame = new IntegrationFrame();
+    private IntegrationFrame rootFrame = new TemplateIntegrationFrame();
     CartModel cartModel = new CartModel();
     ProductModel productModel = new ProductModel();
 
@@ -106,6 +106,14 @@ public class ShopExample
         rootFrame.getContentPane().setPreferredSize(SDimension.FULLAREA);
         rootFrame.getContentPane().setVerticalAlignment(SConstants.TOP_ALIGN);
         rootFrame.setVisible(true);
+        
+        String fragment = "NONE!"; 
+        try {
+            fragment = (String) rootFrame.getResource("test");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(fragment);
     }
 
     private URL buildURLContext(String image) {

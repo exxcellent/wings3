@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <integration adapter="org.wings.adapter.cms.joomla.Joomla15Adapter">
-	<base-url>http://localhost/joomla15</base-url>
+	<base-url>http://localhost/energyshop</base-url>
 	<resource processor="org.wings.macro.impl.VelocityMacroProcessor" cache="true">
-		<url-extension>index.php?option=com_wings&amp;type=article&amp;name={name}&amp;format=raw</url-extension>
-		<url-extension type="module">index.php?option=com_wings&amp;type=module&amp;name={name}&amp;format=raw</url-extension>
+        <url-extension>index.php?option=com_wings&amp;type=module&amp;name={name}&amp;format=raw</url-extension>
+        <url-extension type="module">index.php?option=com_wings&amp;type=module&amp;name={name}&amp;format=raw</url-extension>
+		<url-extension type="article">index.php?option=com_wings&amp;type=article&amp;name={name}&amp;format=raw</url-extension>
     </resource>
 </integration>
+
+<!--integration adapter="org.wings.adapter.file.LocalAdapter">
+    <base-url>file:///templates/</base-url>
+    <resource processor="org.wings.macro.impl.VelocityMacroProcessor" cache="true">
+        <url-extension>/fragments/{templateName}.html</url-extension>
+    </resource>
+</integration-->

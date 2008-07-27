@@ -1,7 +1,0 @@
-<!-- TODO: currently not working (throws a MalformedURLException -->
-<integration adapter="org.wings.adapter.local.LocalAdapter">
-	<base-url>{fix me}</base-url>
-	<resource processor="org.wings.macro.impl.VelocityMacroProcessor" cache="true">
-		<url-extension type="article">/template/{templateName}</url-extension>
-    </resource>
-</integration>
