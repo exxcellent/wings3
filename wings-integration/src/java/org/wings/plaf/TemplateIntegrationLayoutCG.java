@@ -13,7 +13,7 @@
 package org.wings.plaf;
 
 /**
- * <code>CmsLayoutCG<code>.
+ * <code>TemplateIntegrationLayoutCG<code>.
  * <p/>
  * User: raedler
  * Date: 08.08.2007
@@ -22,5 +22,5 @@ package org.wings.plaf;
  * @author raedler
  * @version $Id
  */
-public interface IntegrationLayoutCG extends LayoutCG {
+public interface TemplateIntegrationLayoutCG extends LayoutCG {
 }

@@ -3,12 +3,8 @@
  */
 package org.wings.adapter;
 
-import java.io.IOException;
-
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpStatus;
+import org.wings.IntegrationFrame;
 import org.wings.Resource;
-import org.wings.SFrame;
 import org.wings.conf.Integration;
 import org.wings.resource.DynamicResource;
 import org.wings.resource.ReloadResource;
@@ -26,7 +22,7 @@ import org.wings.resource.ReloadResource;
  */
 public abstract class AbstractIntegrationAdapter implements IntegrationAdapter {
 
-	protected SFrame frame;
+	protected IntegrationFrame frame;
 	
 	protected Integration integration;
 	
@@ -36,7 +32,7 @@ public abstract class AbstractIntegrationAdapter implements IntegrationAdapter {
 	 * @param frame
 	 * @param integration
 	 */
-	public AbstractIntegrationAdapter(SFrame frame, Integration integration) {
+	public AbstractIntegrationAdapter(IntegrationFrame frame, Integration integration) {
 		this.frame = frame;
 		this.integration = integration;
 		
@@ -46,7 +42,7 @@ public abstract class AbstractIntegrationAdapter implements IntegrationAdapter {
 	/* (non-Javadoc)
 	 * @see org.wings.adapter.IntegrationAdapter#setFrame(org.wings.SFrame)
 	 */
-	public void setFrame(SFrame frame) {
+	public void setFrame(IntegrationFrame frame) {
 		this.frame = frame;
 	}
 
@@ -65,7 +61,6 @@ public abstract class AbstractIntegrationAdapter implements IntegrationAdapter {
 			navigate(url);
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return defaultResource;

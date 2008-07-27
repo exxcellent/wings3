@@ -12,6 +12,7 @@
  */
 package org.wings;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -19,13 +20,14 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.wings.adapter.AbstractIntegrationAdapter;
 import org.wings.adapter.IntegrationAdapter;
 import org.wings.conf.Integration;
 import org.wings.conf.Resource;
 import org.wings.session.SessionManager;
 
 /**
- * <code>CmsFrame<code>.
+ * <code>IntegrationFrame<code>.
  * <p/>
  * User: raedler
  * Date: 08.08.2007
@@ -37,36 +39,35 @@ import org.wings.session.SessionManager;
 public class IntegrationFrame extends SFrame {
 
     private static final long serialVersionUID = 1L;
-
-    private IntegrationLayout layout = new IntegrationLayout();
     
-    private String headExtension;
-    
-    private String bodyExtension;
+    protected IntegrationAdapter adapter;
 
     /**
      * Default constructor
      */
     public IntegrationFrame() {
-        setContentPane(new IntegrationForm());
-        getContentPane().setLayout(layout);
-
-        Integration integration = readCms();
-
-        IntegrationAdapter adapter = createAdapter(integration);
+        Integration integration = readIntegration();
+        
+        adapter = createAdapter(integration);
         adapter.setFrame(this);
         adapter.setIntegration(integration);
 
         // Set the resource mapper which is the distinguishable cms adapter.
         SessionManager.getSession().setResourceMapper(adapter);
+        
+        initialize();
+    }
+    
+    protected void initialize() {
+        adapter.initialize();
     }
 
     /**
-     * Reads the wings to cms configuration file and returns an object containing all required data.
+     * Reads the integration.xml configuration file and returns an object containing all required data.
      *
-     * @return A configuration object with all required data to access the cms.
+     * @return A configuration object with all required data.
      */
-    private Integration readCms() {
+    private Integration readIntegration() {
         try {
             JAXBContext ctx = JAXBContext.newInstance(Integration.class, Resource.class);
             Unmarshaller unmarshaller = ctx.createUnmarshaller();
@@ -78,15 +79,15 @@ public class IntegrationFrame extends SFrame {
         return null;
     }
 
-    private IntegrationAdapter createAdapter(Integration integration) {
+    protected IntegrationAdapter createAdapter(Integration integration) {
         Class<? extends IntegrationAdapter> type = integration.getAdapter();
 
         assert type != null : "Adapter class cannot be null.";
 
         try {
-            if (IntegrationAdapter.class.isAssignableFrom(type)) {
-                Constructor<? extends IntegrationAdapter> constructor = type.getConstructor(SFrame.class, Integration.class, STemplateLayout.class);
-                return (IntegrationAdapter) constructor.newInstance(this, integration, layout);
+            if (AbstractIntegrationAdapter.class.isAssignableFrom(type)) {
+                Constructor<? extends IntegrationAdapter> constructor = type.getConstructor(IntegrationFrame.class, Integration.class);
+                return (IntegrationAdapter) constructor.newInstance(this, integration);
             }
             else {
                 return (IntegrationAdapter) type.newInstance();
@@ -106,41 +107,20 @@ public class IntegrationFrame extends SFrame {
         }
         return null;
     }
-
-
-    @Override
-    public final SComponent add(SComponent c) {
-        throw new UnsupportedOperationException("This method won't be supported by CmsFrame. Use add(SComponent c, Object constraint) instead.");
-    }
-
-    @Override
-    public void add(SComponent c, Object constraint) {
-        getContentPane().add(c, constraint);
-    }
-
-    @Override
-    public SComponent add(SComponent c, int index) {
-        throw new UnsupportedOperationException("This method won't be supported by CmsFrame. Use add(SComponent c, Object constraint) instead.");
-    }
-
-    @Override
-    public void add(SComponent c, Object constraint, int index) {
-        throw new UnsupportedOperationException("This method won't be supported by CmsFrame. Use add(SComponent c, Object constraint) instead.");
-    }
     
-    public String getHeadExtension() {
-        return headExtension;
+    public Object getResource(String param) throws IOException {
+        return getResource(new String[] {param});
     }
 
-    public void setHeadExtension(String headExtension) {
-        this.headExtension = headExtension;
+    public Object getResource(String[] params) throws IOException {
+        return adapter.getResource(params);
     }
 
-    public String getBodyExtension() {
-        return bodyExtension;
+    public Object getResource(String type, String[] params) throws IOException {
+        return adapter.getResource(type, params);
     }
 
-    public void setBodyExtension(String bodyExtension) {
-        this.bodyExtension = bodyExtension;
+    public org.wings.Resource mapResource(String url) {
+        return adapter.mapResource(url);
     }
 }

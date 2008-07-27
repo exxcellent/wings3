@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.wings.adapter.IntegrationAdapter;
 
 /**
- * <code>Configuration<code>.
+ * <code>Integration<code>.
  * <p/>
  * User: rrd
  * Date: 08.08.2007
@@ -76,26 +76,5 @@ public class Integration {
 	 */
 	public void setResource(Resource resource) {
 		this.resource = resource;
-	}
-
-	/**
-	 * Returns the server path e.g. http://localhost:8080/ including port if set and
-	 * a '/' at the end of the path.
-	 * 
-	 * @return The server path.
-	 */
-	public String getServerPath() {
-		StringBuilder path = new StringBuilder();
-		
-		path.append(baseUrl.getProtocol()).append("://")
-		.append(baseUrl.getHost());
-		
-		if (baseUrl.getPort() != -1) {
-			path.append(":").append(baseUrl.getPort());
-		}
-		
-		path.append("/");
-		
-		return path.toString();
 	}
 }

@@ -1,13 +1,19 @@
 package org.wings.plaf.css;
 
-import org.wings.plaf.css.script.LayoutFillScript;
-import org.wings.io.Device;
-import org.wings.*;
-
 import java.io.IOException;
 
+import org.wings.SBorderLayout;
+import org.wings.SComponent;
+import org.wings.SConstants;
+import org.wings.SDimension;
+import org.wings.SForm;
+import org.wings.SGridBagLayout;
+import org.wings.SLayoutManager;
+import org.wings.io.Device;
+import org.wings.plaf.css.script.LayoutFillScript;
+
 /**
- * <code>CmsFormCG<code>.
+ * <code>TemplateIntegrationFormCG<code>.
  * <p/>
  * User: rrd
  * Date: 14.08.2007
@@ -16,8 +22,9 @@ import java.io.IOException;
  * @author rrd
  * @version $Id
  */
-public class IntegrationFormCG extends FormCG implements org.wings.plaf.IntegrationFormCG {
-
+public class TemplateIntegrationFormCG extends FormCG implements org.wings.plaf.TemplateIntegrationFormCG {
+    
+    private static final long serialVersionUID = 1L;
 
     @Override
     public void writeInternal(final Device device, final SComponent component) throws IOException {

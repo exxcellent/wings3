@@ -1,30 +1,21 @@
-/*
- * Copyright 2000,2005 wingS development team.
- *
- * This file is part of wingS (http://wingsframework.org).
- *
- * wingS is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License
- * as published by the Free Software Foundation; either version 2.1
- * of the License, or (at your option) any later version.
- *
- * Please see COPYING for the complete licence.
- */
 package org.wings.plaf.css;
 
-import org.wings.*;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+
+import org.wings.DebugTagHandler;
+import org.wings.MacroTagHandler;
+import org.wings.SLayoutManager;
+import org.wings.TemplateIntegrationLayout;
 import org.wings.io.Device;
 import org.wings.io.NullDevice;
 import org.wings.template.IntegrationTemplateParseContext;
 import org.wings.template.TemplateSource;
-import org.wings.template.RangeTagHandler;
 import org.wings.template.parser.PageParser;
 
-import java.io.IOException;
-import java.util.*;
-
 /**
- * <code>CmsLayoutCG<code>.
+ * <code>TemplateIntegrationLayoutCG<code>.
  * <p/>
  * User: raedler
  * Date: 08.08.2007
@@ -33,11 +24,8 @@ import java.util.*;
  * @author raedler
  * @version $Id
  */
-public class IntegrationLayoutCG implements org.wings.plaf.IntegrationLayoutCG {
+public class TemplateIntegrationLayoutCG implements org.wings.plaf.TemplateIntegrationLayoutCG {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     private static final PageParser parser = new PageParser();
@@ -50,7 +38,7 @@ public class IntegrationLayoutCG implements org.wings.plaf.IntegrationLayoutCG {
         parser.addTagHandler("DEBUG", DebugTagHandler.class);
     }
 
-    private void write(Device device, IntegrationLayout layout)
+    private void write(Device device, TemplateIntegrationLayout layout)
             throws IOException {
         final TemplateSource source = layout.getTemplateSource();
 
@@ -70,18 +58,18 @@ public class IntegrationLayoutCG implements org.wings.plaf.IntegrationLayoutCG {
      */
     public void write(Device device, SLayoutManager manager)
             throws IOException {
-        write(device, (IntegrationLayout) manager);
+        write(device, (TemplateIntegrationLayout) manager);
     }
 
-    public static Set<String> getContainedComponents(IntegrationLayout layout) throws IOException {
+    public static Set<String> getContainedComponents(TemplateIntegrationLayout layout) throws IOException {
         final TemplateSource source = layout.getTemplateSource();
         IntegrationTemplateParseContext context = new IntegrationTemplateParseContext(new NullDevice(), layout);
-        return IntegrationLayoutCG.parser.getContainedComponents(source, context);
+        return TemplateIntegrationLayoutCG.parser.getContainedComponents(source, context);
     }
 
-    public static Map<String, Map<String, String>> getComponentProperties(IntegrationLayout layout) throws IOException {
+    public static Map<String, Map<String, String>> getComponentProperties(TemplateIntegrationLayout layout) throws IOException {
         final TemplateSource source = layout.getTemplateSource();
         IntegrationTemplateParseContext context = new IntegrationTemplateParseContext(new NullDevice(), layout);
-        return IntegrationLayoutCG.parser.getComponentProperties(source, context);
+        return TemplateIntegrationLayoutCG.parser.getComponentProperties(source, context);
     }
 }

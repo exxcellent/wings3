@@ -1,11 +1,10 @@
 package org.wings.adapter;
 
-import org.wings.SFrame;
+import java.io.IOException;
+
+import org.wings.IntegrationFrame;
 import org.wings.conf.Integration;
 import org.wings.session.ResourceMapper;
-import org.wings.template.ResourceResolver;
-
-import au.id.jericho.lib.html.Source;
 
 /**
  * <code>JoomlaIntegration<code>.
@@ -17,9 +16,15 @@ import au.id.jericho.lib.html.Source;
  * @author rrd
  * @version $Id
  */
-public interface IntegrationAdapter extends ResourceMapper, ResourceResolver {
+public interface IntegrationAdapter extends ResourceMapper {
+    
+    void initialize();
 
-    void setFrame(SFrame frame);
+    void setFrame(IntegrationFrame frame);
 
     void setIntegration(Integration integration);
+    
+    Object getResource(String[] params) throws IOException;
+
+    Object getResource(String type, String[] params) throws IOException;
 }

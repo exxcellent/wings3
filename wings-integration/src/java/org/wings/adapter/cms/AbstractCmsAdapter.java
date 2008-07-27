@@ -22,12 +22,11 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.util.DateParser;
+import org.wings.IntegrationFrame;
 import org.wings.Resource;
-import org.wings.SFrame;
-import org.wings.STemplateLayout;
 import org.wings.SimpleURL;
 import org.wings.URLResource;
-import org.wings.adapter.AbstractIntegrationAdapter;
+import org.wings.adapter.AbstractTemplateIntegrationAdapter;
 import org.wings.adapter.parser.HtmlParser;
 import org.wings.conf.Integration;
 import org.wings.conf.UrlExtension;
@@ -54,9 +53,7 @@ import au.id.jericho.lib.html.Tag;
  * @author rrd
  * @version $Id
  */
-public abstract class AbstractCmsAdapter extends AbstractIntegrationAdapter implements HtmlParser {
-
-	private STemplateLayout layout;
+public abstract class AbstractCmsAdapter extends AbstractTemplateIntegrationAdapter implements HtmlParser {
 
 	protected Map<String, StringTemplateSource> contentMap = new HashMap<String, StringTemplateSource>();
 	protected Map<String, Date> obtainedMap = new HashMap<String, Date>();
@@ -66,23 +63,25 @@ public abstract class AbstractCmsAdapter extends AbstractIntegrationAdapter impl
 	protected Collection<Link> links = new ArrayList<Link>();
 	protected Collection<Script> scripts = new ArrayList<Script>();
 
-	public AbstractCmsAdapter(SFrame frame, Integration integration, STemplateLayout layout) {
+	public AbstractCmsAdapter(IntegrationFrame frame, Integration integration) {
 		super(frame, integration);
-		this.layout = layout;
 
 		// httpdate parses and formats dates in HTTP Date Format (RFC1123)
 		httpdate = new SimpleDateFormat(DateParser.PATTERN_RFC1123, Locale.ENGLISH);
 		httpdate.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-		try {
-			navigate(SessionManager.getSession().getServletRequest().getPathInfo());
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
-	public URL getIntegrationBaseUrl() {
+	public void initialize() {
+	    super.initialize();
+	    try {
+            navigate(SessionManager.getSession().getServletRequest().getPathInfo());
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public URL getIntegrationBaseUrl() {
 		return integration.getBaseUrl();
 	}
 
@@ -183,10 +182,6 @@ public abstract class AbstractCmsAdapter extends AbstractIntegrationAdapter impl
 		setTemplate(templateSource);
 	}
 
-	protected void setTemplate(TemplateSource templateSource) throws IOException {
-		layout.setTemplate(templateSource);
-	}
-
 	/**
 	 * @param responseBody
 	 * @return
@@ -247,15 +242,17 @@ public abstract class AbstractCmsAdapter extends AbstractIntegrationAdapter impl
 					values.add(attribute.getValue());
 				}
 				else {
-					System.out.println("No attribute " + variable + " has been found within element \"" + include
-							+ "\".");
+					System.out.println("No attribute " + variable + " has been found within element \"" + include + "\".");
 				}
 			}
+			
+			String baseUrl = integration.getBaseUrl().toExternalForm();
+	        if (!baseUrl.endsWith("/")) {
+	            baseUrl += "/";
+	        }
+	        String extensionUrl = urlExtension.getReplacedValue(values.toArray(new String[values.size()]));
 
-			String extension = urlExtension.getReplacedValue(values.toArray(new String[values.size()]));
-
-			String url = integration.getBaseUrl().toExternalForm() + "/" + extension;
-			System.out.println(url);
+			String url = baseUrl + extensionUrl;
 
 			int begin = include.getBegin();
 			int end = include.getEnd();
@@ -287,11 +284,9 @@ public abstract class AbstractCmsAdapter extends AbstractIntegrationAdapter impl
 			}
 		}
 		catch (HttpException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return "";

@@ -15,9 +15,11 @@ import java.util.HashMap;
  * @author rrd
  * @version $Id
  */
-public class MacroContext extends HashMap {
+public class MacroContext extends HashMap<Object, Object> {
 
-    private enum MacroContextKey {
+    private static final long serialVersionUID = 1L;
+
+    private static enum MacroContextKey {
         DEVICE, COMPONENT
     }
 

@@ -39,7 +39,7 @@ public class DebugTagHandler implements SpecialTagHandler {
 
     long startPos;
     long endPos;
-    Map properties;
+    Map<String, String> properties;
     String name;
 
     public long getTagStart() {
@@ -55,7 +55,7 @@ public class DebugTagHandler implements SpecialTagHandler {
         Device sink = tcontext.getDevice();
 
         /*
-         * get the component that is associtated with this name. This has
+         * get the component that is associated with this name. This has
          * been set as Layout Manager Constraint.
          */
         SComponent[] components = tcontext.getComponents();

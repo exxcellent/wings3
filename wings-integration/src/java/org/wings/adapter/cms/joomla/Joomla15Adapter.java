@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.wings.IntegrationFrame;
-import org.wings.SFrame;
-import org.wings.STemplateLayout;
-import org.wings.adapter.cms.AbstractCmsAdapter;
+import org.wings.TemplateIntegrationFrame;
 import org.wings.conf.Integration;
 import org.wings.header.Script;
 import org.wings.util.HtmlParserUtils;
@@ -19,7 +17,7 @@ import au.id.jericho.lib.html.Source;
 import au.id.jericho.lib.html.Tag;
 
 /**
- * <code>JoomlaAdapter<code>.
+ * <code>Joomla15Adapter<code>.
  * <p/>
  * User: rrd
  * Date: 08.08.2007
@@ -35,8 +33,8 @@ public class Joomla15Adapter extends AbstactJoomlaAdapter {
 	 * @param layout
 	 * @param integration
 	 */
-	public Joomla15Adapter(SFrame frame, Integration integration, STemplateLayout layout) {
-		super(frame, integration, layout);
+	public Joomla15Adapter(IntegrationFrame frame, Integration integration) {
+		super(frame, integration);
 	}
 
 	/*
@@ -52,7 +50,7 @@ public class Joomla15Adapter extends AbstactJoomlaAdapter {
 		headSource = prepareLinks(headSource);
 		headSource = prepareScripts(headSource);
 
-		((IntegrationFrame) frame).setHeadExtension(headSource.toString().trim());
+		((TemplateIntegrationFrame) frame).setHeadExtension(headSource.toString().trim());
 		
 		return headSource;
 	}
@@ -78,7 +76,7 @@ public class Joomla15Adapter extends AbstactJoomlaAdapter {
 
 		if (titleElement != null) {
 			String title = titleElement.getTextExtractor().toString();
-			frame.setTitle("Joomla15Adapter :: " + title);
+			frame.setTitle(title);
 			
 			return HtmlParserUtils.removeAllTags(headSource, Tag.TITLE);
 		}

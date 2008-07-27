@@ -1,22 +1,23 @@
 package org.wings.adapter.cms.joomla;
 
-import org.wings.SFrame;
-import org.wings.STemplateLayout;
-import org.wings.session.SessionManager;
-import org.wings.header.Link;
-import org.wings.header.Script;
-import org.wings.adapter.cms.AbstractCmsAdapter;
-import org.wings.conf.Integration;
-
-import au.id.jericho.lib.html.*;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.wings.IntegrationFrame;
+import org.wings.conf.Integration;
+import org.wings.header.Script;
+
+import au.id.jericho.lib.html.Attribute;
+import au.id.jericho.lib.html.Attributes;
+import au.id.jericho.lib.html.Element;
+import au.id.jericho.lib.html.OutputDocument;
+import au.id.jericho.lib.html.Source;
+import au.id.jericho.lib.html.StartTag;
+import au.id.jericho.lib.html.Tag;
+
 /**
- * <code>JoomlaAdapter<code>.
+ * <code>Joomla10Adapter<code>.
  * <p/>
  * User: rrd
  * Date: 08.08.2007
@@ -27,8 +28,8 @@ import java.util.List;
  */
 public class Joomla10Adapter extends AbstactJoomlaAdapter {
 
-    public Joomla10Adapter(SFrame frame, Integration integration, STemplateLayout layout) {
-        super(frame, integration, layout);
+    public Joomla10Adapter(IntegrationFrame frame, Integration integration) {
+        super(frame, integration);
     }
 
     /**
@@ -39,7 +40,7 @@ public class Joomla10Adapter extends AbstactJoomlaAdapter {
 
         if (titleElement != null) {
             String title = titleElement.getTextExtractor().toString();
-            frame.setTitle("JoomlaAdapter :: " + title);
+            frame.setTitle(title);
         }
     }
 

@@ -1,7 +1,7 @@
 package org.wings.plaf;
 
 /**
- * <code>IntegrationFrameCG<code>.
+ * <code>TemplateIntegrationFrameCG<code>.
  * <p/>
  * User: rrd
  * Date: 10.08.2007
@@ -10,5 +10,5 @@ package org.wings.plaf;
  * @author rrd
  * @version $Id
  */
-public interface IntegrationFrameCG extends FrameCG {    
+public interface TemplateIntegrationFrameCG extends IntegrationFrameCG {    
 }

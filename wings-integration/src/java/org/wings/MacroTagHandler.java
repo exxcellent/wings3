@@ -31,7 +31,7 @@ import org.wings.template.parser.SGMLTag;
 import org.wings.template.parser.SpecialTagHandler;
 
 /**
- * <code>CmsObjectTagHandler<code>.
+ * <code>MacroTagHandler<code>.
  * <p/>
  * User: raedler
  * Date: 08.08.2007
@@ -45,7 +45,7 @@ public class MacroTagHandler implements SpecialTagHandler {
 
     long startPos;
     long endPos;
-    Map properties;
+    Map<String, String> properties;
     String name;
     private String macroTemplate;
 
@@ -62,7 +62,7 @@ public class MacroTagHandler implements SpecialTagHandler {
         Device sink = tcontext.getDevice();
 
         /*
-         * get the component that is associtated with this name. This has
+         * get the component that is associated with this name. This has
          * been set as Layout Manager Constraint.
          */
         SComponent c = tcontext.getComponent(name);
@@ -107,17 +107,6 @@ public class MacroTagHandler implements SpecialTagHandler {
 
                 macroContainer.setContext(ctx);
 
-//                if (c instanceof CmsForm) {
-//                    SComponent child = ((CmsForm) c).getComponent();
-//
-//                    if (child instanceof STable) {
-//                        CmsTableCG cg = new CmsTableCG();
-//                        cg.setMacros(macroContainer);
-//                        child.setCG(cg);
-//                        c.write(sink);
-//                    }
-//                }
-
                 if (c instanceof STable) {
                     IntegrationTableCG cg = new IntegrationTableCG();
                     cg.setMacros(macroContainer);
@@ -126,12 +115,9 @@ public class MacroTagHandler implements SpecialTagHandler {
                     c.setCG(cg);
                     c.write(sink);
                 }
-
-                //String result = macroProcessor.handle(macroTemplate, name, tcontext);
-                //sink.print(result);
             }
             else {
-                ComponentCG cg = (ComponentCG)c.getClientProperty("cg");
+                ComponentCG cg = (ComponentCG) c.getClientProperty("cg");
                 if (cg != null)
                     c.setCG(cg);
                 c.write(sink);
@@ -142,14 +128,13 @@ public class MacroTagHandler implements SpecialTagHandler {
     private void properties(SComponent c) {
         if (properties.size() > 0) {
             PropertyManager propManager =
-                    IntegrationLayout.getPropertyManager(c.getClass());
+                    TemplateIntegrationLayout.getPropertyManager(c.getClass());
 
             if (propManager != null) {
-                Iterator iter = properties.keySet().iterator();
+                Iterator<String> iter = properties.keySet().iterator();
                 while (iter.hasNext()) {
-                    String key = (String) iter.next();
-                    String value = (String) properties.get(key);
-                    // System.out.println("set Property " + key + "=" +value + "  for " + name);
+                    String key = iter.next();
+                    String value = properties.get(key);
                     propManager.setProperty(c, key, value);
                 }
             }

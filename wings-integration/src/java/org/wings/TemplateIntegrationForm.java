@@ -12,7 +12,7 @@
  */
 package org.wings;
 
-import org.wings.plaf.IntegrationFormCG;
+import org.wings.plaf.TemplateIntegrationFormCG;
 
 /**
  * <code>CmsForm<code>.
@@ -24,9 +24,19 @@ import org.wings.plaf.IntegrationFormCG;
  * @author raedler
  * @version $Id
  */
-public class IntegrationForm extends SForm {
+public class TemplateIntegrationForm extends SForm {
+    
+    private static final long serialVersionUID = 1L;
 
-    public void setCG(IntegrationFormCG cg) {
+    public TemplateIntegrationForm() {
+        super();
+    }
+
+    public TemplateIntegrationForm(SLayoutManager layout) {
+        super(layout);
+    }
+
+    public void setCG(TemplateIntegrationFormCG cg) {
         super.setCG(cg);
     }
 }

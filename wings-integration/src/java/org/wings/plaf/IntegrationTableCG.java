@@ -29,7 +29,7 @@ import org.wings.plaf.css.Utils;
 import org.wings.table.STableCellRenderer;
 
 /**
- * <code>CmsTableCG<code>.
+ * <code>IntegrationTableCG<code>.
  * <p/>
  * User: raedler
  * Date: 10.08.2007
@@ -39,8 +39,10 @@ import org.wings.table.STableCellRenderer;
  * @version $Id
  */
 public class IntegrationTableCG implements TableCG, IntegrationCG {
-
-	private MacroContainer macros;
+    
+    private static final long serialVersionUID = 1L;
+    
+    private MacroContainer macros;
 
 	/**
 	 * {@inheritDoc}

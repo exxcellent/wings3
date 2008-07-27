@@ -3,7 +3,7 @@ package org.wings.conf;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
- * <code>StringToClassAdapter<code>.
+ * <code>ClassAdapter<code>.
  * <p/>
  * User: rrd
  * Date: 08.08.2007

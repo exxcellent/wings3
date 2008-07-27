@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 import au.id.jericho.lib.html.Element;
 import au.id.jericho.lib.html.OutputDocument;
 import au.id.jericho.lib.html.Source;
-import au.id.jericho.lib.html.Tag;
 
 /**
  * <code>HtmlParserUtils</code>.
@@ -68,6 +67,7 @@ public class HtmlParserUtils {
 	 *            The tag(s) that will be removed.
 	 * @return The same source as the parameter source except the removed tags.
 	 */
+	@SuppressWarnings("unchecked")
 	public static Source removeAllTags(final Source source, final String tagName) {
 
 		OutputDocument outputDocument = new OutputDocument(source);

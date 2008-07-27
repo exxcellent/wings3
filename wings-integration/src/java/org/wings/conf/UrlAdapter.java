@@ -8,7 +8,7 @@ import java.net.URL;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
- * <code>StringToUrlAdapter</code>.
+ * <code>UrlAdapter</code>.
  * 
  * <pre>
  * Date: Jul 23, 2008

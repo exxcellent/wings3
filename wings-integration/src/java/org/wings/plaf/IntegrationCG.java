@@ -3,7 +3,7 @@ package org.wings.plaf;
 import org.wings.macro.MacroContainer;
 
 /**
- * <code>CmsCG<code>.
+ * <code>IntegrationCG<code>.
  * <p/>
  * User: rrd
  * Date: 13.08.2007

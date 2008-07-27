@@ -3,12 +3,7 @@
  */
 package org.wings.conf;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
-import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -20,7 +15,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.wings.macro.MacroProcessor;
 
 /**
- * <code>TemplateDetail</code>.
+ * <code>Resource</code>.
  * 
  * <pre>
  * Date: Jul 23, 2008

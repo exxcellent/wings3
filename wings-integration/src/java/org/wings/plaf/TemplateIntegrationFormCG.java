@@ -1,7 +1,7 @@
 package org.wings.plaf;
 
 /**
- * <code>CmsFormCG<code>.
+ * <code>TemplateIntegrationFormCG<code>.
  * <p/>
  * User: rrd
  * Date: 14.08.2007
@@ -10,5 +10,5 @@ package org.wings.plaf;
  * @author rrd
  * @version $Id
  */
-public interface IntegrationFormCG extends FormCG {
+public interface TemplateIntegrationFormCG extends FormCG {
 }

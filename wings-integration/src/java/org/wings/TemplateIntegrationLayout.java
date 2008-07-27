@@ -12,7 +12,7 @@
  */
 package org.wings;
 
-import org.wings.plaf.IntegrationLayoutCG;
+import org.wings.plaf.TemplateIntegrationLayoutCG;
 import org.wings.template.TemplateSource;
 import org.wings.template.PropertyManager;
 
@@ -23,11 +23,12 @@ import java.io.IOException;
  * @author hengels
  * @version $Id
  */
-public class IntegrationLayout extends STemplateLayout {
+public class TemplateIntegrationLayout extends STemplateLayout {
 
+    private static final long serialVersionUID = 1L;
     Map<String, ComponentSet> componentSets = new HashMap<String, ComponentSet>();
 
-    protected void setCG(IntegrationLayoutCG cg) {
+    protected void setCG(TemplateIntegrationLayoutCG cg) {
         super.setCG(cg);
     }
 
@@ -37,7 +38,7 @@ public class IntegrationLayout extends STemplateLayout {
 
         TemplateSource source = getTemplateSource();
         if (source != null) {
-            IntegrationLayout.ComponentSet componentSet = componentSets.get(source.getCanonicalName());
+            TemplateIntegrationLayout.ComponentSet componentSet = componentSets.get(source.getCanonicalName());
             boolean contained = componentSet.names.contains(component.getName());
             component.setVisible(contained);
             if (contained)
@@ -52,7 +53,7 @@ public class IntegrationLayout extends STemplateLayout {
 
         TemplateSource source = getTemplateSource();
         if (source != null) {
-            IntegrationLayout.ComponentSet componentSet = componentSets.get(source.getCanonicalName());
+            TemplateIntegrationLayout.ComponentSet componentSet = componentSets.get(source.getCanonicalName());
             componentSet.contained.remove(component);
             componentSet.notContained.remove(component);
         }
@@ -60,14 +61,14 @@ public class IntegrationLayout extends STemplateLayout {
 
     public void setTemplate(TemplateSource source) throws IOException {
         super.setTemplate(source);
-        Set<String> names = org.wings.plaf.css.IntegrationLayoutCG.getContainedComponents(this);
+        Set<String> names = org.wings.plaf.css.TemplateIntegrationLayoutCG.getContainedComponents(this);
         final SContainer container = getContainer();
 
-        IntegrationLayout.ComponentSet componentSet = componentSets.get(source.getCanonicalName());
+        TemplateIntegrationLayout.ComponentSet componentSet = componentSets.get(source.getCanonicalName());
         if (componentSet == null) {
             componentSet = new ComponentSet();
             componentSet.names = names;
-            componentSet.componentProperties = org.wings.plaf.css.IntegrationLayoutCG.getComponentProperties(this);
+            componentSet.componentProperties = org.wings.plaf.css.TemplateIntegrationLayoutCG.getComponentProperties(this);
             for (SComponent component : container.getComponents()) {
                 if (names.contains(component.getName()))
                     componentSet.contained.add(component);
@@ -85,14 +86,13 @@ public class IntegrationLayout extends STemplateLayout {
         for (SComponent component : componentSet.contained) {
             Map<String, String> properties = componentSet.componentProperties.get(component.getName());
             if (properties.size() > 0) {
-                PropertyManager propManager = IntegrationLayout.getPropertyManager(component.getClass());
+                PropertyManager propManager = TemplateIntegrationLayout.getPropertyManager(component.getClass());
 
                 if (propManager != null) {
-                    Iterator iter = properties.keySet().iterator();
+                    Iterator<String> iter = properties.keySet().iterator();
                     while (iter.hasNext()) {
-                        String key = (String) iter.next();
-                        String value = (String) properties.get(key);
-                        // System.out.println("set Property " + key + "=" +value + "  for " + name);
+                        String key = iter.next();
+                        String value = properties.get(key);
                         propManager.setProperty(component, key, value);
                     }
                 }
@@ -100,8 +100,7 @@ public class IntegrationLayout extends STemplateLayout {
         }
     }
 
-    private class ComponentSet
-    {
+    private class ComponentSet {
         Set<String> names;
         Set<SComponent> contained = new HashSet<SComponent>();
         Set<SComponent> notContained = new HashSet<SComponent>();
