@@ -153,12 +153,12 @@ public class ServletPreferences
         String baseDir = System.getProperty("java.util.prefs.userRoot",
                 System.getProperty("user.home"));
         
-        File userRootDir = new File(baseDir, ".java/userPrefs/" + (userName != null ? userName.trim() : ""));
+        File userRootDir = new File(baseDir, ".java/.userPrefs/" + (userName != null ? userName.trim() : ""));
         // Attempt to create root dir if it does not yet exist.
         if (!userRootDir.exists()) {
             if (userRootDir.mkdirs()) {
 
-                getLogger().info("Created user preferences directory.");
+                getLogger().info("Created user preferences directory at " + userRootDir.getPath());
             }
             else
                 getLogger().warning("Couldn't create user preferences" +
@@ -194,21 +194,14 @@ public class ServletPreferences
     }
 
     private static void setupSystemRoot() {
-        String systemPrefsDirName = "./Prefs/system/";
 
-        //(String)System.getProperty("java.util.prefs.systemRoot","/etc/.java");
-
-        systemRootDir = new File(systemPrefsDirName);//, ".systemPrefs");
-        // Attempt to create root dir if it does not yet exist.
-        //if (!systemRootDir.exists()) {
-        // system root does not exist in /etc/.java
-        // Switching  to java.home
-        //systemRootDir = new File(System.getProperty("java.home"),".systemPrefs");
+        String baseDir = System.getProperty("java.util.prefs.systemRoot", System.getProperty("user.home"));
+        systemRootDir = new File(baseDir, ".java/.userPrefs/system-servlet-prefs");
         if (!systemRootDir.exists()) {
             if (systemRootDir.mkdirs()) {
                 getLogger().info(
                     "Created system preferences directory "
-                        + "in " + systemPrefsDirName);
+                        + "in " + systemRootDir.getName());
 
             }
             else {
