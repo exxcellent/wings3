@@ -184,7 +184,7 @@
         <ant dir="wingx" target="clean" inheritall="false"/>
         <ant dir="wings-experimental" target="clean" inheritall="false"/>
         <ant dir="wings-portlet" target="clean" inheritall="false"/>
-        <ant dir="wings-cms" target="clean" inheritall="false"/>
+        <ant dir="wings-integration" target="clean" inheritall="false"/>
         <ant dir="demo-wingset" target="clean" inheritall="false"/>
         <ant dir="demo-desktop" target="clean" inheritall="false"/>
         <ant dir="demo-jsp" target="clean" inheritall="false"/>
@@ -219,7 +219,7 @@
     <target name="deploy-demo-wingscms" description="deploy demo-wingcms">
         <ant dir="wings" target="build"/>
         <ant dir="wingx" target="build"/>
-        <ant dir="wings-cms" target="build"/>
+        <ant dir="wings-integration" target="build"/>
         <ant dir="demo-wingscms" target="deploy"/>
     </target>
 
