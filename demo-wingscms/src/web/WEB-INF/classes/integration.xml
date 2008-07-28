@@ -11,6 +11,6 @@
 <!--integration adapter="org.wings.adapter.file.LocalAdapter">
     <base-url>file:///templates/</base-url>
     <resource processor="org.wings.macro.impl.VelocityMacroProcessor" cache="true">
-        <url-extension>/fragments/{templateName}.html</url-extension>
+        <url-extension>/fragments/{name}.html</url-extension>
     </resource>
 </integration-->
