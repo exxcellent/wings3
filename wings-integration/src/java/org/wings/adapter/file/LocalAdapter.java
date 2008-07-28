@@ -8,16 +8,18 @@ import java.io.InputStreamReader;
 
 import org.wings.IntegrationFrame;
 import org.wings.Resource;
+import org.wings.TemplateIntegrationFrame;
 import org.wings.adapter.AbstractTemplateIntegrationAdapter;
 import org.wings.conf.Integration;
 import org.wings.session.SessionManager;
 import org.wings.template.StringTemplateSource;
 import org.wings.template.TemplateSource;
+import org.wings.util.HtmlParserUtils;
 
-/**
- * @author hengels
- * @version $Id
- */
+import au.id.jericho.lib.html.Element;
+import au.id.jericho.lib.html.Source;
+import au.id.jericho.lib.html.Tag;
+
 public class LocalAdapter extends AbstractTemplateIntegrationAdapter {
 
     public LocalAdapter(IntegrationFrame frame, Integration integration) {
@@ -42,33 +44,19 @@ public class LocalAdapter extends AbstractTemplateIntegrationAdapter {
      * @see org.wings.adapter.AbstractIntegrationAdapter#navigate(java.lang.String)
      */
     protected void navigate(String url) throws IOException {
-        String template = getFileContent(getFile(url));
-
-        // Add template to cache
-        TemplateSource templateSource = new StringTemplateSource(template);
-        setTemplate(templateSource);
+        String template = getFileContent(new File(prepareUrl(url)));
+        setTemplate(new StringTemplateSource(process(template)));
     }
 
     public Object getResource(String[] params) throws IOException {
-        return getFileContent(getFile(integration.getResource().getUrlExtension(null).getReplacedValue(params)));
+        String url = prepareUrl(integration.getResource().getUrlExtension(null).getReplacedValue(params));
+        return process(getFileContent(new File(url)));
     }
 
     public Object getResource(String type, String[] params) throws IOException {
         return getResource(params);
     }
     
-    private File getFile(String filePath) throws IOException {
-        String basePath = integration.getBaseUrl().toExternalForm();
-        if (!basePath.endsWith("/") || !basePath.endsWith("\\")) {
-            basePath += File.separatorChar;
-        }
-        String path = basePath + filePath;
-        String protocol = integration.getBaseUrl().getProtocol();
-        path = path.replaceFirst(protocol + "://", "");
-        path = path.replaceFirst(protocol + ":", "");
-        return new File(SessionManager.getSession().getServletContext().getRealPath(path));
-    }
-
     private String getFileContent(File file) throws IOException {
         StringBuilder contents = new StringBuilder();
 
@@ -84,6 +72,52 @@ public class LocalAdapter extends AbstractTemplateIntegrationAdapter {
         }
 
         return contents.toString();
+    }
+    
+    @Override
+    protected String prepareUrl(String extensionUrl) {
+        String baseUrl = integration.getBaseUrl().toExternalForm();
+        if (!baseUrl.endsWith("/") || !baseUrl.endsWith("\\")) {
+            baseUrl += File.separatorChar;
+        }
+        String url = baseUrl + extensionUrl;
+        String protocol = integration.getBaseUrl().getProtocol();
+        url = url.replaceFirst(protocol + "://", "");
+        url = url.replaceFirst(protocol + ":", "");
+        return SessionManager.getSession().getServletContext().getRealPath(url);
+    }
+
+    @Override
+    protected String requestInclude(String url) {
+        try {
+            return getFileContent(new File(url));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+    
+    public Source parseHead(Source headSource) {
+        headSource = prepareTitle(headSource);
+        headSource = HtmlParserUtils.removeAllTags(headSource, Tag.META);
+        ((TemplateIntegrationFrame) frame).setHeadExtension(headSource.toString().trim());
+        return headSource;
+    }
+    
+    public Source parseBody(Source bodySource) {
+        bodySource = HtmlParserUtils.removeAllTags(bodySource, Tag.FORM);
+        return bodySource;
+    }
+    
+    private Source prepareTitle(Source headSource) {
+        Element titleElement = headSource.findNextElement(0, Tag.TITLE);
+        if (titleElement != null) {
+            String title = titleElement.getTextExtractor().toString();
+            frame.setTitle(title);
+            
+            return HtmlParserUtils.removeAllTags(headSource, Tag.TITLE);
+        }
+        return headSource;
     }
 
 }

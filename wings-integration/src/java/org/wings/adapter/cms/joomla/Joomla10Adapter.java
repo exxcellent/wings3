@@ -43,17 +43,11 @@ public class Joomla10Adapter extends AbstactJoomlaAdapter {
             frame.setTitle(title);
         }
     }
-
-    /* (non-Javadoc)
-	 * @see org.wings.adapter.CmsAdapter#parseHead(au.id.jericho.lib.html.Source)
-	 */
+    
 	public Source parseHead(Source source) {
 		return source;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.wings.adapter.CmsAdapter#parseBody(au.id.jericho.lib.html.Source)
-	 */
 	public Source parseBody(Source source) {
 		return source;
 	}

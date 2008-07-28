@@ -37,11 +37,7 @@ public abstract class AbstactJoomlaAdapter extends AbstractCmsAdapter {
 	}
 	
 	public Object getResource(String type, String[] params) throws IOException {
-	    String baseUrl = integration.getBaseUrl().toExternalForm();
-        if (!baseUrl.endsWith("/")) {
-            baseUrl += "/";
-        }
-        String extensionUrl = integration.getResource().getUrlExtension(type).getReplacedValue(params);
-		return request(new GetMethod(baseUrl + extensionUrl));
+	    String url = prepareUrl(integration.getResource().getUrlExtension(type).getReplacedValue(params));
+		return process(request(new GetMethod(url)));
 	}
 }

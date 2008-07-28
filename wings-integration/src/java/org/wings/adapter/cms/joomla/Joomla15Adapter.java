@@ -36,13 +36,7 @@ public class Joomla15Adapter extends AbstactJoomlaAdapter {
 	public Joomla15Adapter(IntegrationFrame frame, Integration integration) {
 		super(frame, integration);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.wings.adapter.CmsAdapter#parseHead(au.id.jericho.lib.html.Source)
-	 */
+	
 	public Source parseHead(Source headSource) {
 		
 		headSource = prepareTitle(headSource);
@@ -54,10 +48,7 @@ public class Joomla15Adapter extends AbstactJoomlaAdapter {
 		
 		return headSource;
 	}
-
-	/* (non-Javadoc)
-	 * @see org.wings.adapter.CmsAdapter#parseBody(au.id.jericho.lib.html.Source)
-	 */
+	
 	public Source parseBody(Source bodySource) {
 
 		bodySource = HtmlParserUtils.removeAllTags(bodySource, Tag.FORM);
