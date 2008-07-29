@@ -148,9 +148,12 @@ public class XTable extends STable
             STableCellRenderer cellRenderer = getCellRenderer(row, col);
             if (cellRenderer instanceof EditableTableCellRenderer) {
                 EditableTableCellRenderer editableCellRenderer = (EditableTableCellRenderer)cellRenderer;
-                editableCellRenderer.getLowLevelEventListener(this, row, col).processLowLevelEvent(action, values);
-                Object value = editableCellRenderer.getValue();
-                getModel().setValueAt(value, row, convertColumnIndexToModel(col));
+                LowLevelEventListener listener = editableCellRenderer.getLowLevelEventListener(this, row, col);
+                if (listener.isEnabled()) {
+                    listener.processLowLevelEvent(action, values);
+                    Object value = editableCellRenderer.getValue();
+                    getModel().setValueAt(value, row, convertColumnIndexToModel(col));
+                }
             }
         }
         else {

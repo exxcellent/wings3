@@ -1796,7 +1796,8 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * is displaying it as html form button.
      * Setting <i>showAsFormComponent</i> to <i>false</i> will
      * force displaying as href even if button is inside
-     * a form.
+     * a form. Beware that form buttons submit the whole form while
+     * href buttons send a get request!
      *
      * @param showAsFormComponent if true, display as link, if false as html form component.
      */

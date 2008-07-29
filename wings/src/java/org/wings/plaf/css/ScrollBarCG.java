@@ -13,6 +13,7 @@
 package org.wings.plaf.css;
 
 import org.wings.*;
+import org.wings.style.CSSProperty;
 import org.wings.io.Device;
 import org.wings.plaf.css.script.LayoutFillScript;
 import org.wings.plaf.css.script.OnPageRenderedScript;
@@ -55,6 +56,7 @@ public final class ScrollBarCG extends org.wings.plaf.css.AbstractComponentCG<SS
             Utils.setPreferredSize(sb, preferredSize.getWidth(), null);
         }
 
+        sb.setAttribute(CSSProperty.TABLE_LAYOUT, "fixed");
         Utils.writeAllAttributes(device, sb);
 
         if (clientLayout) {

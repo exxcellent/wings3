@@ -512,7 +512,11 @@ public class XTableCG
 
     private void writeCol(Device device, String width) throws IOException {
         device.print("<col");
-        Utils.optAttribute(device, "width", width);
+        if (width != null) {
+            device.print(" width=\"");
+            device.print(width);
+            device.print("\"");
+        }
         device.print("/>");
     }
 

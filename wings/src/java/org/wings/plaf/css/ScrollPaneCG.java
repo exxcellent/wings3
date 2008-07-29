@@ -16,6 +16,7 @@ import java.awt.Adjustable;
 import java.io.IOException;
 
 import org.wings.*;
+import org.wings.style.CSSProperty;
 import org.wings.io.Device;
 import org.wings.plaf.css.script.LayoutFillScript;
 import org.wings.plaf.css.script.LayoutFixScript;
