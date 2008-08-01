@@ -354,7 +354,7 @@ public class XTableCG
         }
     }
 
-    private void writeHeader(Device device, XTable table, int startX, int endX) throws IOException {
+    protected void writeHeader(Device device, XTable table, int startX, int endX) throws IOException {
         if (!table.isHeaderVisible())
             return;
 
@@ -380,7 +380,7 @@ public class XTableCG
         Utils.printNewline(device, table);
     }
 
-    private void writeFilter(Device device, XTable table, int startX, int endX) throws IOException {
+    protected void writeFilter(Device device, XTable table, int startX, int endX) throws IOException {
         if (!table.isFilterVisible() || !(table.getModel() instanceof FilterableTableModel))
             return;
 

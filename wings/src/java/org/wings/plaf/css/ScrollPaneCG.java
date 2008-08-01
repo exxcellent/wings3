@@ -74,6 +74,11 @@ public class ScrollPaneCG extends org.wings.plaf.css.AbstractComponentCG impleme
             Utils.setPreferredSize(scrollPane, preferredSize.getWidth(), null);
         }
 
+        if (scrollPane.getMode() == SScrollPane.MODE_COMPLETE)
+            scrollPane.setAttribute(CSSProperty.TABLE_LAYOUT, "fixed");
+        else
+            scrollPane.setAttribute(CSSProperty.TABLE_LAYOUT, null);
+
         Utils.writeAllAttributes(device, scrollPane);
 
         if (clientLayout) {
