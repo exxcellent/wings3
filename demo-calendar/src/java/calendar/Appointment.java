@@ -12,8 +12,10 @@ public interface Appointment {
 	 */
 	public abstract Date getAppointmentStartDate();
 	
+
 	/**
 	 * Returns the End Date of an Appointment
+     * As the end time is merged with the date, it could vary on different days, therefore a date is passed
 	 * @return The Appointments End Date/Time
 	 */
 	public abstract Date getAppointmentEndDate();
@@ -42,8 +44,9 @@ public interface Appointment {
 	 * @return String that represents the name of this appointment
 	 */
 	public abstract String getAppointmentName();
-	
-	/**
+
+
+    /**
 	 * Returns the description of the appointment
 	 * @return String that represents the description of this appointment
 	 */
@@ -54,7 +57,7 @@ public interface Appointment {
 	 * @return String that represents additional information about this appointment
 	 */
 	public abstract String getAdditionalAppointmentInformation();
-	
+
 	/**
 	 * Returns the foreground color of the appointment
 	 * @return Foreground color of the appointment
@@ -66,10 +69,17 @@ public interface Appointment {
 	 * @return Background color of the appointment
 	 */
 	public abstract Color getBackgroundColor();
-	
-	/**
+
+    /**
+     * Must return a subtype of the appointment (usually this) - in case of recurring appointments with exceptions
+     * the exception is returned
+     * @param date 
+     * @return
+     */
+    public abstract Appointment getSubAppointment(Date date);
+
+    /**
 	 * Gets a String that represents the Weekdays this Appointment recurrs
-	 * @param weekdays EnumSet of Weekdays that to build String
 	 * @param locale Locale to use when building the string
 	 * @return String representing the given Weekday Enum in the given Locale 
 	 */
@@ -91,13 +101,12 @@ public interface Appointment {
 	
 	/**
 	 * Gets a localized String of the Start/end Time of a Appointment
-	 * @param startDate
-	 * @param endDate
+	 * @param locale
 	 * @return
 	 */
 	public abstract String getAppointmentStartEndTimeString(Locale locale);
-	
-	/**
+
+    /**
 	 * A Enumeration representing the Type of an Appointment (either NORMAL or ALLDAY) 
 	 * @author Florian Roks
 	 *

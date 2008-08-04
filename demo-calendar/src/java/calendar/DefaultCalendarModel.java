@@ -291,10 +291,13 @@ public class DefaultCalendarModel implements CalendarModel {
                 // this should add all appointments that are active on this day
                 if(isAppointmentAdded(appointment, new java.sql.Date(tempCalFrom.getTimeInMillis())))
                 {
-                    if(appointment.getAppointmentType() == calendar.Appointment.AppointmentType.NORMAL)
-                        eventListNormal.add(appointment);
-                    if(appointment.getAppointmentType() == calendar.Appointment.AppointmentType.ALLDAY)
-                        eventListAllDay.add(appointment);
+                    Appointment app = appointment.getSubAppointment(new Date(tempCalFrom.getTimeInMillis()));
+                    if(appointment.getAppointmentType() == calendar.Appointment.AppointmentType.NORMAL) {
+                        eventListNormal.add(app==null?appointment:app);
+                    }
+                    if(appointment.getAppointmentType() == calendar.Appointment.AppointmentType.ALLDAY) {
+                        eventListAllDay.add(app==null?appointment:app);
+                    }
                 }
             }
             Collections.sort(eventListAllDay, timeComparator);

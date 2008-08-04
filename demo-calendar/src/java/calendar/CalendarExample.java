@@ -25,9 +25,12 @@ import org.wings.SLabel;
 import org.wings.SPanel;
 import org.wings.SURLIcon;
 import org.wings.SFont;
+import org.wings.sdnd.SDropMode;
 
 import calendar.CalendarModel.CalendarView;
 import calendar.remote.RemoteCalendar;
+
+import javax.swing.*;
 
 /**
  * Simple Example to show the Calendar Component
@@ -52,7 +55,7 @@ public class CalendarExample {
 			this.calendar.setDate(Calendar.getInstance().getTime());
 		} else {
 			DefaultCalendarModel model = new DefaultCalendarModel();
-            model.setMergeWeekends(false);
+            model.setMergeWeekends(true);
             calendar.setCalendarModel(model);
 		}
 
@@ -69,8 +72,10 @@ public class CalendarExample {
 		calendar.setBorder(SBorderFactory.createSLineBorder(new java.awt.Color(100, 100, 255), 2));
 		calendar.setPreferredSize(new SDimension("100%", "600"));
 		calendar.setHorizontalAlignment(SConstants.CENTER);
-
-		mainPanel.add(calendar, SBorderLayout.CENTER);
+        calendar.setDragEnabled(true);
+        calendar.setDropMode(SDropMode.USE_SELECTION);
+        
+        mainPanel.add(calendar, SBorderLayout.CENTER);
 		mainPanel.add(getBottomPanel(), SBorderLayout.SOUTH);
 		mainPanel.add(getNavigationPanel(), SBorderLayout.NORTH);
 
@@ -257,12 +262,11 @@ public class CalendarExample {
 					}
 				);
 
-		String[] dateArray = {"NONE", "SINGLE_DATE", "MULTIPLE_DATE", "DESELECT_APPOINTMENT_ON_DATE|SINGLE_DATE"};
+		String[] dateArray = {"NONE", "SINGLE_DATE", "MULTIPLE_DATE", "DESELECT_APPOINTMENT_ON_DATE|SINGLE_DATE", "DESELECT_APPOINTMENT_ON_DATE|MULTIPLE_DATE"};
 		SComboBox comboBox2 = new SComboBox(dateArray);
 		comboBox2.addActionListener(
 				new ActionListener()
 				{
-
 					public void actionPerformed(ActionEvent e) {
 						int oldVal = calendar.getSelectionModel().getSelectionMode();
 						// preserve all bits not reserved for dates
@@ -274,18 +278,19 @@ public class CalendarExample {
 							newVal |= CalendarSelectionModel.MULTIPLE_DATE_SELECTION;
 						if(selection == 3)
 							newVal |= CalendarSelectionModel.DESELECT_APPOINTMENT_ON_DATE_SELECTION|CalendarSelectionModel.SINGLE_DATE_SELECTION;
+                        if(selection == 4)
+                            newVal |= CalendarSelectionModel.DESELECT_APPOINTMENT_ON_DATE_SELECTION|CalendarSelectionModel.MULTIPLE_DATE_SELECTION;
 
 						calendar.getSelectionModel().setSelectionMode(newVal);
 					}
 				}
 			);
 
-		String[] appArray = {"NONE", "SINGLE_APPOINTMENT", "MULTIPLE_APPOINTMENT", "DESELECT_DATE_ON_APPOINTMENT|SINGLE_APPOINTMENT"};
+		String[] appArray = {"NONE", "SINGLE_APPOINTMENT", "MULTIPLE_APPOINTMENT", "DESELECT_DATE_ON_APPOINTMENT|SINGLE_APPOINTMENT", "DESELECT_DATE_ON_APPOINTMENT|MULTIPLE_APPOINTMENT"};
 		SComboBox comboBox3 = new SComboBox(appArray);
 		comboBox3.addActionListener(
 				new ActionListener()
 				{
-
 					public void actionPerformed(ActionEvent e) {
 						int oldVal = calendar.getSelectionModel().getSelectionMode();
 						// preserve all bits not reserved for appointments
@@ -297,6 +302,8 @@ public class CalendarExample {
 							newVal |= CalendarSelectionModel.MULTIPLE_APPOINTMENT_SELECTION;
 						if(selection == 3)
 							newVal |= CalendarSelectionModel.DESELECT_DATE_ON_APPOINTMENT_SELECTION | CalendarSelectionModel.SINGLE_APPOINTMENT_SELECTION;
+                        if(selection == 4)
+                            newVal |= CalendarSelectionModel.DESELECT_DATE_ON_APPOINTMENT_SELECTION | CalendarSelectionModel.MULTIPLE_APPOINTMENT_SELECTION;
 
 						calendar.getSelectionModel().setSelectionMode(newVal);
 					}

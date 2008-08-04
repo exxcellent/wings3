@@ -27,7 +27,7 @@ AppCalendar.clickAppointment = function(appointment, event, eventName) {
 	wingS.request.sendEvent(event, false, true, eventName, eventValue);
 	
 	return false;
-}
+};
 
 /**
  * Function that is executed, when a click on a Date-Cell occured
@@ -44,7 +44,7 @@ AppCalendar.clickDate = function(date, event, eventName) {
 	wingS.request.sendEvent(event, false, true, eventName, eventValue);
 	
 	return false;
-}
+};
 
 AppCalendar.timeout = null;
 AppCalendar.popupShown = false;
@@ -61,7 +61,7 @@ AppCalendar.loadPopup = function(element, event, eventName)
         return false;
 
     AppCalendar.timeout = setTimeout("AppCalendar.showPopup('" + eventName + "', '" + element.id + "')", 500);
-}
+};
 
 /**
  * Function that is called when a popup should be shown, it sends the ajax event for a popup to the wingS
@@ -75,7 +75,7 @@ AppCalendar.showPopup = function(eventName, elementID)
 	wingS.request.sendEvent(null, false, true,   eventName, "q:"+elementID, null);
     clearTimeout(AppCalendar.timeout);
     AppCalendar.timeout = null;
-}
+};
 
 AppCalendar.hidePopup = function(element) {
     if(!window.UnTip)
@@ -84,4 +84,77 @@ AppCalendar.hidePopup = function(element) {
         UnTip();
     clearTimeout(AppCalendar.timeout);
     AppCalendar.timeout = null;
-}
+};
+
+/**
+ * Calendar Drag and Drop code
+ */
+(function(){
+    var dndLib = window.wingS.sdnd;
+
+    function getTarget(event) {
+        return wingS.event.getTarget(event);
+    }
+
+    function stopEvent(event) {
+        return YAHOO.util.Event.stopEvent(event);
+    }
+
+    function getFirstParentWithHandler(element, handler) {
+        return dndLib.getFirstParentWithHandler(element, handler);
+    }
+
+    function getFirstParentWithHandlerBeforeParent(element, handler, parent) {
+        return dndLib.getFirstParentWithHandlerBeforeParent(element, handler, parent);
+    }
+
+    function getDateParent(element) {
+        if(element == null)
+            return null;
+
+        if(element.id && typeof(element.id) == 'string')
+            if(/^.+_[0-9]+:[0-9]+$/.exec(element.id))
+                return element;
+
+        return getDateParent(element.parentNode);
+    }
+
+    var calendarDragCode = {
+        dragStart : function(event, realEvent) { // is called when the drag operation should start (first mousemove while clicking)
+                                      // - decides, if the whiledragging events should be registered (mouseenter/leave)
+            if(event == null)
+                return false;
+
+            var target = getTarget(event);
+            var parent = getFirstParentWithHandler(target, dndLib.getDragSources());
+            var element = getFirstParentWithHandlerBeforeParent(target, 'onmouseover', parent);
+            if(element == null)
+                return false;
+            
+            dndLib.sendDragEvent(event, "ds", 'ctrlKey=' + realEvent.ctrlKey + ':shiftKey=' + realEvent.shiftKey + ':' + element.id);
+
+            stopEvent(realEvent);
+            return true;
+        }
+    }
+
+    var calendarDropCode = {
+        drop : function(event) {    // called when the mouse button is released on a droptarget
+                                    // - decides if the events should be deregistered
+                                    // return false only if you're using your own events
+            var target = getTarget(event);
+            var dateparent = getDateParent(target);
+            var params = null;
+            if(dateparent != null && dateparent.id != undefined) {
+                params = dateparent.id.substring(dateparent.id.indexOf("_")+1);
+            }
+
+            dndLib.sendDragEvent(event, "dr", params);
+            stopEvent(event);
+            return true;
+        }
+    }
+
+    dndLib.registerCode('drag', 'calendar', calendarDragCode);
+    dndLib.registerCode('drop', 'calendar', calendarDropCode);
+})();

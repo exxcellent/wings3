@@ -8,13 +8,18 @@ import org.wings.SComponent;
 import calendar.plaf.CalendarCG;
 
 import java.sql.Date;
-import java.util.Calendar;
-import java.util.Locale;
+import java.util.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.DataFlavor;
 import org.wings.plaf.Update;
 import org.wings.*;
+import org.wings.event.SMouseEvent;
+import org.wings.sdnd.DefaultTransferable;
+import org.wings.sdnd.CustomDragHandler;
+import org.wings.sdnd.SDropMode;
+
 
 /**
  * Calendar Component - always starts in the MONTH view
@@ -181,13 +186,14 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 		else
 			setCalendarModel(model);
 
-        setStyle(this.getClass().getSimpleName());
+        setStyle("AppointmentCalendar");
 		setSelectionModel(new DefaultCalendarSelectionModel(this));
 		setDate(date);
         setLocale(locale);
 
         getSession().getDispatcher().register(this);
 
+        installTransferHandler();
 		//getSelectionModel().setSelectionMode(CalendarSelectionModel.SINGLE_EXCLUSIVE_DATE_OR_APPOINTMENT_SELECTION);
 		//getSelectionModel().setSelectionMode(CalendarSelectionModel.MULTIPLE_APPOINTMENT_SELECTION | CalendarSelectionModel.MULTIPLE_DATE_SELECTION);
 	}
@@ -411,4 +417,164 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	public boolean isEpochCheckEnabled() {
 		return false;
 	}
+
+    /**
+     * Drag and Drop stuff
+     */
+    private SDropMode dropMode = null;
+    private boolean dragEnabled = false;
+
+
+
+    protected static final class DropLocation extends STransferHandler.DropLocation {
+        private Date date = null;
+
+        public DropLocation(AppointmentCalendar calendar, SPoint point) {
+            super(point);
+
+            if(point == null || point.getCoordinates() == null)
+                return;
+            
+            String dateString = point.getCoordinates();
+            if(!dateString.matches("[0-9]+:[0-9]+")) // java matches with /^$/, so this is fine
+                return;
+
+            Calendar cal = Calendar.getInstance();
+            String[] dateParts = dateString.split(":");
+
+            cal.set(Calendar.YEAR, Integer.parseInt(dateParts[0]));
+            cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(dateParts[1]));
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            
+            this.date = new java.sql.Date(cal.getTimeInMillis());
+        }
+
+        public java.sql.Date getDate() {
+            return date;
+        }
+    }
+
+    public void setDropMode(SDropMode dropMode) {
+        this.dropMode = dropMode;
+
+        getSession().getSDragAndDropManager().addDropTarget(this, "calendar");
+    }
+
+    public SDropMode getDropMode() {
+        return this.dropMode;
+    }
+
+    protected DropLocation dropLocationForPoint(SPoint p) {
+        return new AppointmentCalendar.DropLocation(this, p);
+    }
+
+    private void installTransferHandler() {
+        if(getTransferHandler() == null) {
+            setTransferHandler(new DefaultTransferHandler());
+        }
+    }
+
+    public void setDragEnabled(boolean dragEnabled) {
+        if(getSelectionModel() == null && dragEnabled == true)
+            throw new IllegalStateException("Unable to enable DND - no selection mode set in " + this);
+
+        if(dragEnabled != this.dragEnabled) {
+            if(dragEnabled) {
+                this.getSession().getSDragAndDropManager().addDragSource(this, "calendar");
+            } else {
+                this.getSession().getSDragAndDropManager().removeDragSource(this);
+            }
+
+            this.dragEnabled = dragEnabled;
+        }
+    }
+
+    protected static class AppointmentTransferable extends DefaultTransferable {
+        private static DataFlavor[] flavors;
+        private Collection collection;
+
+        static {
+            try
+            {
+                flavors = new DataFlavor[] {
+                    new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + "; class=java.util.Collection")
+                };
+            } catch(ClassNotFoundException e) {
+            }
+        }
+
+        public AppointmentTransferable(Collection appointments) {
+            super(flavors);
+
+            this.collection = appointments;
+        }
+
+        protected Object getDataForClass(DataFlavor dataFlavor, Class<?> aClass) {
+            if(dataFlavor.getPrimaryType().equals("application")) {
+                // application/x-java-jvm-local-objectref
+                if(dataFlavor.getMimeType().startsWith(DataFlavor.javaJVMLocalObjectMimeType)) {
+                    return collection;
+                }
+            }
+            
+            return null;
+        }
+    }
+
+    protected static class DefaultTransferHandler extends STransferHandler implements CustomDragHandler {
+        public DefaultTransferHandler() {
+            super(null);
+        }
+
+        protected Transferable createTransferable(SComponent component) {
+            if(component instanceof AppointmentCalendar) {
+                AppointmentCalendar calendar = (AppointmentCalendar)component;
+                return new AppointmentTransferable(calendar.getSelectionModel().getSelectedAppointments());
+            }
+            
+            return null;
+        }
+
+        public int getSourceActions(SComponent component) {
+            return COPY;
+        }
+
+        public boolean dragStart(SComponent source, SComponent target, int action, SMouseEvent event) {
+            String[] coords = event.getPoint().getCoordinates().split(":");
+            try {
+                if(coords.length < 5)
+                    return false;
+
+                boolean ctrlKey = false;
+                boolean shiftKey = false;
+                for(int i=0; i<coords.length; ++i) {
+                    String[] keyVal = coords[i].split("=");
+                    if("ctrlKey".equals(keyVal[0])) {
+                        ctrlKey = Boolean.parseBoolean(keyVal[1]);
+                    } else if("shiftKey".equals(keyVal[0])) {
+                        shiftKey = Boolean.parseBoolean(keyVal[1]);
+                    }
+                }
+
+                if(source instanceof AppointmentCalendar) {
+                    AppointmentCalendar calendar = (AppointmentCalendar)source;
+                    ModifierKeyStatus keyStatus = new ModifierKeyStatus();
+                    keyStatus.ctrlKey = ctrlKey;
+                    keyStatus.shiftKey = shiftKey;
+                    Appointment appointment = calendar.getCalendarModel().getAppointmentFromID(coords[2].substring(coords[2].indexOf("_")+1) + ":" + coords[3] + ":" + coords[4]);
+                    Calendar cal = Calendar.getInstance();
+                    cal.set(Calendar.YEAR, Integer.parseInt(coords[2].substring(coords[2].indexOf("_")+1)));
+                    cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(coords[3]));
+                    Date date = new Date(cal.getTimeInMillis());
+                    calendar.getSelectionModel().clickAppointment(appointment, date, keyStatus);
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+    }
 }

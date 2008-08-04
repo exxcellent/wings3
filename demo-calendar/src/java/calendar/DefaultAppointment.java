@@ -127,7 +127,7 @@ public class DefaultAppointment implements Appointment {
 		return startDate;
 	}
 
-	public void setAppointmentEndDate(Date date) {
+    public void setAppointmentEndDate(Date date) {
 		this.endDate = date;
 	}
 
@@ -212,7 +212,11 @@ public class DefaultAppointment implements Appointment {
 		return DefaultAppointment.StaticGetAppointmentTypeString(type, locale);
 	}
 
-	public static String StaticGetAppointmentTypeString(AppointmentType type, Locale locale)
+    public Appointment getSubAppointment(Date date) {
+        return this;
+    }
+
+    public static String StaticGetAppointmentTypeString(AppointmentType type, Locale locale)
 	{
 		if(locale == Locale.US || locale == Locale.UK || locale == Locale.CANADA)
 		{

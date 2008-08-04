@@ -196,34 +196,70 @@ public class DefaultCalendarSelectionModel implements CalendarSelectionModel {
 	{
 		if((selectionMode & CalendarSelectionModel.MULTIPLE_APPOINTMENT_SELECTION) == CalendarSelectionModel.MULTIPLE_APPOINTMENT_SELECTION)
 		{
-			if(!keyStatus.ctrlKey) {
-				clearAppointmentSelection();
-			}
-		}
+            if(keyStatus.ctrlKey && isSelected(appointment, date)) {
+                removeSelection(appointment, date);
+                return;
+            }
+
+            if(!keyStatus.ctrlKey)
+                clearAppointmentSelection();
+        }
 
 		addSelection(appointment, date);
 	}
 
-	private void addSelectionCheckModifierKeys(Date date, ModifierKeyStatus keyStatus)
+    public void addSelectionInterval(Date from, Date until) {
+        if(until.getTime() < from.getTime()) {
+            addSelectionInterval(until, from);
+            return;
+        }
+        
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTimeInMillis(from.getTime());
+        Calendar cal2 = (Calendar)cal1.clone();
+        cal2.setTimeInMillis(until.getTime());
+
+        while(cal1.get(Calendar.YEAR) <= cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) <= cal2.get(Calendar.DAY_OF_YEAR)
+              ) {
+            addSelection(new Date(cal1.getTimeInMillis()));
+            cal1.add(Calendar.DAY_OF_YEAR, +1);
+        }
+    }
+    
+    Date lastSelectedDateShift = null;
+
+    private void addSelectionCheckModifierKeys(Date date, ModifierKeyStatus keyStatus)
 	{
 		if((selectionMode & CalendarSelectionModel.MULTIPLE_DATE_SELECTION) == CalendarSelectionModel.MULTIPLE_DATE_SELECTION)
 		{
-			if(!keyStatus.ctrlKey) {
-				clearDateSelection();
-			}
-		}
+            if(keyStatus.ctrlKey && !keyStatus.shiftKey && isSelected(date)) {
+                removeSelection(date);
+                return;
+            }
+
+            if(!keyStatus.ctrlKey && !keyStatus.shiftKey)
+                clearDateSelection();
+
+            if(!keyStatus.ctrlKey && keyStatus.shiftKey && lastSelectedDateShift != null && date != null) {
+                clearDateSelection();
+                addSelectionInterval(lastSelectedDateShift, date);
+                return;
+            }
+        }
 
 		addSelection(date);
-	}
+        lastSelectedDateShift = date;
+    }
 
 	public int getAppointmentSelectionCount() {
 		return selectedAppointments.size();
 	}
 
 	public void removeSelection(Appointment appointment, Date date) {
-		selectedAppointments.remove(new UniqueAppointment(appointment, date));
+        selectedAppointments.remove(new UniqueAppointment(appointment, date));
 
-		fireSelectionChangeEvent(new CalendarSelectionEvent(this, CalendarSelectionEvent.SelectionType.REMOVED, appointment, date));
+        fireSelectionChangeEvent(new CalendarSelectionEvent(this, CalendarSelectionEvent.SelectionType.REMOVED, appointment, date));
 	}
 
 	public void removeSelection(Date date) {
@@ -269,17 +305,11 @@ public class DefaultCalendarSelectionModel implements CalendarSelectionModel {
 	}
 
 	public void clickAppointment(Appointment appointment, Date date, ModifierKeyStatus keyStatus) {
-		if(isSelected(appointment, date))
-			removeSelection(appointment, date);
-		else
-			addSelectionCheckModifierKeys(appointment, date, keyStatus);
+        addSelectionCheckModifierKeys(appointment, date, keyStatus);
 	}
 
 	public void clickDate(Date date, ModifierKeyStatus keyStatus) {
-		if(isSelected(date))
-			removeSelection(date);
-		else
-			addSelectionCheckModifierKeys(date, keyStatus);
+        addSelectionCheckModifierKeys(date, keyStatus);
 	}
 
 	private void removeAllDatesOnDayOfDate(Date date)
