@@ -23,6 +23,7 @@ import org.wings.macro.MacroContext;
 import org.wings.macro.impl.VelocityMacroProcessor;
 import org.wings.plaf.IntegrationTableCG;
 import org.wings.plaf.ComponentCG;
+import org.wings.plaf.IntegrationComponentCG;
 import org.wings.template.IntegrationTemplateParseContext;
 import org.wings.template.PropertyManager;
 import org.wings.template.parser.ParseContext;
@@ -109,6 +110,13 @@ public class MacroTagHandler implements SpecialTagHandler {
 
                 if (c instanceof STable) {
                     IntegrationTableCG cg = new IntegrationTableCG();
+                    cg.setMacros(macroContainer);
+                    if (c.getClientProperty("cg") == null)
+                        c.putClientProperty("cg", c.getCG());
+                    c.setCG(cg);
+                    c.write(sink);
+                } else {
+                    IntegrationComponentCG cg = new IntegrationComponentCG();
                     cg.setMacros(macroContainer);
                     if (c.getClientProperty("cg") == null)
                         c.putClientProperty("cg", c.getCG());

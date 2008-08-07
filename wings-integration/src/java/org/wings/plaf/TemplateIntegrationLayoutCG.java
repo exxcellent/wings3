@@ -23,4 +23,7 @@ package org.wings.plaf;
  * @version $Id
  */
 public interface TemplateIntegrationLayoutCG extends LayoutCG {
+
+  void addTagHandler(String tagname, Class handlerClass);
+
 }

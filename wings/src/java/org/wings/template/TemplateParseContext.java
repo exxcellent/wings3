@@ -24,10 +24,10 @@ import java.util.*;
 /**
  * @author <a href="mailto:H.Zeller@acm.org">Henner Zeller</a>
  */
-public final class TemplateParseContext implements ParseContext {
+public class TemplateParseContext implements ParseContext {
     private final OutputStream myOut;
     private final Device sink;
-    private final STemplateLayout layout;
+    protected final STemplateLayout layout;
     private final Set<String> containedComponents = new HashSet<String>();
     private final Map<String,Map<String,String>> componentProperties = new HashMap<String, Map<String, String>>();
 

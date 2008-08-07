@@ -100,6 +100,10 @@ public class TemplateIntegrationLayout extends STemplateLayout {
         }
     }
 
+    public TemplateIntegrationLayoutCG getCG() {
+        return (TemplateIntegrationLayoutCG) super.getCG();
+    }
+    
     private class ComponentSet {
         Set<String> names;
         Set<SComponent> contained = new HashSet<SComponent>();

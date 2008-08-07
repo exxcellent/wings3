@@ -72,4 +72,8 @@ public class TemplateIntegrationLayoutCG implements org.wings.plaf.TemplateInteg
         IntegrationTemplateParseContext context = new IntegrationTemplateParseContext(new NullDevice(), layout);
         return TemplateIntegrationLayoutCG.parser.getComponentProperties(source, context);
     }
+
+    public void addTagHandler(String tagname, Class handlerClass) {
+        parser.addTagHandler(tagname, handlerClass);
+    }
 }

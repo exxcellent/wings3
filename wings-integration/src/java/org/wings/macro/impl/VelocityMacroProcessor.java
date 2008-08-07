@@ -3,15 +3,7 @@ package org.wings.macro.impl;
 import java.io.Reader;
 import java.io.StringReader;
 
-import org.wings.macro.ForMacro;
-import org.wings.macro.IfMacro;
-import org.wings.macro.Instruction;
-import org.wings.macro.Macro;
-import org.wings.macro.MacroContainer;
-import org.wings.macro.MacroProcessor;
-import org.wings.macro.MethodCallMacro;
-import org.wings.macro.StringInstruction;
-import org.wings.macro.WhileMacro;
+import org.wings.macro.*;
 
 /**
  * <code>VelocityMacroHandler<code>.
@@ -119,13 +111,15 @@ public class VelocityMacroProcessor implements MacroProcessor {
         if ("if".equals(type)) {
         	return new IfMacro(instructions);
         } else if ("else if".equals(type)) {
-
+            // todo:...
         } else if ("else".equals(type)) {
-
+            // todo:...
         } else if ("while".equals(type)) {
             return new WhileMacro(instructions);
         } else if ("for".equals(type)) {
             return new ForMacro(instructions);
+        } else if ("valueLookup".equals(type)) {
+            return new ValueLookupMacro(instructions);
         } else {
             return new MethodCallMacro(type, instructions);
         }
