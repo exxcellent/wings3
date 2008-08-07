@@ -118,8 +118,10 @@ public class VelocityMacroProcessor implements MacroProcessor {
             return new WhileMacro(instructions);
         } else if ("for".equals(type)) {
             return new ForMacro(instructions);
-        } else if ("valueLookup".equals(type)) {
+        } else if ("value".equals(type)) {
             return new ValueLookupMacro(instructions);
+        } else if ("event".equals(type)) {
+            return new EventLookupMacro(instructions);
         } else {
             return new MethodCallMacro(type, instructions);
         }
