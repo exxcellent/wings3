@@ -207,6 +207,13 @@
         </copy>
     </target>
 
+    <target name="zip" description="builds a zip containing all source files">
+        <mkdir dir="build"/>
+        <zip destfile="build/wings-src.zip">
+            <zipfileset dir="src/java"/>
+        </zip>
+    </target>
+
     <target description="cleanup build results" name="clean">
         <delete dir="build"/>
         <delete dir="dist"/>
