@@ -120,6 +120,10 @@ public class VelocityMacroProcessor implements MacroProcessor {
             return new ForMacro(instructions);
         } else if ("value".equals(type)) {
             return new ValueLookupMacro(instructions);
+        } else if ("ctx.put".equals(type)) {
+            return new CtxPutMacro(instructions);
+        } else if ("ctx.get".equals(type)) {
+            return new CtxGetMacro(instructions);
         } else if ("event".equals(type)) {
             return new EventLookupMacro(instructions);
         } else {
