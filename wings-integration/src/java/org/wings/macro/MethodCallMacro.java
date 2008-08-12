@@ -35,14 +35,15 @@ public class MethodCallMacro extends AbstractMacro {
 
     public void execute(MacroContext ctx) {
         SComponent component = ctx.getComponent();
-//        if (component instanceof CmsForm) {
-//            component = ((CmsForm) component).getComponent();
-//        }
 
-        invokeMethod(component.getCG(), ctx);
+        // step 1: try to invoke method on the component's cg
+        invokeMethodOnCG(component.getCG(), ctx);
+
+        // step 2: try to invoke method on the component itself
+        invokeMethodOnComponent(component);
     }
 
-    private void invokeMethod(Object target, MacroContext ctx) {
+    private void invokeMethodOnCG(Object target, MacroContext ctx) {
         Object[] parameters = new Object[instr.length + 1];
         parameters[0] = ctx;
         for (int i = 0; i < instr.length; i++) {
@@ -61,6 +62,23 @@ public class MethodCallMacro extends AbstractMacro {
                     getWriteMethodName(name).equals(methodName)) {
                 try {
                     method.invoke(target, parameters);
+                }
+                catch (IllegalAccessException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+                catch (InvocationTargetException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+            }
+        }
+    }
+
+    private void invokeMethodOnComponent(Object target) {
+        Method[] methods = target.getClass().getMethods();
+        for (Method method : methods) {
+            if (name.equals(method.getName())) {
+                try {
+                    method.invoke(target, instr);
                 }
                 catch (IllegalAccessException e) {
                     LOG.error(e.getMessage(), e);
