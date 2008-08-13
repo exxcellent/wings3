@@ -9,9 +9,8 @@ import java.math.BigDecimal;
 /**
  * #set directive
  * <p/>
- * The #set directive is used for setting the rhsReference of a lhsReference.
- * A rhsReference can be assigned to either a variable lhsReference or a property lhsReference.
- * For example:
+ * The #set directive is used for setting the value of a reference.
+ * A value can be assigned to either a variable reference or a property reference, for example:
  * #set( $primate = "monkey" )
  * #set( $customer.Behavior = $primate )
  * <p/>
@@ -53,7 +52,7 @@ public class SetMacro extends AbstractMacro {
                 }
                 lhsReference = lhs.substring(1);
             } else {
-                LOG.debug("Invalid lhsReference on LHS");
+                LOG.debug("Invalid reference on LHS");
             }
 
             if (rhs.length() > 0) {
