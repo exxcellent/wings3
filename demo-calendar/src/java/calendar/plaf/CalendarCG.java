@@ -823,7 +823,12 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 				case APPOINTMENT:
 					UpdateHandler handler = new UpdateHandler("component");
 					// add the component id
-					String uniqueAppointmentID = getComponent().getName() + "_" + calendar.getCalendarModel().getUniqueAppointmentID(event.getDate(), event.getAppointment());
+					String id = calendar.getCalendarModel().getUniqueAppointmentID(event.getDate(), event.getAppointment());
+                    if(id == null) { // appointment does not exist, reload whole component
+                        Update update = component.getCG().getComponentUpdate(component);
+                        return update.getHandler();
+                    }
+                    String uniqueAppointmentID = getComponent().getName() + "_" + id;
 					if(uniqueAppointmentID == null)
 					{
                         LOG.info("valid appointment was sent: date:" + event.getDate() + " app: " + event.getAppointment());

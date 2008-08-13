@@ -19,8 +19,8 @@ public class DefaultCalendarModel implements CalendarModel {
 	public PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 	private CalendarView view;
 	protected Collection<Appointment> appointments;
-	private Date visibleFrom;
-	private Date visibleUntil;
+	protected Date visibleFrom;
+	protected Date visibleUntil;
 	private Date date;
 	private ArrayList<CalendarViewChangeListener> viewChangeListener = new ArrayList<CalendarViewChangeListener>();
 	private Locale locale;
@@ -109,7 +109,7 @@ public class DefaultCalendarModel implements CalendarModel {
 				end.add(Calendar.WEEK_OF_YEAR, 5);
 				end.add(Calendar.DAY_OF_YEAR, ((8 - end.get(Calendar.DAY_OF_WEEK)) % 7));
 
-				if(locale == Locale.US)
+				if(!isMergeWeekendsEnabled() && locale == Locale.US)
 				{
 					begin.add(Calendar.DAY_OF_YEAR, -1);
 					end.add(Calendar.DAY_OF_YEAR, -1);
