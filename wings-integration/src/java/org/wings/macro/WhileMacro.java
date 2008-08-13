@@ -16,8 +16,10 @@ public class WhileMacro extends AbstractMacro {
 
     private String condition;
 
-    public WhileMacro(String condition) {
-        this.condition = condition;
+    public WhileMacro(String instruction) {
+        if (instruction != null) {
+            condition = instruction.replace('$', ' ').trim();
+        }
     }
 
     private boolean condition(MacroContext ctx) {

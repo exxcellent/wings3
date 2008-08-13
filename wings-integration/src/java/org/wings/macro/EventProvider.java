@@ -1,6 +1,6 @@
 package org.wings.macro;
 
-public interface EventLookupProvider {
+public interface EventProvider {
 
     String lookup(String key, String eventValue);
 

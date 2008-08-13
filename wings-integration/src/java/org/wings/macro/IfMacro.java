@@ -2,8 +2,8 @@ package org.wings.macro;
 
 import org.mvel.MVEL;
 
-import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * <code>IfMacro<code>.
@@ -23,16 +23,15 @@ public class IfMacro extends AbstractMacro {
     private AbstractMacro elseMacro;
 
     public IfMacro(String instruction) {
-        condition = instruction;
+        if (instruction != null) {
+            condition = instruction.replace('$', ' ').trim();
+        }
     }
 
     private boolean condition(MacroContext ctx) {
         return MVEL.evalToBoolean(condition, ctx);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void execute(MacroContext ctx) {
 
         if (condition(ctx)) {

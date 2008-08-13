@@ -20,24 +20,24 @@ public class ForMacro extends AbstractMacro {
     private String variable;
 
     public ForMacro(String instructions) {
-        String[] instr = instructions.split(";");
+        if (instructions != null) {
+            String[] instr = instructions.replace('$', ' ').split(";");
 
-        initialize = instr[0];
-        condition = instr[1];
-        statement = instr[2].replaceAll("\\+\\+", "+1").replaceAll("--", "-1");
+            initialize = instr[0];
+            condition = instr[1];
+            statement = instr[2].replaceAll("\\+\\+", "+1").replaceAll("--", "-1");
+        }
     }
 
-    @SuppressWarnings("unchecked")
-	private void initialize(MacroContext ctx) {
+    private void initialize(MacroContext ctx) {
         String[] init = initialize.split("=");
 
         variable = init[0].trim();
-        Object value = init[1].trim();
 
+        Object value = init[1].trim();
         try {
             value = Integer.parseInt((String) value);
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             // do nothing
         }
 
@@ -48,22 +48,17 @@ public class ForMacro extends AbstractMacro {
         return MVEL.evalToBoolean(condition, ctx);
     }
 
-    @SuppressWarnings("unchecked")
     private void statement(MacroContext ctx) {
-        Object result = MVEL.eval(statement, ctx);
-
-        ctx.put(variable, result);
+        ctx.put(variable, MVEL.eval(statement, ctx));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void execute(MacroContext ctx) {
-
         for (initialize(ctx); condition(ctx); statement(ctx)) {
             for (Instruction instruction : instructions) {
                 instruction.execute(ctx);
             }
         }
+
+        ctx.remove(variable);
     }
 }

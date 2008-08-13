@@ -1,7 +1,9 @@
 package org.wings.macro;
 
-import java.util.Collection;
+import org.mvel.MVEL;
+
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * <code>AbstractMacro<code>.
@@ -19,5 +21,15 @@ public abstract class AbstractMacro implements Macro, Instruction {
 
     public void addInstruction(Instruction instruction) {
         instructions.add(instruction);
+    }
+
+    protected static Object resolveValue(MacroContext ctx, String expr) {
+        if (expr != null && expr.length() > 1) {
+            if (expr.charAt(0) == '$') {
+                // handle reference
+                return MVEL.eval(expr.substring(1), ctx);
+            }
+        }
+        return expr;
     }
 }
