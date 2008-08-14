@@ -38,7 +38,6 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	protected final static List<Header> headers;
 	static {
 		headers = new ArrayList<Header>();
-        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DOM));
 		headers.add(Utils.createExternalizedCSSHeader("calendar/css/calendar.css"));
 		headers.add(Utils.createExternalizedJSHeader("calendar/js/calendar.js"));
 	}
