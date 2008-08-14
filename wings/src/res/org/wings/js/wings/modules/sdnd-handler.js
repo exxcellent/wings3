@@ -554,5 +554,3 @@
         lib.registerCode('drop', 'default', defaultDropCode);
     })();
 })();
-
-document.cookie = "DEBUG=javascript";

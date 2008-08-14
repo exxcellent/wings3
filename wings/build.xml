@@ -80,6 +80,7 @@
 		<include name="org/wings/js/yui/utilities/**"/>
 		<include name="org/wings/js/yui/yahoo/**"/>
 		<include name="org/wings/js/yui/yahoo-dom-event/**"/>
+		<include name="org/wings/js/yui/editor/**" />
     </fileset>
 
     <target name="prepare">

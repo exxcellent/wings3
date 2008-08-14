@@ -38,22 +38,15 @@ public class SDragAndDropManagerCG extends AbstractComponentCG implements org.wi
     protected final static List<Header> headers = new ArrayList<Header>();
     protected final static List<SResourceIcon> icons = new ArrayList<SResourceIcon>();
 
-    static {
-        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_YAHOO));
-        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_EVENT));
-    }
-
     public SDragAndDropManagerCG() {
     }
 
     @Override
     public void installCG(SComponent c) {
-        SessionHeaders.getInstance().registerHeaders(SDragAndDropManagerCG.headers);
     }
 
     @Override
     public void uninstallCG(SComponent c) {
-        SessionHeaders.getInstance().deregisterHeaders(SDragAndDropManagerCG.headers);
     }
 
     protected String getAddDragSourceString(SDragAndDropManager manager, SComponent dragSource) {

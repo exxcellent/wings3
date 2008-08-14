@@ -752,5 +752,3 @@
         return lastTarget;
     }
 })();
-
-document.cookie = "DEBUG=javascript";
