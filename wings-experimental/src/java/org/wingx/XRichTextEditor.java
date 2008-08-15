@@ -1,13 +1,15 @@
 package org.wingx;
 
-import org.wings.STextArea;
-import org.wings.SDialog;
-import org.wings.STextComponent;
+import org.wings.*;
+import org.wings.event.SDocumentEvent;
 import org.wings.script.ScriptListener;
 import org.wings.plaf.css.Utils;
 import org.wings.plaf.css.AbstractComponentCG;
+import org.wings.plaf.TextFieldCG;
+import org.wings.plaf.TextAreaCG;
 import org.wings.header.SessionHeaders;
 import org.wings.header.Header;
+import org.wingx.plaf.RichTextEditorCG;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -24,7 +26,7 @@ public class XRichTextEditor extends STextComponent {
 
     public XRichTextEditor(int editorType) {
         super();
-
+        
         this.editorType = editorType;
     }
 
