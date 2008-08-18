@@ -81,6 +81,7 @@
 		<include name="org/wings/js/yui/yahoo/**"/>
 		<include name="org/wings/js/yui/yahoo-dom-event/**"/>
 		<include name="org/wings/js/yui/editor/**" />
+        <include name="org/wings/js/yui/element/**" />
     </fileset>
 
     <target name="prepare">

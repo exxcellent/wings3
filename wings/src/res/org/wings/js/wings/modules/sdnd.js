@@ -120,6 +120,8 @@
     function addDragStartEvents() {
         for(var elementId in dropTargets) {
             var elt = document.getElementById(elementId);
+            if(elt == null) // if the element isn't on the page at the moment
+                continue;
             if(typeof(dropTargets[elementId].dropCode.install) == "function") {
                 dropTargets[elementId].dropCode.install(elt);
             } else {
@@ -153,6 +155,8 @@
     function removeDragStartEvents() {
         for(var elementId in dropTargets) {
             var elt = document.getElementById(elementId);
+            if(elt == null)
+                return;
             if(typeof(dropTargets[elementId].dropCode.uninstall) == "function") {
                 dropTargets[elementId].dropCode.uninstall(elt);
             } else {
@@ -503,37 +507,38 @@
      * @param sourceActions Source (Drag) Actions supported by the drag source
      * @param dragCode Either a string, pointing to the dragcode-handler in the dragcoderegistry or a dragcode-handler
      */
-    lib.addDragSource = function(element, sourceActions, dragCode) {
-        if(typeof(element) == 'string') {
-            element = document.getElementById(element);
+    lib.addDragSource = function(elementId, sourceActions, dragCode) {
+        if(typeof(elementId) == 'string') {
+            var element = document.getElementById(elementId);
         }
-        if(element == null)
-            return;
-        
-        dragSources[element.id] = { };
+
+        dragSources[elementId] = { };
 
         if(typeof(dragCode) == 'string') {
             if(typeof(dragCodeRegistry[dragCode]) != "object") {
                 error("no dragcode registered for '" + dragCode +"'");
                 return;
             }
-            dragSources[element.id].dragCode = dragCodeRegistry[dragCode];
+            dragSources[elementId].dragCode = dragCodeRegistry[dragCode];
         } else if(typeof(dragCode) == 'object') {
-	        dragSources[element.id].dragCode = dragCode;
+	        dragSources[elementId].dragCode = dragCode;
 	    } else {
 	        error("invalid dragCode");
             return;
         }
 
         if(typeof(sourceActions) == 'number') {
-            dragSources[element.id].sourceActions = sourceActions;
+            dragSources[elementId].sourceActions = sourceActions;
         } else {
             error("no actions for addDragSource given");
             return;
         }
 
+        if(element == null) // element isn't on page (at the moment)
+            return;
+
         if(typeof(dragSources[element.id].dragCode.install) == "function") {
-            dragSources[element.id].dragCode.install(element);
+            dragSources[elementId].dragCode.install(element);
         } else {
             dragCodeRegistry['default'].install(element);
         }
@@ -562,25 +567,23 @@
      * @param dropCode Dropcode to use
      * @param options Array of options for the element
      */
-    lib.addDropTarget = function(element, dropCode, options) {
-        if(typeof(element) == 'string') {
-            element = document.getElementById(element);
+    lib.addDropTarget = function(elementId, dropCode, options) {
+        if(typeof(elementId) == 'string') {
+            var element = document.getElementById(element);
         }
-        if(element == null)
-            return;
 
-        dropTargets[element.id]  = { };
+        dropTargets[elementId]  = { };
         
         if(typeof(dropCode) == 'string') {
-            dropTargets[element.id].dropCode = dropCodeRegistry[dropCode];
-            dropTargets[element.id].options = options;
+            dropTargets[elementId].dropCode = dropCodeRegistry[dropCode];
+            dropTargets[elementId].options = options;
         } else if(typeof(dragCode) == 'object') {
-	        dropTargets[element.id].dropCode = dropCode;
-            dropTargets[element.id].options = options;
+	        dropTargets[elementId].dropCode = dropCode;
+            dropTargets[elementId].options = options;
         } else {
 	        error("invalid dropCode");
         }
-	};
+    };
 
     /**
      * Removes a drop target
@@ -712,6 +715,7 @@
                 dragCodeRegistry['default'].install(element);
             }
         }
+
         if(element != null && typeof(element) == "object" && element.id != null && typeof(element.id) == "string" && dropTargets[element.id] != null && typeof(dropTargets[element.id]) == "object") {
             if(typeof(dropTargets[element.id].dropCode.install) == "function") {
                 dropTargets[element.id].dropCode.install(element);
@@ -719,6 +723,7 @@
                 dropCodeRegistry['default'].install(element);
             }
         }
+
 
         for(var i=0; i<element.childNodes.length; ++i) {
             if(element.childNodes[i] != null)
@@ -731,6 +736,8 @@
      * @param element
      */
     lib.elementUpdated = function(element) {
+        // element contains the *old* DOM-object, let's get the new one
+        element = document.getElementById(element.id);
         reapplyDragAndDropOperationsRecursively(element);
     };
 
