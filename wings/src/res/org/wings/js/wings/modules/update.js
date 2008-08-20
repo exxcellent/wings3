@@ -172,7 +172,6 @@ wingS.update.component = function(componentId, html, exception) {
  * @param {String} html - the new HTML code of the component
  */
 wingS.update.element = function(element, html) {
-    var elementId = element.id; // it seems that ie destroys "element", safe the id
     if (typeof element.outerHTML != "undefined") {
         // Use outerHTML if available
         element.outerHTML = html;
