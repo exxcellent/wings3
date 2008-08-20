@@ -724,7 +724,9 @@
             }
         }
 
-
+        if(element == null || element.childNodes == null || typeof(element.childNodes) == 'undefined')
+            return;
+        
         for(var i=0; i<element.childNodes.length; ++i) {
             if(element.childNodes[i] != null)
                 reapplyDragAndDropOperationsRecursively(element.childNodes[i]);
@@ -735,9 +737,8 @@
      * Needs to be called when a element has lost it's handlers due to a replacement
      * @param element
      */
-    lib.elementUpdated = function(element) {
-        // element contains the *old* DOM-object, let's get the new one
-        element = document.getElementById(element.id);
+    lib.elementUpdated = function(elementId) {
+        var element = document.getElementById(elementId);
         reapplyDragAndDropOperationsRecursively(element);
     };
 
