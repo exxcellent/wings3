@@ -10,10 +10,14 @@ public class LookupMacro extends AbstractMacro {
 
     /**
      * Ask the LookupProvider to look up an object specified by the given set of parameters.
-     * It is the LookupProvider's job to return a reasonable value, for example:
-     * - if the object is a Date: use a fitting DateFormat
-     * - if the object is a BigDecimal: use a fitting NumberFormat
-     * - if the object is a SComponent: return the result of ComponentCG.write() (for example)
+     * It is the LookupProvider's job to return a reasonable value.
+     *
+     * The LookupProvider might do something like this:
+     * - if the looked up object is a String: return the String
+     * - if the looked up object is a Date: return an appropriate DateFormat
+     * - if the looked up object is some Object: return the result of the toString() method
+     * - if the looked up object is a SComponent: return the result of ComponentCG.write()
+     * - if the object is a SButton: return the corresponding ajax request ("wingS.request.sendEvent(...)")
      */
     public void execute(MacroContext ctx) {
         if (params != null && ctx.getComponent() instanceof LookupProvider) {
