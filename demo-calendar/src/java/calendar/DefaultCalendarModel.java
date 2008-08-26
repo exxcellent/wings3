@@ -21,7 +21,7 @@ public class DefaultCalendarModel implements CalendarModel {
 	protected Collection<Appointment> appointments;
 	protected Date visibleFrom;
 	protected Date visibleUntil;
-	private Date date;
+	protected Date date;
 	private ArrayList<CalendarViewChangeListener> viewChangeListener = new ArrayList<CalendarViewChangeListener>();
 	private Locale locale;
     private boolean mergeWeekends;

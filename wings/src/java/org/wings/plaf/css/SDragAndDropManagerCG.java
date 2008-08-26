@@ -49,25 +49,6 @@ public class SDragAndDropManagerCG extends AbstractComponentCG implements org.wi
     public void uninstallCG(SComponent c) {
     }
 
-    protected String getAddDragSourceString(SDragAndDropManager manager, SComponent dragSource) {
-        String dragCode = manager.getCustomDragCode(dragSource);
-
-        if(dragCode == null) {
-            if(dragSource instanceof STextComponent)
-                dragCode = "text";
-            else if(dragSource instanceof SList)
-                dragCode = "list";
-            else if(dragSource instanceof STree)
-                dragCode = "tree";
-            else if(dragSource instanceof STable)
-                dragCode = "table";
-            else
-                dragCode = "default";
-        }
-        
-        return "wingS.sdnd.addDragSource('" + dragSource.getName() + "', " + dragSource.getTransferHandler().getSourceActions(dragSource) + ", '" + dragCode + "');";
-    }
-    
     protected String getAddDropTargetString(SDragAndDropManager manager, SComponent dropTarget) {
         String dropCode = manager.getCustomDropCode(dropTarget);
 
@@ -100,10 +81,29 @@ public class SDragAndDropManagerCG extends AbstractComponentCG implements org.wi
             configuration = configuration.substring(0, configuration.length()-2); // removes the last ", "
             configuration += "}";
         }
-        
-        return "wingS.sdnd.addDropTarget('" + dropTarget.getName() + "', '"+ dropCode + "', " + configuration + ");";
+
+        return "wingS.global.onHeadersLoaded(function() { wingS.sdnd.addDropTarget('" + dropTarget.getName() + "', '"+ dropCode + "', " + configuration + "); });";
     }
 
+    protected String getAddDragSourceString(SDragAndDropManager manager, SComponent dragSource) {
+        String dragCode = manager.getCustomDragCode(dragSource);
+
+        if(dragCode == null) {
+            if(dragSource instanceof STextComponent)
+                dragCode = "text";
+            else if(dragSource instanceof SList)
+                dragCode = "list";
+            else if(dragSource instanceof STree)
+                dragCode = "tree";
+            else if(dragSource instanceof STable)
+                dragCode = "table";
+            else
+                dragCode = "default";
+        }
+        
+        return "wingS.global.onHeadersLoaded(function() { wingS.sdnd.addDragSource('" + dragSource.getName() + "', " + dragSource.getTransferHandler().getSourceActions(dragSource) + ", '" + dragCode + "'); });";
+    }
+    
     protected String getRemoveDragSourceString(SComponent dragSource) {
         return "wingS.sdnd.removeDragSource('" + dragSource.getName() + "');";
     }
@@ -113,7 +113,6 @@ public class SDragAndDropManagerCG extends AbstractComponentCG implements org.wi
     }
 
     public Update getComponentUpdate(SComponent component) {   // no component updates possible nor allowed
-        // maybe reregister all drag/drops?
         return null;
     }
 
