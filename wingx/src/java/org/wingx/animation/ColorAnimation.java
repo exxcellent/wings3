@@ -15,7 +15,6 @@ package org.wingx.animation;
 import java.awt.Color;
 
 import org.wings.SComponent;
-import org.wings.script.ScriptListener;
 
 /**
  * <code>ColorAnimation</code>.
@@ -59,20 +58,33 @@ public class ColorAnimation extends AbstractAnimation {
 	public String getAttributes() {
 		
 		// Convert color to hex representation and cut off 0x
-		String fromColor = Integer.toHexString(this.fromColor.getRGB());
-		fromColor = fromColor.substring(2, fromColor.length());
+		String from = Integer.toHexString(this.fromColor.getRGB());
+		from = from.substring(2, from.length());
 		
 		// Convert color to hex representation and cut off 0x
-		String toColor = Integer.toHexString(this.toColor.getRGB());
-		toColor = toColor.substring(2, toColor.length());
+		String to = Integer.toHexString(this.toColor.getRGB());
+		to = to.substring(2, to.length());
 		
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("backgroundColor:{")
-		  .append("from:'#").append(fromColor).append("',")
-		  .append("to:'#").append(toColor).append("'")
+		  .append("from:'#").append(from).append("',")
+		  .append("to:'#").append(to).append("'")
 		  .append("}");
 		
 		return sb.toString();
 	}
+
+    @Override
+    protected String getPreAnimationScript(String variableName) {
+        return null;
+    }
+
+    @Override
+    protected String getPostAnimationScript(String variableName) {
+        return null;
+    }
+
+
+
 }

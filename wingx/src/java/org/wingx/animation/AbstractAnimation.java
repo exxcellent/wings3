@@ -17,15 +17,9 @@ import org.wings.script.ScriptListener;
 import org.wings.session.ScriptManager;
 
 /**
- * <code>AbstractAnimation</code>.
- * 
- * <pre>
- * Date: Apr 1, 2008
- * Time: 3:54:45 PM
- * </pre>
- * 
+ * Base class for custom animations.
  * @author <a href="mailto:Roman.Raedle@uni-konstanz.de">Roman R&auml;dle</a>
- * @version $Id
+ * @author leon
  */
 public abstract class AbstractAnimation implements ScriptListener {
 
@@ -75,13 +69,11 @@ public abstract class AbstractAnimation implements ScriptListener {
 	 */
 	public abstract String getAttributes();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.wings.script.ScriptListener#getScript()
-	 */
+    /**
+     * {@inheritDoc}
+     */
 	public String getScript() {
-		String name = getAffectedComponent().getName();
+		String name = getAffectedComponentId(affectedComponent);
 
 		StringBuilder sb = new StringBuilder();
 
@@ -93,10 +85,43 @@ public abstract class AbstractAnimation implements ScriptListener {
 				getAnimationClass()).append("(").append(name).append(", {")
 				.append(getAttributes()).append("},").append(duration).append(
 						");\n");
+        String preAnimationScript = getPreAnimationScript("_" + name);
+        if (preAnimationScript != null && preAnimationScript.trim().length() > 0) {
+            sb.append("var preAnimationScript = function() {\n");
+            sb.append("var _" + name + " = document.getElementById('" + name + "');\n");
+            sb.append(preAnimationScript);
+            sb.append("\n};\n");
+            sb.append(name).append("_animation.onStart.subscribe(preAnimationScript);\n");
+        }
+        String postAnimationScript = getPostAnimationScript("_" + name);
+        if (postAnimationScript != null && postAnimationScript.trim().length() > 0) {
+            sb.append("var postAnimationScript = function() {\n");
+            sb.append("var _" + name + " = document.getElementById('" + name + "');\n");
+            sb.append(postAnimationScript);
+            sb.append("\n};\n");
+            sb.append(name).append("_animation.onComplete.subscribe(postAnimationScript);\n");
+        }
 		sb.append(name).append("_animation.animate();\n");
-
 		return sb.toString();
 	}
+
+    /**
+     * Returns the script to be executed before the animation starts, or null if no script should be executed.
+     *
+     * @param variableName the name of the javascript variable under which the dom element
+     * for the given component can be accessed.
+     * @return the script to be executed before the animation starts, or null if no script should be executed.
+     */
+    protected abstract String getPreAnimationScript(String variableName);
+
+    /**
+     * Returns the script to be executed after the animation ends, or null if no script should be executed.
+     *
+     * @param variableName the name of the javascript variable under which the dom element
+     * for the given component can be accessed.
+     * @return the script to be executed after the animation ends, or null if no script should be executed.
+     */
+    protected abstract String getPostAnimationScript(String variableName);
 	
 	/**
 	 * Starts this animation by adding this instance to the responsible
@@ -106,30 +131,28 @@ public abstract class AbstractAnimation implements ScriptListener {
 		ScriptManager.getInstance().addScriptListener(this);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.wings.script.ScriptListener#getCode()
-	 */
+    /**
+     * {@inheritDoc}
+     */
 	public String getCode() {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.wings.script.ScriptListener#getEvent()
-	 */
+    /**
+     * {@inheritDoc}
+     */
 	public String getEvent() {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.wings.script.ScriptListener#getPriority()
-	 */
+    /**
+     * {@inheritDoc}
+     */
 	public int getPriority() {
 		return Integer.MIN_VALUE;
 	}
+
+    protected String getAffectedComponentId(SComponent component) {
+        return component.getName();
+    }
 }

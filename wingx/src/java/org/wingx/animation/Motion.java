@@ -69,4 +69,14 @@ public class Motion extends AbstractAnimation {
 		return attributes.toString();
 	}
 
+    @Override
+    protected String getPreAnimationScript(String variableName) {
+        return null;
+    }
+
+    @Override
+    protected String getPostAnimationScript(String variableName) {
+        return null;
+    }
+
 }

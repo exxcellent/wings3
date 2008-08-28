@@ -299,5 +299,5 @@ public class XScrollPane extends SScrollPane {
 
     public SComboBox getExtentCombo(){
         return extentCombo;
-    }
+    }    
 }
