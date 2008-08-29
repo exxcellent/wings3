@@ -3,6 +3,7 @@ package org.wingx.util;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
+import org.wings.SComponent;
 
 /**
  * Helper class to manage component styles (CSS class names).
@@ -27,6 +28,14 @@ public class StyleNameBuilder implements Iterable<String> {
         while (tok.hasMoreTokens()) {
             styles.add(tok.nextToken());
         }
+    }
+
+    /**
+     * Creates a new instance based on the style the component given component currently has.
+     * @param component the component whose style will be taken as a base for the current style builder.
+     */
+    public StyleNameBuilder(SComponent component) {
+        this(component.getStyle());
     }
 
     /**
