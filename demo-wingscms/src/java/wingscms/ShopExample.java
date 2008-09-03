@@ -12,21 +12,35 @@
  */
 package wingscms;
 
-import org.wings.IntegrationFrame;
-import org.wingx.table.XTableClickListener;
-import org.wingx.XTable;
-import org.wingx.XZoomableImage;
-import org.wings.*;
-import org.wings.table.STableCellRenderer;
-import org.wings.session.SessionManager;
+import java.awt.Color;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
-import java.awt.Image;
-import java.io.IOException;
-import java.net.URL;
-import java.net.MalformedURLException;
+
+import org.wings.IntegrationContainer;
+import org.wings.IntegrationFrame;
+import org.wings.SBorderLayout;
+import org.wings.SButton;
+import org.wings.SComponent;
+import org.wings.SConstants;
+import org.wings.SDimension;
+import org.wings.SLabel;
+import org.wings.SListSelectionModel;
+import org.wings.SPanel;
+import org.wings.STable;
+import org.wings.TemplateIntegrationFrame;
+import org.wings.session.SessionManager;
+import org.wings.table.STableCellRenderer;
+import org.wingx.XTable;
+import org.wingx.XZoomableImage;
+import org.wingx.table.XTableClickListener;
 
 /**
  * @author hengels
@@ -102,6 +116,47 @@ public class ShopExample
         rootFrame.add(productTable, "products");
         rootFrame.add(productDetails, "productDetails");
         rootFrame.add(cartTable, "cart");
+        
+        final IntegrationContainer center = new IntegrationContainer("Test");
+        center.setBackground(Color.RED);
+        
+        SButton addButton = new SButton("Add");
+        addButton.addActionListener(new ActionListener() {
+
+			/* (non-Javadoc)
+			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+			 */
+			public void actionPerformed(ActionEvent e) {
+				try {
+					center.setTemplate("Test2");
+				}
+				catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+        });
+        
+        SButton removeButton = new SButton("Remove");
+        removeButton.addActionListener(new ActionListener() {
+
+			/* (non-Javadoc)
+			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+			 */
+			public void actionPerformed(ActionEvent e) {
+				try {
+					center.setTemplate("Test");
+				}
+				catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+        });
+        
+        rootFrame.add(addButton, "addButton");
+        rootFrame.add(removeButton, "removeButton");
+        rootFrame.add(center, "center");
 
         rootFrame.getContentPane().setPreferredSize(SDimension.FULLAREA);
         rootFrame.getContentPane().setVerticalAlignment(SConstants.TOP_ALIGN);

@@ -10,6 +10,7 @@ import org.wings.TemplateIntegrationFrame;
 import org.wings.adapter.parser.HtmlParser;
 import org.wings.conf.Integration;
 import org.wings.conf.UrlExtension;
+import org.wings.session.SessionManager;
 import org.wings.template.TemplateSource;
 import org.wings.util.HtmlParserUtils;
 
@@ -27,6 +28,8 @@ public abstract class AbstractTemplateIntegrationAdapter extends
     
     public AbstractTemplateIntegrationAdapter(IntegrationFrame frame, Integration integration) {
         super(frame, integration);
+        
+		SessionManager.getSession().setProperty("AbstractTemplateIntegrationAdapter", this);
     }
 
     public void initialize() {
@@ -37,7 +40,7 @@ public abstract class AbstractTemplateIntegrationAdapter extends
         layout.setTemplate(templateSource);
     }
     
-    protected String process(String responseBody) {
+    public String process(String responseBody) {
         Source source = new Source(responseBody);
 
         // Resolves all includes contained in source (recursive).
