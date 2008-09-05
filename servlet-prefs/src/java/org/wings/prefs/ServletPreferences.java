@@ -95,13 +95,17 @@ public class ServletPreferences
         String userName = "user/";
 
         HttpServletRequest request = requests.get();
-        //if authorized user, use this name
-        if(request.getUserPrincipal()!= null && request.getUserPrincipal().getName()!= null){
-           userName = request.getUserPrincipal().getName();
-           
-        }else{
+        // XXX - request should never be null. How comes??!?!
+        if (request != null && request.getUserPrincipal()!= null && request.getUserPrincipal().getName()!= null){
+            userName = request.getUserPrincipal().getName();
+        } else {
            boolean isAlreadyKnown = false;
-            userName = (String)request.getSession().getAttribute(COOKIE_NAME);
+           if (request == null) {
+               userName = "bug";
+           } else {
+               userName = (String)request.getSession().getAttribute(COOKIE_NAME);
+
+           }
             if (userName != null)
                 isAlreadyKnown = true;
             else {
