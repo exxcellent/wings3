@@ -20,10 +20,8 @@ import org.wings.*;
 import org.wings.header.SessionHeaders;
 import org.wings.header.Header;
 import org.wings.event.SParentFrameEvent;
-import org.wings.event.SParentFrameListener;
 import org.wings.io.Device;
 import org.wings.plaf.css.*;
-import org.wings.plaf.css.script.OnPageRenderedScript;
 import org.wings.plaf.css.script.OnHeadersLoadedScript;
 import org.wings.plaf.Update;
 import org.wings.session.ScriptManager;
@@ -66,14 +64,14 @@ public class SuggestCG
         String name = textField.getName();
         builder.append("var ds_");
         builder.append(name);
-        builder.append(" = new wingS.suggest.SuggestDS(\"");
+        builder.append(" = new wingS.suggest.DataSource(\"");
         builder.append(name);
         builder.append("\",\"");
         builder.append(name);
         builder.append("_popup\");\n");
-        builder.append("var ac_");
+        builder.append("var xs_");
         builder.append(name);
-        builder.append(" = new YAHOO.widget.AutoComplete(\"");
+        builder.append(" = new wingS.suggest.XSuggest(\"");
         builder.append(name);
         builder.append("\", \"");
         builder.append(name);
@@ -85,7 +83,7 @@ public class SuggestCG
             builder.append("var onchange_");
             builder.append(name);
             builder.append(" = function(sType, aArgs) { wingS.request.sendEvent(null, true, " + !textField.isReloadForced() + "); };\n");
-            builder.append("ac_");
+            builder.append("xs_");
             builder.append(name);
             builder.append(".textboxBlurEvent.subscribe(onchange_" + name + ");\n");
         }
