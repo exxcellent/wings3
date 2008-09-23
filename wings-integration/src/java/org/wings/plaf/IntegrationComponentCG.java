@@ -1,6 +1,7 @@
 package org.wings.plaf;
 
 import org.wings.SComponent;
+import org.wings.plaf.css.AbstractComponentCG;
 import org.wings.io.Device;
 import org.wings.macro.MacroContainer;
 import org.wings.macro.MacroContext;
@@ -8,7 +9,7 @@ import org.wings.macro.MacroTag;
 
 import java.io.IOException;
 
-public class IntegrationComponentCG implements ComponentCG, IntegrationCG {
+public class IntegrationComponentCG extends AbstractComponentCG implements IntegrationCG {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,10 +31,8 @@ public class IntegrationComponentCG implements ComponentCG, IntegrationCG {
         macros.execute();
     }
 
-    public Update getComponentUpdate(SComponent component) {
-        // can be ignored at the moment
-        return null;
-    }
+    public void writeInternal(Device device, SComponent component) throws IOException {
+     }
 
     public void setMacros(MacroContainer macros) {
         this.macros = macros;

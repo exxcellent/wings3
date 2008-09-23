@@ -347,7 +347,7 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
     /**
      * This method renders the component (and all of its subcomponents) to the given device.
      */
-	public final void write(final Device device, final COMPONENT_TYPE component) throws IOException {
+	public void write(final Device device, final COMPONENT_TYPE component) throws IOException {
         Utils.printDebug(device, "<!-- ");
         Utils.printDebug(device, component.getName());
         Utils.printDebug(device, " -->");
