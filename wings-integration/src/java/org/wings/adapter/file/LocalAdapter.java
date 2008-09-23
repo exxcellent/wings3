@@ -59,7 +59,7 @@ public class LocalAdapter extends AbstractTemplateIntegrationAdapter {
     
     private String getFileContent(File file) throws IOException {
         StringBuilder contents = new StringBuilder();
-
+        
         BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
         try {
             String line = null;

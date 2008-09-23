@@ -2,6 +2,8 @@ package org.wings.plaf;
 
 import org.wings.SComponent;
 import org.wings.plaf.css.AbstractComponentCG;
+import org.wings.plaf.css.Utils;
+import org.wings.session.ScriptManager;
 import org.wings.io.Device;
 import org.wings.macro.MacroContainer;
 import org.wings.macro.MacroContext;
@@ -9,7 +11,7 @@ import org.wings.macro.MacroTag;
 
 import java.io.IOException;
 
-public class IntegrationComponentCG extends AbstractComponentCG implements IntegrationCG {
+public class IntegrationComponentCG extends AbstractComponentCG<SComponent> implements IntegrationCG {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,11 +30,26 @@ public class IntegrationComponentCG extends AbstractComponentCG implements Integ
     }
 
     public void write(Device device, SComponent component) throws IOException {
-        macros.execute();
+    	Utils.printDebug(device, "<!-- ");
+        Utils.printDebug(device, component.getName());
+        Utils.printDebug(device, " -->");
+        
+        component.fireRenderEvent(SComponent.START_RENDERING);
+
+        writeInternal(device, component);
+
+        component.fireRenderEvent(SComponent.DONE_RENDERING);
+        Utils.printDebug(device, "<!-- /");
+        Utils.printDebug(device, component.getName());
+        Utils.printDebug(device, " -->");
+
+        updateDragAndDrop(component);
     }
 
-    public void writeInternal(Device device, SComponent component) throws IOException {
-     }
+	public void writeInternal(Device device, SComponent component) throws IOException {
+		macros.getContext().setDevice(device);
+		macros.execute();
+    }
 
     public void setMacros(MacroContainer macros) {
         this.macros = macros;

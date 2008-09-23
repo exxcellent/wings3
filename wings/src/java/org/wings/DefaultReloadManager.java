@@ -63,7 +63,8 @@ public class DefaultReloadManager implements ReloadManager {
         }
     }
 
-    public void addUpdate(SComponent component, Update update) {
+    @SuppressWarnings("unchecked")
+	public void addUpdate(SComponent component, Update update) {
         if (component == null)
             throw new IllegalArgumentException("Component must not be null!");
 

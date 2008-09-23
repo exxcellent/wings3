@@ -19,6 +19,10 @@ public class MacroContainer implements Macro {
 
     private Collection<Instruction> instructions = new ArrayList<Instruction>();
 
+    public MacroContext getContext() {
+    	return context;
+    }
+    
     public void setContext(MacroContext context) {
         this.context = context;
     }

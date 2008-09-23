@@ -84,6 +84,7 @@ public class IntegrationTableCG implements TableCG, IntegrationCG {
 	 * {@inheritDoc}
 	 */
 	public void write(Device device, SComponent component) throws IOException {
+		macros.getContext().setDevice(device);
 		macros.execute();
 	}
 

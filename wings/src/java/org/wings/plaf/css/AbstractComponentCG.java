@@ -436,7 +436,7 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
 
 	public Update getComponentUpdate(COMPONENT_TYPE component) {
         updateDragAndDrop(component);
-        return new ComponentUpdate(this, component);
+        return new ComponentUpdate<COMPONENT_TYPE>(this, component);
 	}
 
 	protected static class ComponentUpdate<COMPONENT_TYPE extends SComponent> extends AbstractUpdate<COMPONENT_TYPE> {
