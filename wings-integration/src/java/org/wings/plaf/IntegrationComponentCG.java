@@ -47,8 +47,13 @@ public class IntegrationComponentCG extends AbstractComponentCG<SComponent> impl
     }
 
 	public void writeInternal(Device device, SComponent component) throws IOException {
+		
+		device.print("<div id=\"").print(component.getName()).print("\">");
+		
 		macros.getContext().setDevice(device);
 		macros.execute();
+		
+		device.print("</div>");
     }
 
     public void setMacros(MacroContainer macros) {

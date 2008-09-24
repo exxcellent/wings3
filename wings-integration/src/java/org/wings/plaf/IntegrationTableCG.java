@@ -84,8 +84,13 @@ public class IntegrationTableCG implements TableCG, IntegrationCG {
 	 * {@inheritDoc}
 	 */
 	public void write(Device device, SComponent component) throws IOException {
+		
+		device.print("<div id=\"").print(component.getName()).print("\">");
+		
 		macros.getContext().setDevice(device);
 		macros.execute();
+		
+		device.print("</div>");
 	}
 
 	/**
