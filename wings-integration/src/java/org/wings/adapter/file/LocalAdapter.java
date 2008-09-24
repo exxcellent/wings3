@@ -5,12 +5,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.mvel.MVEL;
 import org.wings.IntegrationFrame;
 import org.wings.Resource;
 import org.wings.TemplateIntegrationFrame;
 import org.wings.adapter.AbstractTemplateIntegrationAdapter;
 import org.wings.conf.Integration;
+import org.wings.conf.UrlExtension;
+import org.wings.session.Session;
 import org.wings.session.SessionManager;
 import org.wings.template.StringTemplateSource;
 import org.wings.template.TemplateSource;
@@ -49,7 +54,26 @@ public class LocalAdapter extends AbstractTemplateIntegrationAdapter {
     }
 
     public Object getResource(String[] params) throws IOException {
-        String url = prepareUrl(integration.getResource().getUrlExtension(null).getReplacedValue(params));
+    	List<String> values = new ArrayList<String>();
+		
+		UrlExtension urlExtension = integration.getResource().getUrlExtension(null);
+		
+		int i = 0;
+		for (String variable : urlExtension.getVariables()) {
+			if (variable.startsWith("$session")) {
+	        	Session session = SessionManager.getSession();
+	        	String expression = variable.substring(9, variable.length());
+	        	
+	        	Object value = MVEL.getProperty(expression, session);
+	        	values.add(value.toString());
+	        }
+			else {
+				values.add(params[i]);
+				i++;
+			}
+		}
+    	
+        String url = prepareUrl(integration.getResource().getUrlExtension(null).getReplacedValue(values.toArray(new String[0])));
         return process(getFileContent(new File(url)));
     }
 
