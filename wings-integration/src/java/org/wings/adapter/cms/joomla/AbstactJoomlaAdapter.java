@@ -4,11 +4,17 @@
 package org.wings.adapter.cms.joomla;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.mvel.MVEL;
 import org.wings.IntegrationFrame;
 import org.wings.adapter.cms.AbstractCmsAdapter;
 import org.wings.conf.Integration;
+import org.wings.conf.UrlExtension;
+import org.wings.session.Session;
+import org.wings.session.SessionManager;
 
 /**
  * <code>AbstactJoomlaAdapter</code>.
@@ -37,7 +43,27 @@ public abstract class AbstactJoomlaAdapter extends AbstractCmsAdapter {
 	}
 	
 	public Object getResource(String type, String[] params) throws IOException {
-	    String url = prepareUrl(integration.getResource().getUrlExtension(type).getReplacedValue(params));
+		
+		List<String> values = new ArrayList<String>();
+		
+		UrlExtension urlExtension = integration.getResource().getUrlExtension(type);
+		
+		int i = 0;
+		for (String variable : urlExtension.getVariables()) {
+			if (variable.startsWith("$session")) {
+	        	Session session = SessionManager.getSession();
+	        	String expression = variable.substring(9, variable.length());
+	        	
+	        	Object value = MVEL.getProperty(expression, session);
+	        	values.add(value.toString());
+	        }
+			else {
+				values.add(params[i]);
+				i++;
+			}
+		}
+		
+	    String url = prepareUrl(urlExtension.getReplacedValue(values.toArray(new String[0])));
 		return process(request(new GetMethod(url)));
 	}
 }

@@ -91,7 +91,12 @@ public class UrlExtension {
 
 		StringBuffer urlExtension = new StringBuffer();
 		for (int i = 0; matcher.find(); i++) {
-			matcher.appendReplacement(urlExtension, values[i]);
+			try {
+				matcher.appendReplacement(urlExtension, values[i]);
+			}
+			catch (IndexOutOfBoundsException e) {
+				e.printStackTrace();
+			}
 		}
 		matcher.appendTail(urlExtension);
 

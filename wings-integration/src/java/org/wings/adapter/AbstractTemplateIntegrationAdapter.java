@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mvel.MVEL;
 import org.wings.IntegrationFrame;
 import org.wings.STemplateLayout;
 import org.wings.TemplateIntegrationFrame;
 import org.wings.adapter.parser.HtmlParser;
 import org.wings.conf.Integration;
 import org.wings.conf.UrlExtension;
+import org.wings.session.Session;
 import org.wings.session.SessionManager;
 import org.wings.template.TemplateSource;
 import org.wings.util.HtmlParserUtils;
@@ -88,7 +90,15 @@ public abstract class AbstractTemplateIntegrationAdapter extends
 
                 if (attribute != null) {
                     values.add(attribute.getValue());
-                } else {
+                }
+                else if (variable.startsWith("$session")) {
+                	Session session = SessionManager.getSession();
+                	String expression = variable.substring(9, variable.length());
+                	
+                	Object value = MVEL.getProperty(expression, session);
+                	values.add(value.toString());
+                }
+                else {
                     System.out.println("No attribute " + variable + " has been found within element \"" + include + "\".");
                 }
             }
