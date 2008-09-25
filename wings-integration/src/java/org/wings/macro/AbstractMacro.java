@@ -26,8 +26,11 @@ public abstract class AbstractMacro implements Macro, Instruction {
     protected static Object resolveValue(MacroContext ctx, String expr) {
         if (expr != null && expr.length() > 1) {
             if (expr.charAt(0) == '$') {
-                // handle reference
-                return MVEL.eval(expr.substring(1), ctx);
+                try {
+                    return MVEL.eval(expr.substring(1), ctx);
+                } catch (Exception e) {
+                    return expr;
+                }
             }
         }
         return expr;

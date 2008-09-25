@@ -3,7 +3,6 @@ package org.wings.macro;
 import org.wings.SComponent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mvel.MVEL;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
@@ -49,7 +48,7 @@ public class MethodCallMacro extends AbstractMacro {
         for (int i = 0; i < instr.length; i++) {
             parameters[i + 1] = ctx.get(instr[i]);
             if (parameters[i + 1] == null)
-            parameters[i + 1] = MVEL.eval(instr[i], ctx);
+            parameters[i + 1] = resolveValue(ctx, instr[i]);
         }
 
         Method[] methods = target.getClass().getMethods();
