@@ -58,6 +58,8 @@ public class DialogCG extends WindowCG implements org.wings.plaf.DialogCG {
                 .append("modal:").append(dialog.isModal()).append(",")
                 .append("draggable:").append(dialog.isDraggable()).append(",")
                 .append("close:").append(dialog.isClosable()).append(",")
+                .append("height:").append(dialog.getPreferredSize().getHeight()).append(",")
+                .append("width:").append(dialog.getPreferredSize().getWidth()).append(",")
                 .append("constraintoviewport:true").append("});\n")
                 .append("dialog_").append(name).append(".render();\n");
         
