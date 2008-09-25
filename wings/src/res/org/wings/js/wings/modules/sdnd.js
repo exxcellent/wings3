@@ -677,6 +677,7 @@
 
     /**
      * Registers Code with type <i>codetype</i> with key and code
+     * To delete code, use null as code-argument
      * @param codetype Either 'drag' or 'drop'
      * @param key Key 
      * @param code
@@ -688,6 +689,19 @@
             dropCodeRegistry[key] = code;
         }
     };
+
+    /**
+     * Returns Code from the registry specified with codetype the code associated with key
+     * @param codetype either 'drag' or 'drop'
+     * @param key Key
+     */
+    lib.getCode = function(codetype, key) {
+        if(codetype == "drag") {
+            return dragCodeRegistry[key];
+        } else if(codetype == "drop") {
+            return dropCodeRegistry[key];
+        }
+    }
 
     /**
      * Returns a array of droptargets - the eleemntid is the key

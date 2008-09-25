@@ -366,6 +366,11 @@
                 if(target.tagName == "UL" || target.tagName == "OL")
                     return false;
 
+                if(target.tagName == "TEXTAREA" || target.tagName == "INPUT") {
+                    var dragcode = lib.getCode('drag', 'text'); // this could also be archived by just using textDragCode
+                    return dragcode.dragPrepare(event);
+                }
+
                 if(isSelectionEvent(event))
                     return false;
 
@@ -511,6 +516,13 @@
                 return true;
             },
             dragPrepare : function(event) { // decides if a drag operation is possible after the initial click
+                var target = getTarget(event);
+
+                if(target.tagName == "TEXTAREA" || target.tagName == "INPUT") {
+                    var dragcode = lib.getCode('drag', 'text'); // this could also be archived by just using textDragCode
+                    return dragcode.dragPrepare(event);
+                }
+                
                 stopEvent(event);
 
                 return true;
