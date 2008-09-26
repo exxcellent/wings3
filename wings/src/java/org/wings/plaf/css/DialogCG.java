@@ -42,7 +42,7 @@ public class DialogCG extends WindowCG implements org.wings.plaf.DialogCG {
         StringBuilder sb = new StringBuilder();
         sb.append("dialog_").append(name).append(" = new wingS.dialog.SDialog(\"").append(name).append("\"")
                 .append(", {");
-        
+
         if (dialog.getX() > -1 && dialog.getY() > -1) {
         	sb.append("x:").append(dialog.getX()).append(",")
         	  .append("y:").append(dialog.getY()).append(",");
@@ -50,26 +50,29 @@ public class DialogCG extends WindowCG implements org.wings.plaf.DialogCG {
         else {
         	sb.append("fixedcenter:true").append(",");
         }
-                
+
         if (!(owner instanceof SFrame))
             sb.append("viewportelement:\"").append(owner.getName()).append("\",");
-        
-              sb.append("visible:").append(dialog.isVisible()).append(",")
-                .append("modal:").append(dialog.isModal()).append(",")
-                .append("draggable:").append(dialog.isDraggable()).append(",")
-                .append("close:").append(dialog.isClosable()).append(",")
-                .append("height:").append(dialog.getPreferredSize().getHeight()).append(",")
-                .append("width:").append(dialog.getPreferredSize().getWidth()).append(",")
-                .append("constraintoviewport:true").append("});\n")
-                .append("dialog_").append(name).append(".render();\n");
-        
+
+        if (dialog.getPreferredSize() != null) {
+            sb.append("height:").append(dialog.getPreferredSize().getHeight()).append(",")
+              .append("width:").append(dialog.getPreferredSize().getWidth()).append(",");
+        }
+
+        sb.append("visible:").append(dialog.isVisible()).append(",")
+          .append("modal:").append(dialog.isModal()).append(",")
+          .append("draggable:").append(dialog.isDraggable()).append(",")
+          .append("close:").append(dialog.isClosable()).append(",")
+          .append("constraintoviewport:true").append("});\n")
+          .append("dialog_").append(name).append(".render();\n");
+
 //        sb.append("var resize = new YAHOO.util.Resize(\"").append("dialog_").append(name).append("\", {")
-//            .append("handles: ['br'],")
-//            .append("autoRatio: false,")
-//       		.append("minWidth: 300,")
+//          .append("handles: ['br'],")
+//          .append("autoRatio: false,")
+//          .append("minWidth: 300,")
 //			.append("minHeight: 100,")
 //			.append("status: true")
-//            .append("});");
+//          .append("});");
 
         ScriptManager.getInstance().addScriptListener(new OnPageRenderedScript(sb.toString()));
     }
