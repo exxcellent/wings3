@@ -57,7 +57,7 @@ public final class XPopupCG extends FormCG implements org.wingx.plaf.XPopupCG {
                 append("'").append(anchor).append("', ").
                 append("'").append(corner).append("'").
                 append(");");
-        code.append(name).append(".show()");
+        code.append(name).append(".show();");
         return code.toString();
     }
 
@@ -65,7 +65,7 @@ public final class XPopupCG extends FormCG implements org.wingx.plaf.XPopupCG {
     public void writeInternal(Device device, SComponent component) throws IOException {
         XPopup popup = (XPopup) component;
         // contents are written here
-        device.print("<div id='content_" + popup.getName() + "'>");
+        device.print("<div id='outer_" + popup.getName() + "'>");
         super.writeInternal(device, popup);
         device.print("</div>");
         ScriptManager.getInstance().addScriptListener(new OnPageRenderedScript(getInitScript(popup)));

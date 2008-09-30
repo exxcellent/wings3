@@ -67,7 +67,7 @@ public class XPopupExample
 
         SButton popupButton = new SButton("Popup button 1");
         panel.add(popupButton);
-        final XPopup popup = new XPopup(createContent(), 100, 100);
+        final XPopup popup = new XPopup(createContent(), popupButton, XPopup.BOTTOM_LEFT, 2, 2);
         popup.setPreferredSize(new SDimension(400, 200));
         popupButton.addActionListener(new ActionListener() {
 

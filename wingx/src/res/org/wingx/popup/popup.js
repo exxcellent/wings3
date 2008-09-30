@@ -48,21 +48,21 @@ wingS.XPopup.prototype.show = function show() {
         if ("tr" == this.corner || "br" == this.corner) {
             xAbs = xAbs + anchorElement.offsetWidth;
         }
-        this.popup = new YAHOO.widget.Overlay(this.id,
+        this.popup = new YAHOO.widget.Overlay(this.id + "yahoo",
         {   xy:      [this.x + xAbs, this.y + yAbs],
             width:   this.width + "px",
             height:  this.height + "px",
             monitorresize: false
         });
     } else {
-        this.popup = new YAHOO.widget.Overlay(this.id,
+        this.popup = new YAHOO.widget.Overlay(this.id + "yahoo",
         {   xy:      [this.x, this.y],
             width:   this.width + "px",
             height:  this.height + "px",
             monitorresize: false
         });
     }
-    this.popup.setBody(document.getElementById("content_" + this.id));
+    this.popup.setBody(document.getElementById("outer_"+ this.id));
     this.popup.render(document.body);
     this.popup.show();
     this.popup.visible = true;

@@ -14,10 +14,6 @@ package org.wings;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wings.border.SBorder;
-import org.wings.plaf.ComponentCG;
-import org.wings.plaf.FormCG;
-import org.wings.plaf.WindowCG;
 
 /**
  * The <code>SWindow</code> is currently just a placeholder for further implementations like
@@ -82,6 +78,9 @@ public class SWindow extends SForm implements LowLevelEventListener {
 	}
 
     public void setVisible(boolean visible) {
+        if (isVisible() == visible) {
+            return;
+        }
         if (visible) {
             show(owner);
         } else {
