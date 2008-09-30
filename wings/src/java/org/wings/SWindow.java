@@ -78,9 +78,6 @@ public class SWindow extends SForm implements LowLevelEventListener {
 	}
 
     public void setVisible(boolean visible) {
-        if (isVisible() == visible) {
-            return;
-        }
         if (visible) {
             show(owner);
         } else {
