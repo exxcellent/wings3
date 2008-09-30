@@ -62,8 +62,14 @@ public class XScrollPane extends SScrollPane {
         setHorizontalExtent(20);
         setVerticalExtent(verticalExtent);
 
-        if (tableComponent != null)
+        Locale locale = getSession().getLocale();
+        if (locale == null) {
+            locale = Locale.ENGLISH;
+        }
+        visibleSectionLabel = ResourceBundle.getBundle("Bundle", locale).getString("visibleSection");
+        if (tableComponent != null) {
             setViewportView(tableComponent);
+        }
     }
 
     /**
