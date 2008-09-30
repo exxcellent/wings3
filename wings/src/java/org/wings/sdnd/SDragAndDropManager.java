@@ -196,7 +196,7 @@ public class SDragAndDropManager extends SComponent implements LowLevelEventList
         SCursor cursor = getSession().getCursor();
 
         if(operation.equals("ds")) { // dragStart
-            setTransferHandler(null); // clean transferhandler (in case a dragging was aborted for any reason)
+            setTransferSupport(null); // clean transfersupport (in case a dragging was aborted for any reason)
 
             boolean customCallResult = false;
             if(sourceTH instanceof CustomDragHandler) {
