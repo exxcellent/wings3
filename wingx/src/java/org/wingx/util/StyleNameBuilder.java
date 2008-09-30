@@ -41,16 +41,18 @@ public class StyleNameBuilder implements Iterable<String> {
     /**
      * Adds a new style  (CSS class name) to the list of styles.
      * @param styleName the style (CSS class name) to be added.
+     * @return this instance.
      */
-    public void addStyle(String styleName) {
+    public StyleNameBuilder addStyle(String styleName) {
         if (styleName == null || styleName.trim().length() == 0) {
-            return;
+            return this;
         }
         styleName = styleName.trim();
         if (styles.contains(styleName)) {
-            return;
+            return this;
         }
         styles.add(styleName);
+        return this;
     }
 
     /**
@@ -94,6 +96,14 @@ public class StyleNameBuilder implements Iterable<String> {
      */
     public Iterator<String> iterator() {
         return styles.iterator();
+    }
+
+    /**
+     * Applies the style of this style builder to the given component.
+     * @param component the component which will get the given style.
+     */
+    public void applyTo(SComponent component) {
+        component.setStyle(toStyleName());
     }
 
 }
