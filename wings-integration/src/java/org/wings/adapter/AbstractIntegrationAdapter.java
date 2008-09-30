@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.wings.adapter;
 
@@ -8,10 +8,12 @@ import org.wings.Resource;
 import org.wings.conf.Integration;
 import org.wings.resource.DynamicResource;
 import org.wings.resource.ReloadResource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>AbstractIntegrationAdapter</code>.
- * 
+ *
  * <pre>
  * Date: Jul 25, 2008
  * Time: 6:36:21 PM
@@ -22,12 +24,14 @@ import org.wings.resource.ReloadResource;
  */
 public abstract class AbstractIntegrationAdapter implements IntegrationAdapter {
 
-	protected IntegrationFrame frame;
-	
+    private final transient static Log LOG = LogFactory.getLog(AbstractIntegrationAdapter.class);
+
+    protected IntegrationFrame frame;
+
 	protected Integration integration;
-	
+
 	private DynamicResource defaultResource;
-	
+
 	/**
 	 * @param frame
 	 * @param integration
@@ -35,7 +39,7 @@ public abstract class AbstractIntegrationAdapter implements IntegrationAdapter {
 	public AbstractIntegrationAdapter(IntegrationFrame frame, Integration integration) {
 		this.frame = frame;
 		this.integration = integration;
-		
+
 		defaultResource = frame.getDynamicResource(ReloadResource.class);
 	}
 
@@ -59,13 +63,12 @@ public abstract class AbstractIntegrationAdapter implements IntegrationAdapter {
 	public Resource mapResource(String url) {
 		try {
 			navigate(url);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+            LOG.error("Cannot resolve \"" + url+ "\"");
 		}
 		return defaultResource;
 	}
-	
+
 	/**
 	 * @param url
 	 */
