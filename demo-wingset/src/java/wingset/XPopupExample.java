@@ -21,7 +21,6 @@ import org.wings.SBorderLayout;
 import org.wings.SButton;
 import org.wings.SComponent;
 import org.wings.SDimension;
-import org.wings.SForm;
 import org.wings.SGridLayout;
 import org.wings.SIcon;
 import org.wings.SPanel;
@@ -45,7 +44,7 @@ public class XPopupExample
             "components are arranged in a hierarchy of containers, whose root\n" +
             "container is hooked to a frame.";
 
-    public SPanel createContent() {
+    private SPanel createContent() {
         SPanel content = new SPanel(new SBorderLayout());
         content.setBorder(new SLineBorder(1));
         content.setBackground(Color.WHITE);
@@ -59,6 +58,7 @@ public class XPopupExample
             }
         });
         content.add(button, SBorderLayout.SOUTH);
+        content.setPreferredSize(SDimension.FULLAREA);
         return content;
     }
 
@@ -67,8 +67,10 @@ public class XPopupExample
 
         SButton popupButton = new SButton("Popup button 1");
         panel.add(popupButton);
-        final XPopup popup = new XPopup(createContent(), popupButton, XPopup.BOTTOM_LEFT, 2, 2);
+        final XPopup popup = new XPopup(popupButton, XPopup.BOTTOM_LEFT, 2, 2);
         popup.setPreferredSize(new SDimension(400, 200));
+        popup.setLayout(new SBorderLayout());
+        popup.add(createContent(), SBorderLayout.CENTER);
         popupButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
