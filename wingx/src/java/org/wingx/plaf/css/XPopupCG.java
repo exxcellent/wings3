@@ -38,8 +38,22 @@ public final class XPopupCG extends FormCG implements org.wingx.plaf.XPopupCG {
 
     public XPopupCG() {
         header = Utils.createExternalizedJSHeader("org/wingx/popup/popup.js");
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void installCG(SComponent component) {
+        super.installCG(component);
         SessionHeaders.getInstance().registerHeader(header);
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void uninstallCG(SComponent component) {
+        super.uninstallCG(component);
+        SessionHeaders.getInstance().deregisterHeader(header);
+    }
+
 
     private String getInitScript(XPopup popup) {
         StringBuilder code = new StringBuilder();

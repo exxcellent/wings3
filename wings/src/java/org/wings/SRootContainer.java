@@ -15,7 +15,6 @@ package org.wings;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.plaf.RootContainerCG;
-import org.wings.style.Selector;
 
 /**
  * A root container. The classes derived from this class ({@link SFrame} and {@link SInternalFrame}) render in the content pane of this
@@ -106,7 +105,9 @@ public abstract class SRootContainer extends SContainer {
     }
 
     public void removeWindow(SWindow window) {
-    	
+        if (!windowsPane.getComponentList().contains(window)) {
+            return;
+        }
     	getSession().getReloadManager().setSuppressMode(true);
         windowsPane.remove(window);
         getSession().getReloadManager().setSuppressMode(false);
