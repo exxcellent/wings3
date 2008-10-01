@@ -16,7 +16,6 @@ import org.wings.SBorderLayout;
 import org.wings.SComponent;
 import org.wings.SDimension;
 import org.wings.SWindow;
-import org.wingx.plaf.css.XPopupCG;
 
 /**
  * @author leon
@@ -27,28 +26,6 @@ public class XPopup extends SWindow {
      * The form representing the Popup.
      */
     private SComponent contents;
-
-    /**
-     * popup x position, origin is the top left of the browser viewport
-     */
-    private int x;
-
-    /**
-     * popup y position, origin is the top left of the browser viewport
-     */
-    private int y;
-
-    /**
-     * width of the popup which will be retrieved by using
-     * contents.getPreferredSize()
-     */
-    private int width;
-
-    /**
-     * height of the popup which will be retrieved by using
-     * contents.getPreferredSize()
-     */
-    private int height;
 
     public static final String TOP_RIGHT = "tr";
 
@@ -96,38 +73,16 @@ public class XPopup extends SWindow {
         if (contents == null) {
             throw new IllegalArgumentException("Contents must be non-null.");
         }
-        if (contents.getPreferredSize() == null) {
-            throw new IllegalArgumentException("Popup contents should have a preferred size");
-        }
         this.anchor = anchor;
         this.contents = contents;
         this.corner = corner;
-        this.x = offsetX;
-        this.y = offsetY;
-        this.width = contents.getPreferredSize().getWidthInt();
-        this.height = contents.getPreferredSize().getHeightInt();
-        setCG(new XPopupCG());
+        setX(offsetX);
+        setY(offsetY);
         setVisible(false);
     }
 
     public String getCorner() {
         return corner;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
     }
 
     public boolean isAnchored() {

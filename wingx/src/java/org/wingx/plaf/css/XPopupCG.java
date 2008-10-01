@@ -13,16 +13,15 @@
 package org.wingx.plaf.css;
 
 
-import org.apache.commons.logging.Log;
 import org.wings.SComponent;
 import org.wings.header.SessionHeaders;
 import org.wings.io.Device;
 import java.io.IOException;
-import org.apache.commons.logging.LogFactory;
+import org.wings.SDimension;
 import org.wings.header.Header;
 import org.wings.plaf.css.FormCG;
 import org.wings.plaf.css.Utils;
-import org.wings.plaf.css.script.OnPageRenderedScript;
+import org.wings.plaf.css.script.OnHeadersLoadedScript;
 import org.wings.session.ScriptManager;
 import org.wingx.XPopup;
 
@@ -31,11 +30,11 @@ import org.wingx.XPopup;
  */
 public final class XPopupCG extends FormCG implements org.wingx.plaf.XPopupCG {
 
-    private static final Log LOGGER = LogFactory.getLog(XPopupCG.class);
-
     private static final long serialVersionUID = 1L;
 
     private Header header;
+
+    private static final SDimension DEFAULT_DIMENSION = new SDimension(400, 300);
 
     public XPopupCG() {
         header = Utils.createExternalizedJSHeader("org/wingx/popup/popup.js");
@@ -47,13 +46,25 @@ public final class XPopupCG extends FormCG implements org.wingx.plaf.XPopupCG {
         String anchor = popup.isAnchored() ? popup.getAnchor().getName() : "";
         String corner = popup.isAnchored() ? popup.getCorner() : "";
         String name = "popup_" + popup.getName();
+        SDimension dim = popup.getPreferredSize();
+        if (dim == null) {
+            dim = DEFAULT_DIMENSION;
+        }
+        String heightUnit = dim.getHeightUnit();
+        if (heightUnit != null && !heightUnit.equals("px")) {
+            throw new IllegalStateException("Only 'px' is a valid unit, but height was specified as " + dim.getHeight());
+        }
+        String widthUnit = dim.getWidthUnit();
+        if (widthUnit != null && !widthUnit.equals("px")) {
+            throw new IllegalStateException("Only 'px' is a valid unit, but width was specified as " + dim.getWidth());
+        }
         code.append(name).
                 append(" = new wingS.XPopup(").
                 append("'").append(popup.getName()).append("', ").
                 append(popup.getX() + ", ").
                 append(popup.getY() + ", ").
-                append(popup.getWidth()).append(", ").
-                append(popup.getHeight()).append(", ").
+                append(dim.getWidthInt()).append(", ").
+                append(dim.getHeightInt()).append(", ").
                 append("'").append(anchor).append("', ").
                 append("'").append(corner).append("'").
                 append(");");
@@ -68,7 +79,7 @@ public final class XPopupCG extends FormCG implements org.wingx.plaf.XPopupCG {
         device.print("<div id='outer_" + popup.getName() + "'>");
         super.writeInternal(device, popup);
         device.print("</div>");
-        ScriptManager.getInstance().addScriptListener(new OnPageRenderedScript(getInitScript(popup)));
+        ScriptManager.getInstance().addScriptListener(new OnHeadersLoadedScript(getInitScript(popup)));
     }
 
 }
