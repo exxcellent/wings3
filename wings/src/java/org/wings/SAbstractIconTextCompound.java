@@ -109,7 +109,7 @@ public abstract class SAbstractIconTextCompound
      * Creates a new submit button
      */
     public SAbstractIconTextCompound() {
-        this(null);
+        model = new SDefaultButtonModel();
     }
 
     public SButtonModel getModel() {
