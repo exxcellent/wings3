@@ -569,7 +569,7 @@
      */
     lib.addDropTarget = function(elementId, dropCode, options) {
         if(typeof(elementId) == 'string') {
-            var element = document.getElementById(element);
+            var element = document.getElementById(elementId);
         }
 
         dropTargets[elementId]  = { };

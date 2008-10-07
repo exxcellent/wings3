@@ -13,21 +13,19 @@ import org.wingx.plaf.RichTextEditorCG;
 
 import java.util.List;
 import java.util.LinkedList;
+import java.io.UnsupportedEncodingException;
 
 public class XRichTextEditor extends STextComponent {
     public final static int SIMPLE_EDITOR = 0;
     public final static int NORMAL_EDITOR = 1;
 
     private int editorType;
-    private String title;
 
-    public XRichTextEditor(String title) {
+    public XRichTextEditor() {
         this(SIMPLE_EDITOR);
-
-        this.title = title;
     }
 
-    private XRichTextEditor(int editorType) {
+    public XRichTextEditor(int editorType) {
         super();
         
         this.editorType = editorType;
@@ -37,11 +35,14 @@ public class XRichTextEditor extends STextComponent {
         return editorType;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public String getText() {
+        String text = super.getText();
+        try {
+            byte[] bytes = text.getBytes();
+            return new String(bytes, "US-ASCII");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return super.getText();
+        }
     }
 }

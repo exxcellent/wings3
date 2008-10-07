@@ -345,7 +345,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
     }
 
     /**
-     * Uninstall renderer (i.e. other to apply other renderer).
+         * Uninstall renderer (i.e. other to apply other renderer).
      */
     public void uninstallCG(final SComponent comp) {
         final SFrame component = (SFrame) comp;
