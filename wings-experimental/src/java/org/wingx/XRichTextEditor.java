@@ -19,12 +19,15 @@ public class XRichTextEditor extends STextComponent {
     public final static int NORMAL_EDITOR = 1;
 
     private int editorType;
+    private String title;
 
-    public XRichTextEditor() {
+    public XRichTextEditor(String title) {
         this(SIMPLE_EDITOR);
+
+        this.title = title;
     }
 
-    public XRichTextEditor(int editorType) {
+    private XRichTextEditor(int editorType) {
         super();
         
         this.editorType = editorType;
@@ -32,5 +35,13 @@ public class XRichTextEditor extends STextComponent {
 
     public int getEditorType() {
         return editorType;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

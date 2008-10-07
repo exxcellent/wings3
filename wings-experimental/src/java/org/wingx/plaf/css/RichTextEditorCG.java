@@ -36,19 +36,43 @@ public class RichTextEditorCG extends AbstractComponentCG<XRichTextEditor> imple
         }
 
         String editor = "SimpleEditor";
-        if(((XRichTextEditor)component).getEditorType() == XRichTextEditor.NORMAL_EDITOR)
-            editor = "Editor";
 
-        device.print("var " + name + " = new YAHOO.widget." + editor + "('" + component.getName() + "', {" +
-                "height:\"" + height + "\"," +
-                "width:\"" + width + "\"" +
+        device.print("var " + name + " = new YAHOO.widget." + editor + "('" + component.getName() + "', " +
+                "{" +
+                    "height:\"" + height + "\"," +
+                    "width:\"" + width + "\"," +
+                    "toolbar: {" +
+                        "titlebar: '" + component.getTitle() +"'," +
+                        "collapse:false,"+
+                        "buttons: ["+
+                            "{ group: 'textstyle', label: 'Font Style',"+
+                                "buttons: ["+
+                                    "{ type: 'push', label: 'Bold', value: 'bold' },"+
+                                    "{ type: 'push', label: 'Italic', value: 'italic' },"+
+                                    "{ type: 'push', label: 'Underline', value: 'underline' },"+
+                                    "{ type: 'separator' },"+
+                                    "{ type: 'select', label: 'Arial', value: 'fontname', disabled: true,"+
+                                        "menu: ["+
+                                            "{ text: 'Arial', checked: true },"+
+                                            "{ text: 'Arial Black' },"+
+                                            "{ text: 'Comic Sans MS' },"+
+                                            "{ text: 'Courier New' },"+
+                                            "{ text: 'Lucida Console' },"+
+                                            "{ text: 'Tahoma' },"+
+                                            "{ text: 'Times New Roman' },"+
+                                            "{ text: 'Trebuchet MS' },"+
+                                            "{ text: 'Verdana' }"+
+                                        "]"+
+                                    "},"+
+                                    "{ type: 'spin', label: '13', value: 'fontsize', range: [ 9, 75 ], disabled: true },"+
+                                    "{ type: 'separator' },"+
+                                    "{ type: 'color', label: 'Font Color', value: 'forecolor', disabled: true },"+
+                                    "{ type: 'color', label: 'Background Color', value: 'backcolor', disabled: true }"+
+                                "]"+
+                            "}"+
+                        "]"+
+                    "}"+
                 "});\n");
-        /*device.print(name + ".on('editorKeyUp', function(o) { "+ name + ".saveHTML(); }, " + name + ", true);\n");
-        device.print(name + ".on('toolbarLoaded', function(o) { " +
-                                                    "this.toolbar.on('buttonClick', function(o) { "
-                                                                                            + name + ".saveHTML(); alert('click');" +
-                                                                                        "});" +
-                                                           "}, " + name + ", true);\n"); */
         device.print(name + ".on('afterNodeChange', function(o) { var elt = document.getElementById('" + component.getName() + "'); " + name + ".saveHTML(); }, " + name + ", true);");
         device.print(name + ".on('editorKeyUp', function(o) { var elt = document.getElementById('" + component.getName() + "'); " + name + ".saveHTML(); }, " + name + ", true);");
         device.print(name + ".render();");
