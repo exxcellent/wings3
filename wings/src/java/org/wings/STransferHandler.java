@@ -35,10 +35,25 @@ import java.beans.PropertyChangeListener;
 public class STransferHandler implements Serializable {
     private final transient static Log LOG = LogFactory.getLog(STransferHandler.class);
 
+    /**
+     * An integer representing no transfer action
+     */
     public final static int NONE = DnDConstants.ACTION_NONE;
+    /**
+     * An integer representing a move transfer action
+     */
     public final static int MOVE = DnDConstants.ACTION_MOVE;
+    /**
+     * An integer representing a copy transfer action
+     */
     public final static int COPY = DnDConstants.ACTION_COPY;
+    /**
+     * An integer representing a copy|move transfer action
+     */
     public final static int COPY_OR_MOVE = DnDConstants.ACTION_COPY_OR_MOVE;
+    /**
+     * An integer representing a link transfer action
+     */
     public final static int LINK = DnDConstants.ACTION_LINK;
 
     private String propertyName = null;
@@ -48,7 +63,7 @@ public class STransferHandler implements Serializable {
     }
 
     /**
-     * Constructs a new STransferHandler with property
+     * Constructs a new STransferHandler with Property property
      * @param property
      */
     public STransferHandler(String property) {
@@ -56,7 +71,7 @@ public class STransferHandler implements Serializable {
     }
 
     /**
-     * Returns whether if this component can import one of the DataFlavor's of component 
+     * Returns whether if this component can import one of the Transfers DataFlavors  
      * @param component
      * @param transferFlavors
      * @return
@@ -77,7 +92,7 @@ public class STransferHandler implements Serializable {
         if(arguments == null || arguments.length != 1)
             return false;
 
-        // check if the arguments type matches one of the transferflavors
+        // check if the argument type matches one of the transferflavors
         DataFlavor flavor = getPropertyDataFlavor(arguments[0], transferFlavors);
         if(flavor == null)
             return false;
@@ -94,6 +109,11 @@ public class STransferHandler implements Serializable {
         return canImport(support.getComponent(), support.getDataFlavors());
     }
 
+    /**
+     * Creates a Transferable based on the data in the given component
+     * @param component
+     * @return
+     */
     protected Transferable createTransferable(SComponent component) {
         PropertyDescriptor propertyDescriptor = getPropertyDescriptor(propertyName, component);
         if(propertyDescriptor != null)  {
@@ -102,6 +122,12 @@ public class STransferHandler implements Serializable {
         return null;
     }
 
+    /**
+     * Creates a Transferable based on the data in the given component and event (calls createTransferable(SComponent))
+     * @param component
+     * @param event
+     * @return
+     */
     protected Transferable createTransferable(SComponent component, SMouseEvent event) {
         return createTransferable(component);
     }
@@ -130,9 +156,23 @@ public class STransferHandler implements Serializable {
         }
     }
 
+    /**
+     * Method that is called after a completed Drag-Operation - action will be NONE if
+     * unsuccessfull and != NONE if successfull
+     * @param source
+     * @param data
+     * @param action
+     */
     public void exportDone(SComponent source, Transferable data, int action) {
     }
 
+    /**
+     * Exports the data in componet to the given Clipboard
+     * @param component
+     * @param clipboard
+     * @param action
+     * @throws IllegalStateException
+     */
     public void exportToClipboard(SComponent component, Clipboard clipboard, int action) throws IllegalStateException {
         Transferable t = createTransferable(component);
         if( (action != COPY && action != MOVE) || (getSourceActions(component)&action) == 0 ) {
@@ -151,6 +191,9 @@ public class STransferHandler implements Serializable {
         }
     }
 
+    /**
+     * ClipboardAction - Helper-Class for the Clipboard-Actions, used by getCutAction, getCopyAction, getPasteAction
+     */
     public static class ClipboardAction implements Action {
         private String name;
 
@@ -203,14 +246,26 @@ public class STransferHandler implements Serializable {
     static final Action cutAction = new ClipboardAction("cut");
     static final Action pasteAction = new ClipboardAction("paste");
 
+    /**
+     * Returns an Action representing a copy operation to the Clipboard
+     * @return
+     */
     public static Action getCopyAction() {
         return copyAction;
     }
 
+    /**
+     * Returns an Action representing a cut operation to the Clipboard
+     * @return
+     */
     public static Action getCutAction() {
         return cutAction;
     }
 
+    /**
+     * Returns an Action representing a paste operation from the Clipboard
+     * @return
+     */
     public static Action getPasteAction() {
         return pasteAction;
     }
@@ -347,6 +402,11 @@ public class STransferHandler implements Serializable {
         return null;
     }
 
+    /**
+     * Returns the Actions supported by the given Component - Actions may be any combination of COPY, MOVE, LINK or NONE
+     * @param component
+     * @return
+     */
     public int getSourceActions(SComponent component) {
         PropertyDescriptor propertyDescriptor = getPropertyDescriptor(this.propertyName, component);
         if(propertyDescriptor != null) // only COPY allowed by default if a read method is available
@@ -355,11 +415,23 @@ public class STransferHandler implements Serializable {
         return NONE;
     }
 
+    /**
+     * Returns an SIcon representing the visual representation of the Transferable transferable
+     * @param transferable
+     * @return
+     */
     public SIcon getVisualRepresentation(Transferable transferable) {
         return null;
     }
 
     private SLabel label = null;
+
+    /**
+     * Returns an SLabel representing the visual representation of the Transferable transferable
+     * Note: (calls SIcon getVisualRepresentation(Transferable))
+     * @param transferable
+     * @return
+     */
     public SLabel getVisualRepresentationLabel(Transferable transferable) {
         SIcon icon = getVisualRepresentation(transferable);
         if(icon == null)
@@ -372,6 +444,12 @@ public class STransferHandler implements Serializable {
         return label;
     }
 
+    /**
+     * Imports the data specified in the Transferable into the given component
+     * @param component
+     * @param transferable
+     * @return
+     */
     public boolean importData(SComponent component, Transferable transferable) {
         PropertyDescriptor propertyDecsriptor = getPropertyDescriptor(this.propertyName, component);
         if(propertyDecsriptor == null)
@@ -398,12 +476,17 @@ public class STransferHandler implements Serializable {
         return false;
     }
 
+    /**
+     * Imports the data specified in TransferSupport into the component specified in TransferSupport
+     * @param support 
+     * @return
+     */
     public boolean importData(STransferHandler.TransferSupport support) {
         return importData(support.getComponent(), support.getTransferable());
     }
 
     /**
-     * PropertyTransferable
+     * PropertyTransferable - represents Data from a Property
      */
     public static class PropertyTransferable implements Transferable {
         private PropertyDescriptor propertyDescriptor = null;
@@ -448,7 +531,7 @@ public class STransferHandler implements Serializable {
     }
 
     /**
-     * TransferSupport
+     * TransferSupport encapsulates details of a transfer
      */
     public final static class TransferSupport {
         private SComponent component;
@@ -537,6 +620,10 @@ public class STransferHandler implements Serializable {
             return dropAction;
         }
 
+        /**
+         * Returns the Drop-Actions supported by the source-component
+         * @return
+         */
         public int getSourceDropActions() {
             if(!isDrop())
                 throw new IllegalStateException("getSourceDropActions called when isDrop = false");
@@ -596,6 +683,10 @@ public class STransferHandler implements Serializable {
             this.dropLocation = component.dropLocationForPoint(point);
         }
 
+        /**
+         * Returns the DropLocation for this  Transfer
+         * @return
+         */
         public DropLocation getDropLocation() {
             if(!isDrop())
                 throw new IllegalStateException("isDrop was false when getDropLocation was called");
@@ -604,6 +695,9 @@ public class STransferHandler implements Serializable {
         }
     }
 
+    /**
+     * Represents a location where dropped data should be inserted
+     */
     public static class DropLocation {
         private final SPoint point;
 
