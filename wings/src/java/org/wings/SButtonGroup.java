@@ -12,8 +12,6 @@
  */
 package org.wings;
 
-import org.wings.session.SessionManager;
-import javax.swing.event.EventListenerList;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
@@ -21,8 +19,10 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.EventListener;
 import java.util.Iterator;
+import java.util.List;
+import javax.swing.event.EventListenerList;
+import org.wings.session.SessionManager;
 
 /**
  * Used to create a multiple-exclusion scope for a set of buttons.
@@ -53,7 +53,7 @@ import java.util.Iterator;
 public class SButtonGroup implements SDelayedEventModel, Serializable {
     public static final String SELECTION_CHANGED = "SelectionChanged";
 
-    protected final ArrayList buttons = new ArrayList(2);
+    protected final List<SAbstractButton> buttons = new ArrayList<SAbstractButton>(2);
 
     private SAbstractButton selection = null;
 
@@ -71,7 +71,7 @@ public class SButtonGroup implements SDelayedEventModel, Serializable {
     /**
      * all delayed events are stored here.
      */
-    protected final ArrayList delayedEvents = new ArrayList(2);
+    protected final List<ActionEvent> delayedEvents = new ArrayList<ActionEvent>(2);
 
     public SButtonGroup() {}
 
@@ -87,7 +87,7 @@ public class SButtonGroup implements SDelayedEventModel, Serializable {
     }
 
     protected void setSelection(SAbstractButton button) {
-        SAbstractButton oldSelection = selection;
+        final SAbstractButton oldSelection = selection;
 
         selection = button;
 
@@ -100,6 +100,23 @@ public class SButtonGroup implements SDelayedEventModel, Serializable {
 
         fireActionPerformed(selection != null ? selection.getActionCommand() :
                 SELECTION_CHANGED);
+    }
+
+
+    /**
+     * Clears the selection such that none of the buttons
+     * in the <code>SButtonGroup</code> are selected.
+     */
+    public void clearSelection() {
+        if (selection != null) {
+            final SAbstractButton oldSelection = selection;
+            selection = null;
+
+            if (oldSelection.getGroup() == this)
+                oldSelection.setSelected(false);
+
+            fireActionPerformed(SELECTION_CHANGED);
+        }
     }
 
     /*
@@ -142,8 +159,8 @@ public class SButtonGroup implements SDelayedEventModel, Serializable {
      * removes all buttons from the group.
      */
     public void removeAll() {
-        while (buttons.size() > 0)
-            remove((SAbstractButton) buttons.get(0));
+        while (!buttons.isEmpty())
+            remove(buttons.get(0));
     }
 
     /**
@@ -228,7 +245,7 @@ public class SButtonGroup implements SDelayedEventModel, Serializable {
      */
     public ActionListener[] getActionListeners() {
     	if (listenerList != null) {
-            return (ActionListener[]) listenerList.getListeners(ActionListener.class);
+            return listenerList.getListeners(ActionListener.class);
         } else {
             return (ActionListener[]) Array.newInstance(ActionListener.class, 0);
         }
