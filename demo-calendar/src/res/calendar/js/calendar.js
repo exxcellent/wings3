@@ -118,7 +118,7 @@ AppCalendar.hidePopup = function(element) {
 
         return getDateParent(element.parentNode);
     }
-
+    
     var calendarDragCode = {
         dragStart : function(event, realEvent) { // is called when the drag operation should start (first mousemove while clicking)
                                       // - decides, if the whiledragging events should be registered (mouseenter/leave)

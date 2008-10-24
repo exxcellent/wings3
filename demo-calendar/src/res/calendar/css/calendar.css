@@ -91,7 +91,7 @@
 
 .AppointmentCalendar .monthview tbody td.selected
 {
-	background-color:#ff9900;
+	background-color:#d0dff4;
 }
 
 .AppointmentCalendar .monthview tbody td div.selected
@@ -102,7 +102,7 @@
 	margin-right:1px;
 	width:98%;
 /*	height:16px; */
-	background-color:#ff9900;
+	background-color:#d0dff4;
 	color:white;
 	text-align:center;
 	cursor:pointer;
@@ -163,7 +163,7 @@
 
 .AppointmentCalendar .weekview td.selected /* cell */
 {
-	background-color:#ff9900;
+	background-color:#d0dff4;
 }
 
 .AppointmentCalendar .weekview div.selected  /* appointment */
@@ -175,7 +175,7 @@
 	margin-left:1%;
 	margin-right:1%;
 
-	background-color:#ff9900;
+	background-color:#d0dff4;
 	color:black;
 }
 
@@ -247,5 +247,5 @@
 .AppointmentCalendar .dayview td.selected,
 .AppointmentCalendar .dayview td div.selected
 {
-	background-color:#ff9900;
+	background-color:#d0dff4;
 }
