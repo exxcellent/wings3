@@ -78,7 +78,7 @@ public class MacroTagHandler implements SpecialTagHandler {
                 int length = (int)getTagLength();
                 byte[] bytes = new byte[length];
                 input.read(bytes, 0, length);
-                macroTemplate = new String(bytes, "UTF-8");
+                macroTemplate = new String(bytes, "8859_1"); // force iso-8859_1 encoding!
                 macroTemplate = macroTemplate.substring(macroTemplate.indexOf('>') + 1, macroTemplate.lastIndexOf('<'));
             }
             else
