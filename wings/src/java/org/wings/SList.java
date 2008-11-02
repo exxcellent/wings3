@@ -234,6 +234,7 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
         this.dataModel.addListDataListener(this);
         setSelectionModel(createSelectionModel());
         installTransferHandler();
+        createActionMap();
     }
 
 
@@ -1244,6 +1245,14 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
      */
     private SDropMode dropMode = null;
     private boolean dragEnabled = false;
+
+    protected void createActionMap() {
+        ActionMap map = getActionMap();
+
+        map.put(STransferHandler.getCutAction().getValue(Action.NAME), STransferHandler.getCutAction());
+        map.put(STransferHandler.getCopyAction().getValue(Action.NAME), STransferHandler.getCopyAction());
+        map.put(STransferHandler.getPasteAction().getValue(Action.NAME), STransferHandler.getPasteAction());
+    }
 
     protected static final class DropLocation extends STransferHandler.DropLocation {
         private int index;

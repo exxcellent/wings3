@@ -106,11 +106,11 @@
                 var range = document.createRange(); // unfortunately .rangeOffset only provides us with the position within the current line
                 var rangeStart = event.rangeOffset; // therefore we create a range and extend it using the "internal" anonymous div that
                 var rangeEnd = event.rangeOffset;   // ff uses to render the element, other methods (.previousSibling etc. do not work, as
-                range.setStart(event.originalTarget, 0); // they are forbidden to be access within TextNodes)
-                range.setEnd(event.rangeParent, event.rangeOffset); // this unfortunately doesn't  work if the event.originalTarget
-                                                        //is the textarea instead of the anonymous div - luckily
-                var contents = range.cloneContents();	//this only happens when the cursor it dropped very close to the edges - in this case
-                var lengthOfRange = 0;					// the lengthOfRange stays 0 and the text is inserted at the beginning - in dragging it
+                range.setStart(event.originalTarget, 0); // they are forbidden to be accessed within TextNodes)
+                range.setEnd(event.rangeParent, event.rangeOffset); // this unfortunately doesn't  work if event.originalTarget
+                                                        // is the textarea instead of the anonymous div - luckily
+                var contents = range.cloneContents();	// this only happens when the cursor it dropped very close to the edges - in this case
+                var lengthOfRange = 0;					// the lengthOfRange stays 0 and the text is inserted at the beginning - when dragging it
                 var childNodes = contents.childNodes;	 // doesn't matter
                 for(var i=0; i<childNodes.length;++i) {
                     if(childNodes[i].nodeType == 3) {
@@ -147,7 +147,7 @@
 
         function isSelectionEvent(event) {
             var target = getTarget(event);
-            // TODO: returns true if you want to drag 1 selected char (maybe not fixable?)
+            // returns true if you want to drag 1 selected char (not fixable!)
             if(target.tagName == "INPUT" || target.tagName == "TEXTAREA") {
                 if(document.selection) // don't decide for internet explorer, it'll decide itself
                     return false;
@@ -191,7 +191,7 @@
                 }
             },
             abort : function(element, event) {
-                if(event.rangeOffset) { // put the caret at the position where clicked - removes selected, works in ff
+                if(event.rangeOffset) { // put the caret at the position where clicked - removes selection, works in ff
                     element.selectionStart = event.rangeOffset;
                     element.selectionEnd = event.rangeOffset;
                 }  /*else { /* ie handles the textfield dragging differently, therefore no need for this, maybe in opera?
@@ -242,6 +242,28 @@
             }
         }
 
+        function sendCaretPositionAndSelection(event, destinationElementId) {
+            event = wingS.event.getEvent(event);
+            var pos = getClickedPosition(event, wingS.event.getTarget(event));
+            var selStart = getSelectionStart(event, wingS.event.getTarget(event));
+            var selEnd = getSelectionEnd(event, wingS.event.getTarget(event));
+
+            var posString = "";
+            if(pos == -1) {
+                posString = selStart + "-" + selEnd;
+            } else {
+                posString = ""+pos;
+            }
+            
+            wingS.request.sendEvent(event, false, true, destinationElementId, posString, null);
+        }
+
+        lib.installTextPositionHandler = function(elementId, destinationElementId) {
+            lib.addEvent(elementId, "select", function(event) { sendCaretPositionAndSelection(event, destinationElementId); });
+            lib.addEvent(elementId, "mousedown", function(event) { sendCaretPositionAndSelection(event, destinationElementId); });
+            lib.addEvent(elementId, "keyup", function(event) { sendCaretPositionAndSelection(event, destinationElementId); });
+        }
+
         lib.registerCode('drag', 'text', textDragCode);
         lib.registerCode('drop', 'text', textDropCode);
     })();
@@ -253,7 +275,7 @@
         function isSelectionEvent(event) {
             var target = getTarget(event);
             if(target.tagName == "OPTION") { // lists in firefox
-                if(target.selected == false) {// if it isn't selected yet, it it a selection event
+                if(target.selected == false) {// if it isn't selected yet, it is a selection event
                     return true;
                 }
 

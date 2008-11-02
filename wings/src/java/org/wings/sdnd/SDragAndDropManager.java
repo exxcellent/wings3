@@ -179,26 +179,38 @@ public class SDragAndDropManager extends SComponent implements LowLevelEventList
         if(params.length > 4)
             additionalParams = params[4];
 
+        // Get the source component from the unique id and its transferhandler
         SComponent source = getSession().getComponentByName(sourceId);
         STransferHandler sourceTH = source.getTransferHandler();
         if(sourceTH == null)
             return;
+
+        // Get the target component from the unique id and its transferhandler 
         SComponent target = getSession().getComponentByName(targetId);
         STransferHandler targetTH = null;
         if(target == null) {
-             if(!("ds".equals(operation) || "ab".equals(operation)))
+            // if there's no target, it's ok if it's a dragstart or abort-operation
+            if(!("ds".equals(operation) || "ab".equals(operation)))
                 LOG.fatal("target not found: " + targetId + " " + valuesToProcess);
         } else {
             targetTH = target.getTransferHandler();
         }
 
+        // Create a SMouseEvent from the optional parameter string  
         SMouseEvent mouseEvent = new SMouseEvent(source, 0, new SPoint(additionalParams));
+
+        // Get the session Cursor
         SCursor cursor = getSession().getCursor();
 
-        if(operation.equals("ds")) { // dragStart
-            setTransferSupport(null); // clean transfersupport (in case a dragging was aborted for any reason)
+        // On Drag-Start Operations
+        if(operation.equals("ds")) {
+             // clean transfersupport (in case a old dragging was aborted for any reason and didn't clean up)
+            setTransferSupport(null);
+
 
             boolean customCallResult = false;
+
+            // Look for a CustomDragHandler
             if(sourceTH instanceof CustomDragHandler) {
                 customCallResult = ((CustomDragHandler)sourceTH).dragStart(source, target, action, mouseEvent);
             }
@@ -206,38 +218,47 @@ public class SDragAndDropManager extends SComponent implements LowLevelEventList
                 return;
             }
 
-            // must set the transfersupport
+            // This call must and usually will set the TransferSupport
             sourceTH.exportAsDrag(source, mouseEvent, action);
             if(getTransferSupport() == null) {
                 // abort drag operation
             } else {
-                // start drag operation
+                // Start drag operation
+
+                // Get the Visual Representation Label and use it
                 SLabel label = sourceTH.getVisualRepresentationLabel(getTransferSupport().getTransferable());
                 if(label != null) {
                     cursor.setLabel(label);
                 }
+                // Show it
                 cursor.setShowCursor(true);
             }
 
+            // Automatically create first drag-enter operation with the current element to update the
+            // cursor status to reflect the current mouse position 
             operation = "de";
             target = source;
             targetTH = sourceTH;
         }
 
-        if (operation.equals("de")) { // dragEnter
-            if(getTransferSupport() == null) // if a drag operation wasn't started, return
+         // On dragEnter Operation (Mouse entered a element)
+        if (operation.equals("de")) {
+             // if a drag operation wasn't started, abort
+            if(getTransferSupport() == null)
                 return;
 
             if(target == null)
                 return;
 
             if(source == target && !dropTargets.contains(source)) { // in case of dragstart
+                 // remove all icons from category 'dnd', and add the default-STOP-icon
                 cursor.removeIcons("dnd");
                 cursor.addIcon("dnd", DND_ICON_STOP, SCursor.HIGH_PRIORITY);
                 
                 return;
             }
-            
+
+            // check for a custom dragover handler
             boolean customCallResult = false;
             if(targetTH != null && (targetTH instanceof CustomDragOverHandler)) {
                 customCallResult = ((CustomDragOverHandler)targetTH).dragOverEnter(source, target, action, mouseEvent);
@@ -246,14 +267,17 @@ public class SDragAndDropManager extends SComponent implements LowLevelEventList
             if(customCallResult) {
                 return;
             }
-            
+
+            // set that this is a (potential) drop - will use droplocation and stuff if possible
             getTransferSupport().setIsDrop(target, source, mouseEvent, action);
-            if((getTransferSupport().getSourceDropActions() & action) == 0) { // if dropping here isn't allowed aith action
+            if((getTransferSupport().getSourceDropActions() & action) == 0) {
+                // if dropping isn't allowed with requested action
                 cursor.removeIcons("dnd");
                 cursor.addIcon("dnd", DND_ICON_STOP, SCursor.HIGH_PRIORITY);
                 return;
             }
 
+            // Check if the target-component can import the transferred data
             if(targetTH != null && targetTH.canImport(getTransferSupport())) {
                 cursor.removeIcons("dnd");
                 switch(action) {
@@ -275,6 +299,7 @@ public class SDragAndDropManager extends SComponent implements LowLevelEventList
             if(getTransferSupport() == null) // if a drag operation wasn't started, return
                 return;
 
+            // check for the custom dragover-handler
             boolean customCallResult = false;
             if(targetTH != null && (targetTH instanceof CustomDragOverHandler)) {
                 customCallResult = ((CustomDragOverHandler)targetTH).dragOverLeave(source, target, action, mouseEvent);
@@ -289,6 +314,8 @@ public class SDragAndDropManager extends SComponent implements LowLevelEventList
         } else if(operation.equals("st")) { // stayed on element
             if(getTransferSupport() == null)
                 return;
+
+            // check for the custom dragStay-handler
             if(targetTH != null && (targetTH instanceof CustomDropStayHandler)) {
                 ((CustomDropStayHandler)targetTH).dropStay(source, target, action, mouseEvent);
             }
@@ -296,6 +323,7 @@ public class SDragAndDropManager extends SComponent implements LowLevelEventList
             if(getTransferSupport() == null) // if a drag operation wasn't started, return
                 return;
 
+            // check for the custom drop-handler
             boolean customCallResult = false;
             if(targetTH != null && (targetTH instanceof CustomDropHandler)) {
                 customCallResult = ((CustomDropHandler)targetTH).drop(source, target, action, mouseEvent);
@@ -306,7 +334,8 @@ public class SDragAndDropManager extends SComponent implements LowLevelEventList
             }
 
             getTransferSupport().setIsDrop(target, source, mouseEvent, action);
-            if((getTransferSupport().getSourceDropActions() & action) == 0) { // if dropping here isn't allowed aith action
+            if((getTransferSupport().getSourceDropActions() & action) == 0) {
+                 // if dropping isn't allowed with the requested action
                 setTransferSupport(null);
                 cursor.setLabel(null);
                 cursor.removeIcons("dnd");
@@ -314,6 +343,7 @@ public class SDragAndDropManager extends SComponent implements LowLevelEventList
                 return;
             }
 
+            // Import the data and call exportDone on the source-TH 
             if(targetTH != null && targetTH.canImport(getTransferSupport())) {
                 targetTH.importData(getTransferSupport());
                 sourceTH.exportDone(source, getTransferSupport().getTransferable(), action);
@@ -322,12 +352,13 @@ public class SDragAndDropManager extends SComponent implements LowLevelEventList
             setTransferSupport(null);
             cursor.setLabel(null);
             cursor.removeIcons("dnd");
+            // hides the cursor if there are no icons shown
             cursor.hideCursorIfPossible();
         } else if(operation.equals("ab")) { // aborted
             cursor.setLabel(null);
             cursor.removeIcons("dnd");
             cursor.hideCursorIfPossible();
-        }
+        } 
     }
 
     /**

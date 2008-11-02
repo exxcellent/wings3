@@ -768,9 +768,23 @@
     }
 
     /**
-     * Gets the Lsat Target - may be useful in custom handlers
+     * Gets the Last Target - may be useful in custom handlers
      */
     lib.getLastTarget = function() {
         return lastTarget;
     }
+
+    var focusElementId = null;
+
+    /**
+     * Helper function for detecting new focused elements
+     * @param newElementId
+     */
+    lib.focus = function(newElementId) {
+        if(focusElementId == null || newElementId != focusElementId) {
+            wingS.request.sendEvent(null, false, true, 'focuslistener', newElementId, null);
+            focusElementId = newElementId;
+        }
+    }
+
 })();

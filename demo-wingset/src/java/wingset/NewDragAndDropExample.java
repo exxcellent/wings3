@@ -3,6 +3,8 @@ package wingset;
 import org.wings.*;
 import org.wings.sdnd.DefaultTransferable;
 import org.wings.sdnd.SDropMode;
+import org.wings.sdnd.TransferActionListener;
+import org.wings.sdnd.TextComponentChangeListener;
 import org.wings.style.CSSProperty;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -59,6 +61,7 @@ public class NewDragAndDropExample extends WingSetPane {
      */
     private class WingsComponents {
         private SPanel rootPanel = null;
+
         public SComponent getComponent() {
             if(rootPanel == null) {
                 rootPanel = new SPanel(new SBorderLayout());
@@ -74,24 +77,28 @@ public class NewDragAndDropExample extends WingSetPane {
                 textField1.setPreferredSize(new SDimension(200, 20));
                 textField1.setDragEnabled(true);
                 textField1.setDropMode(SDropMode.USE_SELECTION);
+                textField1.addScriptListener(new TextComponentChangeListener(textField1));
 
                 textFieldPanel.add(textField1, SBorderLayout.NORTH);
 
-                SSpacer spacer = new SSpacer("100%", "100%");
-                textFieldPanel.add(spacer, SBorderLayout.CENTER);
-
-                STextField textField2 = new STextField("Textfeld 2");
-                textField2.setPreferredSize(new SDimension(200, 20));
-                textField2.setDragEnabled(true);
-                textField2.setDropMode(SDropMode.USE_SELECTION);
+                SButton buttonCut = new SButton((String)STransferHandler.getCutAction().getValue(Action.NAME));
+                SButton buttonCopy = new SButton((String)STransferHandler.getCopyAction().getValue(Action.NAME));
+                SButton buttonPaste = new SButton((String)STransferHandler.getPasteAction().getValue(Action.NAME));
                 
-                textFieldPanel.add(textField2, SBorderLayout.SOUTH);
+                SPanel buttonPanel = new SPanel();
+
+                buttonPanel.add(buttonCut);
+                buttonPanel.add(buttonCopy);
+                buttonPanel.add(buttonPaste);
+
+                textFieldPanel.add(buttonPanel, SBorderLayout.CENTER);
 
                 topPanel.add(textFieldPanel, SBorderLayout.WEST);
 
                 STextArea textArea1 = new STextArea("TextArea 1");
                 textArea1.setPreferredSize(SDimension.FULLAREA);
                 textArea1.setDragEnabled(true);
+                textArea1.addScriptListener(new TextComponentChangeListener(textArea1));
 
                 topPanel.add(textArea1, SBorderLayout.CENTER);
 
@@ -151,12 +158,20 @@ public class NewDragAndDropExample extends WingSetPane {
 
                 SScrollPane scrollPaneTable = new SScrollPane(table);
                 scrollPaneTable.setVerticalExtent(5);
+                scrollPaneTable.setHorizontalExtent(5);
 
                 bottomPanel.add(scrollPaneTable, SBorderLayout.CENTER);
 
                 rootPanel.add(topPanel, SBorderLayout.NORTH);
                 rootPanel.add(middlePanel, SBorderLayout.CENTER);
                 rootPanel.add(bottomPanel, SBorderLayout.SOUTH);
+
+                TransferActionListener transferActionListener = new TransferActionListener();
+                transferActionListener.installFocusListener(textField1, textArea1, tree1, list1, table);
+
+                buttonCut.addActionListener(transferActionListener);
+                buttonCopy.addActionListener(transferActionListener);
+                buttonPaste.addActionListener(transferActionListener);
             }
 
             

@@ -67,6 +67,7 @@ public abstract class STextComponent extends SComponent implements LowLevelEvent
         setDocument(document);
         setEditable(editable);
         installTransferHandler();
+        createActionMap();
         if(!(this instanceof STextField)) {
             setDropMode(SDropMode.USE_SELECTION);
         }
@@ -223,12 +224,33 @@ public abstract class STextComponent extends SComponent implements LowLevelEvent
      */
     private int selectionStart;
     private int selectionEnd;
+    private int caretPosition;
+
+    protected void createActionMap() {
+        ActionMap map = getActionMap();
+
+        map.put(STransferHandler.getCutAction().getValue(Action.NAME), STransferHandler.getCutAction());
+        map.put(STransferHandler.getCopyAction().getValue(Action.NAME), STransferHandler.getCopyAction());
+        map.put(STransferHandler.getPasteAction().getValue(Action.NAME), STransferHandler.getPasteAction());
+    }
+
+    public void setCaretPosition(int caretPosition) {
+        this.caretPosition = caretPosition;
+    }
+
+    /**
+     * Note: Used for Clipboard - only updated if done by setCaretPosition
+     * @return
+     */
+    public int getCaretPosition() {
+        return caretPosition;
+    }
 
     /**
      * Internal Selection Mechanism for Drag and Drop - may be made public if a real selection support is introduced
      * @return
      */
-    protected int getSelectionStart() {
+    public int getSelectionStart() {
         return selectionStart;
     }
 
@@ -236,7 +258,7 @@ public abstract class STextComponent extends SComponent implements LowLevelEvent
      * Internal Selection Mechanism for Drag and Drop - may be made public if a real selection support is introduced
      * @param selectionStart
      */
-    protected void setSelectionStart(int selectionStart) {
+    public void setSelectionStart(int selectionStart) {
         this.selectionStart = selectionStart;
     }
 
@@ -244,7 +266,7 @@ public abstract class STextComponent extends SComponent implements LowLevelEvent
      * Internal Selection Mechanism for Drag and Drop - may be made public if a real selection support is introduced
      * @return
      */
-    protected int getSelectionEnd() {
+    public int getSelectionEnd() {
         return selectionEnd;
     }
 
@@ -252,7 +274,7 @@ public abstract class STextComponent extends SComponent implements LowLevelEvent
      * Internal Selection Mechanism for Drag and Drop - may be made public if a real selection support is introduced
      * @param selectionEnd
      */
-    protected void setSelectionEnd(int selectionEnd) {
+    public void setSelectionEnd(int selectionEnd) {
         this.selectionEnd = selectionEnd;
     }
 
@@ -340,7 +362,7 @@ public abstract class STextComponent extends SComponent implements LowLevelEvent
     private static class TextTransferable extends TextAndHTMLTransferable {
         private int startPos, endPos;
         private STextComponent component;
-        private int insertIndex;
+        private STextComponent destComponent;
 
         protected TextTransferable(STextComponent component, int startPos, int endPos) {
             super(null, null);
@@ -352,14 +374,17 @@ public abstract class STextComponent extends SComponent implements LowLevelEvent
             this.plainTextData = component.getSelectedText();
         }
 
-        public void setInsertIndex(int insertIndex) {
-            this.insertIndex = insertIndex;
+        protected void setDestComponent(STextComponent component) {
+            this.destComponent = component;
         }
 
         protected void removeText() {
-            String newtext = this.component.getText();
             try {
-                component.getDocument().remove(this.startPos+((insertIndex<=startPos)?this.endPos - this.startPos:-(this.endPos - this.startPos)), this.endPos - this.startPos);
+                if(component.equals(destComponent)) {
+                    component.getDocument().remove(this.startPos, this.endPos - this.startPos);
+                } else {
+                    component.getDocument().remove(this.startPos, this.endPos - this.startPos);
+                }
                 component.reload();
             } catch (BadLocationException e) {
                 e.printStackTrace();
@@ -429,29 +454,36 @@ public abstract class STextComponent extends SComponent implements LowLevelEvent
             return false;
         }
 
-        private int insertIndex = 0;
-
         public boolean importData(SComponent component, Transferable transferable) {
             try {
                 STextComponent textComponent = (STextComponent)component;
 
                 String data = (String)(transferable.getTransferData(getImportFlavor((STextComponent)component, transferable.getTransferDataFlavors())));
                 String text = textComponent.getText();
+                int insertIndex = textComponent.getCaretPosition();
 
                 if(insertIndex == -1) { // in case we couldn't determine a drop position, append
                     textComponent.setText(text + data);
                     return true;
                 }
+
                 if(insertIndex > text.length())
                     return false;
 
-                String firstPart = text.substring(0, insertIndex);
-                String secondPart = text.substring(insertIndex); 
+                if(textComponent.getSelectionStart() == textComponent.getSelectionEnd()) {
+                    String firstPart = text.substring(0, insertIndex);
+                    String secondPart = text.substring(insertIndex);
 
-                if(transferable instanceof TextTransferable) {
-                    ((TextTransferable)transferable).setInsertIndex(insertIndex);
+                    if(transferable instanceof TextTransferable) {
+                        ((TextTransferable)transferable).setDestComponent((STextComponent)component);
+                    }
+                    textComponent.setText(firstPart + data + secondPart);
+                } else {
+                    String firstPart = text.substring(0, textComponent.getSelectionStart());
+                    String secondPart = text.substring(textComponent.getSelectionEnd());
+                    textComponent.setText(firstPart + data + secondPart);
                 }
-                textComponent.setText(firstPart + data + secondPart);
+
                 return true;
             } catch (UnsupportedFlavorException e) {
             } catch (IOException e) {
@@ -460,7 +492,13 @@ public abstract class STextComponent extends SComponent implements LowLevelEvent
         }
 
         public boolean importData(TransferSupport support) {
-            insertIndex = ((STextComponent.DropLocation)support.getDropLocation()).getIndex();
+            if(support.isDrop()) {
+                int index = ((STextComponent.DropLocation)support.getDropLocation()).getIndex();
+                ((STextComponent)support.getComponent()).setCaretPosition(index);
+                ((STextComponent)support.getComponent()).setSelectionStart(index);
+                ((STextComponent)support.getComponent()).setSelectionEnd(index);
+            }
+
             return super.importData(support);
         }
 

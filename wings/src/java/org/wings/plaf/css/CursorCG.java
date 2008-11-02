@@ -67,10 +67,12 @@ public class CursorCG extends AbstractComponentCG implements org.wings.plaf.Curs
     }
 
     public void writeComponent(Device device, SCursor component) throws IOException {
-        device.print("<div");
+        //Write outer element (Updates update everything inside)
+		device.print("<div");
         Utils.writeAllAttributes(device, component);
         device.print(">");
-
+		
+		//Write inner element
         writeInnerComponent(device, component);
 
         device.print("</div>");

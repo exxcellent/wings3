@@ -317,6 +317,7 @@ public class STable extends SComponent
         setModel(model); // the resulting tableChanged event will update the default column mdoel
 
         installTransferHandler();
+        createActionMap();
     }
 
     /**
@@ -1962,6 +1963,14 @@ public class STable extends SComponent
     private SDropMode dropMode = null;
     private boolean dragEnabled = false;
 
+    protected void createActionMap() {
+        ActionMap map = getActionMap();
+
+        map.put(STransferHandler.getCutAction().getValue(Action.NAME), STransferHandler.getCutAction());
+        map.put(STransferHandler.getCopyAction().getValue(Action.NAME), STransferHandler.getCopyAction());
+        map.put(STransferHandler.getPasteAction().getValue(Action.NAME), STransferHandler.getPasteAction());
+    }
+
     protected static class DropLocation extends STransferHandler.DropLocation {
         private int row, col;
 
@@ -2043,11 +2052,11 @@ public class STable extends SComponent
             
             for(int row:table.getSelectedRows()) {
                 htmlText += "<tr>";
-                for(int col=0; col<table.getRowCount(); ++col) {
+                for(int col=0; col<table.getColumnCount(); ++col) {
                     Object object = table.getModel().getValueAt(row, col);
 
                     htmlText += "<td>" + object.toString() + "</td>";
-                    if(col == (table.getRowCount()-1))
+                    if(col == (table.getColumnCount()-1))
                         plainText += object.toString();
                     else
                         plainText += object.toString() + "\t";

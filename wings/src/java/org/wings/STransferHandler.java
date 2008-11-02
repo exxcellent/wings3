@@ -201,9 +201,16 @@ public class STransferHandler implements Serializable {
             this.name = name;
         }
 
-        public Object getValue(String key) { return null; }
+        public Object getValue(String key) {
+            if(key == NAME) {
+                return name;
+            }
+            return null;
+        }
 
-        public void putValue(String key, Object value) { }
+        public void putValue(String key, Object value) {
+            
+        }
 
         public void setEnabled(boolean b) { }
 
@@ -212,7 +219,7 @@ public class STransferHandler implements Serializable {
         }
 
         public boolean isEnabled(Object sender) {
-            if(sender instanceof SComponent)
+            if(!(sender instanceof SComponent) || ((SComponent)sender).getTransferHandler() != null)
                 return true;
 
             return false;
@@ -234,10 +241,11 @@ public class STransferHandler implements Serializable {
                     th.exportToClipboard(component, clipboard, COPY);
                 } else if(this.name.equals("paste")) { // import the data from the clipboard
                     Transferable transferable = clipboard.getContents(null);
-                    th.importData(new TransferSupport(component, transferable));
+                    TransferSupport support = new TransferSupport(component, transferable);
+                    th.importData(support);
                 }
             } catch(Exception e) {
-
+                throw new RuntimeException(e);
             }
         }
     }
