@@ -782,9 +782,22 @@
      */
     lib.focus = function(newElementId) {
         if(focusElementId == null || newElementId != focusElementId) {
-            wingS.request.sendEvent(null, false, true, 'focuslistener', newElementId, null);
+            //wingS.request.sendEvent(null, false, true, 'focuslistener', newElementId, null);
             focusElementId = newElementId;
         }
+    }
+
+    /**
+     * Function to be called if the selection and position for the last focus are needed
+     * @param destinationElementId
+     */
+    lib.sendDataForClipboardAction = function(destinationElementId) {
+        var selAndPosition = lib.getSelectionAndPosition(focusElementId);
+        var sendString = focusElementId;
+        if(typeof(selAndPosition) == "string")
+            sendString += ":" + selAndPosition;
+
+        wingS.request.sendEvent(null, false, true, destinationElementId, sendString, null);
     }
 
 })();

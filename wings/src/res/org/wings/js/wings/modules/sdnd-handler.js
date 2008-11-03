@@ -242,11 +242,14 @@
             }
         }
 
-        function sendCaretPositionAndSelection(event, destinationElementId) {
+        var selectionAndPosition = new Array();
+
+        function saveCaretPositionAndSelection(event) {
             event = wingS.event.getEvent(event);
-            var pos = getClickedPosition(event, wingS.event.getTarget(event));
-            var selStart = getSelectionStart(event, wingS.event.getTarget(event));
-            var selEnd = getSelectionEnd(event, wingS.event.getTarget(event));
+            var target = wingS.event.getTarget(event);
+            var pos = getClickedPosition(event, target);
+            var selStart = getSelectionStart(event, target);
+            var selEnd = getSelectionEnd(event, target);
 
             var posString = "";
             if(pos == -1) {
@@ -254,14 +257,25 @@
             } else {
                 posString = ""+pos;
             }
-            
-            wingS.request.sendEvent(event, false, true, destinationElementId, posString, null);
+
+            selectionAndPosition[target.id] = posString;
+            //wingS.request.sendEvent(event, false, true, destinationElementId, posString, null);
         }
 
-        lib.installTextPositionHandler = function(elementId, destinationElementId) {
-            lib.addEvent(elementId, "select", function(event) { sendCaretPositionAndSelection(event, destinationElementId); });
-            lib.addEvent(elementId, "mousedown", function(event) { sendCaretPositionAndSelection(event, destinationElementId); });
-            lib.addEvent(elementId, "keyup", function(event) { sendCaretPositionAndSelection(event, destinationElementId); });
+        lib.getSelectionAndPosition = function(textElementId) {
+            return selectionAndPosition[textElementId];
+        }
+
+        lib.installTextPositionHandler = function(elementId) {
+            lib.addEvent(elementId, "select", saveCaretPositionAndSelection);
+            lib.addEvent(elementId, "mousedown", saveCaretPositionAndSelection);
+            lib.addEvent(elementId, "keyup", saveCaretPositionAndSelection);
+        }
+
+        lib.removeTextPositionHandler = function(elementId) {
+            lib.removeEvent(elementId, "select");
+            lib.removeEvent(elementId, "mousedown");
+            lib.removeEvent(elementId, "keyup");
         }
 
         lib.registerCode('drag', 'text', textDragCode);

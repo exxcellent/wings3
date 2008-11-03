@@ -77,7 +77,6 @@ public class NewDragAndDropExample extends WingSetPane {
                 textField1.setPreferredSize(new SDimension(200, 20));
                 textField1.setDragEnabled(true);
                 textField1.setDropMode(SDropMode.USE_SELECTION);
-                textField1.addScriptListener(new TextComponentChangeListener(textField1));
 
                 textFieldPanel.add(textField1, SBorderLayout.NORTH);
 
@@ -98,7 +97,6 @@ public class NewDragAndDropExample extends WingSetPane {
                 STextArea textArea1 = new STextArea("TextArea 1");
                 textArea1.setPreferredSize(SDimension.FULLAREA);
                 textArea1.setDragEnabled(true);
-                textArea1.addScriptListener(new TextComponentChangeListener(textArea1));
 
                 topPanel.add(textArea1, SBorderLayout.CENTER);
 
@@ -167,7 +165,10 @@ public class NewDragAndDropExample extends WingSetPane {
                 rootPanel.add(bottomPanel, SBorderLayout.SOUTH);
 
                 TransferActionListener transferActionListener = new TransferActionListener();
-                transferActionListener.installFocusListener(textField1, textArea1, tree1, list1, table);
+
+                TextComponentChangeListener.installTextChangeListener(textArea1, textField1);
+                TransferActionListener.installFocusListener(textField1, textArea1, tree1, list1, table);
+                TransferActionListener.installSendDataListener(buttonCut, buttonCopy, buttonPaste);
 
                 buttonCut.addActionListener(transferActionListener);
                 buttonCopy.addActionListener(transferActionListener);
