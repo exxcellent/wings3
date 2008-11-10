@@ -12,31 +12,42 @@
  */
 package org.wings.session;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.wings.*;
-import org.wings.script.JavaScriptListener;
-import org.wings.script.ScriptListener;
-import org.wings.event.ExitVetoException;
-import org.wings.event.SRequestEvent;
-import org.wings.externalizer.ExternalizeManager;
-import org.wings.externalizer.ExternalizedResource;
-import org.wings.io.*;
-import org.wings.resource.*;
-
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.StringTokenizer;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.*;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionBindingListener;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wings.ReloadManager;
+import org.wings.RequestURL;
+import org.wings.Resource;
+import org.wings.SForm;
+import org.wings.SFrame;
+import org.wings.event.ExitVetoException;
+import org.wings.event.SRequestEvent;
+import org.wings.externalizer.ExternalizeManager;
+import org.wings.externalizer.ExternalizedResource;
+import org.wings.io.Device;
+import org.wings.io.DeviceFactory;
+import org.wings.io.ServletDevice;
+import org.wings.io.StringBuilderDevice;
+import org.wings.resource.ReloadResource;
+import org.wings.resource.StringResource;
+import org.wings.resource.UpdateResource;
+import org.wings.script.JavaScriptListener;
+import org.wings.script.ScriptListener;
 
 /**
  * The servlet engine creates for each user a new HttpSession. This
@@ -541,9 +552,9 @@ final class SessionServlet
 
                     long startTime = System.currentTimeMillis();
                     extManager.deliver(extInfo, response, outputDevice);
-                    long endTime = System.currentTimeMillis();
-                    log.debug("------------------------- Time needed for rendering: " +
-                            (endTime - startTime) + " ms -------------------------\n");
+                    if (log.isDebugEnabled()) {
+                        log.debug("Rendering time: " + (System.currentTimeMillis() - startTime) + " ms");
+                    }
 
                 } finally {
                     session.fireRequestEvent(SRequestEvent.DELIVER_DONE, extInfo);
