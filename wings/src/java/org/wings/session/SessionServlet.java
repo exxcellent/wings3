@@ -536,15 +536,18 @@ final class SessionServlet
 
             if (extInfo != null) {
                 outputDevice = DeviceFactory.createDevice(extInfo);
-                session.fireRequestEvent(SRequestEvent.DELIVER_START, extInfo);
+                try {
+                    session.fireRequestEvent(SRequestEvent.DELIVER_START, extInfo);
 
-                long startTime = System.currentTimeMillis();
-                extManager.deliver(extInfo, response, outputDevice);
-                long endTime = System.currentTimeMillis();
-                log.debug("------------------------- Time needed for rendering: " +
-                        (endTime - startTime) + " ms -------------------------\n");
+                    long startTime = System.currentTimeMillis();
+                    extManager.deliver(extInfo, response, outputDevice);
+                    long endTime = System.currentTimeMillis();
+                    log.debug("------------------------- Time needed for rendering: " +
+                            (endTime - startTime) + " ms -------------------------\n");
 
-                session.fireRequestEvent(SRequestEvent.DELIVER_DONE, extInfo);
+                } finally {
+                    session.fireRequestEvent(SRequestEvent.DELIVER_DONE, extInfo);
+                }
             } else {
                 handleUnknownResourceRequested(req, response);
             }
