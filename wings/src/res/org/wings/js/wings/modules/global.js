@@ -30,6 +30,7 @@ wingS.global.config = {                   // This variable stores the global con
  */
 wingS.global.init =  function(configObject) {
     // Initialize -wingS.global-
+    wingS.global.defaultButtonName = 'undefined';
     wingS.global.eventEpoch = configObject.eventEpoch;
     wingS.global.reloadResource = configObject.reloadResource;
     wingS.global.updateResource = configObject.updateResource;

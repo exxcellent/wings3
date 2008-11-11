@@ -562,3 +562,11 @@ wingS.update.visibility = function(componentId, display, visibility) {
 wingS.update.runScript = function(scriptToEval) {
     eval(scriptToEval);
 };
+
+/**
+ * Updates the current default button name of this frame.
+ * @param {String} defaultButtonName - the current default button name
+ */
+wingS.update.defaultButtonName = function(defaultButtonName) {
+    wingS.global.defaultButtonName = defaultButtonName;
+};

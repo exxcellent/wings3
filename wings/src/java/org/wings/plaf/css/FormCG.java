@@ -14,8 +14,10 @@ package org.wings.plaf.css;
 
 
 import org.wings.*;
+import org.wings.session.ScriptManager;
 import org.wings.io.Device;
 import org.wings.plaf.css.script.LayoutFillScript;
+import org.wings.plaf.css.script.OnPageRenderedScript;
 import org.wings.plaf.Update;
 
 import java.io.IOException;
@@ -32,6 +34,15 @@ public class FormCG extends AbstractComponentCG implements org.wings.plaf.FormCG
         boolean formTagRequired = !form.getResidesInForm();
 
         if (formTagRequired) {
+            // Is there a default button?
+            String defaultButtonName = "undefined";
+            if (form.getDefaultButton() != null) {
+                defaultButtonName = Utils.event(form.getDefaultButton());
+            }
+            StringBuilder script = new StringBuilder();
+            script.append("wingS.update.defaultButtonName('").append(defaultButtonName).append("');");
+            ScriptManager.getInstance().addScriptListener(new OnPageRenderedScript(script.toString()));
+
             device.print("<form method=\"");
             if (form.isPostMethod()) {
                 device.print("post");
@@ -44,12 +55,6 @@ public class FormCG extends AbstractComponentCG implements org.wings.plaf.FormCG
             Utils.optAttribute(device, "enctype", form.getEncodingType());
             Utils.optAttribute(device, "action", form.getRequestURL());
             Utils.writeEvents(device, form, null);
-
-            // Is there a default button?
-            String defaultButtonName = "undefined";
-            if (form.getDefaultButton() != null) {
-                defaultButtonName = Utils.event(form.getDefaultButton());
-            }
 
             // The "onsubmit"-handler of the form gets triggered
             // ONLY if the user submits it by pressing <enter> in
@@ -68,9 +73,7 @@ public class FormCG extends AbstractComponentCG implements org.wings.plaf.FormCG
             device.print("event,");
             device.print("true,");
             device.print(!component.isReloadForced());
-            device.print(",'default_button','");
-            device.print(defaultButtonName);
-            device.print("'); return false;\">");
+            device.print(",'default_button', wingS.global.defaultButtonName); return false;\">");
 
             writeCapture(device, form);
 
@@ -153,6 +156,10 @@ public class FormCG extends AbstractComponentCG implements org.wings.plaf.FormCG
         return new MethodUpdate(form, method != null ? method : "");
     }
 
+    public Update getDefaultButtonNameUpdate(SForm form, String defaultButtonName) {
+        return new DefaultButtonNameUpdate(form, defaultButtonName != null ? defaultButtonName : "undefined");
+    }
+
     protected class EncodingUpdate extends AbstractUpdate {
 
         private String encoding;
@@ -184,6 +191,23 @@ public class FormCG extends AbstractComponentCG implements org.wings.plaf.FormCG
             UpdateHandler handler = new UpdateHandler("method");
             handler.addParameter(component.getName());
             handler.addParameter(method);
+            return handler;
+        }
+    }
+
+    protected class DefaultButtonNameUpdate
+        extends AbstractUpdate {
+
+        private String defaultButtonName;
+
+        public DefaultButtonNameUpdate(SComponent component, String defaultButtonName) {
+            super(component);
+            this.defaultButtonName = defaultButtonName;
+        }
+
+        public Handler getHandler() {
+            UpdateHandler handler = new UpdateHandler("defaultButtonName");
+            handler.addParameter(defaultButtonName);
             return handler;
         }
     }

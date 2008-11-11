@@ -21,6 +21,8 @@ public interface FormCG
     Update getEncodingUpdate(SForm form, String encoding);
 
     Update getMethodUpdate(SForm form, String postMethod);
+
+    Update getDefaultButtonNameUpdate(SForm form, String postMethod);
 }
 
 

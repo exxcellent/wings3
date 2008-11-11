@@ -9,8 +9,10 @@ import org.wings.SDimension;
 import org.wings.SForm;
 import org.wings.SGridBagLayout;
 import org.wings.SLayoutManager;
+import org.wings.session.ScriptManager;
 import org.wings.io.Device;
 import org.wings.plaf.css.script.LayoutFillScript;
+import org.wings.plaf.css.script.OnPageRenderedScript;
 
 /**
  * <code>TemplateIntegrationFormCG<code>.
@@ -35,6 +37,15 @@ public class TemplateIntegrationFormCG extends FormCG implements org.wings.plaf.
         boolean formTagRequired = !form.getResidesInForm();
 
         if (formTagRequired) {
+            // Is there a default button?
+            String defaultButtonName = "undefined";
+            if (form.getDefaultButton() != null) {
+                defaultButtonName = Utils.event(form.getDefaultButton());
+            }
+            StringBuilder script = new StringBuilder();
+            script.append("wingS.update.defaultButtonName('").append(defaultButtonName).append("');");
+            ScriptManager.getInstance().addScriptListener(new OnPageRenderedScript(script.toString()));
+
             device.print("<form method=\"");
             if (form.isPostMethod()) {
                 device.print("post");
@@ -47,12 +58,6 @@ public class TemplateIntegrationFormCG extends FormCG implements org.wings.plaf.
             Utils.optAttribute(device, "enctype", form.getEncodingType());
             Utils.optAttribute(device, "action", form.getRequestURL());
             Utils.writeEvents(device, form, null);
-
-            // Is there a default button?
-            String defaultButtonName = "undefined";
-            if (form.getDefaultButton() != null) {
-                defaultButtonName = Utils.event(form.getDefaultButton());
-            }
 
             // The "onsubmit"-handler of the form gets triggered
             // ONLY if the user submits it by pressing <enter> in
@@ -71,9 +76,7 @@ public class TemplateIntegrationFormCG extends FormCG implements org.wings.plaf.
             device.print("event,");
             device.print("true,");
             device.print(!component.isReloadForced());
-            device.print(",'default_button','");
-            device.print(defaultButtonName);
-            device.print("'); return false;\">");
+            device.print(",'default_button', wingS.global.defaultButtonName); return false;\">");
 
             writeCapture(device, form);
 

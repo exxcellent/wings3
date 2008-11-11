@@ -140,10 +140,13 @@ public class SForm  extends SContainer implements LowLevelEventListener {
      * If <code>null</code> enter key pressed will be catched by the wings framework.
      */
     public void setDefaultButton(SButton defaultButton) {
-        SButton oldVal = this.defaultButton;
-        reloadIfChange(this.defaultButton, defaultButton);
+        SButton oldButton = this.defaultButton;
+        String oldName = oldButton != null ? oldButton.getName() : null;
+        String newName = defaultButton != null ? defaultButton.getName() : null;
+        if (isDifferent(oldName, newName))
+            update(getCG().getDefaultButtonNameUpdate(this, newName));
         this.defaultButton = defaultButton;
-        propertyChangeSupport.firePropertyChange("defaultButton", oldVal, this.defaultButton);
+        propertyChangeSupport.firePropertyChange("defaultButton", oldButton, this.defaultButton);
     }
 
     /**
