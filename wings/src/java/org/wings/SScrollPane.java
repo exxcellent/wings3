@@ -488,7 +488,7 @@ public class SScrollPane
     /**
      * A model synchronizing the scrollbar settings with the viewport of the given scrollable.
      */
-    class SViewportSynchronizationModel implements SBoundedRangeModel, SViewportChangeListener {
+    protected class SViewportSynchronizationModel implements SBoundedRangeModel, SViewportChangeListener {
 
         private boolean horizontal;
         private Scrollable scrollable;

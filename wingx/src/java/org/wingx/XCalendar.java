@@ -58,6 +58,7 @@ public class XCalendar extends SContainer implements LowLevelEventListener, SDoc
     private TimeZone timeZone = TimeZone.getDefault();
 
     private ActionListener actionListener = null;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
     private ActionListener getActionListener() {
         if ( actionListener == null ) {
@@ -397,7 +398,6 @@ public class XCalendar extends SContainer implements LowLevelEventListener, SDoc
         if (action.endsWith("_keystroke"))
             return;
 
-        SimpleDateFormat dateFormat  = new SimpleDateFormat("MM/dd/yyyy");
         dateFormat.setTimeZone( getTimeZone() );
         
         try {

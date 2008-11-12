@@ -118,7 +118,7 @@ public class CalendarCG extends AbstractComponentCG<XCalendar> implements org.wi
                 .append(component.getParentFrame().getName()).append("\", {iframe:false,")
                 .append("months_long:").append(createMonthsString( format_months_long)).append(',')
                 .append("weekdays_short:").append(createWeekdaysString( format_weekdays_short)).append(',')
-                .append("start_weekday:").append((Calendar.getInstance().getFirstDayOfWeek() - 1)).append("}")
+                .append("start_weekday:").append((Calendar.getInstance(component.getSession().getLocale()).getFirstDayOfWeek() - 1)).append("}")
                 .append(");");
 
             ScriptManager.getInstance().addScriptListener(new OnHeadersLoadedScript(script.toString(), true));

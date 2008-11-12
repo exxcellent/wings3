@@ -262,6 +262,7 @@
     <option name="ADDITIONAL_OPTIONS_STRING" value="" />
     <option name="MAXIMUM_HEAP_SIZE" value="128" />
   </component>
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" />
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
   </component>
@@ -342,11 +343,6 @@
         </modules>
       </facet-type>
     </autodetection-disabled>
-  </component>
-  <component name="FindManager">
-    <FindUsagesManager>
-      <setting name="OPEN_NEW_TAB" value="false" />
-    </FindUsagesManager>
   </component>
   <component name="HierarchyBrowserManager">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
@@ -538,6 +534,9 @@
     <option name="USE_CLIENT_FILTER" value="true" />
     <option name="CLIENT" value="" />
   </component>
+  <component name="ProjectDetails">
+    <option name="projectName" value="wings3" />
+  </component>
   <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectLevelVcsManager">
     <OptionsSetting value="true" id="Add" />
@@ -561,7 +560,6 @@
       <module fileurl="file://$PROJECT_DIR$/demo-wingset/demo-wingset.iml" filepath="$PROJECT_DIR$/demo-wingset/demo-wingset.iml" />
       <module fileurl="file://$PROJECT_DIR$/global.iml" filepath="$PROJECT_DIR$/global.iml" />
       <module fileurl="file://$PROJECT_DIR$/wings/wings.iml" filepath="$PROJECT_DIR$/wings/wings.iml" />
-      <module fileurl="file://$PROJECT_DIR$/wings-cms/wings-cms.iml" filepath="$PROJECT_DIR$/wings-cms/wings-cms.iml" />
       <module fileurl="file://$PROJECT_DIR$/wings-experimental/wings-experimental.iml" filepath="$PROJECT_DIR$/wings-experimental/wings-experimental.iml" />
       <module fileurl="file://$PROJECT_DIR$/wingx/wingx.iml" filepath="$PROJECT_DIR$/wingx/wingx.iml" />
     </modules>
@@ -569,7 +567,7 @@
   <component name="ProjectReloadState">
     <option name="STATE" value="0" />
   </component>
-  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="ProjectView">
@@ -585,14 +583,6 @@
       <autoscrollFromSource />
       <sortByType />
     </navigator>
-  </component>
-  <component name="PropertiesComponent">
-    <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
-    <property name="MemberChooser.sorted" value="false" />
-    <property name="MemberChooser.showClasses" value="true" />
-    <property name="GoToClass.includeLibraries" value="false" />
-    <property name="MemberChooser.copyJavadoc" value="false" />
   </component>
   <component name="ResourceManagerContainer">
     <option name="myResourceBundles">
@@ -616,7 +606,7 @@
       <option name="HTML_USED" value="false" />
       <option name="WIDTH" value="400" />
       <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="/home/hengels/jdevel/idea-6107/bin/appletviewer.policy" />
+      <option name="POLICY_FILE" value="$TEMPLATE$/jdevel/idea-6107/bin/appletviewer.policy" />
       <option name="VM_PARAMETERS" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
@@ -706,6 +696,7 @@
         </entry>
       </map>
     </option>
+    <option name="myVersion" value="124" />
   </component>
   <component name="SvnChangesBrowserSettings">
     <option name="USE_AUTHOR_FIELD" value="true" />
@@ -808,6 +799,11 @@
   <component name="com.intellij.profile.ui.ErrorOptionsConfigurable" proportions="" version="1">
     <option name="myLastEditedConfigurable" />
   </component>
+  <component name="copyright">
+    <Base>
+      <setting name="state" value="2" />
+    </Base>
+  </component>
   <component name="libraryTable">
     <library name="J2EE Servlet API">
       <CLASSES>
@@ -859,5 +855,8 @@
       <SOURCES />
     </library>
   </component>
+  <UsedPathMacros>
+    <macro name="TEMPLATE" />
+  </UsedPathMacros>
 </project>
 
