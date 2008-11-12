@@ -372,7 +372,7 @@ public class SFileChooser
             exception = e;
         } catch (Exception ex) {
             log.warn("Unknown Exception during URL decoding '" + values[0] + "'.");
-            exception = new  IOException(ex);
+            exception = new IOException(ex.getMessage());
         }
 
         if (exception != null) {

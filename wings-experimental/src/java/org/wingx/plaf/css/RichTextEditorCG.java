@@ -42,7 +42,7 @@ public class RichTextEditorCG extends AbstractComponentCG<XRichTextEditor> imple
                     "height:\"" + height + "\"," +
                     "width:\"" + width + "\"," +
                     "toolbar: {" +
-                        "titlebar: '" + component.getTitle() +"'," +
+                        "titlebar: 'Text Editor'," +
                         "collapse:false,"+
                         "buttons: ["+
                             "{ group: 'textstyle', label: 'Font Style',"+
