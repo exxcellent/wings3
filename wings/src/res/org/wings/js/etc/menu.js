@@ -306,7 +306,7 @@ function wpm_closeMenu(event, id, parentId) {
 }
 
 function wpm_toggleFormElements(elementBounds) {
-    if (YAHOO.env.ua.ie < 7) {
+    if (YAHOO.env.ua.ie && YAHOO.env.ua.ie < 7) {
         var selects = document.getElementsByTagName('select');
         if (!elementBounds) {
             for (var i = 0; i < selects.length; i++) {
