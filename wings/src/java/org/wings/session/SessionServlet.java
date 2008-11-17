@@ -368,7 +368,7 @@ final class SessionServlet
 
             // Special case handling: We request a .html resource of a session which is not accessible.
             // This happens some times and leads to a 404, though it should not be possible.
-            if (extInfo == null && pathInfo != null && pathInfo.endsWith(".html")) {
+            if (extInfo == null && pathInfo != null && (pathInfo.endsWith(".html") || pathInfo.endsWith(".xml"))) {
                 log.info("Got a request to an invalid .html during a valid session .. redirecting to root frame.");
                 response.sendRedirect("");
                 return;
