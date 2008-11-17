@@ -347,6 +347,8 @@ public class SOptionPane extends SDialog implements ActionListener {
         setOptionType(optionType);
         setMessageType(messageType);
         setModal(true);
+        
+        setPreferredSize(SDimension.AUTOAREA);
     }
 
     public void setCG(OptionPaneCG cg) {
@@ -373,7 +375,7 @@ public class SOptionPane extends SDialog implements ActionListener {
         imageLabel.setStyle("SOptionPaneImage");
         imageLabel.setToolTipText(null);
 
-        optionData.setPreferredSize(SDimension.FULLAREA);
+        optionData.setPreferredSize(SDimension.FULLWIDTH);
 
         contents.add(imageLabel, SBorderLayout.WEST);
         contents.add(optionData, SBorderLayout.CENTER);
