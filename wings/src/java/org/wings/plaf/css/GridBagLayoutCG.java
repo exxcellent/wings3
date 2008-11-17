@@ -76,47 +76,6 @@ public class GridBagLayoutCG extends AbstractLayoutCG {
                 Utils.printNewline(d, container);
 
                 cellStyle.renderAsTH = row == grid.firstRow && header;
-                
-                GridBagConstraints c = layout.getConstraints(comp);
-                
-                switch(c.anchor) {
-                case GridBagConstraints.NORTHWEST:
-                    cellStyle.defaultLayoutCellHAlignment = SConstants.LEFT;
-                    cellStyle.defaultLayoutCellVAlignment = SConstants.TOP;
-                    break;
-                case GridBagConstraints.NORTH:
-                    cellStyle.defaultLayoutCellHAlignment = SConstants.CENTER;
-                    cellStyle.defaultLayoutCellVAlignment = SConstants.TOP;
-                    break;
-                case GridBagConstraints.NORTHEAST:
-                    cellStyle.defaultLayoutCellHAlignment = SConstants.RIGHT;
-                    cellStyle.defaultLayoutCellVAlignment = SConstants.TOP;
-                    break;
-                case GridBagConstraints.EAST:
-                    cellStyle.defaultLayoutCellHAlignment = SConstants.RIGHT;
-                    cellStyle.defaultLayoutCellVAlignment = SConstants.CENTER;
-                    break;
-                case GridBagConstraints.SOUTHEAST:
-                    cellStyle.defaultLayoutCellHAlignment = SConstants.RIGHT;
-                    cellStyle.defaultLayoutCellVAlignment = SConstants.BOTTOM;
-                    break;
-                case GridBagConstraints.SOUTH:
-                    cellStyle.defaultLayoutCellHAlignment = SConstants.CENTER;
-                    cellStyle.defaultLayoutCellVAlignment = SConstants.BOTTOM;
-                    break;
-                case GridBagConstraints.SOUTHWEST:
-                    cellStyle.defaultLayoutCellHAlignment = SConstants.LEFT;
-                    cellStyle.defaultLayoutCellVAlignment = SConstants.BOTTOM;
-                    break;
-                case GridBagConstraints.WEST:
-                    cellStyle.defaultLayoutCellHAlignment = SConstants.LEFT;
-                    cellStyle.defaultLayoutCellVAlignment = SConstants.CENTER;
-                    break;
-                default:
-                    cellStyle.defaultLayoutCellHAlignment = SConstants.CENTER;
-                    cellStyle.defaultLayoutCellVAlignment = SConstants.CENTER;
-                    break;
-                }
 
                 if (comp == null) {
                     cellStyle.colspan = -1;
@@ -126,6 +85,46 @@ public class GridBagLayoutCG extends AbstractLayoutCG {
                     openLayouterCell(d, null, cellStyle);
                     closeLayouterCell(d, null, cellStyle.renderAsTH);
                 } else {
+                    GridBagConstraints c = layout.getConstraints(comp);
+                    switch(c.anchor) {
+                    case GridBagConstraints.NORTHWEST:
+                        cellStyle.defaultLayoutCellHAlignment = SConstants.LEFT;
+                        cellStyle.defaultLayoutCellVAlignment = SConstants.TOP;
+                        break;
+                    case GridBagConstraints.NORTH:
+                        cellStyle.defaultLayoutCellHAlignment = SConstants.CENTER;
+                        cellStyle.defaultLayoutCellVAlignment = SConstants.TOP;
+                        break;
+                    case GridBagConstraints.NORTHEAST:
+                        cellStyle.defaultLayoutCellHAlignment = SConstants.RIGHT;
+                        cellStyle.defaultLayoutCellVAlignment = SConstants.TOP;
+                        break;
+                    case GridBagConstraints.EAST:
+                        cellStyle.defaultLayoutCellHAlignment = SConstants.RIGHT;
+                        cellStyle.defaultLayoutCellVAlignment = SConstants.CENTER;
+                        break;
+                    case GridBagConstraints.SOUTHEAST:
+                        cellStyle.defaultLayoutCellHAlignment = SConstants.RIGHT;
+                        cellStyle.defaultLayoutCellVAlignment = SConstants.BOTTOM;
+                        break;
+                    case GridBagConstraints.SOUTH:
+                        cellStyle.defaultLayoutCellHAlignment = SConstants.CENTER;
+                        cellStyle.defaultLayoutCellVAlignment = SConstants.BOTTOM;
+                        break;
+                    case GridBagConstraints.SOUTHWEST:
+                        cellStyle.defaultLayoutCellHAlignment = SConstants.LEFT;
+                        cellStyle.defaultLayoutCellVAlignment = SConstants.BOTTOM;
+                        break;
+                    case GridBagConstraints.WEST:
+                        cellStyle.defaultLayoutCellHAlignment = SConstants.LEFT;
+                        cellStyle.defaultLayoutCellVAlignment = SConstants.CENTER;
+                        break;
+                    default:
+                        cellStyle.defaultLayoutCellHAlignment = SConstants.CENTER;
+                        cellStyle.defaultLayoutCellVAlignment = SConstants.CENTER;
+                        break;
+                    }
+
                     if ((c.gridx == SGridBagLayout.LAST_CELL || c.gridx == col) &&
                             (c.gridy == SGridBagLayout.LAST_CELL || c.gridy == row)) {
 

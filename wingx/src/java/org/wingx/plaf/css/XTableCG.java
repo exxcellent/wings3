@@ -186,7 +186,7 @@ public class XTableCG
         if (parameter != null && (selectableCell || editableCell) && !isClickable) {
             printClickability(device, table, parameter, table.getShowAsFormComponent());
             device.print(isEditingCell || isEditableCellRenderer ? " editing=\"true\"" : " editing=\"false\"");
-            device.print(isEditingCell || isEditableCellRenderer     ? " class=\"cell\"" : " class=\"cell clickable\"");
+            device.print(isEditingCell || isEditableCellRenderer ? " class=\"cell\"" : " class=\"cell clickable\"");
         }
         else
             device.print(" class=\"cell\"");
@@ -827,6 +827,7 @@ public class XTableCG
                 exception = t.getClass().getName();
             }
 
+            boolean isEditableCellRenderer = component instanceof EditableTableCellRenderer;
             row = table.isHeaderVisible() ? this.row + 1 : this.row;
             row = (table.isFilterVisible() && table.getModel() instanceof FilterableTableModel) ? this.row + 1 : this.row;
             column = columnInView(table, column);
@@ -842,7 +843,7 @@ public class XTableCG
             handler.addParameter(table.getName());
             handler.addParameter(row);
             handler.addParameter(column);
-            handler.addParameter(false);
+            handler.addParameter(isEditableCellRenderer);
             handler.addParameter(htmlCode);
             if (exception != null) {
                 handler.addParameter(exception);

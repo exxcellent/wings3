@@ -338,8 +338,7 @@ final class SessionServlet
             }
             handleLocale(req);
 
-            // The externalizer is able to handle static and dynamic resources
-            ExternalizeManager extManager = getSession().getExternalizeManager();
+            // The pathInfo addresses the resource
             String pathInfo = req.getPathInfo();                    // Note: Websphere returns <code>null</code> here!
             if (pathInfo != null && pathInfo.length() > 0) {
                 // strip of leading /
@@ -350,27 +349,30 @@ final class SessionServlet
 
             ResourceMapper mapper = session.getResourceMapper();
 
+            // The externalizer is able to handle static and dynamic resources
+            ExternalizeManager extManager = getSession().getExternalizeManager();
+
             ExternalizedResource extInfo;
             Resource resource;
             if (pathInfo == null || pathInfo.length() == 0)
                 extInfo = extManager.getExternalizedResource(retrieveCurrentRootFrameResource().getId());
             else if (mapper != null && (resource = mapper.mapResource(pathInfo)) != null)
                 extInfo = extManager.getExternalizedResource(resource.getId());
-            else if (firstRequest)
+            else if (firstRequest) {
                 extInfo = extManager.getExternalizedResource(retrieveCurrentRootFrameResource().getId());
+            }
             else
                 extInfo = extManager.getExternalizedResource(pathInfo);
 
             firstRequest = false;
-            /*
+
             // Special case handling: We request a .html resource of a session which is not accessible.
             // This happens some times and leads to a 404, though it should not be possible.
             if (extInfo == null && pathInfo != null && pathInfo.endsWith(".html")) {
-                log.info("Found a request to an invalid .html during a valid session. Redirecting to root frame.");
-                response.sendRedirect(retrieveCurrentRootFrameResource().getURL().toString());
+                log.info("Got a request to an invalid .html during a valid session .. redirecting to root frame.");
+                response.sendRedirect("");
                 return;
             }
-            */
 
             if (extInfo != null && extInfo.getObject() instanceof UpdateResource) {
                 reloadManager.setUpdateMode(true);
