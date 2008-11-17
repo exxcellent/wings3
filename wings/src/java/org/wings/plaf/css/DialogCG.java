@@ -32,28 +32,9 @@ public class DialogCG extends WindowCG implements org.wings.plaf.DialogCG {
         device.print("\n\n" +
                 "<div id=\"" + name + "\">\n" +
                 "  <div class=\"hd\">" + (dialog.getTitle() != null ? dialog.getTitle() : "&#160;") + "</div>\n" +
-                "  <div class=\"bd sdf\">");
-        
-        SDimension outerDim = dialog.getPreferredSize();
-        if (outerDim != null) {
-            int outerHeight = outerDim.getHeightInt();
-            String outerHeightUnit = outerDim.getHeightUnit();
-            if (outerHeightUnit != null &&
-                outerHeightUnit.equalsIgnoreCase("px") &&
-                outerHeight != SDimension.AUTO_INT) {
-                // The magic number 48 is hardcoded here which is obviously not good and should
-                // be changed in the future. This must probably be done via JS since we need to
-                // read out the width and height set via CSS. For the moment the calculation is
-                // done like this: 48 px = 2 x 10px [padding] + 26px [header] + 2 x 1px [border]
-                SDimension innerDim = new SDimension(outerDim.getWidthInt(), outerHeight - 48);
-                dialog.setPreferredSize(innerDim);
-            }
-        }
+                "  <div class=\"bd\" style=\"padding:0;\">");
 
         super.writeInternal(device, dialog);
-        
-        // Reset the actual dimension
-        dialog.setPreferredSize(outerDim);
 
         device.print("  </div>\n" +
                 "</div>\n");
@@ -73,17 +54,6 @@ public class DialogCG extends WindowCG implements org.wings.plaf.DialogCG {
         if (!(owner instanceof SFrame))
             sb.append("viewportelement:\"").append(owner.getName()).append("\",");
 
-        if (outerDim != null) {
-            String width = outerDim.getWidth();
-            if (width != SDimension.AUTO) {
-                sb.append("width:\"").append(width).append("\",");
-            }
-            String height = outerDim.getHeight();
-            if (height != SDimension.AUTO) {
-                sb.append("height:\"").append(height).append("\",");
-            }
-        }
-
         sb.append("visible:").append(dialog.isVisible()).append(",")
           .append("modal:").append(dialog.isModal()).append(",")
           .append("draggable:").append(dialog.isDraggable()).append(",")
@@ -91,13 +61,7 @@ public class DialogCG extends WindowCG implements org.wings.plaf.DialogCG {
           .append("constraintoviewport:true").append("});\n")
           .append("dialog_").append(name).append(".render();\n");
 
-//        sb.append("var resize = new YAHOO.util.Resize(\"").append("dialog_").append(name).append("\", {")
-//          .append("handles: ['br'],")
-//          .append("autoRatio: false,")
-//          .append("minWidth: 300,")
-//			.append("minHeight: 100,")
-//			.append("status: true")
-//          .append("});");
+        //sb.append("var resize = new YAHOO.util.Resize(\"").append(name).append("\");");
 
         ScriptManager.getInstance().addScriptListener(new OnPageRenderedScript(sb.toString()));
     }

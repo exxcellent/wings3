@@ -808,10 +808,7 @@ public class SFrame
             newPanel.add(component, constraint);
         }
     }
-
-    /**
-     * @return
-     */
+    
     public String getLogLevel() {
         String[] debugSettings = (String[])SessionManager.getSession().getProperty("debug.cookie");
         if (debugSettings != null) {

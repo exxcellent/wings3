@@ -2,10 +2,14 @@ package org.wings;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wings.border.SEmptyBorder;
 import org.wings.plaf.OptionPaneCG;
 import org.wings.resource.ResourceManager;
 
 import javax.swing.*;
+
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.StringTokenizer;
@@ -340,8 +344,6 @@ public class SOptionPane extends SDialog implements ActionListener {
         this.options = options;
         this.initialValue = initialValue;
         this.icon = icon;
-        SGridLayout layout = new SGridLayout(1);
-        setLayout(layout);
         initPanel();
         setOptionType(optionType);
         setMessageType(messageType);
@@ -371,6 +373,11 @@ public class SOptionPane extends SDialog implements ActionListener {
         imageLabel.setVerticalAlignment(SConstants.TOP_ALIGN);
         imageLabel.setStyle("SOptionPaneImage");
         imageLabel.setToolTipText(null);
+
+        optionData.setPreferredSize(SDimension.FULLAREA);
+
+        contents.add(imageLabel, SBorderLayout.WEST);
+        contents.add(optionData, SBorderLayout.CENTER);
         
         optionButtons.add(optionNo, "NO");
         optionButtons.add(optionCancel, "CANCEL");
@@ -378,15 +385,26 @@ public class SOptionPane extends SDialog implements ActionListener {
         optionButtons.add(optionOK, "OK");        
         optionButtons.setPreferredSize(SDimension.FULLWIDTH);
         optionButtons.setStyle("SOptionPaneButtons");
-
-        optionData.setPreferredSize(SDimension.FULLWIDTH);
-
-        contents.add(imageLabel, SBorderLayout.WEST);
-        contents.add(optionData, SBorderLayout.CENTER);
-        contents.setPreferredSize(SDimension.FULLWIDTH);
-
-        add(contents);
-        add(optionButtons);
+        
+        setLayout(new SGridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        add(contents, gbc);
+        
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 1;
+        gbc.weighty = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.SOUTHEAST;
+        add(optionButtons, gbc);
     }
 
     /**

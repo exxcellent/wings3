@@ -14,7 +14,10 @@
 
 package wingset;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.wings.SBorderLayout;
 import org.wings.SComponent;
@@ -28,98 +31,115 @@ import org.wingx.XSuggestDataSource;
 
 /**
  * Example demonstrating the use of component XSuggest.
- * @author Christian Schyma
+ * 
+ * @author Christian Schyma, Stephan Schuster
  */
 public class XSuggestExample extends WingSetPane {
-    
-    XSuggest birthCountryField = null;
-    XSuggest currentCountryField = null;
-    
+
+    private static final long serialVersionUID = 14544074749281370L;
+
     protected SComponent createExample() {
         SPanel panel = new SPanel();
-        panel.add(createXSuggestPanel(), SBorderLayout.CENTER);        
+        panel.add(createXSuggestPanel(), SBorderLayout.CENTER);
         return panel;
     }
-    
-    private SPanel createXSuggestPanel() {     
+
+    private SPanel createXSuggestPanel() {
+        SLabel info = new SLabel(
+                "See tooltips on textfields for more information" +
+                " about the settings made for each XSuggest field.");
+        info.setPreferredSize(new SDimension(280, 100));
+        info.setWordWrap(true);
+        
         SGridLayout gridLayout = new SGridLayout(2);
         gridLayout.setHgap(10);
-        gridLayout.setVgap(4);
-        SPanel panel = new SPanel(gridLayout);        
+        gridLayout.setVgap(5);
+        SPanel inputs = new SPanel(gridLayout);
+        inputs.setPreferredSize(new SDimension(280, SDimension.AUTO_INT));
         
-        panel.add(new SLabel("Surname:"));
-        STextField surname = new STextField();
-        surname.setToolTipText("enter your surname");
-        panel.add(surname);
+        inputs.add(new SLabel("Normal textfield:"));
+        STextField normal = new STextField();
+        normal.setColumns(30);
+        normal.setToolTipText("Nothing happens!");
+        inputs.add(normal);
+
+        inputs.add(new SLabel("Enter a country: "));
+        XSuggest country = new XSuggest();
+        country.setDataSource(new CountriesOfTheWorld());
+        country.setToolTipText("Settings:" +
+                "\ndefault");
+        inputs.add(country);
+
+        inputs.add(new SLabel("Enter a country: "));
+        XSuggest country1 = new XSuggest();
+        country1.setDataSource(new CountriesOfTheWorld());
+        country1.setMaxCacheEntries(10);
+        country1.setToolTipText("Settings:" +
+                "\nsetMaxCacheEntries(10)");
+        inputs.add(country1);
+
+        inputs.add(new SLabel("Enter a country: "));
+        XSuggest country2 = new XSuggest();
+        country2.setDataSource(new CountriesOfTheWorld());
+        country2.setMaxResultsDisplayed(3);
+        country2.setMinQueryLength(2);
+        country2.setQueryDelay(1);
+        country2.setAutoHighlight(false);
+        country2.setUseShadow(true);
+        country2.setForceSelection(true);
+        country2.setToolTipText("Settings:" +
+                "\nsetMaxResultsDisplayed(3)" +
+                "\nsetMinQueryLength(2)" +
+                "\nsetQueryDelay(1)" +
+                "\nsetAutoHighlight(false)" +
+                "\nsetUseShadow(true)" +
+                "\nsetForceSelection(true)");
+        inputs.add(country2);
         
-        panel.add(new SLabel("Name:"));
-        STextField name = new STextField();
-        name.setToolTipText("enter your name");
-        panel.add(name);        
+        inputs.add(new SLabel("Enter a country: "));
+        XSuggest country3 = new XSuggest();
+        country3.setDataSource(new CountriesOfTheWorld());
+        country3.setTypeAhead(true);
+        country3.setAllowBrowserAutocomplete(false);
+        country3.setToolTipText("Settings:" +
+                "\nsetTypeAhead(true)" +
+                "\nsetAllowBrowserAutocomplete(false)");
+        inputs.add(country3);
+
+        inputs.add(new SLabel("Enter a german\nstate (try \"b\"): "));
+        XSuggest states = new XSuggest();
+        states.setDataSource(new StatesOfGermany());
+        states.setToolTipText("Settings:" +
+                "\nspecial datasource");
+        inputs.add(states);
         
-        panel.add(new SLabel("Birth Country:"));
-        birthCountryField = new XSuggest();
-        birthCountryField.setDataSource(new CountriesOfTheWorld());        
-        birthCountryField.setToolTipText("where have you been born?");
-        birthCountryField.setSuggestBoxWidth(new SDimension(SDimension.INHERIT, SDimension.INHERIT));
-        panel.add(birthCountryField);        
-        
-        panel.add(new SLabel("Current Country:"));
-        currentCountryField = new XSuggest();
-        currentCountryField.setDataSource(new CountriesOfTheWorld());        
-        currentCountryField.setToolTipText("where are you living?");
-        currentCountryField.setSuggestBoxWidth(new SDimension(SDimension.INHERIT, SDimension.INHERIT));
-        panel.add(currentCountryField);        
-        
-        panel.add(new SLabel("State (only German: try 'b'): "));
-        XSuggest stateSuggestionField = new XSuggest();
-        stateSuggestionField.setDataSource(new StatesOfGermany());                        
-        panel.add(stateSuggestionField);        
-        
-        panel.add(new SLabel("auto correct: "));
-        XSuggest autoCorrect = new XSuggest();                
-        panel.add(autoCorrect);
-                
-        // set width of text fields
-        for (int i = 0; i < panel.getComponentCount(); i++) {
-            SComponent component = panel.getComponent(i);
-            if ((component instanceof XSuggest) || (component instanceof  STextField)) {
-                ((STextField)component).setColumns(20);
-            }
-        }                
-        
+        SPanel panel = new SPanel(new SBorderLayout());
+        panel.add(info, SBorderLayout.NORTH);
+        panel.add(inputs, SBorderLayout.CENTER);
+        panel.setPreferredSize(SDimension.FULLAREA);
+
         return panel;
     }
 
     protected SComponent createControls() {
         return null;
     }
-    
-    /**     
+
+    /**
      * a model for XSuggest
-     * @author Roman R&auml;dle
+     * 
+     * @author Roman Rädle
      * @version $Revision$
      */
     public class CountriesOfTheWorld implements XSuggestDataSource {
-        
-        private List completion;
+
+        private List<String> completion = new ArrayList<String>();
 
         public CountriesOfTheWorld() {
-            completion = new ArrayList();
-            initCompletion();
+            init();
         }
 
-        private String ajaxText;
-
-        public String getAjaxText() {
-            return ajaxText;
-        }
-
-        public void setAjaxText(String ajaxText) {
-            this.ajaxText = ajaxText;
-        }
-
-        private void initCompletion() {
+        private void init() {
             completion.add("Afghanistan");
             completion.add("Albania");
             completion.add("Algeria");
@@ -375,53 +395,50 @@ public class XSuggestExample extends WingSetPane {
             completion.add("Zambia");
             completion.add("Zimbabwe");
         }
-        
-        public List<Map.Entry<String,String>> generateSuggestions(String part) {
-            List<Map.Entry<String,String>> returning = new ArrayList<Map.Entry<String,String>>();
-            for (Iterator iter = completion.iterator(); iter.hasNext();) {                
-                Object o = iter.next();
-                if (o instanceof String) {
-                    String s = (String)o;
-                    if (s.toLowerCase().startsWith(part.toLowerCase())) {
-                        returning.add(new Entry(s, s));
-                    }
+
+        public List<Map.Entry<String, String>> generateSuggestions(String part) {
+            List<Map.Entry<String, String>> returning = new ArrayList<Map.Entry<String, String>>();
+            for (Iterator<String> iter = completion.iterator(); iter.hasNext();) {
+                String s = iter.next();
+                if (s.toLowerCase().startsWith(part.toLowerCase())) {
+                    returning.add(new Entry(s, s));
                 }
-            }            
-                       
+            }
+            
+            if (returning.isEmpty()) {
+                String noData = "No matches found!";
+                returning.add(new Entry(noData, noData));
+            }
+
             return returning;
         }
-                
+
     }
-    
-    /**     
-     * another model for XSuggest 
+
+    /**
+     * another model for XSuggest
+     * 
      * @author Christian Schyma
      * @version $Revision$
      */
     public class StatesOfGermany implements XSuggestDataSource {
-        
-        private String ajaxText;
-
-        public String getAjaxText() {
-            return ajaxText;
-        }
-
-        public void setAjaxText(String ajaxText) {
-            this.ajaxText = ajaxText;
-        }
 
         class State {
             public String name;
             public String iso;
-            
+
             State(String name, String iso) {
                 this.name = name;
                 this.iso = iso;
-            }            
+            }
         }
-        
-        private List states = new ArrayList();
-        
+
+        private List<State> states = new ArrayList<State>();
+
+        public StatesOfGermany() {
+            init();
+        }
+
         private void init() {
             states.add(new State("Berlin", "DE-BE"));
             states.add(new State("Brandenburg", "DE-BR"));
@@ -440,26 +457,24 @@ public class XSuggestExample extends WingSetPane {
             states.add(new State("Sachsen-Anhalt", "DE-ST"));
             states.add(new State("Thüringen", "DE-TH"));
         }
-                 
-        public List<Map.Entry<String,String>> generateSuggestions(String part) {
-            List<Map.Entry<String,String>> returning = new ArrayList<Map.Entry<String,String>>();
-            for (Iterator iter = states.iterator(); iter.hasNext();) {                
-                Object o = iter.next();                
-                if (o instanceof State) {
-                    State state = (State)o;
-                    if (state.name.toLowerCase().startsWith(part.toLowerCase())) {
-                        returning.add(new Entry(state.name, state.iso + " " + state.name));
-                    }
+
+        public List<Map.Entry<String, String>> generateSuggestions(String part) {
+            List<Map.Entry<String, String>> returning = new ArrayList<Map.Entry<String, String>>();
+            for (Iterator<State> iter = states.iterator(); iter.hasNext();) {
+                State state = iter.next();
+                if (state.name.toLowerCase().startsWith(part.toLowerCase())) {
+                    returning.add(new Entry(state.name, state.iso + " "
+                            + state.name));
                 }
             }
             
+            if (returning.isEmpty()) {
+                String noData = "No matches found!";
+                returning.add(new Entry(noData, noData));
+            }
+
             return returning;
         }
-                
-        /** Creates a new instance of StatesOfGermany */
-        public StatesOfGermany() {            
-            init();
-        }
     }
-    
+
 }

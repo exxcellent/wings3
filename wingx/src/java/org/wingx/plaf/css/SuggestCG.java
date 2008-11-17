@@ -1,16 +1,3 @@
-/*
- * Copyright 2006 wingS development team.
- *
- * This file is part of wingS (http://wingsframework.org).
- *
- * wingS is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License
- * as published by the Free Software Foundation; either version 2.1
- * of the License, or (at your option) any later version.
- *
- * Please see COPYING for the complete licence.
- */
-
 package org.wingx.plaf.css;
 
 import java.io.IOException;
@@ -28,16 +15,16 @@ import org.wings.session.ScriptManager;
 import org.wingx.XSuggest;
 
 /**
- *
- * @author Christian Schyma
+ * @author Christian Schyma, Stephan Schuster
  */
-public class SuggestCG
-    extends TextFieldCG
-    implements org.wingx.plaf.SuggestCG
-{
+public class SuggestCG extends TextFieldCG implements org.wingx.plaf.SuggestCG {
+    
+    private static final long serialVersionUID = 8395625026802022216L;
+    
     protected final List<Header> headers = new ArrayList<Header>();
     
     public SuggestCG() {
+        headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DATASOURCE));
         headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_AUTOCOMPLETE));
         headers.add(Utils.createExternalizedCSSHeader("org/wingx/suggest/suggest.css"));
         headers.add(Utils.createExternalizedJSHeader("org/wingx/suggest/suggest.js"));
@@ -55,38 +42,51 @@ public class SuggestCG
 
     protected void onChangeSubmitListener(STextField textField) {
     }
+    
+    private boolean appendConfigPropery(StringBuilder sb, String name, Object value, Object defaultValue, boolean isFirst) {
+        boolean nextIsFirst = isFirst;
+        if (!value.equals(defaultValue)) {
+            if (isFirst) {
+                nextIsFirst = false;
+            } else {
+                sb.append(", ");
+            }
+            sb.append(name).append(":").append(value);
+        }
+        return nextIsFirst;
+    }
 
     protected void printPostInput(Device device, STextField textField) throws IOException {
-        device.print("<div id=\"" + textField.getName() + "_popup\"></div>");
+        XSuggest xSuggest = (XSuggest) textField;
+        
+        device.print("<div id=\"" + xSuggest.getName() + "_popup\"></div>");
         StringBuilder builder = STRING_BUILDER.get();
         builder.setLength(0);
 
         String name = textField.getName();
-        builder.append("var ds_");
-        builder.append(name);
-        builder.append(" = new wingS.suggest.DataSource(\"");
-        builder.append(name);
-        builder.append("\",\"");
-        builder.append(name);
-        builder.append("_popup\");\n");
-        builder.append("var xs_");
-        builder.append(name);
-        builder.append(" = new wingS.suggest.XSuggest(\"");
-        builder.append(name);
-        builder.append("\", \"");
-        builder.append(name);
-        builder.append("_popup\", ds_");
-        builder.append(name);
-        builder.append(");\n");
+        builder.append("xs_datasource_").append(name).append(" = new wingS.suggest.DataSource(\"").append(name).append("\", {");
+        appendConfigPropery(builder, "maxCacheEntries", xSuggest.getMaxCacheEntries(), 0, true);
+        builder.append("});\n");
+        builder.append("xs_").append(name).append(" = new wingS.suggest.XSuggest(\"")
+               .append(name).append("\", \"").append(name).append("_popup\", xs_datasource_").append(name).append(", {");
+        boolean isFirst = true;
+        isFirst = appendConfigPropery(builder, "maxResultsDisplayed", xSuggest.getMaxResultsDisplayed(), 10, isFirst);
+        isFirst = appendConfigPropery(builder, "minQueryLength", xSuggest.getMinQueryLength(), 1, isFirst);
+        isFirst = appendConfigPropery(builder, "queryDelay", xSuggest.getQueryDelay(), 0.2f, isFirst);
+        isFirst = appendConfigPropery(builder, "autoHighlight", xSuggest.isAutoHighlight(), true, isFirst);
+        isFirst = appendConfigPropery(builder, "useShadow", xSuggest.isUseShadow(), false, isFirst);
+        isFirst = appendConfigPropery(builder, "forceSelection", xSuggest.isForceSelection(), false, isFirst);
+        isFirst = appendConfigPropery(builder, "typeAhead", xSuggest.isTypeAhead(), false, isFirst);
+        isFirst = appendConfigPropery(builder, "allowBrowserAutocomplete", xSuggest.isAllowBrowserAutocomplete(), true, isFirst);
+        isFirst = appendConfigPropery(builder, "alwaysShowContainer", xSuggest.isAlwaysShowContainer(), false, isFirst);
+        builder.append("});\n");
 
         if (textField.getDocumentListeners().length > 1 || textField instanceof SFormattedTextField) {
-            builder.append("var onchange_");
-            builder.append(name);
-            builder.append(" = function(sType, aArgs) { wingS.request.sendEvent(null, true, " + !textField.isReloadForced() + "); };\n");
-            builder.append("xs_");
-            builder.append(name);
-            builder.append(".textboxBlurEvent.subscribe(onchange_" + name + ");\n");
+            builder.append("var xs_onchange_").append(name);
+            builder.append(" = function() { wingS.request.sendEvent(null, true, ").append(!xSuggest.isReloadForced()).append("); };\n");
+            builder.append("xs_").append(name).append(".textboxBlurEvent.subscribe(xs_onchange_").append(name).append(");\n");
         }
+        
         ScriptManager.getInstance().addScriptListener(new OnHeadersLoadedScript(builder.toString()));
     }
 
@@ -98,19 +98,16 @@ public class SuggestCG
         SessionHeaders.getInstance().deregisterHeaders(headers);
     }
 
-    public Update getSuggestionsUpdate(XSuggest suggest, String text, List<Map.Entry<String,String>> suggestions) {
+    public Update getSuggestionsUpdate(XSuggest suggest, String text, List<Map.Entry<String, String>> suggestions) {
         return new SuggestUpdate(suggest, text, suggestions);
     }
 
-    protected class SuggestUpdate
-        extends AbstractUpdate
-    {
-        private String string;
+    protected class SuggestUpdate extends AbstractUpdate {
+        
         private List<Map.Entry<String,String>> suggestions;
 
-        public SuggestUpdate(SComponent component, String string, List<Map.Entry<String,String>> suggestions) {
+        public SuggestUpdate(SComponent component, String text, List<Map.Entry<String, String>> suggestions) {
             super(component);
-            this.string = string;
             this.suggestions = suggestions;
         }
 
@@ -119,13 +116,16 @@ public class SuggestCG
         }
 
         public Handler getHandler() {
+            List<Renderable> keyValuePairs = new ArrayList<Renderable>(suggestions.size());
+            for (Map.Entry<String, String> suggestion : suggestions) {
+                List<String> keyValuePair = new ArrayList<String>(2);
+                keyValuePair.add(suggestion.getKey());
+                keyValuePair.add(suggestion.getValue());
+                keyValuePairs.add(Utils.listToJsArray(keyValuePair));
+            }
             UpdateHandler handler = new UpdateHandler("suggest");
             handler.addParameter(component.getName());
-            handler.addParameter(string);
-            for (Map.Entry suggestion : suggestions) {
-                handler.addParameter(suggestion.getKey());
-                handler.addParameter(suggestion.getValue());
-            }
+            handler.addParameter(Utils.listToJsArray(keyValuePairs));
             return handler;
         }
     }

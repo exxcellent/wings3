@@ -13,7 +13,7 @@ import org.wings.SPopupMenu;
 
 public class MenuManager {
 
-    private Map menuLinkMap = new HashMap();
+    private Map<SComponent, Set<SComponent>> menuLinkMap = new HashMap<SComponent, Set<SComponent>>();
 
     public void registerMenuLink(SMenu menu, SComponent component) {
         register(menu, component);
@@ -27,7 +27,7 @@ public class MenuManager {
         if (menu == null)
             throw new IllegalArgumentException("Menu must not be null!");
 
-        Set components = getComponents(menu);
+        Set<SComponent> components = getComponents(menu);
         components.add(component);
         menuLinkMap.put(menu, components);
     }
@@ -44,7 +44,7 @@ public class MenuManager {
         if (menu == null)
             throw new IllegalArgumentException("Menu must not be null!");
 
-        Set components = getComponents(menu);
+        Set<SComponent> components = getComponents(menu);
         components.remove(component);
 
         if (components.isEmpty()) {
@@ -62,32 +62,32 @@ public class MenuManager {
         return !getComponents(menu).isEmpty();
     }
 
-    public Set getMenueLinks(SMenu menu) {
+    public Set<SComponent> getMenueLinks(SMenu menu) {
         return getComponents(menu);
     }
 
-    public Set getMenueLinks(SPopupMenu menu) {
+    public Set<SComponent> getMenueLinks(SPopupMenu menu) {
         return getComponents(menu);
     }
 
-    public Set getMenues() {
+    public Set<SComponent> getMenues() {
         return menuLinkMap.keySet();
     }
 
-    public Set getMenues(SFrame frame) {
-        Set menuesUsedInFrame = new HashSet(menuLinkMap.keySet());
-        for (Iterator i = menuesUsedInFrame.iterator(); i.hasNext();) {
-            if (((SComponent) i.next()).getParentFrame() != frame) {
+    public Set<SComponent> getMenues(SFrame frame) {
+        Set<SComponent> menuesUsedInFrame = new HashSet<SComponent>(menuLinkMap.keySet());
+        for (Iterator<SComponent> i = menuesUsedInFrame.iterator(); i.hasNext();) {
+            if (i.next().getParentFrame() != frame) {
                 i.remove();
             }
         }
         return menuesUsedInFrame;
     }
 
-    private Set getComponents(SComponent menu) {
-        Set links = (Set) menuLinkMap.get(menu);
+    private Set<SComponent> getComponents(SComponent menu) {
+        Set<SComponent> links = menuLinkMap.get(menu);
         if (links == null) {
-            links = new HashSet(2);
+            links = new HashSet<SComponent>(2);
         }
         return links;
     }

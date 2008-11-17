@@ -75,13 +75,14 @@
 		<include name="org/wings/js/yui/datasource/**"/>
 		<include name="org/wings/js/yui/dom/**"/>
 		<include name="org/wings/js/yui/dragdrop/**"/>
+		<include name="org/wings/js/yui/editor/**" />
+		<include name="org/wings/js/yui/element/**" />
 		<include name="org/wings/js/yui/event/**"/>
 		<include name="org/wings/js/yui/slider/**"/>
+		<include name="org/wings/js/yui/logger/**"/>
 		<include name="org/wings/js/yui/utilities/**"/>
 		<include name="org/wings/js/yui/yahoo/**"/>
 		<include name="org/wings/js/yui/yahoo-dom-event/**"/>
-		<include name="org/wings/js/yui/editor/**" />
-        <include name="org/wings/js/yui/element/**" />
     </fileset>
 
     <target name="prepare">

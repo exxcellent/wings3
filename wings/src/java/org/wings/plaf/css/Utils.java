@@ -25,7 +25,6 @@ import org.wings.header.Script;
 import org.wings.header.StyleSheetHeader;
 import org.wings.io.Device;
 import org.wings.io.NullDevice;
-import org.wings.io.StringBuilderDevice;
 import org.wings.resource.*;
 import org.wings.script.JavaScriptDOMListener;
 import org.wings.script.JavaScriptEvent;
@@ -1352,71 +1351,38 @@ public final class Utils {
     /**
      * Lookup keys for yui resources
      */
-    public static final String JS_YUI_ANIMATION = "JS.yuiAnimation";
-    // CSS: public static final String CSS_YUI_ASSETS_... = "CSS.yuiAssets...";
     public static final String CSS_YUI_ASSETS_CALENDAR = "CSS.yuiAssetsCalendar";
     public static final String CSS_YUI_ASSETS_CONTAINER = "CSS.yuiAssetsContainer";
     public static final String CSS_YUI_ASSETS_EDITOR = "CSS.yuiAssetsEditor";
     public static final String CSS_YUI_ASSETS_SIMPLE_EDITOR = "CSS.yuiAssetsSimpleeditor";
-    public static final String IMG_YUI_ASSETS_SPRITE = "IMG.yuiAssetsSprite";
     public static final String IMG_YUI_ASSETS_EDITOR_SPRITE = "IMG.yuiAssetsEditorSprite";
     public static final String IMG_YUI_ASSETS_EDITOR_SPRITE_ACTIVE = "IMG.yuiAssetsEditorSpriteActive";
+    public static final String CSS_YUI_ASSETS_LOGGER = "CSS.yuiAssetsLogger";
+    public static final String IMG_YUI_ASSETS_SPRITE = "IMG.yuiAssetsSprite";
     public static final String JS_YUI_AUTOCOMPLETE = "JS.yuiAutocomplete";
-    // CSS: public static final String CSS_YUI_BASE = "CSS.yuiBase";
-    public static final String JS_YUI_BUTTON = "JS.yuiButton";
     public static final String JS_YUI_CALENDAR = "JS.yuiCalendar";
-    // Experimental: public static final String JS_YUI_CHARTS = "JS.yuiCharts";
-    public static final String JS_YUI_COLORPICKER = "JS.yuiColorpicker";
-    public static final String JS_YUI_CONNECTION = "JS.yuiConnection";
     public static final String JS_YUI_CONTAINER = "JS.yuiContainer";
-    public static final String JS_YUI_CONTAINER_CORE = "JS.yuiContainerCore";
-    // Beta: public static final String JS_YUI_COOKIE = "JS.yuiCookie";
-    // Beta: public static final String JS_YUI_DATASOURCE = "JS.yuiDatasource";
-    // Beta: public static final String JS_YUI_DATATABLE = "JS.yuiDatatable";
-    public static final String JS_YUI_DOM = "JS.yuiDom";
-    public static final String JS_YUI_DRAGDROP = "JS.yuiDragdrop";
-    public static final String JS_YUI_EDITOR_BETA = "JS.yuiEditor";
-    // Beta: for XRichTextEditor
-    public static final String JS_YUI_EDITOR_SIMPLE_BETA = "JS.yuiEditorSimple";
-    // Beta: for XRichTextEditor
-    public static final String JS_YUI_ELEMENT_BETA = "JS.yuiElement";
-    public static final String JS_YUI_EVENT = "JS.yuiEvent";
-    // CSS: public static final String CSS_YUI_FONTS = "CSS.yuiFonts";
-    public static final String JS_YUI_GET = "JS.yuiGet";
-    // CSS: public static final String CSS_YUI_GRIDS = "CSS.yuiGrids";
-    public static final String JS_YUI_HISTORY = "JS.yuiHistory";
-    // Beta: public static final String JS_YUI_IMAGECROPPER = "JS.yuiImagecropper";
-    public static final String JS_YUI_IMAGELOADER = "JS.yuiImageloader";
-    public static final String JS_YUI_JSON = "JS.yuiJson";
-    // Beta: public static final String JS_YUI_LAYOUT = "JS.yuiLayout";
+    public static final String JS_YUI_DATASOURCE = "JS.yuiDatasource";
+    public static final String JS_YUI_EDITOR = "JS.yuiEditor";
+    public static final String JS_YUI_EDITOR_SIMPLE = "JS.yuiEditorSimple";
     public static final String JS_YUI_LOGGER = "JS.yuiLogger";
-    public static final String JS_YUI_MENU = "JS.yuiMenu";
-    // Beta: public static final String JS_YUI_PROFILER = "JS.yuiProfiler";
-    // Beta: public static final String JS_YUI_PROFILERVIEWER = "JS.yuiProfilerviewer";
-    // CSS: public static final String CSS_YUI_RESET = "CSS.yuiReset";
-    // CSS: public static final String CSS_YUI_RESET_FONTS = "CSS.yuiResetFonts";
-    // CSS: public static final String CSS_YUI_RESET_FONTS_GRIDS = "CSS.yuiResetFontsGrids";
-    // Beta: public static final String JS_YUI_RESIZE = "JS.yuiResize";
-    // Beta: public static final String JS_YUI_SELECTOR = "JS.yuiSelector";
     public static final String JS_YUI_SLIDER = "JS.yuiSlider";
-    public static final String JS_YUI_TABVIEW = "JS.yuiTabview";
-    public static final String JS_YUI_TREEVIEW = "JS.yuiTreeview";
-    // Experimental: public static final String JS_YUI_UPLOADER = "JS.yuiUploader";
     public static final String JS_YUI_UTILITIES = "JS.yuiUtilities";
-    public static final String JS_YUI_YAHOO = "JS.yuiYahoo";
-    public static final String JS_YUI_YAHOO_DOM_EVENT = "JS.yuiYahooDomEvent";
-    // Beta: public static final String JS_YUI_YUILOADER = "JS.yuiYuiloader";
-    public static final String JS_YUI_YUILOADER_DOM_EVENT = "JS.yuiYuiloaderDomEvent";
-    public static final String JS_YUI_TEST = "JS.yuiYuitest";
-    public static final String JS_YUI_TEST_CORE = "JS.yuiYuitestCore";
-
+    
     public static final String JS_YUI_ANIMATION_DEBUG = "JS.yuiAnimationDebug";
+    public static final String JS_YUI_AUTOCOMPLETE_DEBUG = "JS.yuiAutocompleteDebug";
+    public static final String JS_YUI_CALENDAR_DEBUG = "JS.yuiCalendarDebug";
     public static final String JS_YUI_CONNECTION_DEBUG = "JS.yuiConnectionDebug";
     public static final String JS_YUI_CONTAINER_DEBUG = "JS.yuiContainerDebug";
+    public static final String JS_YUI_DATASOURCE_DEBUG = "JS.yuiDatasourceDebug";
     public static final String JS_YUI_DOM_DEBUG = "JS.yuiDomDebug";
     public static final String JS_YUI_DRAGDROP_DEBUG = "JS.yuiDragdropDebug";
-    public static final String JS_YUI_EVENT_DEBUG = "JS.yuiEventDebug";
+    public static final String JS_YUI_EDITOR_DEBUG = "JS.yuiEditorDebug";
+    public static final String JS_YUI_EDITOR_SIMPLE_DEBUG = "JS.yuiEditorSimpleDebug";
     public static final String JS_YUI_ELEMENT_DEBUG = "JS.yuiElementDebug";
+    public static final String JS_YUI_EVENT_DEBUG = "JS.yuiEventDebug";
+    public static final String JS_YUI_LOGGER_DEBUG = "JS.yuiLoggerDebug";
+    public static final String JS_YUI_SLIDER_DEBUG = "JS.yuiSliderDebug";
     public static final String JS_YUI_YAHOO_DEBUG = "JS.yuiYahooDebug";
 
     /**
@@ -1425,23 +1391,101 @@ public final class Utils {
     public static final String JS_ETC_MENU = "JS.etcMenu";
     public static final String JS_ETC_POPUP = "JS.etcPopup";
     public static final String JS_ETC_WZ_TOOLTIP = "JS.etcWzTooltip";
-
-    public static final String JS_DEBUG_FIREBUGLITE = "JS.debugFirebugLite";
-    public static final String HTML_DEBUG_FIREBUGLITE = "HTML.debugFirebugLite";
-    public static final String CSS_DEBUG_FIREBUGLITE = "CSS.debugFirebugLite";
-    public static final String IMG_DEBUG_FIREBUGLITE_ERROR = "IMG.debugFirebugLiteError";
-    public static final String IMG_DEBUG_FIREBUGLITE_WARN = "IMG.debugFirebugLiteWarn";
-    public static final String IMG_DEBUG_FIREBUGLITE_INFO = "IMG.debugFirebugLiteInfo";
-
-
+    
+    /**
+     * Lookup keys for debug resources
+     */
+    public static final String JS_DEBUG_PI = "JS.debugPi";
+    public static final String CSS_DEBUG_FIREBUG_LITE = "CSS.debugFirebugLite";
+    public static final String JS_DEBUG_FIREBUG_LITE = "JS.debugFirebugLite";
+    public static final String IMG_DEBUG_FIREBUG_LITE_SPRITE = "IMG.debugFirebugLiteSprite";
+    public static final String IMG_DEBUG_FIREBUG_LITE_SPACER = "IMG.debugFirebugLiteSpacer";
+    public static final String IMG_DEBUG_FIREBUG_LITE_OPEN = "IMG.debugFirebugLiteOpen";
+    public static final String IMG_DEBUG_FIREBUG_LITE_CLOSE = "IMG.debugFirebugLiteClose";
+    
+    /**
+     * Debug header management
+     */
+    private static final Map<Script, Script[]> debugHeaders = new HashMap<Script, Script[]>();
+    private static final Map<Script, String> debugHeaderMappings = new HashMap<Script, String>();
+    private static final Map<String, String[]> specialHeaderMappings = new HashMap<String, String[]>();
+    
+    private static final Renderable[] consoleHeaders = new Renderable[] {
+        Utils.createExternalizedJSHeaderFromProperty(Utils.JS_DEBUG_PI),
+        Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_DEBUG_FIREBUG_LITE),
+        Utils.createExternalizedJSHeaderFromProperty(Utils.JS_DEBUG_FIREBUG_LITE),
+        Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_LOGGER),
+        Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_LOGGER_DEBUG)
+    };
+    
+    static {
+        specialHeaderMappings.put(
+            JS_YUI_UTILITIES, new String[] {
+                JS_YUI_YAHOO_DEBUG,
+                JS_YUI_DOM_DEBUG,
+                JS_YUI_EVENT_DEBUG,
+                JS_YUI_CONNECTION_DEBUG,
+                JS_YUI_ANIMATION_DEBUG,
+                JS_YUI_DRAGDROP_DEBUG,
+                JS_YUI_ELEMENT_DEBUG
+            }
+        );
+        
+        new SResourceIcon((String) ResourceManager.getObject(Utils.IMG_DEBUG_FIREBUG_LITE_SPRITE, String.class)).getId();
+        new SResourceIcon((String) ResourceManager.getObject(Utils.IMG_DEBUG_FIREBUG_LITE_SPACER, String.class)).getId();
+        new SResourceIcon((String) ResourceManager.getObject(Utils.IMG_DEBUG_FIREBUG_LITE_OPEN, String.class)).getId();
+        new SResourceIcon((String) ResourceManager.getObject(Utils.IMG_DEBUG_FIREBUG_LITE_CLOSE, String.class)).getId();
+    }
+    
+    public static Script[] getDebugHeaders(Object header) {
+        if (header instanceof Script) {
+            Script script = (Script) header;
+            String jsResourceProperty = debugHeaderMappings.get(script);
+            if (jsResourceProperty != null) {
+                Script[] jsDebugHeaders = debugHeaders.get(script);
+                if (jsDebugHeaders == null) {
+                    String[] jsResourceProperties = specialHeaderMappings.get(jsResourceProperty);
+                    if (jsResourceProperties == null) {
+                        jsResourceProperties = new String[] { jsResourceProperty + "Debug" };
+                    }
+                    int jsDebugHeaderCount = jsResourceProperties.length;
+                    jsDebugHeaders = new Script[jsDebugHeaderCount];
+                    for (int i = 0; i < jsDebugHeaderCount; ++i) {
+                        Script jsDebugHeader = Utils.createExternalizedJSHeaderFromProperty(jsResourceProperties[i], false);
+                        if (jsDebugHeader == null) {
+                            return null;
+                        } else {
+                            jsDebugHeaders[i] = jsDebugHeader;
+                        }
+                    }
+                    debugHeaders.put(script, jsDebugHeaders);
+                }
+                return jsDebugHeaders;
+            }
+        }
+        return null;
+    }
+    
+    public static Renderable[] getConsoleHeaders() {
+        return consoleHeaders;
+    }
+    
     /**
      * Load a Javascript library that comes with wingS by a property. Check <code>JS_XXX</code> constants.
      * @param jsResourceProperty A property lookup key, preferably by a constant in this utility class
      * @return A script reference to the desired script addable as header
      */
     public static Script createExternalizedJSHeaderFromProperty(String jsResourceProperty) {
+        return createExternalizedJSHeaderFromProperty(jsResourceProperty, true);
+    }
+    
+    private static Script createExternalizedJSHeaderFromProperty(String jsResourceProperty, boolean remember) {
         String jsClassPath = (String) ResourceManager.getObject(jsResourceProperty, String.class);
-        return createExternalizedJSHeader(jsClassPath);
+        Script header = createExternalizedJSHeader(jsClassPath);
+        if (header != null && remember) {
+            debugHeaderMappings.put(header, jsResourceProperty);
+        }
+        return header;
     }
 
     /**
@@ -1450,6 +1494,9 @@ public final class Utils {
      * @return A script reference to the desired script addable as header
      */
     public static Script createExternalizedJSHeader(String jsClassPath) {
+        if (jsClassPath == null) {
+            return null;
+        }
         ClassPathResource res = new ClassPathJavascriptResource(jsClassPath, HEADER_LOADED_CALLBACK);
         ExternalizeManager extMgr = SessionManager.getSession().getExternalizeManager();
         String jsUrl = extMgr.externalize(res, ExternalizeManager.GLOBAL);
@@ -1503,11 +1550,6 @@ public final class Utils {
             ((Renderable)o).write(d);
             return;
         }
-
-        // Using an Objects toString() method to JSON-serialize them is DIRTY.
-        assert(o instanceof String) : " never rely on toString() to serialize "
-            + "an object in JSON! Implement org.wings.Renderable instead. "
-            + "Object was a " + o.getClass() + ": >" + o + "<";
 
         d.print('\'');
         final String stringRep = o.toString();
@@ -1681,16 +1723,6 @@ public final class Utils {
         }
 
         @Override
-            public String toString() {
-            final StringBuilderDevice sb = new StringBuilderDevice(256);
-           // Prevent this toString() be used for rendering, provide
-            // info string to break that assumption.
-            sb.print("JSArray.toString():");
-            try { write(sb); } catch (IOException e) { }
-            return sb.toString();
-        }
-
-        @Override
         public boolean equals(Object object) {
             return list.equals(object);
         }
@@ -1720,16 +1752,6 @@ public final class Utils {
                 isFirst = false;
             }
             d.print('}');
-        }
-
-        @Override  // TODO: removeme
-            public String toString() {
-            final StringBuilderDevice sb = new StringBuilderDevice(10);
-            // Prevent this toString() be used for rendering, provide
-            // info string to break that assumption.
-            sb.print("JSObject.toString():");
-            try { write(sb); } catch (IOException e) {}
-            return sb.toString();
         }
 
         @Override

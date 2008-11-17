@@ -13,6 +13,7 @@
 package org.wings.session;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -84,8 +85,6 @@ final class SessionServlet
 
     /** Refer to comment in {@link #doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)} */
     private String exitSessionWorkaround;
-
-    private Boolean clientDebuggingEnabled = null;
 
     /**
      * Default constructor.
@@ -398,13 +397,13 @@ final class SessionServlet
                     Cookie cookie = cookies[i];
                     String paramName = cookie.getName();
                     
-                    if ("DEBUG".equals(paramName)
-                        && clientDebuggingEnabled()) {
+                    if ("DEBUG".equals(paramName)) {
                         // Cookies have a limited length, therefore we copy
                         // them trustingly into the session.
                         
-                        // Use a Tokenizer for performance. 
-                        StringTokenizer tokenizer = new StringTokenizer(cookie.getValue(),":");
+                        // Use a Tokenizer for performance.
+                        String paramValue = URLDecoder.decode(cookie.getValue(), "ISO-8859-1");
+                        StringTokenizer tokenizer = new StringTokenizer(paramValue, "|");
                         String[] values = new String[tokenizer.countTokens()];
                         for (int j = 0; j < values.length; j++) {
                             values[j] = tokenizer.nextToken();
@@ -594,18 +593,6 @@ final class SessionServlet
             SessionManager.removeSession();
             SForm.clearArmedComponents();
         }
-    }
-
-    /**
-     * @return
-     */
-    private boolean clientDebuggingEnabled() {
-        if (clientDebuggingEnabled == null) {
-            clientDebuggingEnabled = "true".equals((String)session.getProperty("wings.client.debug")) 
-                                     ? Boolean.TRUE 
-                                     : Boolean.FALSE;
-        }
-        return clientDebuggingEnabled .booleanValue();
     }
 
     /**

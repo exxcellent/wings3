@@ -20,12 +20,11 @@ import org.wings.*;
 import org.wings.sdnd.SDragAndDropManager;
 import org.wings.event.SRequestListener;
 import org.wings.event.SRequestEvent;
-import org.wings.externalizer.AbstractExternalizeManager;
-import org.wings.externalizer.ExternalizeManager;
 import org.wings.dnd.DragAndDropManager;
 import org.wings.header.*;
 import org.wings.io.Device;
 import org.wings.plaf.CGManager;
+import org.wings.plaf.css.script.OnHeadersLoadedScript;
 import org.wings.plaf.css.script.OnPageRenderedScript;
 import org.wings.resource.ClassPathResource;
 import org.wings.resource.ReloadResource;
@@ -76,71 +75,14 @@ public class FrameCG implements org.wings.plaf.FrameCG {
 
     private String documentType = STRICT_DOCTYPE;
 
-    protected final List<Header> headers = new ArrayList<Header>();
-
     /**
      * Should the returned HTML page start with the &lt;?xml version="1.0" encoding="..."&gt;.
      * This has effects which rendering mode the browsers will choose (quirks/strict)
      */
     private Boolean renderXmlDeclaration = Boolean.FALSE;
-
-    private final List<Script> compressedHeaders = new ArrayList<Script>();
-    private final Map<Script, Script[]> debugReplacementJsHeaders = new HashMap<Script, Script[]>();
-    private final List<Script> debugAddonJsHeaders = new ArrayList<Script>();
-    private final String[] firebugResources = new String[] {
-            Utils.HTML_DEBUG_FIREBUGLITE,
-            Utils.CSS_DEBUG_FIREBUGLITE,
-            Utils.IMG_DEBUG_FIREBUGLITE_ERROR,
-            Utils.IMG_DEBUG_FIREBUGLITE_WARN,
-            Utils.IMG_DEBUG_FIREBUGLITE_INFO
-    };
-
-    private boolean debugJs = false;
-
-    // JS_YUI_UTILITIES = aggregate: yahoo, dom, event, connection, animation, dragdrop, element
-    final Script yuiUtilities = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_UTILITIES);
-    final Script yuiContainer = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONTAINER);
-    final Script yuiEditor = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_EDITOR_BETA);
-    final Script yuiEditorSimple = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_EDITOR_SIMPLE_BETA);
-    final Script wingsAll = Utils.createExternalizedJSHeaderFromProperty(Utils.JS_WINGS_ALL);
-
-    {
-        compressedHeaders.add(yuiUtilities);
-        compressedHeaders.add(yuiContainer);
-        compressedHeaders.add(yuiEditor);
-        compressedHeaders.add(yuiEditorSimple);
-        compressedHeaders.add(wingsAll);
-        debugReplacementJsHeaders.put(
-                yuiUtilities, new Script[] {
-                    Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_YAHOO_DEBUG),
-                    Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DOM_DEBUG),
-                    Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_EVENT_DEBUG),
-                    Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONNECTION_DEBUG),
-                    Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_ANIMATION_DEBUG),
-                    Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DRAGDROP_DEBUG),
-                    Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_ELEMENT_DEBUG)
-                }
-        );
-        debugReplacementJsHeaders.put(
-                yuiContainer, new Script[] {
-                    Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONTAINER_DEBUG)
-                }
-        );
-        debugReplacementJsHeaders.put(
-                wingsAll, new Script[] {
-                    Utils.createExternalizedJSHeaderFromProperty(Utils.JS_WINGS_ALL_DEBUG)
-                }
-        );
-
-        debugAddonJsHeaders.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_DEBUG_FIREBUGLITE));
-        // HTML, CSS and Images for firebuglite
-        ExternalizeManager extMgr = SessionManager.getSession().getExternalizeManager();
-        for (int i = 0; i < firebugResources.length; i++) {
-            String classPath = (String) ResourceManager.getObject(firebugResources[i], String.class);
-            ClassPathResource res = new ClassPathResource(classPath);
-            String string = extMgr.externalize(res, AbstractExternalizeManager.GLOBAL);
-        }
-    }
+    
+    protected final List<Header> headers = new ArrayList<Header>();
+    protected final List<Script> defaultHeaders = new ArrayList<Script>();
 
     /**
      * Initialize properties from config
@@ -157,13 +99,22 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         if (userRenderXmlDecl != null) {
             setRenderXmlDeclaration(userRenderXmlDecl);
         }
+        
+        // Add JS headers which should be included in every frames by default
+        // (JS_YUI_UTILITIES = aggregate: yahoo, dom, event, connection, animation, dragdrop, element)
+        defaultHeaders.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_UTILITIES));
+        defaultHeaders.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CONTAINER));
+        defaultHeaders.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_EDITOR));
+        defaultHeaders.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_EDITOR_SIMPLE));
+        defaultHeaders.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_WINGS_ALL));
 
-        // Add CSS headers of YUI components which should be included in every frames by default
+        // Add CSS headers which should be included in every frames by default
         // (DO use files under "yui/assets" and DO NOT use those under "yui/<component>/assets")
         headers.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_CONTAINER));
         headers.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_EDITOR));
         headers.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_SIMPLE_EDITOR));
-        // Common hack to externalize YUI's 'sprite.png' which contains most (if not all) images of the SAM skin
+        
+        // Externalize images needed for default skin
         new SResourceIcon((String) ResourceManager.getObject(Utils.IMG_YUI_ASSETS_SPRITE, String.class)).getId();
         new SResourceIcon((String) ResourceManager.getObject(Utils.IMG_YUI_ASSETS_EDITOR_SPRITE, String.class)).getId();
         new SResourceIcon((String) ResourceManager.getObject(Utils.IMG_YUI_ASSETS_EDITOR_SPRITE_ACTIVE, String.class)).getId();
@@ -203,7 +154,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         component.addScriptListener(Utils.isMSIE(component) ? storeFocusIE : storeFocusFF);
 
         SessionHeaders.getInstance().registerHeaders(0, headers);
-        SessionHeaders.getInstance().registerHeaders(0, compressedHeaders);
+        SessionHeaders.getInstance().registerHeaders(0, defaultHeaders);
         SessionHeaders.getInstance().registerHeaders(getBrowserStylesheets());
 
         new InputMapRequestListener(component);
@@ -418,18 +369,12 @@ public class FrameCG implements org.wings.plaf.FrameCG {
 
         // Render all headers
         boolean isDebug = frame.isDebugJs();
-        if (isDebug) {
-            for (Script debugAddon : debugAddonJsHeaders) {
-                ((Renderable) debugAddon).write(device);
-                device.print("\n");
-            }
-        }
         for (Object next : frame.getHeaders()) {
             if (next instanceof Renderable) {
                 try {
-                    if (isDebug && getDebugHeaders(next) != null) {
+                    Script[] debugHeaders;
+                    if (isDebug && (debugHeaders = Utils.getDebugHeaders(next)) != null) {
                         // Render uncompressed headers
-                        Script[] debugHeaders = getDebugHeaders(next);
                         for (Script debugHeader : debugHeaders) {
                             if (debugHeader instanceof Renderable) {
                                 ((Renderable) debugHeader).write(device);
@@ -448,6 +393,12 @@ public class FrameCG implements org.wings.plaf.FrameCG {
                 Utils.write(device, next.toString());
             }
             device.print("\n");
+        }
+        if (isDebug) {
+            for (Renderable consoleHeader : Utils.getConsoleHeaders()) {
+                consoleHeader.write(device);
+                device.print("\n");
+            }
         }
 
         // Focus management. Put focus in selected object.
@@ -474,9 +425,9 @@ public class FrameCG implements org.wings.plaf.FrameCG {
 
             // Write menus
             device.print("\n\n<div id=\"wings_menues\">\n");
-            Set menues = frame.getSession().getMenuManager().getMenues(frame);
-            for (Iterator i = menues.iterator(); i.hasNext();) {
-                SComponent menuItem = (SComponent) i.next();
+            Set<SComponent> menues = frame.getSession().getMenuManager().getMenues(frame);
+            for (Iterator<SComponent> i = menues.iterator(); i.hasNext();) {
+                SComponent menuItem = i.next();
                 menuItem.putClientProperty("popup", Boolean.TRUE);
                 menuItem.write(device);
                 menuItem.putClientProperty("popup", null);
@@ -510,18 +461,6 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         device.print("</body>\n</html>\n");
 
         component.fireRenderEvent(SComponent.DONE_RENDERING);
-    }
-
-    /**
-     * @param next
-     * @return
-     */
-    private Script[] getDebugHeaders(Object next) {
-        if (debugReplacementJsHeaders.containsKey(next)) {
-            return debugReplacementJsHeaders.get(next);
-        } else {
-            return null;
-        }
     }
 
     protected void handleScripts(Device device, SComponent component) throws IOException {
@@ -657,21 +596,29 @@ public class FrameCG implements org.wings.plaf.FrameCG {
     public Update getUpdateEnabledUpdate(SFrame frame, boolean enabled) {
         return new UpdateEnabledUpdate(frame, enabled);
     }
+    
+    public Update getAddWindowUpdate(SContainer container, SWindow window) {
+        return new AddWindowUpdate(container, window);
+    }
+    
+    public Update getRemoveWindowUpdate(SContainer container, SWindow window) {
+        return new RemoveWindowUpdate(container, window);
+    }
 
-    protected class HeaderScriptUpdate extends AbstractUpdate {
+    protected class HeaderScriptUpdate extends AbstractUpdate<SFrame> {
 
         private Boolean add;
         private Script script;
         private Integer index;
 
-        public HeaderScriptUpdate(SComponent component, boolean add, Script script) {
-            super(component);
+        public HeaderScriptUpdate(SFrame frame, boolean add, Script script) {
+            super(frame);
             this.add = add;
             this.script = script;
         }
 
-        public HeaderScriptUpdate(SComponent component, boolean add, Script script, int index) {
-            this(component, add, script);
+        public HeaderScriptUpdate(SFrame frame, boolean add, Script script, int index) {
+            this(frame, add, script);
             this.index = index;
         }
 
@@ -702,20 +649,20 @@ public class FrameCG implements org.wings.plaf.FrameCG {
 
     }
 
-    protected class HeaderLinkUpdate extends AbstractUpdate {
+    protected class HeaderLinkUpdate extends AbstractUpdate<SFrame> {
 
         private Boolean add;
         private Link link;
         private Integer index;
 
-        public HeaderLinkUpdate(SComponent component, boolean add, Link link) {
-            super(component);
+        public HeaderLinkUpdate(SFrame frame, boolean add, Link link) {
+            super(frame);
             this.add = add;
             this.link = link;
         }
 
-        public HeaderLinkUpdate(SComponent component, boolean add, Link link, int index) {
-            this(component, add, link);
+        public HeaderLinkUpdate(SFrame frame, boolean add, Link link, int index) {
+            this(frame, add, link);
             this.index = index;
         }
 
@@ -753,12 +700,12 @@ public class FrameCG implements org.wings.plaf.FrameCG {
 
     }
 
-    protected class EpochUpdate extends AbstractUpdate {
+    protected class EpochUpdate extends AbstractUpdate<SFrame> {
 
         private String epoch;
 
-        public EpochUpdate(SComponent component, String epoch) {
-            super(component);
+        public EpochUpdate(SFrame frame, String epoch) {
+            super(frame);
             this.epoch = epoch;
         }
 
@@ -774,12 +721,12 @@ public class FrameCG implements org.wings.plaf.FrameCG {
 
     }
 
-    protected class FocusUpdate extends AbstractUpdate {
+    protected class FocusUpdate extends AbstractUpdate<SFrame> {
 
         private SComponent focus;
 
-        public FocusUpdate(SComponent component, SComponent focus) {
-            super(component);
+        public FocusUpdate(SFrame frame, SComponent focus) {
+            super(frame);
             this.focus = focus;
         }
 
@@ -795,12 +742,12 @@ public class FrameCG implements org.wings.plaf.FrameCG {
 
     }
 
-    protected class UpdateEnabledUpdate extends AbstractUpdate {
+    protected class UpdateEnabledUpdate extends AbstractUpdate<SFrame> {
 
         private Boolean enabled;
 
-        public UpdateEnabledUpdate(SComponent component, boolean enabled) {
-            super(component);
+        public UpdateEnabledUpdate(SFrame frame, boolean enabled) {
+            super(frame);
             this.enabled = Boolean.valueOf(enabled);
         }
 
@@ -810,13 +757,6 @@ public class FrameCG implements org.wings.plaf.FrameCG {
             return handler;
         }
 
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public Update getAddWindowUpdate(SContainer container, SWindow window) {
-        return new AddWindowUpdate(container, window);
     }
     
     protected class AddWindowUpdate extends AbstractUpdate<SContainer> {
@@ -839,10 +779,6 @@ public class FrameCG implements org.wings.plaf.FrameCG {
             handler.addParameter("<div id=\"" + window.getName() + "\"/>");
 			return handler;
         }
-    }
-
-    public Update getRemoveWindowUpdate(final SContainer container, final SWindow window) {
-        return new RemoveWindowUpdate(container, window);
     }
 
     protected class RemoveWindowUpdate extends AbstractUpdate<SContainer> {

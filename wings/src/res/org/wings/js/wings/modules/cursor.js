@@ -1,9 +1,10 @@
-/**
- * Cursor changing support for wingS
- */
+/***************************************************************************************************
+ * WINGS.CURSOR  --  contains: functions for cursor changing support
+ **************************************************************************************************/
+
 (function() {
 	var wingS = window.wingS;
-	// create namespace in global wingS variable
+	// Create module namespace
 	wingS.namespace("cursor");
 
     var lib = wingS.cursor;
@@ -32,8 +33,8 @@
         } else if (event.clientX || event.clientY) {
             posX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
             posY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-        }/*
-        if (target.nodeName == "OPTION" && !YAHOO.env.ua.ie) {
+        }
+        /* if (target.nodeName == "OPTION" && !YAHOO.env.ua.ie) {
             posX += wingS.util.absLeft(target);
             posY += wingS.util.absTop(target.parentNode) + 18;
         }*/

@@ -81,7 +81,7 @@ wingS.ajax.abortRequest = function() {
  * @param {Object} request - the request to process
  */
 wingS.ajax.processRequestFailure = function(request) {
-    if (wingS.global.debugMode)
+    if (wingS.global.useAjaxDebugView)
         wingS.ajax.updateDebugView(request);
 
     if ("console" in window && window.console)
@@ -109,7 +109,7 @@ wingS.ajax.processRequestFailure = function(request) {
  * @param {Object} request - the request to process
  */
 wingS.ajax.processRequestSuccess = function(request) {
-    if (wingS.global.debugMode)
+    if (wingS.global.useAjaxDebugView)
         wingS.ajax.updateDebugView(request);
 
     // Get the received XML response
@@ -210,12 +210,12 @@ wingS.ajax.setActivityIndicatorsVisible = function(visible) {
     if (indicator != null) {
         if (visible) indicator.style.visibility = "visible";
         else indicator.style.visibility = "hidden";
-    } */
+    }*/
 };
 
 /**
  * Initializes the appearance of the activity cursor.
- */ /*
+ *//*
 wingS.ajax.ActivityCursor = function() {
     this.dx = wingS.global.updateCursor.dx;
     this.dy = wingS.global.updateCursor.dy;
@@ -231,7 +231,7 @@ wingS.ajax.ActivityCursor = function() {
 /**
  * Calculates the new position of the activity cursor.
  * @param {Object} event - the event object
- */ /*
+ *//*
 wingS.ajax.ActivityCursor.prototype.followMouse = function(event) {
     event = wingS.event.getEvent(event);
     var target = wingS.event.getTarget(event);
@@ -258,7 +258,7 @@ wingS.ajax.ActivityCursor.prototype.followMouse = function(event) {
     if (newY > 0 && newY < (YAHOO.util.Dom.getDocumentHeight() - wingS.global.updateCursor.height - 2)) {
         this.div.style.top = newY + "px";
     }
-};    */
+};*/
 
 /**
  * Sets the activity cursor either visible or invisible.
@@ -322,17 +322,17 @@ wingS.ajax.isDebugViewVisible = function() {
 
 /**
  * Makes the debug view either visible or invisible. Furthermore
- * the wingS.global.debugMode flag ist set accordingly.
+ * the wingS.global.useAjaxDebugView flag ist set accordingly.
  * @param {boolean} visible - true to set debug view visible
  */
 wingS.ajax.setDebugViewVisible = function(visible) {
     var debugArea = document.getElementById("ajaxDebugView");
     if (debugArea != null) {
         if (visible) {
-            wingS.global.debugMode = true;
+            wingS.global.useAjaxDebugView = true;
             debugArea.style.display = "block";
         } else {
-            wingS.global.debugMode = false;
+            wingS.global.useAjaxDebugView = false;
             debugArea.style.display = "none";
         }
     } else {

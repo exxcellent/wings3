@@ -9,13 +9,13 @@ wingS.namespace("global");
 /**
  * Global variables
  */
-wingS.global.debugMode = false;      // This flag might be set in order to control debug outputs
-wingS.global.asyncHeaderCount = 0;   // Count of headers which are currently loaded asynchronously
-wingS.global.asyncHeaderQueue = [];  // Queue of functions each of which downloads an async header
-wingS.global.asyncHeaderCalls = [];  // Callbacks which are invoked when all headers are available
+wingS.global.useAjaxDebugView = false; // This flag might be set in order to control debug outputs
+wingS.global.asyncHeaderCount = 0;     // Count of headers which are currently loaded asynchronously
+wingS.global.asyncHeaderQueue = [];    // Queue of functions each of which downloads an async header
+wingS.global.asyncHeaderCalls = [];    // Callbacks which are invoked when all headers are available
 
-wingS.global.config = {                   // This variable stores the global configuration object
-    calendar_viewportelementId : null     // The ID of the viewport all XCalendars should stay in
+wingS.global.config = {                // This variable stores the global configuration object
+    calendar_viewportelementId : null  // The ID of the viewport all XCalendars should stay in
 };
 
 /**
@@ -42,9 +42,9 @@ wingS.global.init =  function(configObject) {
     // Initialize -wingS.ajax-
     wingS.ajax.requestIsActive = false;
     wingS.ajax.requestQueue = new Array();
-/*    if (wingS.global.updateCursor.enabled) {
-        wingS.ajax.activityCursor = new wingS.ajax.ActivityCursor();
-    }*/
+    // if (wingS.global.updateCursor.enabled) {
+    //     wingS.ajax.activityCursor = new wingS.ajax.ActivityCursor();
+    // }
 
     wingS.ajax.callbackObject = {
         success : function(request) { wingS.ajax.processRequestSuccess(request); },
@@ -77,11 +77,11 @@ wingS.global.init =  function(configObject) {
         YAHOO.util.Event.addListener(window, 'resize', layout.adjust, layout, true);
         window.lastSize = wingS.global.windowSize();
     }
-
-    // Try to set loglevel in firebug/lite
-    if ("console" in window) {
-        var loglevel = configObject.loglevel;
-        if (loglevel) {
+    
+    var loglevel = configObject.loglevel;
+    if (loglevel) {
+        // Try to set loglevel in firebug/lite
+        if ("console" in window) {
             switch (loglevel) {
             case "off":
                 console.error = function(){};
@@ -98,6 +98,10 @@ wingS.global.init =  function(configObject) {
             case "debug":
                 break;
             }
+        }
+        // Show YUI console for wingS
+        if (loglevel == "yui") {
+            wingS.global.enableYuiConsole();
         }
     }
 };
@@ -199,16 +203,40 @@ wingS.global.dequeueNextHeader = function() {
 };
 
 /**
- * Enables client debugging at a certain level
+ * Enables debugging at a certain level
  */
-wingS.global.setClientDebug = function(loglevel) {
+wingS.global.enableDebugging = function(loglevel) {
    if (loglevel === undefined || loglevel === null || loglevel === "") {
        loglevel = "off";
    }
    
-   wingS.util.setCookie("DEBUG", "javascript;loglevel="+loglevel,365,"/");
+   wingS.util.setCookie("DEBUG", "javascript|loglevel=" + loglevel, 365, "/");
   
    window.location.reload();
+};
+
+/**
+ * Enables the YUI console for wingS
+ */
+wingS.global.enableYuiConsole = function() {
+    wingS.global.onHeadersLoaded(function() {
+        if (!wingS.global.yuiConsole) {
+            wingS.global.yuiConsole = new YAHOO.widget.LogReader("compact", {verboseOutput:false, fontSize:"12px"});
+            wingS.global.yuiConsole.setTitle("YUI Console for wingS");
+        }
+        wingS.global.yuiConsole.show();
+        wingS.global.yuiConsole.resume();
+    });
+};
+
+/**
+ * Disables the YUI console for wingS
+ */
+wingS.global.disableYuiConsole = function() {
+    if (wingS.global.yuiConsole) {
+        wingS.global.yuiConsole.pause();
+        wingS.global.yuiConsole.hide();
+    }
 };
 
 

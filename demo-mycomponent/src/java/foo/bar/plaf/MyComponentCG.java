@@ -32,7 +32,7 @@ public class MyComponentCG extends AbstractComponentCG<MyComponent> {
         // add and register our custom css stylesheet
         headerList.add(Utils.createExternalizedCSSHeader("foo/bar/css/customcomponent.css"));
         // reuse and declare that we utilize some libraries that are already bundled with wingS core.
-        headerList.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_EVENT));
+        headerList.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_CALENDAR));
         // Include our custom javascript
         headerList.add(Utils.createExternalizedJSHeader("foo/bar/js/customcomponent.js"));
         headers = Collections.unmodifiableList(headerList);

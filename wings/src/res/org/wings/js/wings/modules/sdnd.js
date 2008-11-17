@@ -1,10 +1,10 @@
-/********************************************************************************
-	New wingS Drag-and-Drop Javascript-Support-Library
-*********************************************************************************/
+/***************************************************************************************************
+ * WINGS.SDND  --  contains: functions related to new drag-and-drop support
+ **************************************************************************************************/
 
 (function() {
 	var wingS = window.wingS;
-	// create namespace in global wingS variable
+	// Create module namespace
 	wingS.namespace("sdnd");
 	var lib = wingS.sdnd;
 
