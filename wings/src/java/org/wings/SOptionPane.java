@@ -2,7 +2,6 @@ package org.wings;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wings.border.SEmptyBorder;
 import org.wings.plaf.OptionPaneCG;
 import org.wings.resource.ResourceManager;
 
@@ -471,7 +470,7 @@ public class SOptionPane extends SDialog implements ActionListener {
                 b.addActionListener(this);
                 customButtons.add(b);
             }
-        }                             
+        }
         add(customButtons);
 
         propertyChangeSupport.firePropertyChange("options", oldVal, this.options);
@@ -534,36 +533,43 @@ public class SOptionPane extends SDialog implements ActionListener {
         switch (newType) {
             case DEFAULT_OPTION:
                 optionOK.setVisible(true);
+                optionOK.requestFocus();
                 break;
 
             case OK_CANCEL_OPTION:
                 optionOK.setVisible(true);
+                optionOK.requestFocus();
                 optionCancel.setVisible(true);
                 break;
 
             case OK_CANCEL_RESET_OPTION:
                 optionOK.setVisible(true);
+                optionOK.requestFocus();
                 optionCancel.setVisible(true);
                 break;
 
             case YES_NO_OPTION:
                 optionYes.setVisible(true);
+                optionYes.requestFocus();
                 optionNo.setVisible(true);
                 break;
 
             case YES_NO_RESET_OPTION:
                 optionYes.setVisible(true);
+                optionYes.requestFocus();
                 optionNo.setVisible(true);
                 break;
 
             case YES_NO_CANCEL_OPTION:
                 optionYes.setVisible(true);
+                optionYes.requestFocus();
                 optionNo.setVisible(true);
                 optionCancel.setVisible(true);
                 break;
 
             case YES_NO_CANCEL_RESET_OPTION:
                 optionYes.setVisible(true);
+                optionYes.requestFocus();
                 optionNo.setVisible(true);
                 optionCancel.setVisible(true);
                 break;
