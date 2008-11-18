@@ -70,8 +70,9 @@ public class DialogExample extends WingSetPane {
                     dialog.setLayout(new SFlowDownLayout());
                     dialog.setDraggable(draggable);
                     dialog.add(createContent());
-
-                    SPanel buttonPanel = new SPanel(new SGridLayout(1, 2, 5, 5));
+                    
+                    SPanel buttonPanel = new SPanel(new SFlowLayout(SConstants.CENTER, 5, 20));
+                    buttonPanel.setPreferredSize(SDimension.FULLWIDTH);
                     SButton okButton = new SButton("OK");
                     buttonPanel.add(okButton);
                     okButton.addActionListener(new ActionListener() {
@@ -98,7 +99,6 @@ public class DialogExample extends WingSetPane {
                     });
 
                     dialog.add(buttonPanel);
-
                     dialog.setVisible(true);
                 }
             });
@@ -111,7 +111,7 @@ public class DialogExample extends WingSetPane {
             email = new STextField();
             SLabel image = new SLabel(new SURLIcon("../icons/cowSmall.gif"));
 
-            SPanel content = new SPanel(new SGridLayout(4, 2, 5, 5));
+            SPanel content = new SPanel(new SGridLayout(4, 2, 20, 5));
             content.add(new SLabel("Firstname:"));
             content.add(firstname);
             content.add(new SLabel("Lastname:"));
