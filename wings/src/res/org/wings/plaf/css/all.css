@@ -729,6 +729,12 @@ table.DivisionContent {
     left:-1000px;
 }
 
+.yui-skin-sam .mask {
+    position:absolute;
+    top:1000px;
+    left:1000px;
+}
+
 /* --- DEBUGCONSOLE -------------------------------------------------------- */
 
 #ajaxDebugView {
