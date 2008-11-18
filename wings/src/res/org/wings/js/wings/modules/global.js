@@ -58,11 +58,10 @@ wingS.global.init =  function(configObject) {
         wingS.layout.callbackObject = {
             _tOutId : 0,
             _adjust : function () {
-                var currentSize = wingS.global.windowSize();
+                var currentSize = wingS.util.windowSize();
                 var lastSize = window.lastSize;
                 if (currentSize[0] != lastSize[0] || currentSize[1] != lastSize[1]) {
                     wingS.request.sendEvent(null,true,false);
-                    wingS.request.reloadFrame();
                 }
             },
             adjust : function () {
@@ -73,9 +72,9 @@ wingS.global.init =  function(configObject) {
                     wingS.global.autoAdjustLayout.delay);
             }
         };
+        window.lastSize = wingS.util.windowSize();
         var layout = wingS.layout.callbackObject;
         YAHOO.util.Event.addListener(window, 'resize', layout.adjust, layout, true);
-        window.lastSize = wingS.global.windowSize();
     }
     
     var loglevel = configObject.loglevel;
@@ -105,27 +104,6 @@ wingS.global.init =  function(configObject) {
         }
     }
 };
-
-wingS.global.windowSize =  function() {
-    var size = [];
-    if (self.innerHeight) // all except Explorer
-    {
-        size[0] = self.innerWidth;
-        size[1] = self.innerHeight;
-    }
-    else if (document.documentElement && document.documentElement.clientHeight)
-    // Explorer 6 Strict Mode
-    {
-        size[0] = document.documentElement.clientWidth;
-        size[1] = document.documentElement.clientHeight;
-    }
-    else if (document.body) // other Explorers
-    {
-        size[0] = document.body.clientWidth;
-        size[1] = document.body.clientHeight;
-    }
-    return size;
-}
 
 /**
  * Adds a callback function which is invoked when all (asynchronously loaded) headers are available.

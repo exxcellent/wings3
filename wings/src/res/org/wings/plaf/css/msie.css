@@ -187,6 +187,13 @@ TABLE.formbutton_hover {
 	right:0px !important;
 }
 
+/* --- XSUGGEST -------------------------------------------------- */
+
+.yui-ac-content
+{
+    margin-top:-2px;
+}
+
 /* --- ZOOMABLE IMAGE -------------------------------------------- */
 
 .XZoomableImage {

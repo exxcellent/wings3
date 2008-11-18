@@ -867,6 +867,13 @@ table.DivisionContent {
 	right:0px !important;
 }
 
+/* --- XSUGGEST -------------------------------------------------- */
+
+.yui-ac-content
+{
+    margin-top:-1px;
+}
+
 /* --- ZOOMABLE IMAGE -------------------------------------------- */
 
 .XZoomableImage {

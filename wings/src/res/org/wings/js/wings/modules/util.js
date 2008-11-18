@@ -291,6 +291,29 @@ wingS.util.handleBodyClick = function(event) {
 };
 
 /**
+ * Returns the size of the browser window.
+ */
+wingS.util.windowSize =  function() {
+    var size = [];
+    if (self.innerHeight) {
+        // all except Explorer
+        size[0] = self.innerWidth;
+        size[1] = self.innerHeight;
+    }
+    else if (document.documentElement && document.documentElement.clientHeight) {
+        // Explorer 6 Strict Mode
+        size[0] = document.documentElement.clientWidth;
+        size[1] = document.documentElement.clientHeight;
+    }
+    else if (document.body) {
+        // other Explorers
+        size[0] = document.body.clientWidth;
+        size[1] = document.body.clientHeight;
+    }
+    return size;
+}
+
+/**
  * Calculates the absolute position of the element to the left.
  */
 wingS.util.absLeft = function(el) {
