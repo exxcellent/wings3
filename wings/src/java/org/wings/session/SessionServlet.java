@@ -519,6 +519,10 @@ final class SessionServlet
                     } else {
                         // redirect to a fresh session.
                         redirectAddress = req.getRequestURL().toString();
+                        if (pathInfo != null) { // Websphere pathinfo is null
+                            // Make sure that the redirect address doesn't contain any path info.
+                            redirectAddress = redirectAddress.substring(0, redirectAddress.length() - pathInfo.length());
+                        }
                     }
 
                     exitSessionWorkaround = redirectAddress;
