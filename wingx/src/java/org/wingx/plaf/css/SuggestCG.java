@@ -80,12 +80,6 @@ public class SuggestCG extends TextFieldCG implements org.wingx.plaf.SuggestCG {
         isFirst = appendConfigPropery(builder, "allowBrowserAutocomplete", xSuggest.isAllowBrowserAutocomplete(), true, isFirst);
         isFirst = appendConfigPropery(builder, "alwaysShowContainer", xSuggest.isAlwaysShowContainer(), false, isFirst);
         builder.append("});\n");
-
-        if (textField.getDocumentListeners().length > 1 || textField instanceof SFormattedTextField) {
-            builder.append("var xs_onchange_").append(name);
-            builder.append(" = function() { wingS.request.sendEvent(null, true, ").append(!xSuggest.isReloadForced()).append("); };\n");
-            builder.append("xs_").append(name).append(".textboxBlurEvent.subscribe(xs_onchange_").append(name).append(");\n");
-        }
         
         ScriptManager.getInstance().addScriptListener(new OnHeadersLoadedScript(builder.toString()));
     }
