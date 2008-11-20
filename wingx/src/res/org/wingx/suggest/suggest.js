@@ -21,16 +21,16 @@ wingS.suggest.XSuggest = function(elInput, elContainer, oDataSource , oConfigs) 
 };
 
 YAHOO.extend(wingS.suggest.XSuggest, YAHOO.widget.AutoComplete, {
-    
+
     formatResult: function(oResultData, sQuery, sResultMatch) {
         return (oResultData[1]) ? oResultData[1] : "";
     }
-    
+
 });
 
 /**
  * XSuggest uses this DataSource which either gets suggestions from its local
- * cache or requests live data from the server by means of wingS' ajax engine. 
+ * cache or requests live data from the server by means of wingS' ajax engine.
  * @param {String} oSuggestId - the element (ID) representing the XSuggest
  * @param {Object} oConfigs - the configuration object literal
  */
@@ -45,7 +45,7 @@ wingS.suggest.DataSource = function(oSuggestId, oConfigs) {
 };
 
 YAHOO.extend(wingS.suggest.DataSource, YAHOO.util.DataSourceBase, {
-    
+
     connectionParams: null,
 
     makeConnection: function(oRequest, oCallback, oCaller) {
@@ -55,15 +55,17 @@ YAHOO.extend(wingS.suggest.DataSource, YAHOO.util.DataSourceBase, {
         this.liveData(oRequest);
         return tId;
     },
-    
+
     updateCallback: function(oRawResponse) {
-        var tId = this.connectionParams.tId;
-        var oRequest = this.connectionParams.request;
-        var oCallback = this.connectionParams.callback;
-        var oCaller = this.connectionParams.caller;
-        this.handleResponse(oRequest, oRawResponse, oCallback, oCaller, tId);
+        if (this.connectionParams) {
+            var tId = this.connectionParams.tId;
+            var oRequest = this.connectionParams.request;
+            var oCallback = this.connectionParams.callback;
+            var oCaller = this.connectionParams.caller;
+            this.handleResponse(oRequest, oRawResponse, oCallback, oCaller, tId);
+        }
     }
-    
+
 });
 
 wingS.update.suggest = function(oSuggestId, oRawResponse) {
