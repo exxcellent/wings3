@@ -812,6 +812,7 @@ public class XTableCG
             String htmlCode = "";
             String exception = null;
 
+            boolean isEditableCellRenderer = false;
             try {
                 StringBuilderDevice device = new StringBuilderDevice(256);
                 /*
@@ -822,12 +823,12 @@ public class XTableCG
                 SComponent component = table.prepareRenderer(table.getCellRenderer(row, column), row, column);
                 table.getCellRendererPane().writeComponent(device, component, table);
                 htmlCode = device.toString();
+                isEditableCellRenderer = component instanceof EditableTableCellRenderer;
             }
             catch (Throwable t) {
                 exception = t.getClass().getName();
             }
 
-            boolean isEditableCellRenderer = component instanceof EditableTableCellRenderer;
             row = table.isHeaderVisible() ? this.row + 1 : this.row;
             row = (table.isFilterVisible() && table.getModel() instanceof FilterableTableModel) ? this.row + 1 : this.row;
             column = columnInView(table, column);
