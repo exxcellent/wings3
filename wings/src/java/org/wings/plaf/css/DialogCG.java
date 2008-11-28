@@ -43,12 +43,11 @@ public class DialogCG extends WindowCG implements org.wings.plaf.DialogCG {
         sb.append("dialog_").append(name).append(" = new wingS.dialog.SDialog(\"").append(name).append("\"")
                 .append(", {");
 
+        boolean dialogCentered = true;
         if (dialog.getX() > -1 && dialog.getY() > -1) {
+            dialogCentered = false;
         	sb.append("x:").append(dialog.getX()).append(",")
         	  .append("y:").append(dialog.getY()).append(",");
-        }
-        else {
-        	sb.append("fixedcenter:true").append(",");
         }
 
         if (!(owner instanceof SFrame))
@@ -58,8 +57,12 @@ public class DialogCG extends WindowCG implements org.wings.plaf.DialogCG {
           .append("modal:").append(dialog.isModal()).append(",")
           .append("draggable:").append(dialog.isDraggable()).append(",")
           .append("close:").append(dialog.isClosable()).append(",")
-          .append("constraintoviewport:true").append("});\n")
-          .append("dialog_").append(name).append(".render();\n");
+          .append("constraintoviewport:true").append("});\n");
+
+        if (dialogCentered) {
+            sb.append("dialog_").append(name).append(".center();\n");
+        }
+        sb.append("dialog_").append(name).append(".render();\n");
 
         //sb.append("var resize = new YAHOO.util.Resize(\"").append(name).append("\");");
 
