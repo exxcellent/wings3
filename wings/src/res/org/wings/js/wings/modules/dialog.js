@@ -13,7 +13,7 @@ wingS.namespace("dialog");
  * @param {Object} userConfig - the configuration object literal
  */
 wingS.dialog.SDialog = function(el, userConfig) {
-    wingS.dialog.SDialog.superclass.constructor.call(this, el, userConfig);    
+    wingS.dialog.SDialog.superclass.constructor.call(this, el, userConfig);
     wingS.global.overlayManager.register(this);
 };
 
@@ -28,33 +28,42 @@ wingS.dialog.SDialog.CSS_DIALOG = "SDialog";
 wingS.dialog.SDialog._DEFAULT_CONFIG = {
     "VIEWPORTELEMENT": {
         key: "viewportelement",
-		validator: YAHOO.lang.isString
+        validator: YAHOO.lang.isString
     },
-	
-	"PROPAGATE_MOVE_EVENT": {
+
+    "PROPAGATE_MOVE_EVENT": {
         key: "propagateMoveEvent",
-		value:true,
-		validator: YAHOO.lang.isBoolean
+        value:true,
+        validator: YAHOO.lang.isBoolean
     }
 };
 
 YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
 
-	x: -1,
-	
-	y: -1,
+    x: -1,
+
+    y: -1,
 
     shadowWidth: 0,
 
     init: function(el, userConfig) {
         wingS.dialog.SDialog.superclass.init.call(this, el, userConfig);
-        
-		YAHOO.util.Dom.addClass(this.element, wingS.dialog.SDialog.CSS_DIALOG);
 
-		// Handle close events.
-		this.cancelEvent.subscribe(this.destroy, this, true);
-		
-		if (this.cfg.getProperty("underlay") == "shadow") {
+        YAHOO.util.Dom.addClass(this.element, wingS.dialog.SDialog.CSS_DIALOG);
+
+        // Set fixed width for dialogs. This fixes several problems:
+        // - Corrupt sizing issues in IE when dragging the dialog.
+        // - The dialog body has the "overflow" property set to "auto"
+        //   which prevents invisible cursors in textfields on FF 2.x
+        //   in case the dialog is shown in front of a DIV element
+        //   with "overflow:auto" (see Firefox bug report #167801).
+        //   However, this leads to sizing problems in probably all
+        //   browsers. The only solution is to set a fixed width here.
+        this.beforeShowEvent.subscribe(this.setFixedWidth, this, true);
+        // Handle close events.
+        this.cancelEvent.subscribe(this.destroy, this, true);
+
+        if (this.cfg.getProperty("underlay") == "shadow") {
             // Actually the default shadow width is 3px,
             // however, this doesn't seem to be enough.
             this.shadowWidth = 5;
@@ -66,86 +75,79 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
 
         // Add SDialog config properties //
         var DEFAULT_CONFIG = wingS.dialog.SDialog._DEFAULT_CONFIG;
-		
+
         // The element that get the dialog as responsible actor
         this.cfg.addProperty(DEFAULT_CONFIG.VIEWPORTELEMENT.key,
         {
             handler: this.configContext,
             validator: DEFAULT_CONFIG.VIEWPORTELEMENT.validator
         });
-		
-		this.cfg.addProperty(DEFAULT_CONFIG.PROPAGATE_MOVE_EVENT.key,
+
+        this.cfg.addProperty(DEFAULT_CONFIG.PROPAGATE_MOVE_EVENT.key,
         {
             handler: this.configMoveHandler,
             value: DEFAULT_CONFIG.PROPAGATE_MOVE_EVENT.value,
-			validator: DEFAULT_CONFIG.PROPAGATE_MOVE_EVENT.validator
+            validator: DEFAULT_CONFIG.PROPAGATE_MOVE_EVENT.validator
         });
     },
-	
-	configMoveHandler: function(type, args, obj) {
-		// Register the dialog for move events if args[0] == true.
-		if (args[0]) {
-			this.moveEvent.subscribe(this.moveHandler, this, true);
-		}
-	},
-	
-	/**
-	 * Handle move events. Send a request back to server containing the
-	 * x-position and y-position of this dialog. That permits a consitent
-	 * component state between server and client.
-	 * 
-	 * @param {Object} type
-	 * @param {Object} args
-	 * @param {Object} obj
-	 */
-	moveHandler: function(type, args, obj) {
-		var xy = args[0];
-		
-		// Send events if position has been changed.
-		if (xy[0] != this.x || xy[1] != this.y) {
-			this.x = xy[0];
-			this.y = xy[1];
-			wingS.request.sendEvent(null, false, true, this.id + "_xy", args[0]);
-		}
-	},
-	
-	doSubmit: function() {
-		// do nothing
-	},
-	
-	submit: function() {
-		// do nothing
-	},
-	
-	/**
-	 * Sends a destroy event to the server and destroys this dialog afterwards.
-	 * 
-	 * @param {Object} type
-	 * @param {Object} args
-	 * @param {Object} obj
-	 */
-	destroy: function(type, args, obj) {
-		wingS.request.sendEvent(null, false, true, this.id + "_dispose", 1);
-	},
 
-	/**
-	 * Centers this dialog within the window or within a viewport element if specified
-	 * at instanciation time.
-	 */
-    center: function() {        
-        // Workarounds for IE:
-        //  - avoid toggeling dialog width (e.g. while dragging) in IE 7
-        //  - resize to correct width regarding border-box-issues in IE 6/7
-        //  - TODO: it works but it's still a hack - reevaluate with YUI 2.3.2
-        if (YAHOO.env.ua.ie > 6) { // IE 7
-            this.element.style.width = (this.element.offsetWidth - 6) + "px";
-            // Why subtract 6 ? --> 6 = 3 (padding-left) + 3 (padding-right) of surrounding div
-        } else if (YAHOO.env.ua.ie > 0) { // IE 6 and below
-            this.element.firstChild.style.width = (this.element.firstChild.offsetWidth - 8) + "px";
-            this.element.lastChild.style.width = (this.element.lastChild.offsetWidth - 8) + "px";
-            // Why subtract 8 ? --> 8 = 3 (padding-left) + 5 (padding-right) of surrounding div
+    configMoveHandler: function(type, args, obj) {
+        // Register the dialog for move events if args[0] == true.
+        if (args[0]) {
+            this.moveEvent.subscribe(this.moveHandler, this, true);
         }
-        
+    },
+
+    /**
+     * Handle move events. Send a request back to server containing the
+     * x-position and y-position of this dialog. That permits a consitent
+     * component state between server and client.
+     *
+     * @param {Object} type
+     * @param {Object} args
+     * @param {Object} obj
+     */
+    moveHandler: function(type, args, obj) {
+        var xy = args[0];
+
+        // Send events if position has been changed.
+        if (xy[0] != this.x || xy[1] != this.y) {
+            this.x = xy[0];
+            this.y = xy[1];
+            wingS.request.sendEvent(null, false, true, this.id + "_xy", args[0]);
+        }
+    },
+
+    doSubmit: function() {
+        // do nothing
+    },
+
+    submit: function() {
+        // do nothing
+    },
+
+    /**
+     * Sends a destroy event to the server and destroys this dialog afterwards.
+     */
+    destroy: function(type, args, obj) {
+        wingS.request.sendEvent(null, false, true, this.id + "_dispose", 1);
+    },
+
+    /**
+     * Calculates the width of the dialog's content and sets this width as the
+     * width of the dialog's most outer div.
+     */
+    setFixedWidth: function(type, args, obj) {
+        var formContentTable = YAHOO.util.Dom.getRegion(this.id + '_table');
+        var innerWidth = formContentTable.right - formContentTable.left;
+        this.cfg.setProperty("width", innerWidth + "px");
+    },
+
+    /**
+     * Centers this dialog within the window or within a viewport element if
+     * specified at instanciation time.
+     */
+    center: function() {
         var viewportelementId = this.cfg.getProperty("viewportelement");
         if (typeof viewportelementId == 'undefined') {
             wingS.dialog.SDialog.superclass.center.call(this);
@@ -161,13 +163,13 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
         var dialogH = this.element.offsetHeight + (1 * this.shadowWidth);
         var centeredX;
         var centeredY;
-        
+
         if (dialogW < viewportW) {
             centeredX = viewportX + (viewportW / 2) - (dialogW / 2);
         } else {
             centeredX = viewportX + viewportOffset;
         }
-        
+
         if (dialogH < viewportH) {
             centeredY = viewportY + (viewportH / 2) - (dialogH / 2);
         } else {
@@ -177,7 +179,7 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
         this.cfg.setProperty("xy", [parseInt(centeredX, 10), parseInt(centeredY, 10)]);
         this.cfg.refireEvent("iframe");
     },
-    
+
     getConstrainedXY: function(x, y) {
         var viewportelementId = this.cfg.getProperty("viewportelement");
         if (typeof viewportelementId == 'undefined') {
@@ -270,7 +272,7 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
             if (!this.header.id) {
                 this.header.id = this.id + "_h";
             }
-            
+
             this.dd.startDrag = function () {
                 var offsetHeight,
                     offsetWidth,
@@ -288,7 +290,7 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
                 }
 
                 if (me.cfg.getProperty("constraintoviewport")) {
-                    var viewportelement = document.getElementById(viewportelementId);        
+                    var viewportelement = document.getElementById(viewportelementId);
                     var viewportX = YAHOO.util.Dom.getX(viewportelement);
                     var viewportY = YAHOO.util.Dom.getY(viewportelement);
                     var viewportW = viewportelement.offsetWidth;
@@ -296,7 +298,7 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
                     var viewportO = YAHOO.widget.Overlay.VIEWPORT_OFFSET;
                     var dialogW = me.element.offsetWidth + (2 * me.shadowWidth);
                     var dialogH = me.element.offsetHeight + (1 * me.shadowWidth);
-                    
+
                     var topConstraint = viewportY + viewportO;
                     var leftConstraint = viewportX + viewportO;
                     var bottomConstraint = viewportY + viewportH - dialogH - viewportO;
@@ -379,7 +381,7 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
             return;
         }
         var viewportelement = document.getElementById(viewportelementId);
-        
+
         if (this.mask) {
             var zIndex = "2";
             var top = YAHOO.util.Dom.getY(viewportelement) + "px";
@@ -413,62 +415,62 @@ YAHOO.extend(wingS.dialog.SDialog, YAHOO.widget.Dialog, {
 wingS.dialog.createDialogMarkup = function(containerId, cfg){
     var container = document.createElement("div");
     container.id = containerId;
-	
-	var hd = wingS.dialog.createConfiguredElement("hd", cfg);
-	var bd = wingS.dialog.createConfiguredElement("bd", cfg);
-	var ft = wingS.dialog.createConfiguredElement("ft", cfg);
-	
+
+    var hd = wingS.dialog.createConfiguredElement("hd", cfg);
+    var bd = wingS.dialog.createConfiguredElement("bd", cfg);
+    var ft = wingS.dialog.createConfiguredElement("ft", cfg);
+
     container.appendChild(hd);
-	container.appendChild(bd);
-	container.appendChild(ft);
-	
+    container.appendChild(bd);
+    container.appendChild(ft);
+
     return container;
 }
 
 wingS.dialog.createConfiguredElement = function(className, cfg) {
-	var el = document.createElement("div");
-	el.className = className;
-	
-	if (cfg == null || cfg == 'undefined') {
-		return el;
-	}
-	
-	el.className = el.className + (cfg.className != 'undefined' ? " " + cfg.className : "");
-	
-	return el;
+    var el = document.createElement("div");
+    el.className = className;
+
+    if (cfg == null || cfg == 'undefined') {
+        return el;
+    }
+
+    el.className = el.className + (cfg.className != 'undefined' ? " " + cfg.className : "");
+
+    return el;
 }
 
 wingS.dialog.showExceptionDialog = function(exception){
-	
-	// Initialize exception dialog count if not already done.
+
+    // Initialize exception dialog count if not already done.
     if (!wingS.dialog.exceptionDialogCount) {
         wingS.dialog.exceptionDialogCount = 0;
     }
-    
-	// Count of currently available exception dialogs.
+
+    // Count of currently available exception dialogs.
     var count = wingS.dialog.exceptionDialogCount;
 
-	// Ids for exception message and exception detail container.    
+    // Ids for exception message and exception detail container.
     var exceptionMessageId = "exceptionMessage" + count;
     var exceptionDetailId = "exceptionDetail" + count;
-    
-	// Create exception dialog markup containing exception message
-	// container and exception detail container.
+
+    // Create exception dialog markup containing exception message
+    // container and exception detail container.
     var exceptionMarkup = wingS.dialog.createExceptionDialogMarkup(exceptionMessageId, exceptionDetailId)
-	document.body.appendChild(exceptionMarkup);	
-    
+    document.body.appendChild(exceptionMarkup);
+
     // Define various event handlers for Dialog
     var handleClose = function(){
-		this.removeMask();
+        this.removeMask();
         this.destroy();
         wingS.request.reloadFrame();
     };
     var toggleDetails = function(){
-		var visible = detail.cfg.getProperty("visible");
-		detail.cfg.setProperty("visible", !visible);
+        var visible = detail.cfg.getProperty("visible");
+        detail.cfg.setProperty("visible", !visible);
     };
-    
-	// Instantiate the Dialog
+
+    // Instantiate the Dialog
     var dialog = new YAHOO.widget.SimpleDialog(exceptionMessageId, {
         width: "400px",
         fixedcenter: true,
@@ -487,43 +489,43 @@ wingS.dialog.showExceptionDialog = function(exception){
             handler: toggleDetails
         }]
     });
-	
-	// Instantiate the Module
+
+    // Instantiate the Module
     var detail = new YAHOO.widget.Module(exceptionDetailId, {
-		width: "400px",
-		visible: false
-	});
-    
+        width: "400px",
+        visible: false
+    });
+
     dialog.setHeader("Error message");
     dialog.setBody(exception.message);
     dialog.render();
-    
-	// Prepares the message.
+
+    // Prepares the message.
     var detailedMessage = wingS.dialog.prepareDetailedMessage(exception.message + "\n" + exception.detail);
-    
-	detail.setHeader("Detailed Message:");
+
+    detail.setHeader("Detailed Message:");
     detail.setBody(detailedMessage);
     detail.render();
-    
+
     dialog.show();
 };
 
 /**
  * Creates the markup for the exception dialog.
- * 
+ *
  * @param {Object} exceptionMessageId The id for the exception message container.
  * @param {Object} exceptionDetailId The id for the exception detail container.
  */
 wingS.dialog.createExceptionDialogMarkup = function(exceptionMessageId, exceptionDetailId){
 
     var exceptionMessage = wingS.dialog.createDialogMarkup(exceptionMessageId);
-	
+
     var exceptionDetail = document.createElement("div");
-	exceptionDetail.id = exceptionDetailId;
-	
-	exceptionMessage.appendChild(exceptionDetail);
-	
-	return exceptionMessage;
+    exceptionDetail.id = exceptionDetailId;
+
+    exceptionMessage.appendChild(exceptionDetail);
+
+    return exceptionMessage;
 }
 
 /**
@@ -533,28 +535,28 @@ wingS.dialog.createExceptionDialogMarkup = function(exceptionMessageId, exceptio
  * @return {HTMLElement} The prepared message wrapped into a '<pre>' element.
  */
 wingS.dialog.prepareDetailedMessage = function(msg) {
-	var parts = msg.split("\\n");
+    var parts = msg.split("\\n");
 
-	var detailedMessage = document.createElement("textarea");
+    var detailedMessage = document.createElement("textarea");
 /*
-	for (var i = 0; i < parts.length; i++) {
-		var textNode = document.createTextNode(parts[i]);
-		detailedMessage.appendChild(textNode);
-		
-		if ((i + 1) < parts.length) {
-			var br = document.createElement("br");
-			detailedMessage.appendChild(br);
-		}
-	}
+    for (var i = 0; i < parts.length; i++) {
+        var textNode = document.createTextNode(parts[i]);
+        detailedMessage.appendChild(textNode);
+
+        if ((i + 1) < parts.length) {
+            var br = document.createElement("br");
+            detailedMessage.appendChild(br);
+        }
+    }
 */
     detailedMessage.value = msg;
-	
+
 //	detailedMessage.style.overflow = "auto";
     detailedMessage.style.width = "100%";
-	detailedMessage.style.height = "120px";
-	detailedMessage.style.border = "1px solid black";
-	detailedMessage.readOnly = true;
+    detailedMessage.style.height = "120px";
+    detailedMessage.style.border = "1px solid black";
+    detailedMessage.readOnly = true;
 //	detailedMessage.style.backgroundColor = "white";
-	
-	return detailedMessage;
+
+    return detailedMessage;
 }

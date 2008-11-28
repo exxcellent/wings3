@@ -32,7 +32,7 @@ public class DialogCG extends WindowCG implements org.wings.plaf.DialogCG {
         device.print("\n\n" +
                 "<div id=\"" + name + "\">\n" +
                 "  <div class=\"hd\">" + (dialog.getTitle() != null ? dialog.getTitle() : "&#160;") + "</div>\n" +
-                "  <div class=\"bd\" style=\"padding:0;\">");
+                "  <div class=\"bd\" style=\"padding:0; overflow:auto;\">");
 
         super.writeInternal(device, dialog);
 
