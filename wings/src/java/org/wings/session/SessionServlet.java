@@ -750,9 +750,11 @@ final class SessionServlet
     protected void handleUnknownResourceRequested(HttpServletRequest req,
                                                   HttpServletResponse res)
             throws IOException {
-        res.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        res.setContentType("text/html");
-        res.getOutputStream().println("<h1>404 Not Found</h1>Unknown Resource Requested: " + req.getPathInfo());
+//        res.setStatus(HttpServletResponse.SC_NOT_FOUND);
+//        res.setContentType("text/html");
+//        res.getOutputStream().println("<h1>404 Not Found</h1>Unknown Resource Requested: " + req.getPathInfo());
+        res.reset();
+        res.sendError(HttpServletResponse.SC_NOT_FOUND, req.getPathInfo());
     }
 
 
