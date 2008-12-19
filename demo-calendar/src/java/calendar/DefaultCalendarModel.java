@@ -105,7 +105,7 @@ public class DefaultCalendarModel implements CalendarModel {
 				begin.add(Calendar.DAY_OF_YEAR, -1);
 				begin.add(Calendar.DAY_OF_YEAR, -((begin.get(Calendar.DAY_OF_WEEK) + 5) % 7));
 
-				Calendar end = (Calendar)calendar.clone();
+				Calendar end = (Calendar)begin.clone();
 				end.add(Calendar.WEEK_OF_YEAR, 5);
 				end.add(Calendar.DAY_OF_YEAR, ((8 - end.get(Calendar.DAY_OF_WEEK)) % 7));
 
@@ -164,17 +164,8 @@ public class DefaultCalendarModel implements CalendarModel {
 		}
 		appEndDate.setTime(endDate);
 
-		if(appStartDate.get(Calendar.YEAR) <= calTestDate.get(Calendar.YEAR) &&
-				appEndDate.get(Calendar.YEAR) >= calTestDate.get(Calendar.YEAR))
-		{
-            // date is in the correct year
-			if(appStartDate.get(Calendar.DAY_OF_YEAR) <= calTestDate.get(Calendar.DAY_OF_YEAR) &&
-					appEndDate.get(Calendar.DAY_OF_YEAR) >= calTestDate.get(Calendar.DAY_OF_YEAR)
-					)
-			{
-				return true;
-			}
-		}
+		if(calTestDate.after(appStartDate) && calTestDate.before(appEndDate))
+            return true;
 
 		return false;
 	}
@@ -257,17 +248,8 @@ public class DefaultCalendarModel implements CalendarModel {
         until.setTime(visibleUntil);
         checkDate.setTime(date);
 
-        if(from.get(Calendar.YEAR) <= checkDate.get(Calendar.YEAR) &&
-                until.get(Calendar.YEAR) >= checkDate.get(Calendar.YEAR))
-        {
-            // date is in the correct year
-            if(from.get(Calendar.DAY_OF_YEAR) <= checkDate.get(Calendar.DAY_OF_YEAR) &&
-                    until.get(Calendar.DAY_OF_YEAR) >= checkDate.get(Calendar.DAY_OF_YEAR)
-                    )
-            {
-                return true;
-            }
-        }
+        if(from.before(checkDate) && until.after(checkDate))
+            return true;
 
         return false;
     }

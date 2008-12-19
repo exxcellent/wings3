@@ -219,9 +219,7 @@ public class DefaultCalendarSelectionModel implements CalendarSelectionModel {
         Calendar cal2 = (Calendar)cal1.clone();
         cal2.setTimeInMillis(until.getTime());
 
-        while(cal1.get(Calendar.YEAR) <= cal2.get(Calendar.YEAR) &&
-                cal1.get(Calendar.DAY_OF_YEAR) <= cal2.get(Calendar.DAY_OF_YEAR)
-              ) {
+        while(cal1.before(cal2)) {
             addSelection(new Date(cal1.getTimeInMillis()));
             cal1.add(Calendar.DAY_OF_YEAR, +1);
         }
