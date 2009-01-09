@@ -13,13 +13,21 @@ import java.io.IOException;
 
 public class RichTextEditorCG extends AbstractComponentCG<XRichTextEditor> implements org.wingx.plaf.RichTextEditorCG<XRichTextEditor> {
 
+    public String getText(XRichTextEditor component) {
+        String text = component.getText();
+        text = text.replaceAll("\n", "<BR />");
+        text = text.replaceAll("'", "\'");
+
+        return text;
+    }
+
     public void writeInternal(Device device, XRichTextEditor component) throws IOException {
         device.print("<textarea");
         Utils.optAttribute(device, "id", component.getName());
         Utils.optAttribute(device, "eid", component.getName());
         Utils.optAttribute(device, "name", component.getName());
         device.print(">");
-        device.print(((XRichTextEditor)component).getDocument().getText());
+        device.print(getText(component));
         device.print("</textarea>");
 
         device.print("<script type=\"text/javascript\">");
@@ -75,18 +83,19 @@ public class RichTextEditorCG extends AbstractComponentCG<XRichTextEditor> imple
                 "});\n");
         device.print(name + ".on('afterNodeChange', function(o) { var elt = document.getElementById('" + component.getName() + "'); " + name + ".saveHTML(); }, " + name + ", true);");
         device.print(name + ".on('editorKeyUp', function(o) { var elt = document.getElementById('" + component.getName() + "'); " + name + ".saveHTML(); }, " + name + ", true);");
+        device.print(name + ".on('afterRender', function(o) { var elt = document.getElementById('" + component.getName() + "'); " + name + ".setEditorHTML('" + getText(component) + "'); }, true);");
         device.print(name + ".render();");
         device.print("</script>");
     }
 
-    public Update getComponentUpdate(XRichTextEditor component) {
-        return new ComponentUpdate(component);
+    public Update getTextUpdate(XRichTextEditor component) {
+        return new TextUpdate(component);
     }
 
-    private class ComponentUpdate extends AbstractUpdate {
+    private class TextUpdate extends AbstractUpdate {
         XRichTextEditor editor;
 
-        public ComponentUpdate(XRichTextEditor component) {
+        public TextUpdate(XRichTextEditor component) {
             super(component);
 
             this.editor = component;
@@ -95,7 +104,7 @@ public class RichTextEditorCG extends AbstractComponentCG<XRichTextEditor> imple
         public Handler getHandler() {
             UpdateHandler update = new UpdateHandler("runScript");
             String name = "editor_" + component.getName();
-            update.addParameter(name + ".setEditorHTML('" + editor.getText() +"');");
+            update.addParameter(name + ".setEditorHTML('" + getText(editor) + "');");
             // TODO: update size, border, etc.
             return update;
         }

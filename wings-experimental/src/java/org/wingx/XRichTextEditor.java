@@ -2,18 +2,7 @@ package org.wingx;
 
 import org.wings.*;
 import org.wings.event.SDocumentEvent;
-import org.wings.script.ScriptListener;
-import org.wings.plaf.css.Utils;
-import org.wings.plaf.css.AbstractComponentCG;
-import org.wings.plaf.TextFieldCG;
-import org.wings.plaf.TextAreaCG;
-import org.wings.header.SessionHeaders;
-import org.wings.header.Header;
 import org.wingx.plaf.RichTextEditorCG;
-
-import java.util.List;
-import java.util.LinkedList;
-import java.io.UnsupportedEncodingException;
 
 public class XRichTextEditor extends STextComponent {
     public final static int SIMPLE_EDITOR = 0;
@@ -31,18 +20,14 @@ public class XRichTextEditor extends STextComponent {
         this.editorType = editorType;
     }
 
-    public int getEditorType() {
-        return editorType;
+    @Override
+    public void changedUpdate(SDocumentEvent e) {
+        if(isUpdatePossible()) {
+            update(((RichTextEditorCG)getCG()).getTextUpdate(this));
+        }
     }
 
-    public String getText() {
-        String text = super.getText();
-        try {
-            byte[] bytes = text.getBytes();
-            return new String(bytes, "US-ASCII");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            return super.getText();
-        }
+    public int getEditorType() {
+        return editorType;
     }
 }

@@ -5,4 +5,5 @@ import org.wings.plaf.ComponentCG;
 import org.wings.plaf.Update;
 
 public interface RichTextEditorCG<COMPONENT_TYPE extends XRichTextEditor> extends ComponentCG<COMPONENT_TYPE> {
+    public Update getTextUpdate(XRichTextEditor component);
 }
