@@ -1,10 +1,6 @@
 package org.wings.adapter.file;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +14,6 @@ import org.wings.conf.UrlExtension;
 import org.wings.session.Session;
 import org.wings.session.SessionManager;
 import org.wings.template.StringTemplateSource;
-import org.wings.template.TemplateSource;
 import org.wings.util.HtmlParserUtils;
 
 import au.id.jericho.lib.html.Element;
@@ -74,6 +69,9 @@ public class LocalAdapter extends AbstractTemplateIntegrationAdapter {
 		}
     	
         String url = prepareUrl(integration.getResource().getUrlExtension(null).getReplacedValue(values.toArray(new String[0])));
+        if (url == null) {
+            throw new FileNotFoundException();
+        }
         return process(getFileContent(new File(url)));
     }
 
