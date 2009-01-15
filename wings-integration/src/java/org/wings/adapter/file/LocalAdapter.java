@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mvel.MVEL;
+import org.mvel2.MVEL;
 import org.wings.IntegrationFrame;
 import org.wings.Resource;
 import org.wings.TemplateIntegrationFrame;

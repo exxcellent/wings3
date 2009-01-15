@@ -1,6 +1,6 @@
 package org.wings.macro;
 
-import org.mvel.MVEL;
+import org.mvel2.MVEL;
 
 import java.util.ArrayList;
 import java.util.Collection;

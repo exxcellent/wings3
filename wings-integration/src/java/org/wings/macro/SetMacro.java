@@ -2,7 +2,7 @@ package org.wings.macro;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mvel.MVEL;
+import org.mvel2.MVEL;
 
 import java.math.BigDecimal;
 

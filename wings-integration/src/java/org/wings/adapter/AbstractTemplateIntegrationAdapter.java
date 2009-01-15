@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mvel.MVEL;
 import org.wings.IntegrationFrame;
 import org.wings.STemplateLayout;
 import org.wings.TemplateIntegrationFrame;
@@ -15,6 +14,7 @@ import org.wings.session.Session;
 import org.wings.session.SessionManager;
 import org.wings.template.TemplateSource;
 import org.wings.util.HtmlParserUtils;
+import org.mvel2.MVEL;
 
 import au.id.jericho.lib.html.Attribute;
 import au.id.jericho.lib.html.Attributes;

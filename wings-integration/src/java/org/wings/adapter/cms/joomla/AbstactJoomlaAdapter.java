@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.mvel.MVEL;
+import org.mvel2.MVEL;
 import org.wings.IntegrationFrame;
 import org.wings.adapter.cms.AbstractCmsAdapter;
 import org.wings.conf.Integration;
@@ -29,12 +29,12 @@ import org.wings.session.SessionManager;
  */
 public abstract class AbstactJoomlaAdapter extends AbstractCmsAdapter {
 
-	/**
-	 * @param frame
-	 * @param layout
-	 * @param integration
-	 */
-	public AbstactJoomlaAdapter(IntegrationFrame frame, Integration integration) {
+    /**
+     *
+     * @param frame
+     * @param integration
+     */
+    public AbstactJoomlaAdapter(IntegrationFrame frame, Integration integration) {
 		super(frame, integration);
 	}
 	
