@@ -6,6 +6,7 @@ import org.wings.LowLevelEventListener;
 import org.wings.SComponent;
 
 import calendar.plaf.CalendarCG;
+import calendar.plaf.NewCalendarCG;
 
 import java.sql.Date;
 import java.util.*;
@@ -396,6 +397,21 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 				Appointment appointment = getCalendarModel().getAppointmentFromID(value.split("_")[1]);
 
 				this.getSelectionModel().clickAppointment(appointment, new Date(cal.getTimeInMillis()), modifierKeyStatus);
+			} else if(value.startsWith("da:")) {
+				Calendar cal = Calendar.getInstance();
+				String[] data = value.substring(2).split("_")[1].split(":");
+				cal.set(Calendar.YEAR, Integer.parseInt(data[0]));
+				cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(data[1]));
+				Appointment appointment = getCalendarModel().getAppointmentFromID(value.split("_")[1]);
+
+				this.getSelectionModel().doubleClickAppointment(appointment, new Date(cal.getTimeInMillis()), modifierKeyStatus);
+			} else if(value.startsWith("dd:")) {
+                Calendar cal = Calendar.getInstance();
+                String[] data = value.substring(2).split("_")[1].split(":");
+                cal.set(Calendar.YEAR, Integer.parseInt(data[0]));
+                cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(data[1]));
+
+                this.getSelectionModel().doubleClickDate(new java.sql.Date(cal.getTimeInMillis()), modifierKeyStatus);
 			}
 		}
 

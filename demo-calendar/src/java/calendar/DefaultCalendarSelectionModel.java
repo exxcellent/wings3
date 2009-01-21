@@ -310,7 +310,13 @@ public class DefaultCalendarSelectionModel implements CalendarSelectionModel {
         addSelectionCheckModifierKeys(date, keyStatus);
 	}
 
-	private void removeAllDatesOnDayOfDate(Date date)
+    public void doubleClickAppointment(Appointment appointment, Date date, ModifierKeyStatus keyStatus) {
+    }
+
+    public void doubleClickDate(Date date, ModifierKeyStatus keyStatus) {
+    }
+
+    private void removeAllDatesOnDayOfDate(Date date)
 	{
 		Calendar cal1 = Calendar.getInstance();
 		Calendar cal2 = Calendar.getInstance();

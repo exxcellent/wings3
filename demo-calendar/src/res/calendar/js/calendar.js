@@ -30,6 +30,31 @@ AppCalendar.clickAppointment = function(appointment, event, eventName) {
 };
 
 /**
+ * Function that is executed, when a click on a Appointment occured
+ * @param appointment (HTML/DOM) Appointment-Element on which the click was registered
+ * @param event (Javascript-)Event handler
+ * @param eventName Event Name to be sent to the wingS framework
+ */
+AppCalendar.doubleClickAppointment = function(appointment, event, eventName) {
+	if(eventName == null)
+		return false;
+
+    if(!event)
+        event = window.event;
+
+    event.cancelBubble = true;
+
+    if(event.stopPropagation)
+		event.stopPropagation();
+
+	//  send ajax request (selection of appointment)
+    var eventValue = 'shiftKey=' + event.shiftKey + ';ctrlKey=' + event.ctrlKey + ';altKey=' + event.altKey + ';da:' + appointment.id;
+	wingS.request.sendEvent(event, false, true, eventName, eventValue);
+
+	return false;
+};
+
+/**
  * Function that is executed, when a click on a Date-Cell occured
  * @param date (HTML/DOM) Date element on which the click was registered
  * @param event Javascript-event-HAndler
@@ -43,6 +68,23 @@ AppCalendar.clickDate = function(date, event, eventName) {
 	var eventValue = 'shiftKey=' + event.shiftKey + ';ctrlKey=' + event.ctrlKey + ';altKey=' + event.altKey + ';d:' + date.id;
 	wingS.request.sendEvent(event, false, true, eventName, eventValue);
 	
+	return false;
+};
+
+/**
+ * Function that is executed, when a click on a Date-Cell occured
+ * @param date (HTML/DOM) Date element on which the click was registered
+ * @param event Javascript-event-HAndler
+ * @param eventName Name of the Event to send to the wingS-Framework
+ */
+AppCalendar.doubleClickDate = function(date, event, eventName) {
+	if(eventName == null)
+		return false;
+
+	// send ajax request (selection of date)
+	var eventValue = 'shiftKey=' + event.shiftKey + ';ctrlKey=' + event.ctrlKey + ';altKey=' + event.altKey + ';dd:' + date.id;
+	wingS.request.sendEvent(event, false, true, eventName, eventValue);
+
 	return false;
 };
 

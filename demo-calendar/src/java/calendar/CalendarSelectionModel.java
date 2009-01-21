@@ -133,7 +133,24 @@ public interface CalendarSelectionModel extends SDelayedEventModel {
 	 * @param keyStatus Status of the Modifier Keys
 	 */
 	void clickDate(Date date, ModifierKeyStatus keyStatus);
-	
+
+
+    /**
+     * Gets Called when a Appointment is double clicked
+     * @param appointment Appointment that was clicked on
+     * @param date Date that the appointment was clicked on
+     * @param keyStatus Status of the Modifier Keys
+     */
+    void doubleClickAppointment(Appointment appointment, Date date, ModifierKeyStatus keyStatus);
+
+    /**
+     * Geta called when a Date is double clicked
+     * @param date Date that the click registered
+     * @param keyStatus Status of the Modifier Keys
+     */
+    void doubleClickDate(Date date, ModifierKeyStatus keyStatus);
+
+
 	/**
 	 * Returns if a Appointment on Date date is selected
 	 * @param appointment Appointment to be checked

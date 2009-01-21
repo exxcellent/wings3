@@ -66,6 +66,10 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 		device.print(" onClick=\"");
 		Utils.quote(device, "javascript:AppCalendar.click" + dateOrApp + "(this, event, "+ "\"" + calendar.getName() + "\")", true, false, true);
 		device.print("\"");
+
+        device.print(" onDblClick=\"");
+        Utils.quote(device, "javascript:AppCalendar.doubleClick" + dateOrApp + "(this, event, "+ "\"" + calendar.getName() + "\")", true, false, true);
+        device.print("\"");
 	}
 	
 	private void writeWeekInternal(final Device device, final AppointmentCalendar calendar) throws IOException
@@ -663,9 +667,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 	public void writePopupText(final Device device, final AppointmentCalendar calendar, final Appointment appointment) throws IOException
 	{
         if(appointment == null)
-        {
             return;
-        }
 
         device.print(appointment.getAppointmentName() + "<br />");
         if(appointment.getAppointmentDescription() != null && appointment.getAppointmentDescription().length() > 0)
@@ -679,9 +681,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
         device.print(appointment.getAppointmentStartEndDateString(calendar.getLocale()) + "<br />");
 
         if(appointment.getAppointmentType() == Appointment.AppointmentType.NORMAL)
-        {
             device.print(appointment.getAppointmentStartEndTimeString(calendar.getLocale()) + "<br />");
-        }
         else // if the appointment ain't normal, it must be ALLDAY => timeframe is useless
             device.print(appointment.getAppointmentTypeString(appointment.getAppointmentType(), calendar.getLocale()) + "<br />");
 
@@ -722,8 +722,7 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
         
         try {
             Collection<Appointment> appointments = calendar.getCalendarModel().getAppointments(new Date(cal.getTimeInMillis()));
-            if(appointments != null)
-            {
+            if(appointments != null) {
                 Object appointmentArray[] = appointments.toArray();
                 return new AppointmentPopupUpdate(calendar, (Appointment)appointmentArray[Integer.parseInt(data[2])]);
             }
@@ -888,7 +887,11 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 				StringBuilderDevice htmlDevice = new StringBuilderDevice(1024);
 				((CalendarCG)component.getCG()).writePopupText(htmlDevice, (AppointmentCalendar)component, this.appointment);
 				htmlCode = htmlDevice.toString();
+                htmlCode = htmlCode.replaceAll("\\r", "");
+                htmlCode = htmlCode.replaceAll("\r", "");
+                htmlCode = htmlCode.replaceAll("\\n", "<br />");
                 htmlCode = htmlCode.replaceAll("\n", "<br />");
+
             }
 			catch(Throwable t)
 			{
