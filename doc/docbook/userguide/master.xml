@@ -3220,9 +3220,9 @@ cardLayout.last(stackedPanel);
         "compname"));</code></para>
 
         <para>Sample template file: <programlisting>  &lt;HTML&gt;&lt;BODY&gt;
-  Name der Person: &lt;COMPONENT NAME="<emphasis>NAME</emphasis>"&gt;&lt;BR&gt;
-  Vorname der Person: &lt;COMPONENT NAME="VORNAME" ICON="vorname.gif"&gt;&lt;BR&gt;
-  Wohnort der Person: &lt;COMPONENT NAME="WOHNORT"&gt;&lt;BR&gt;
+  Name der Person: &lt;OBJECT NAME="<emphasis>NAME</emphasis>"&gt;&lt;BR&gt;
+  Vorname der Person: &lt;INPUT NAME="VORNAME" ICON="vorname.gif"&gt;&lt;BR&gt;
+  Wohnort der Person: &lt;LABEL NAME="WOHNORT"&gt;&lt;BR&gt;
   &lt;/BODY&gt;&lt;/HTML&gt; </programlisting> According Java sample code:
         <programlisting>  templateContainer.setLayout(new STemplateLayout("templatefile"));
   templateContainer.addComponent(new SLabel("Haaf"), "<emphasis>NAME</emphasis>");
