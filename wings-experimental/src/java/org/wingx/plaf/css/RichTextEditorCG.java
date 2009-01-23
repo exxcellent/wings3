@@ -11,10 +11,12 @@ import org.wings.plaf.css.AbstractComponentCG;
 import org.wings.SComponent;
 import org.wings.SLabel;
 import org.wings.SFrame;
+import org.wings.script.ScriptListener;
 import org.wings.session.SessionManager;
 
 import java.io.IOException;
 import java.util.Random;
+import java.util.List;
 
 public class RichTextEditorCG extends AbstractComponentCG<XRichTextEditor> implements org.wingx.plaf.RichTextEditorCG<XRichTextEditor> {
     public String getText(XRichTextEditor component) {

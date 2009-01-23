@@ -12,18 +12,25 @@ public class XRichTextEditor extends STextComponent {
     public final static int NORMAL_EDITOR = 1;
 
     private int editorType;
-
+    private ScriptListener listener;
+    
     public XRichTextEditor() {
         this(SIMPLE_EDITOR);
+
     }
 
     public XRichTextEditor(int editorType) {
         super();
         
         this.editorType = editorType;
+        updateListener();
+    }
+
+    private void updateListener() {
+        if(listener != null)
+            removeScriptListener(listener);
 
         final StringBuilder builder = new StringBuilder();
-
         builder.append("wingS.global.onHeadersLoaded(function() {");
         String name = "editor_" + getName();
         String height = "";
@@ -78,7 +85,15 @@ public class XRichTextEditor extends STextComponent {
         builder.append(name + ".render();");
         builder.append("});");
 
-        SessionManager.getSession().getScriptManager().addScriptListener(new JavaScriptListener(null, null, builder.toString()));
+        listener = new JavaScriptListener(null, null, builder.toString());
+        addScriptListener(listener);
+    }
+
+    @Override
+    public void setPreferredSize(SDimension preferredSize) {
+        super.setPreferredSize(preferredSize);
+
+        updateListener();
     }
 
     public String getText(XRichTextEditor component) {
