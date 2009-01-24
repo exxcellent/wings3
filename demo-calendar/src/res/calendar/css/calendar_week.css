@@ -1,0 +1,80 @@
+table.calendar_week {
+    width:100%;
+    height:99.9%;
+    table-layout:fixed;
+    border-collapse:collapse;
+}
+
+table.calendar_week tr {
+    vertical-align:top;
+}
+
+table.calendar_week td {
+    border:1px solid rgb(128, 128, 128);
+	height:33%;
+}
+
+table.calendar_week td.today {
+    background-color:#FFB597;
+}
+
+table.calendar_week td.activemonth {
+    background-color:#FFF9DF;
+}
+
+table.calendar_week td.inactivemonth {
+	background-color:#FFF5B7;
+}
+
+table.calendar_week td.selected {
+	background-color:lightblue;
+}
+
+table.calendar_week table {
+    height:100%;
+    width:100%;
+}
+
+table.calendar_week table tr.weekendmerge td {
+	border-bottom:1px solid rgb(128, 128, 128);
+}
+
+table.calendar_week table td {
+    border:0px;
+	height:50%;
+	background-color:#FFF9DF;
+}
+
+table.calendar_week td div.dateheader {
+    background-color:#FEE4A7;
+	padding-left:2px;
+}
+
+table.calendar_week td div.appointmentcontainer {
+    width:98%;
+    overflow-x:hidden;
+    padding-top:2px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+table.calendar_week div.appointment,
+table.calendar_week div.appointment_selected {
+    width:100%;
+    border:1px solid black;
+    cursor:pointer;
+
+    margin-bottom:2px;
+    padding-left:2px;
+    padding-right:2px;
+}
+table.calendar_week div.appointment {
+    height:1.5em;
+    overflow-x:hidden;
+    overflow-y:hidden;
+    background-color:white;
+}
+
+table.calendar_week tbody div.appointment_selected {
+    background-color:lightblue;
+}

@@ -100,7 +100,7 @@ public class CalendarExample {
 							switch(calendar.getCalendarModel().getView())
 							{
 								case WEEK:
-									tempCal.add(Calendar.DAY_OF_YEAR, +3);
+									tempCal.add(Calendar.DAY_OF_YEAR, +7);
 								break;
 								case MONTH:
 									tempCal.add(Calendar.MONTH, +1);
@@ -129,7 +129,7 @@ public class CalendarExample {
 						switch(calendar.getCalendarModel().getView())
 						{
 							case WEEK:
-								tempCal.add(Calendar.DAY_OF_YEAR, -3);
+								tempCal.add(Calendar.DAY_OF_YEAR, -7);
 							break;
 							case MONTH:
 								tempCal.add(Calendar.MONTH, -1);

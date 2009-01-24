@@ -105,10 +105,21 @@ public class DefaultCalendarModel implements CalendarModel {
 				begin.add(Calendar.DAY_OF_YEAR, -1);
 				begin.add(Calendar.DAY_OF_YEAR, -((begin.get(Calendar.DAY_OF_WEEK) + 5) % 7));
 
+                begin.set(Calendar.HOUR_OF_DAY, 0);
+                begin.set(Calendar.MINUTE, 0);
+                begin.set(Calendar.SECOND, 0);
+                begin.set(Calendar.MILLISECOND, 0);
+
 				Calendar end = (Calendar)begin.clone();
 				end.add(Calendar.WEEK_OF_YEAR, 5);
 				end.add(Calendar.DAY_OF_YEAR, ((8 - end.get(Calendar.DAY_OF_WEEK)) % 7));
 
+                end.set(Calendar.HOUR_OF_DAY, 0);
+                end.set(Calendar.MINUTE, 0);
+                end.set(Calendar.SECOND, 0);
+                end.set(Calendar.MILLISECOND, 0);
+                end.add(Calendar.DAY_OF_YEAR, 1);
+                
 				if(!isMergeWeekendsEnabled() && locale == Locale.US)
 				{
 					begin.add(Calendar.DAY_OF_YEAR, -1);
@@ -119,20 +130,29 @@ public class DefaultCalendarModel implements CalendarModel {
 				setVisibleUntil(new Date(end.getTimeInMillis()));
 			break;
 			case WEEK:
-				Calendar calendar2 = Calendar.getInstance();
+                Calendar calendar2 = Calendar.getInstance();
 				calendar2.setTime(this.date);
 
-				calendar2.add(Calendar.DAY_OF_YEAR, -2);
+				calendar2.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                calendar2.set(Calendar.HOUR_OF_DAY, 0);
+                calendar2.set(Calendar.MINUTE, 0);
+                calendar2.set(Calendar.SECOND, 0);
+                calendar2.set(Calendar.MILLISECOND, 0);
 				setVisibleFrom(new Date(calendar2.getTimeInMillis()));
 
-				calendar2.setTime(this.date);
-				calendar2.add(Calendar.DAY_OF_YEAR, +5);
+				calendar2.add(Calendar.DAY_OF_YEAR, 7);
 				setVisibleUntil(new Date(calendar2.getTimeInMillis()));
 			break;
 			case DAY:
                 Calendar calendar1 = Calendar.getInstance();
                 calendar1.setTime(this.date);
+                calendar1.set(Calendar.HOUR_OF_DAY, 0);
+                calendar1.set(Calendar.MINUTE, 0);
+                calendar1.set(Calendar.SECOND, 0);
+                calendar1.set(Calendar.MILLISECOND, 0);
+
                 setVisibleFrom(new Date(calendar1.getTimeInMillis()));
+                calendar1.add(Calendar.DAY_OF_YEAR, 1);
                 setVisibleUntil(new Date(calendar1.getTimeInMillis()));
             break;
 		}

@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;*/
 import org.wings.LowLevelEventListener;
 import org.wings.SComponent;
 
-import calendar.plaf.CalendarCG;
 import calendar.plaf.NewCalendarCG;
 
 import java.sql.Date;
@@ -32,7 +31,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	//private static final Log LOG = LogFactory.getLog(CalendarExample.class);
 
     // TODO: default.properties when moving to wingx
-    private static final CalendarCG calCG = new CalendarCG();
+    private static final NewCalendarCG calCG = new NewCalendarCG();
 
     private CalendarModel model;
     private CalendarSelectionModel selectionModel;
@@ -49,7 +48,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 
             if(isUpdatePossible() && AppointmentCalendar.class.isAssignableFrom(AppointmentCalendar.this.getClass()))
 			{
-                Update update = ((CalendarCG)getCG()).getSelectionUpdate(AppointmentCalendar.this, selectionModel, e);
+                Update update = ((NewCalendarCG)getCG()).getSelectionUpdate(AppointmentCalendar.this, selectionModel, e);
                 if(update == null)
                 {
                     System.out.println("selection update is null!");
@@ -65,7 +64,6 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
     };
 
     private PropertyChangeListener fwdSelectionModeChange = new PropertyChangeListener() {
-
 		public void propertyChange(PropertyChangeEvent evt) {
 			// reload the page to remove/add the onClick event handlers to the calendar
 			// and/or change the selections (i.e. if the user switches from multiple appointments to single)
@@ -102,8 +100,6 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 				break;
 			}
 		}
-
-
     };
 
     private PropertyChangeListener fwdPropChangeCalModel = new PropertyChangeListener() {
@@ -373,7 +369,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 
             if(value.startsWith("q:")) {
 				// q: means update the popup window for more information
-                Update update = ((CalendarCG)this.getCG()).getPopupUpdate(this, value.substring(2).split("_")[1]);
+                Update update = ((NewCalendarCG)this.getCG()).getPopupUpdate(this, value.substring(2).split("_")[1]);
 				if(update != null && isUpdatePossible())
 					update(update);
 			} else if(value.startsWith("ctrlKey")) {

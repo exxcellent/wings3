@@ -476,13 +476,12 @@ public class CalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 				device.print(" id=\"");
 				Utils.quote(device, uniqueID, true, false, true);
 				device.print("\"");
-				
-				device.print(" onmouseover=\"");
 
-				Utils.quote(device, "javascript:AppCalendar.loadPopup(this, event, \"" + calendar.getName() + "\")", true, false, true); 
+				device.print(" onmouseover=\"");
+				Utils.quote(device, "javascript:AppCalendar.loadPopup(this, event, \"" + calendar.getName() + "\")", true, false, true);
 				device.print("\"");
 				device.print(" onmouseout=\"javascript:AppCalendar.hidePopup(this)\"");
-				
+
 				if( (calendar.getSelectionModel().getSelectionMode()&CalendarSelectionModel.APPOINTMENT_BITMASK) != 0) {
 					writeClickability(device, "Appointment", calendar);
 				}

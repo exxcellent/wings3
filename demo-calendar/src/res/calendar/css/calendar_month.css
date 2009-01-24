@@ -1,0 +1,80 @@
+table.calendar_month {
+    width:100%;
+    height:99.9%;
+    table-layout:fixed;
+	border-collapse:collapse;
+	font-family:sans-serif;
+}
+
+table.calendar_month thead {
+    height:12pt;
+}
+
+table.calendar_month thead th {
+    text-align:center;
+    background-color:#FEE4A7;
+	border:1px solid rgb(128, 128, 128);
+    width:14%;
+}
+
+table.calendar_month tbody {
+    text-align:left;
+	vertical-align:top;
+	color:black;
+}
+
+table.calendar_month tbody td.activemonth,
+table.calendar_month tbody td.inactivemonth,
+table.calendar_month tbody td.today,
+table.calendar_month tbody td.selected {
+    vertical-align:top;
+	border:1px solid rgb(128,128,128);
+    width:14%;
+    height:16%;
+    
+    padding:2px;
+}
+
+table.calendar_month tbody td.today {
+    background-color:#FFB597;
+}
+
+table.calendar_month tbody td.activemonth {
+    background-color:#FFF9DF;
+}
+
+table.calendar_month tbody td.inactivemonth {
+	background-color:#FFF5B7;
+}
+
+table.calendar_month tbody td.selected {
+	background-color:lightblue;
+}
+
+table.calendar_month tbody div.appointmentcontainer {
+    width:98%;
+    overflow-x:hidden;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+table.calendar_month tbody div.appointment,
+table.calendar_month tbody div.appointment_selected {
+    width:100%;
+    border:1px solid black;
+    cursor:pointer;
+
+    margin-bottom:2px;
+    padding-left:2px;
+    padding-right:2px;
+}
+table.calendar_month tbody div.appointment {
+    height:1.5em;
+    overflow-x:hidden;
+    overflow-y:hidden;
+    background-color:white;
+}
+
+table.calendar_month tbody div.appointment_selected {
+    background-color:lightblue;
+}
