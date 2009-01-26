@@ -20,7 +20,7 @@ public class MonthlyViewRenderer extends CalendarViewRenderer {
         CalendarModel model = appointmentCalendar.getCalendarModel();
         
         Calendar iterator = Calendar.getInstance(model.getLocale());
-        iterator.setTime(model.getVisibleFrom());
+        iterator.setTimeInMillis(model.getVisibleFrom().getTime());
 
         DateFormat formatter = new SimpleDateFormat("EE", model.getLocale());
 
@@ -121,48 +121,18 @@ public class MonthlyViewRenderer extends CalendarViewRenderer {
         Calendar end = (Calendar)iterator.clone();
         end.add(Calendar.DAY_OF_YEAR, 7*6);
 
-        int round = 0;
         while(iterator.before(end)) {
-            if(iterator.get(Calendar.DAY_OF_WEEK) == iterator.getFirstDayOfWeek()) {
-                if(round > 0) {
-                    device.print("</tr>");
-                }
+            for(int i=0; i<6; ++i) {
+
                 device.print("<tr>");
-            } 
 
+                for(int j=0; j<7; ++j) {
+                    writeDateCell(device, iterator, appointmentCalendar);
+                    iterator.add(Calendar.DAY_OF_YEAR, 1);
+                }
 
-            /*
-            if( model.isMergeWeekendsEnabled() &&
-                    iterator.getFirstDayOfWeek() != Calendar.SUNDAY &&
-                    iterator.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-
-                device.print("<td class=\"mergedweekend\">");
-
-                device.print("<table class=\"mergedweekend\">");
-                device.print("<tr class=\"mergedweekend_first\">");
-                writeDateCell(device, iterator, model, isActiveMonth, isToday);
                 device.print("</tr>");
-
-                iterator.add(Calendar.DAY_OF_YEAR, 1);
-                round++;
-                
-                device.print("<tr class=\"mergedweekend_secondt\">");
-                writeDateCell(device, iterator, model, isActiveMonth, isToday);
-                device.print("</tr>");
-
-                device.print("</table>");
-
-                device.print("</td>");
-
-                iterator.add(Calendar.DAY_OF_YEAR, 1);
-                round++;
-
-            } else { */
-
-            writeDateCell(device, iterator, appointmentCalendar);
-
-            iterator.add(Calendar.DAY_OF_YEAR, 1);
-            round++;
+            }
         }
 
     }

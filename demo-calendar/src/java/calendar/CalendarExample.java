@@ -4,10 +4,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.EnumSet;
+import java.util.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -55,6 +52,7 @@ public class CalendarExample {
 			this.calendar.setDate(Calendar.getInstance().getTime());
 		} else {
 			DefaultCalendarModel model = new DefaultCalendarModel();
+            model.setLocale(Locale.US);
             model.setMergeWeekends(true);
             calendar.setCalendarModel(model);
 		}

@@ -43,18 +43,6 @@ public abstract interface CalendarModel {
 	public abstract Collection<Appointment> getAppointments(Date date);
 
 	/**
-	 * Sets the <code>Date</code> that this Calendars view starts
-	 * @param visibleFrom The <code>Date</code> that this Calendars view (should) start
-	 */
-	public abstract void setVisibleFrom(Date visibleFrom);
-	
-	/**
-	 * Sets the <code>Date</code> that this Calendars view (should) stop (note: the default CalendarCG ignores this and only uses getRow/ColumnCount)
-	 * @param visibleUntil The <code>Date</code> that this Calendars view (should) stop (note: the default CalendarCG ignores this and only uses getRow/ColumnCount)
-	 */
-	public abstract void setVisibleUntil(Date visibleUntil);
-	
-	/**
 	 * Returns the <code>Date</code> that this Calendars view starts 
 	 * @return Start <code>Date</code> of the current view 
 	 */

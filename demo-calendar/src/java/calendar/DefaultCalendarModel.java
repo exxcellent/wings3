@@ -96,13 +96,13 @@ public class DefaultCalendarModel implements CalendarModel {
 		switch(this.view)
 		{
 			case MONTH:
-				Calendar calendar = Calendar.getInstance();
+				Calendar calendar = Calendar.getInstance(getLocale());
 
 				calendar.setTime(this.date);
-				calendar.set(java.util.Calendar.DAY_OF_MONTH, 1);
+                calendar.set(java.util.Calendar.DAY_OF_MONTH, 1);
 
 				Calendar begin = (Calendar)calendar.clone();
-				begin.add(Calendar.DAY_OF_YEAR, -1);
+                begin.add(Calendar.DAY_OF_YEAR, -1);
 				begin.add(Calendar.DAY_OF_YEAR, -((begin.get(Calendar.DAY_OF_WEEK) + 5) % 7));
 
                 begin.set(Calendar.HOUR_OF_DAY, 0);
@@ -111,20 +111,24 @@ public class DefaultCalendarModel implements CalendarModel {
                 begin.set(Calendar.MILLISECOND, 0);
 
 				Calendar end = (Calendar)begin.clone();
-				end.add(Calendar.WEEK_OF_YEAR, 5);
-				end.add(Calendar.DAY_OF_YEAR, ((8 - end.get(Calendar.DAY_OF_WEEK)) % 7));
+                end.add(Calendar.DAY_OF_YEAR, 5*7);
+				//end.add(Calendar.WEEK_OF_YEAR, 5);
+                //end.add(Calendar.DAY_OF_YEAR, ((8 - end.get(Calendar.DAY_OF_WEEK)) % 7));
 
                 end.set(Calendar.HOUR_OF_DAY, 0);
                 end.set(Calendar.MINUTE, 0);
                 end.set(Calendar.SECOND, 0);
                 end.set(Calendar.MILLISECOND, 0);
                 end.add(Calendar.DAY_OF_YEAR, 1);
-                
-				if(!isMergeWeekendsEnabled() && locale == Locale.US)
-				{
-					begin.add(Calendar.DAY_OF_YEAR, -1);
-					end.add(Calendar.DAY_OF_YEAR, -1);
-				}
+
+                if(Locale.US.equals(getLocale()) || Locale.GERMANY.equals(getLocale())) {
+                    if(begin.get(Calendar.DAY_OF_MONTH) == 1 && begin.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+
+                    } else {
+                        begin.add(Calendar.DAY_OF_YEAR, -1);
+                        end.add(Calendar.DAY_OF_YEAR, -1);
+                    }
+                }
 
 				setVisibleFrom(new Date(begin.getTimeInMillis()));
 				setVisibleUntil(new Date(end.getTimeInMillis()));
@@ -245,14 +249,14 @@ public class DefaultCalendarModel implements CalendarModel {
 		return visibleUntil;
 	}
 
-	public void setVisibleFrom(Date visibleFrom) {
+	protected void setVisibleFrom(Date visibleFrom) {
 		this.visibleFrom = visibleFrom;
 
         if(getVisibleFrom() != null && getAppointments() != null)
             updateDateAppointmentMapping();
 	}
 
-	public void setVisibleUntil(Date visibleUntil) {
+	protected void setVisibleUntil(Date visibleUntil) {
 		this.visibleUntil = visibleUntil;
 
         if(getVisibleUntil() != null && getAppointments() != null)
