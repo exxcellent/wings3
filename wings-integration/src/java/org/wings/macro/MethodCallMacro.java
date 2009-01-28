@@ -22,18 +22,25 @@ public class MethodCallMacro extends AbstractMacro {
     private static final Log LOG = LogFactory.getLog(MethodCallMacro.class);
 
     private String name;
-    private String[] instr = new String[0];
+    private String[] methodParameters = new String[0];
 
     public MethodCallMacro(String name, String instructions) {
         this.name = name;
-
         if (instructions != null && !"".equals(instructions)) {
-            instr = instructions.split(",");
+            methodParameters = instructions.split(",");
         }
     }
 
     public void execute(MacroContext ctx) {
         invokeMethodOnComponent(ctx);
+    }
+
+    private Object[] resolveMethodParameters(MacroContext ctx) {
+        Object[] paramsResolved = new Object[methodParameters.length];
+        for (int ix = 0; ix < methodParameters.length; ix++) {
+            paramsResolved[ix] = resolveValue(ctx, methodParameters[ix]);
+        }
+        return paramsResolved;
     }
 
     private void invokeMethodOnComponent(MacroContext ctx) {
@@ -43,7 +50,7 @@ public class MethodCallMacro extends AbstractMacro {
             for (Method method : methods) {
                 if (name.equals(method.getName())) {
                     try {
-                        Object result = method.invoke(component, instr);
+                        Object result = method.invoke(component, resolveMethodParameters(ctx));
                         ctx.put(name, result); // null values allowed!
                     }
                     catch (IllegalAccessException e) {
@@ -69,12 +76,12 @@ public class MethodCallMacro extends AbstractMacro {
 //    }
 //
 //    private void invokeMethodOnCG(Object target, MacroContext ctx) {
-//        Object[] parameters = new Object[instr.length + 1];
+//        Object[] parameters = new Object[methodParameters.length + 1];
 //        parameters[0] = ctx;
-//        for (int i = 0; i < instr.length; i++) {
-//            parameters[i + 1] = ctx.get(instr[i]);
+//        for (int i = 0; i < methodParameters.length; i++) {
+//            parameters[i + 1] = ctx.get(methodParameters[i]);
 //            if (parameters[i + 1] == null)
-//            parameters[i + 1] = resolveValue(ctx, instr[i]);
+//            parameters[i + 1] = resolveValue(ctx, methodParameters[i]);
 //        }
 //
 //        Method[] methods = target.getClass().getMethods();
