@@ -1274,6 +1274,10 @@ public class STable extends SComponent
         }
     }
 
+    protected void addSelectionEvent(int row, int col, boolean ctrlKey, boolean shiftKey) {
+        addSelectionEvent(row, ctrlKey, shiftKey); 
+    }
+
     public void fireIntermediateEvents() {
         if (lastReceivedLowLevelEvents == null)
             return;
@@ -1321,7 +1325,7 @@ public class STable extends SComponent
                                 else if("ctrlKey".equals(parts[0]))
                                     ctrlKey = Boolean.parseBoolean( parts[1] );
                             }
-                            addSelectionEvent(row, ctrlKey, shiftKey);
+                            addSelectionEvent(row, col, ctrlKey, shiftKey);
                             break;
                         case 's':
                             getSelectionModel().addSelectionInterval(row, row);
@@ -2107,7 +2111,7 @@ public class STable extends SComponent
                         if(table.isRowSelected(row))
                             return false;
                         
-                        table.addSelectionEvent(row, ctrlKey, shiftKey);
+                        table.addSelectionEvent(row, col, ctrlKey, shiftKey);
                     }
                 }
             } catch(Exception e) {
