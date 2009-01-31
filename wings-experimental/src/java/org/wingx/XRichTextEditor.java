@@ -1,28 +1,25 @@
 package org.wingx;
 
-import org.wings.*;
-import org.wings.session.SessionManager;
-import org.wings.script.ScriptListener;
-import org.wings.script.JavaScriptListener;
+import org.wings.SDimension;
+import org.wings.STextComponent;
 import org.wings.event.SDocumentEvent;
+import org.wings.script.JavaScriptListener;
+import org.wings.script.ScriptListener;
 import org.wingx.plaf.RichTextEditorCG;
 
 public class XRichTextEditor extends STextComponent {
-    public final static int SIMPLE_EDITOR = 0;
-    public final static int NORMAL_EDITOR = 1;
-
-    private int editorType;
+    private String configuration;
+    private XRichTextEditorType type;
     private ScriptListener listener;
-    
-    public XRichTextEditor() {
-        this(SIMPLE_EDITOR);
 
+    public XRichTextEditor() {
+        this(XRichTextEditorType.Simple);
     }
 
-    public XRichTextEditor(int editorType) {
+    public XRichTextEditor(XRichTextEditorType type) {
         super();
-        
-        this.editorType = editorType;
+
+        this.type = type;
         updateListener();
     }
 
@@ -42,45 +39,22 @@ public class XRichTextEditor extends STextComponent {
             height = "100%";
             width = "100%";
         }
-        String editor = "SimpleEditor";
+        String editor = type.getYuiClassName();
+        final String config = getConfiguration();
         builder.append("window." + name + " = new YAHOO.widget." + editor + "('" + getName() + "', " +
                 "{" +
                     "height:\"" + height + "\"," +
-                    "width:\"" + width + "\"," +
-                    "toolbar: {" +
-                        "titlebar: 'Text Editor'," +
-                        "collapse:false,"+
-                        "buttons: ["+
-                            "{ group: 'textstyle', label: 'Font Style',"+
-                                "buttons: ["+
-                                    "{ type: 'push', label: 'Bold', value: 'bold' },"+
-                                    "{ type: 'push', label: 'Italic', value: 'italic' },"+
-                                    "{ type: 'push', label: 'Underline', value: 'underline' },"+
-                                    "{ type: 'separator' },"+
-                                    "{ type: 'select', label: 'Arial', value: 'fontname', disabled: true,"+
-                                        "menu: ["+
-                                            "{ text: 'Arial', checked: true },"+
-                                            "{ text: 'Arial Black' },"+
-                                            "{ text: 'Comic Sans MS' },"+
-                                            "{ text: 'Courier New' },"+
-                                            "{ text: 'Lucida Console' },"+
-                                            "{ text: 'Tahoma' },"+
-                                            "{ text: 'Times New Roman' },"+
-                                            "{ text: 'Trebuchet MS' },"+
-                                            "{ text: 'Verdana' }"+
-                                        "]"+
-                                    "},"+
-                                    "{ type: 'spin', label: '13', value: 'fontsize', range: [ 9, 75 ], disabled: true },"+
-                                    "{ type: 'separator' },"+
-                                    "{ type: 'color', label: 'Font Color', value: 'forecolor', disabled: true },"+
-                                    "{ type: 'color', label: 'Background Color', value: 'backcolor', disabled: true }"+
-                                "]"+
-                            "}"+
-                        "]"+
-                    "}"+
+                    "width:\"" + width + "\"" + (config.trim().length() > 0 ? "," + config : "") +
                 "});\n");
+        //disable titlebar
+        builder.append(name + "._defaultToolbar.titlebar = false;");
+
+        //todo if necessary increase number of undos
+        builder.append(name + ".maxUndo = 250;");
+
         builder.append(name + ".on('afterNodeChange', function(o) { var elt = document.getElementById('" + getName() + "'); " + name + ".saveHTML(); }, " + name + ", true);");
         builder.append(name + ".on('editorKeyUp', function(o) { var elt = document.getElementById('" + getName() + "'); " + name + ".saveHTML(); }, " + name + ", true);");
+        
         builder.append(name + ".on('afterRender', function(o) { var elt = document.getElementById('" + getName() + "'); " + name + ".setEditorHTML('" + getText(this) + "'); }, true);");
         builder.append(name + ".render();");
         builder.append("});");
@@ -111,7 +85,26 @@ public class XRichTextEditor extends STextComponent {
         }
     }
 
-    public int getEditorType() {
-        return editorType;
+    /**
+    * Contains the configuration for the RichTextEditor
+    *
+    * @return
+    */
+    public String getConfiguration() {
+        return configuration != null ? configuration : type.getConfig();
+    }
+
+    /**
+     * Sets the configuration for the RichTextEditor
+     *
+     * @param configuration
+     */
+    public void setConfiguration(String configuration) {
+        this.configuration = configuration;
+    }
+
+    @Override
+    public void processLowLevelEvent(String action, String[] values) {
+        super.processLowLevelEvent(action, values);
     }
 }

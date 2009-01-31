@@ -81,6 +81,19 @@ wingS.request.submitForm = function(target, async, eventName, eventValue, script
         form = document.getElementById(formProvider.getAttribute("form"));
     } else { // By default we walk up until we find the first form
         form = wingS.util.getParentByTagName(target, "FORM");
+        if(form == null || form.id == undefined || form.id == "") {
+            // this workarounds if a component created forms with no id - it searched the first form with id
+            // maybe look for other things too? class=SForm?
+            var forms = document.getElementsByTagName("form");
+            if(forms != undefined && forms != null) {
+                for(var i=0; i<forms.length; ++i) {
+                    if(forms[i] != null && forms[i].id != null && forms[i].id != "") {
+                        form = forms[i];
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     if (wingS.util.invokeScriptCodeArray(scriptCodeArray)) {
