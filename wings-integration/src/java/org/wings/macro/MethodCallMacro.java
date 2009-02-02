@@ -21,11 +21,17 @@ public class MethodCallMacro extends AbstractMacro {
 
     private static final Log LOG = LogFactory.getLog(MethodCallMacro.class);
 
-    private String name;
+    private boolean storeResultInContext = false;
+    private String methodName;
     private String[] methodParameters = new String[0];
 
     public MethodCallMacro(String name, String instructions) {
-        this.name = name;
+        if (name != null && name.length() > 1 && name.startsWith("$")) {
+            storeResultInContext = true;
+            methodName = name.substring(1);
+        } else {
+            methodName = name;
+        }
         if (instructions != null && !"".equals(instructions)) {
             methodParameters = instructions.split(",");
         }
@@ -48,10 +54,16 @@ public class MethodCallMacro extends AbstractMacro {
         if (component != null) {
             Method[] methods = component.getClass().getMethods();
             for (Method method : methods) {
-                if (name.equals(method.getName())) {
+                if (methodName.equals(method.getName())) {
                     try {
                         Object result = method.invoke(component, resolveMethodParameters(ctx));
-                        ctx.put(name, result); // null values allowed!
+                        if (storeResultInContext) {
+                            // store result in context
+                            ctx.put(methodName, result); // null values allowed
+                        } else if (result != null) {
+                            // write result to output device
+                            new StringInstruction(result.toString()).execute(ctx);
+                        }
                     }
                     catch (IllegalAccessException e) {
                         LOG.error(e.getMessage(), e);
@@ -89,9 +101,9 @@ public class MethodCallMacro extends AbstractMacro {
 //            MacroTag macroTag = method.getAnnotation(MacroTag.class);
 //            String methodName = method.getName();
 //
-//            if ((macroTag != null && name.equals(macroTag.name())) ||
-//                    name.equals(methodName) ||
-//                    getWriteMethodName(name).equals(methodName)) {
+//            if ((macroTag != null && methodName.equals(macroTag.methodName())) ||
+//                    methodName.equals(methodName) ||
+//                    getWriteMethodName(methodName).equals(methodName)) {
 //                try {
 //                    method.invoke(target, parameters);
 //                }
@@ -105,8 +117,8 @@ public class MethodCallMacro extends AbstractMacro {
 //        }
 //    }
 //
-//    private String getWriteMethodName(String name) {
-//        return "write" + name.substring(0, 1) + name.substring(1, name.length());
+//    private String getWriteMethodName(String methodName) {
+//        return "write" + methodName.substring(0, 1) + methodName.substring(1, methodName.length());
 //    }
 
 }
