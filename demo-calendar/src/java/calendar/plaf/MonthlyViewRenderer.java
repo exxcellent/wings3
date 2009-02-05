@@ -46,7 +46,7 @@ public class MonthlyViewRenderer extends CalendarViewRenderer {
         device.print("</tr>");
     }
 
-    public void writeAppointment(Device device, Appointment appointment, AppointmentCalendar appointmentCalendar, Calendar iterator) throws IOException {
+    public void writeAppointment(Device device, Appointment appointment, AppointmentCalendar appointmentCalendar, Calendar iterator, int nrOfAppointments) throws IOException {
         if(appointmentCalendar.getSelectionModel().isSelected(appointment, new Date(iterator.getTimeInMillis())))
             device.print("<div class=\"appointment_selected\"");
         else
@@ -104,7 +104,7 @@ public class MonthlyViewRenderer extends CalendarViewRenderer {
         Collection<Appointment> appointments = model.getAppointments(new Date(iterator.getTime().getTime()));
         if(appointments != null) {
             for(Appointment appointment : appointments) {
-                writeAppointment(device, appointment, appointmentCalendar, iterator);
+                writeAppointment(device, appointment, appointmentCalendar, iterator, 1);
             }
         }
         device.print("</div>");

@@ -383,7 +383,12 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
                 String[] data = value.substring(2).split("_")[1].split(":");
                 cal.set(Calendar.YEAR, Integer.parseInt(data[0]));
 				cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(data[1]));
-
+                if(data.length > 2) {
+                    cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(data[2]));
+                    cal.set(Calendar.MINUTE, 0);
+                    cal.set(Calendar.SECOND, 0);
+                    cal.set(Calendar.MILLISECOND, 0);
+                }
 				this.getSelectionModel().clickDate(new java.sql.Date(cal.getTimeInMillis()), modifierKeyStatus);
 			} else if(value.startsWith("a:")) {
 				Calendar cal = Calendar.getInstance();
@@ -406,6 +411,12 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
                 String[] data = value.substring(2).split("_")[1].split(":");
                 cal.set(Calendar.YEAR, Integer.parseInt(data[0]));
                 cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(data[1]));
+                if(data.length > 2) {
+                    cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(data[2]));
+                    cal.set(Calendar.MINUTE, 0);
+                    cal.set(Calendar.SECOND, 0);
+                    cal.set(Calendar.MILLISECOND, 0);
+                }
 
                 this.getSelectionModel().doubleClickDate(new java.sql.Date(cal.getTimeInMillis()), modifierKeyStatus);
 			}

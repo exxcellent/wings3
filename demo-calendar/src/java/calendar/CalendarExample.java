@@ -52,11 +52,15 @@ public class CalendarExample {
 			this.calendar.setDate(Calendar.getInstance().getTime());
 		} else {
 			DefaultCalendarModel model = new DefaultCalendarModel();
-            model.setLocale(Locale.US);
             model.setMergeWeekends(true);
             calendar.setCalendarModel(model);
+            calendar.setLocale(Locale.GERMANY);
 		}
 
+        generateAndSetTestAppointments2();
+        calendar.getCalendarModel().setView(CalendarView.WORKWEEK);
+        calendar.getSelectionModel().setSelectionMode(CalendarSelectionModel.SINGLE_APPOINTMENT_SELECTION | CalendarSelectionModel.SINGLE_DATE_SELECTION);
+        
 		SFrame rootFrame = new SFrame();
 		rootFrame.setTitle("Demo Event-Calendar!");
 		rootFrame.setBackground(Color.LIGHT_GRAY);
@@ -98,6 +102,7 @@ public class CalendarExample {
 							switch(calendar.getCalendarModel().getView())
 							{
 								case WEEK:
+                                case WORKWEEK:
 									tempCal.add(Calendar.DAY_OF_YEAR, +7);
 								break;
 								case MONTH:
@@ -127,6 +132,7 @@ public class CalendarExample {
 						switch(calendar.getCalendarModel().getView())
 						{
 							case WEEK:
+                            case WORKWEEK:
 								tempCal.add(Calendar.DAY_OF_YEAR, -7);
 							break;
 							case MONTH:
@@ -220,8 +226,6 @@ public class CalendarExample {
         button0.addActionListener(
                 new ActionListener()
                 {
-
-
                     public void actionPerformed(ActionEvent e) {
                         deleteAppointments();
                     }
@@ -232,15 +236,13 @@ public class CalendarExample {
 		button1.addActionListener(
 				new ActionListener()
 				{
-
-
 					public void actionPerformed(ActionEvent e) {
 						generateAndSetTestAppointments2();
 					}
 
 				});
 
-		String[] array = {"Monat", "Woche", "Tag"};
+		String[] array = {"Monat", "Woche", "Arbeitswoche", "Tag"};
 		SComboBox comboBox1 = new SComboBox(array);
 		comboBox1.addActionListener(
 					new ActionListener()
@@ -253,7 +255,9 @@ public class CalendarExample {
 								calendar.getCalendarModel().setView(CalendarView.MONTH);
 							if(selection == 1)
 								calendar.getCalendarModel().setView(CalendarView.WEEK);
-							if(selection == 2)
+                            if(selection == 2)
+                                calendar.getCalendarModel().setView(CalendarView.WORKWEEK);
+							if(selection == 3)
 								calendar.getCalendarModel().setView(CalendarView.DAY);
 						}
 
@@ -338,7 +342,6 @@ public class CalendarExample {
 		simpleEvent.setBackgroundColor(Color.MAGENTA);
 		appointments.add(simpleEvent);
 
-
 		startDate = new Date(todayCal.getTime().getTime()+-3*24*60*ONE_MINUTE_IN_MILLISECONDS);
 		endDate = new Date(todayCal.getTime().getTime()+2*24*60*ONE_MINUTE_IN_MILLISECONDS);
 		DefaultAppointment alldayEvent = new DefaultAppointment("AlldayEvent", "Description", Appointment.AppointmentType.ALLDAY, startDate, endDate);
@@ -349,11 +352,17 @@ public class CalendarExample {
 		startDate = new Date(todayCal.getTime().getTime()+ -10*24*60*ONE_MINUTE_IN_MILLISECONDS);
 		endDate = new Date(todayCal.getTime().getTime()+10*24*60*ONE_MINUTE_IN_MILLISECONDS + 90*ONE_MINUTE_IN_MILLISECONDS);
 
-		EnumSet<Appointment.Weekday> weekdays = EnumSet.<Appointment.Weekday>of(Appointment.Weekday.FRIDAY, Appointment.Weekday.TUESDAY);
+		EnumSet<Appointment.Weekday> weekdays = EnumSet.of(Appointment.Weekday.FRIDAY, Appointment.Weekday.TUESDAY);
 		DefaultAppointment recurringEvent = new DefaultAppointment("RecurringNormalEvent", "lang lang lang lang lang lang lagn", Appointment.AppointmentType.NORMAL, startDate, endDate, weekdays);
 		recurringEvent.setForegroundColor(null);
 		recurringEvent.setBackgroundColor(null);
 		appointments.add(recurringEvent);
-		((DefaultCalendarModel)this.calendar.getCalendarModel()).setAppointments(appointments);
+
+        startDate = new Date(todayCal.getTime().getTime());
+        endDate = new Date(todayCal.getTime().getTime()+2*60*ONE_MINUTE_IN_MILLISECONDS);
+        DefaultAppointment longEvent = new DefaultAppointment("long event", "Description", Appointment.AppointmentType.NORMAL, startDate, endDate);
+        appointments.add(longEvent);
+        
+        ((DefaultCalendarModel)this.calendar.getCalendarModel()).setAppointments(appointments);
 	}
 }

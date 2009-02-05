@@ -24,6 +24,7 @@ import java.sql.Date;
 public class NewCalendarCG extends AbstractComponentCG<AppointmentCalendar> {
     private CalendarViewRenderer monthRenderer;
     private CalendarViewRenderer weekRenderer;
+    private CalendarViewRenderer workweekRenderer;
     private CalendarViewRenderer dayRenderer;
     protected final transient static Log LOG = LogFactory.getLog(NewCalendarCG.class);
 
@@ -32,6 +33,7 @@ public class NewCalendarCG extends AbstractComponentCG<AppointmentCalendar> {
         headers = new ArrayList<Header>();
         headers.add(Utils.createExternalizedCSSHeader("calendar/css/calendar_month.css"));
         headers.add(Utils.createExternalizedCSSHeader("calendar/css/calendar_week.css"));
+        headers.add(Utils.createExternalizedCSSHeader("calendar/css/calendar_workweek.css"));
         headers.add(Utils.createExternalizedJSHeader("calendar/js/calendar.js"));
     }
 
@@ -43,6 +45,8 @@ public class NewCalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 
         monthRenderer = new MonthlyViewRenderer();
         weekRenderer = new WeeklyViewRenderer();
+        workweekRenderer = new WorkWeekRenderer();
+        dayRenderer = new DayRenderer();
     }
 
 
@@ -53,14 +57,14 @@ public class NewCalendarCG extends AbstractComponentCG<AppointmentCalendar> {
         SessionHeaders.getInstance().deregisterHeaders(headers);
     }
 
-    public void writeAppointment(Device device, Appointment appointment, AppointmentCalendar appointmentCalendar, Calendar iterator) throws IOException {
+    public void writeAppointment(Device device, Appointment appointment, AppointmentCalendar appointmentCalendar, Calendar iterator, int nrOfAppointments) throws IOException {
         CalendarModel model = appointmentCalendar.getCalendarModel();
         switch(model.getView()) {
             case MONTH:
-                monthRenderer.writeAppointment(device, appointment,  appointmentCalendar, iterator);
+                monthRenderer.writeAppointment(device, appointment,  appointmentCalendar, iterator, nrOfAppointments);
             break;
             case WEEK:
-                weekRenderer.writeAppointment(device, appointment, appointmentCalendar, iterator);
+                weekRenderer.writeAppointment(device, appointment, appointmentCalendar, iterator, nrOfAppointments);
             break;
             default:
                 throw new RuntimeException("unsupported view");
@@ -95,6 +99,12 @@ public class NewCalendarCG extends AbstractComponentCG<AppointmentCalendar> {
                 break;
             case WEEK:
                     weekRenderer.write(device, component);
+                break;
+            case WORKWEEK:
+                    workweekRenderer.write(device, component);
+                break;
+            case DAY:
+                    dayRenderer.write(device, component);
                 break;
             default:
                     throw new RuntimeException("unsupported view");
@@ -232,6 +242,10 @@ public class NewCalendarCG extends AbstractComponentCG<AppointmentCalendar> {
      */
     public Update getSelectionUpdate(AppointmentCalendar calendar, CalendarSelectionModel selectionModel, CalendarSelectionEvent event)
     {
+        if(calendar.getCalendarModel().getView() == CalendarModel.CalendarView.WORKWEEK ||
+                calendar.getCalendarModel().getView() == CalendarModel.CalendarView.DAY)
+            return new ComponentUpdate(this, calendar);
+        
         return new SelectionUpdate(calendar, selectionModel, event);
     }
 
@@ -347,7 +361,7 @@ public class NewCalendarCG extends AbstractComponentCG<AppointmentCalendar> {
                     String htmlCode;
                     String exception = null;
                     try {
-                        ((NewCalendarCG)component.getCG()).writeAppointment(htmlDevice, event.getAppointment(), this.calendar, cal);
+                        ((NewCalendarCG)component.getCG()).writeAppointment(htmlDevice, event.getAppointment(), this.calendar, cal, 1);
                         htmlCode = htmlDevice.toString();
                         handler.addParameter(htmlCode);
                     } catch(Throwable t) {

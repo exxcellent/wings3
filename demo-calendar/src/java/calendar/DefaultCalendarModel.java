@@ -111,7 +111,7 @@ public class DefaultCalendarModel implements CalendarModel {
                 begin.set(Calendar.MILLISECOND, 0);
 
 				Calendar end = (Calendar)begin.clone();
-                end.add(Calendar.DAY_OF_YEAR, 5*7);
+                end.add(Calendar.DAY_OF_YEAR, 6*7);
 				//end.add(Calendar.WEEK_OF_YEAR, 5);
                 //end.add(Calendar.DAY_OF_YEAR, ((8 - end.get(Calendar.DAY_OF_WEEK)) % 7));
 
@@ -147,6 +147,20 @@ public class DefaultCalendarModel implements CalendarModel {
 				calendar2.add(Calendar.DAY_OF_YEAR, 7);
 				setVisibleUntil(new Date(calendar2.getTimeInMillis()));
 			break;
+            case WORKWEEK:
+                Calendar calendar3 = Calendar.getInstance();
+                calendar3.setTime(this.date);
+
+                calendar3.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                calendar3.set(Calendar.HOUR_OF_DAY, 0);
+                calendar3.set(Calendar.MINUTE, 0);
+                calendar3.set(Calendar.SECOND, 0);
+                calendar3.set(Calendar.MILLISECOND, 0);
+                setVisibleFrom(new Date(calendar3.getTimeInMillis()));
+
+                calendar3.add(Calendar.DAY_OF_YEAR, 7);
+                setVisibleUntil(new Date(calendar3.getTimeInMillis()));
+            break;
 			case DAY:
                 Calendar calendar1 = Calendar.getInstance();
                 calendar1.setTime(this.date);
@@ -156,6 +170,7 @@ public class DefaultCalendarModel implements CalendarModel {
                 calendar1.set(Calendar.MILLISECOND, 0);
 
                 setVisibleFrom(new Date(calendar1.getTimeInMillis()));
+
                 calendar1.add(Calendar.DAY_OF_YEAR, 1);
                 setVisibleUntil(new Date(calendar1.getTimeInMillis()));
             break;
@@ -188,7 +203,10 @@ public class DefaultCalendarModel implements CalendarModel {
 		}
 		appEndDate.setTime(endDate);
 
-		if(calTestDate.after(appStartDate) && calTestDate.before(appEndDate))
+		if(calTestDate.after(appStartDate) && calTestDate.before(appEndDate) ||
+                (appStartDate.get(Calendar.YEAR) == calTestDate.get(Calendar.YEAR) &&
+                appStartDate.get(Calendar.DAY_OF_YEAR) == calTestDate.get(Calendar.DAY_OF_YEAR))
+                )
             return true;
 
 		return false;
@@ -238,7 +256,11 @@ public class DefaultCalendarModel implements CalendarModel {
 	 */
 	public Collection<Appointment> getAppointments(Date date) {
         tempCalUntil.setTimeInMillis(date.getTime());
-        return dateAppointmentsMap.get(tempCalUntil.get(Calendar.DAY_OF_YEAR));
+        Collection<Appointment> appointments = dateAppointmentsMap.get(tempCalUntil.get(Calendar.DAY_OF_YEAR));
+        if(appointments == null)
+            appointments = Collections.EMPTY_LIST;
+
+        return Collections.unmodifiableCollection(appointments);
     }
 
 	public Date getVisibleFrom() {
@@ -359,22 +381,6 @@ public class DefaultCalendarModel implements CalendarModel {
 
 	public CustomCellRenderer getCustomCellRenderer() {
 		return null;
-	}
-
-	public int getMaxNumberAppointmentsPerCell(boolean isMerged) {
-		switch(this.view)
-		{
-			case MONTH:
-                if(isMerged)
-                    return 1;
-                return 4;
-			case WEEK:
-				return 10;
-			case DAY:
-				return 1000;
-		}
-
-		return 1000;
 	}
 
 	public void fireViewChangeEvent(CalendarViewChangeEvent e) {

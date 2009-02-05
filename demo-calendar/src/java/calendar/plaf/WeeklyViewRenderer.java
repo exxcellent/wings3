@@ -85,7 +85,6 @@ public class WeeklyViewRenderer extends CalendarViewRenderer {
         if((appointmentCalendar.getSelectionModel().getSelectionMode() & CalendarSelectionModel.DATE_BITMASK) != 0) {
             writeClickability(device, "Date", appointmentCalendar);
         }
-
         device.print(">");
         
         device.print("<div class=\"dateheader\">");
@@ -95,7 +94,7 @@ public class WeeklyViewRenderer extends CalendarViewRenderer {
         Collection<Appointment> appointments = appointmentCalendar.getCalendarModel().getAppointments(new java.sql.Date(iterator.getTimeInMillis()));
         if(appointments != null) {
             for(Appointment appointment : appointments) {
-                writeAppointment(device, appointment, appointmentCalendar, iterator);
+                writeAppointment(device, appointment, appointmentCalendar, iterator, 1);
             }
         }
         device.print("</div>");
@@ -103,7 +102,7 @@ public class WeeklyViewRenderer extends CalendarViewRenderer {
         device.print("</td>");
     }
 
-    public void writeAppointment(Device device, Appointment appointment, AppointmentCalendar appointmentCalendar, Calendar iterator) throws IOException {
+    public void writeAppointment(Device device, Appointment appointment, AppointmentCalendar appointmentCalendar, Calendar iterator, int nrOfAppointments) throws IOException {
         if(appointmentCalendar.getSelectionModel().isSelected(appointment, new java.sql.Date(iterator.getTimeInMillis())))
             device.print("<div class=\"appointment_selected\"");
         else

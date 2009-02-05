@@ -1,0 +1,45 @@
+table.calendar_workweek {
+	width:100%;
+	border-collapse:collapse;
+	table-layout:fixed;
+}
+
+table.calendar_workweek td.timeprefix,
+table.calendar_workweek th.timeprefix {
+	width:4%;
+	background-color:#FEE4A7;
+}
+
+table.calendar_workweek td,
+table.calendar_workweek td.activemonth,
+table.calendar_workweek td.inactivemonth,
+table.calendar_workweek td.today {
+	border:1px solid rgb(128, 128, 128);
+	background-color:#FFF9DF;
+	height:20px;
+}
+
+table.calendar_workweek td.selected {
+	background-color:lightblue;
+}
+
+table.calendar_workweek th {
+	border:1px solid rgb(128, 128, 128);
+	text-align:center;
+	height:20px;
+	background-color:#FEE4A7;
+}
+
+table.calendar_workweek div.appointment {
+	background-color:white;
+	height:100%;
+	overflow:hidden;
+	cursor:pointer;
+}
+
+table.calendar_workweek div.appointment_selected {
+	background-color:lightblue;
+	height:100%;
+	overflow:hidden;
+	cursor:pointer;
+}

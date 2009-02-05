@@ -15,10 +15,10 @@ public abstract class CalendarViewRenderer {
         device.print(" onClick=\"");
         device.print("javascript:AppCalendar.click" + dateOrApp + "(this, event, '" + calendar.getName() + "'); return false;");
         device.print("\"");
-
+/*
         device.print(" onDblClick=\"");
         device.print("javascript:AppCalendar.doubleClick" + dateOrApp + "(this, event, '" + calendar.getName() + "'); return false;");
-        device.print("\"");
+        device.print("\""); */
     }
 
     protected void writeAppointmentIdAndPopup(Device device, Calendar today, Appointment appointment, AppointmentCalendar appointmentCalendar) throws IOException {
@@ -43,7 +43,6 @@ public abstract class CalendarViewRenderer {
     }
 
     public abstract void write(Device device, AppointmentCalendar component) throws IOException;
-    public abstract void writeAppointment(Device device, Appointment appointment, AppointmentCalendar appointmentCalendar, Calendar iterator) throws IOException;
-    public abstract void writeDateCell(Device device, Calendar iterator, AppointmentCalendar appointmentCalendar) throws IOException;
+    public abstract void writeAppointment(Device device, Appointment appointment, AppointmentCalendar appointmentCalendar, Calendar iterator, int nrOfAppointments) throws IOException;
     public abstract String getDateCellClassname(Calendar iterator, AppointmentCalendar appointmentCalendar) throws IOException;
 }

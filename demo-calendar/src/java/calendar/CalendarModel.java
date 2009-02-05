@@ -80,12 +80,6 @@ public abstract interface CalendarModel {
 	public abstract CustomCellRenderer getCustomCellRenderer();
 	
 	/**
-	 * Returns the maximum Number of Appointments to be shown in a Cell 
-	 * @return
-	 */
-	public abstract int getMaxNumberAppointmentsPerCell(boolean isMerged);
-
-	/**
 	 * Adds a CalendarViewChangeListener
 	 * @param listener Listener to be added
 	 */
@@ -131,6 +125,7 @@ public abstract interface CalendarModel {
 		NONE,
 		MONTH,
 		WEEK,
+        WORKWEEK,
 		DAY
 	}
 	

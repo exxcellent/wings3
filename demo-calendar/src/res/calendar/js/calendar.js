@@ -4,6 +4,17 @@ if(typeof AppCalendar == 'undefined')
 	var AppCalendar = { };
 }
 
+AppCalendar.doubleClickDetect = false;
+AppCalendar.doubleClickDetectTimeout = null;
+AppCalendar.shiftKey = false;
+AppCalendar.ctrlKey = false;
+AppCalendar.altKey = false;
+
+AppCalendar.sendClickEvent = function(element, eventName, eventToSend, shiftKey, ctrlKey, altKey) {
+    var eventValue = 'shiftKey=' + shiftKey + ';ctrlKey=' + ctrlKey + ';altKey=' + altKey + ';' + eventToSend + ':' + element.id;
+	wingS.request.sendEvent(null, false, true, eventName, eventValue);
+}
+
 /**
  * Function that is executed, when a click on a Appointment occured
  * @param appointment (HTML/DOM) Appointment-Element on which the click was registered
@@ -22,34 +33,23 @@ AppCalendar.clickAppointment = function(appointment, event, eventName) {
     if(event.stopPropagation)
 		event.stopPropagation();
 
-	//  send ajax request (selection of appointment)
-    var eventValue = 'shiftKey=' + event.shiftKey + ';ctrlKey=' + event.ctrlKey + ';altKey=' + event.altKey + ';a:' + appointment.id;
-	wingS.request.sendEvent(event, false, true, eventName, eventValue);
-	
-	return false;
-};
+    AppCalendar.shiftKey = event.shiftKey;
+    AppCalendar.ctrlKey = event.ctrlKey;
+    AppCalendar.altKey = event.altKey;
 
-/**
- * Function that is executed, when a click on a Appointment occured
- * @param appointment (HTML/DOM) Appointment-Element on which the click was registered
- * @param event (Javascript-)Event handler
- * @param eventName Event Name to be sent to the wingS framework
- */
-AppCalendar.doubleClickAppointment = function(appointment, event, eventName) {
-	if(eventName == null)
-		return false;
+    if(AppCalendar.doubleClickDetect) {
+        if(AppCalendar.doubleClickDetectTimeout != null)
+            window.clearTimeout(AppCalendar.doubleClickDetectTimeout);
 
-    if(!event)
-        event = window.event;
-
-    event.cancelBubble = true;
-
-    if(event.stopPropagation)
-		event.stopPropagation();
-
-	//  send ajax request (selection of appointment)
-    var eventValue = 'shiftKey=' + event.shiftKey + ';ctrlKey=' + event.ctrlKey + ';altKey=' + event.altKey + ';da:' + appointment.id;
-	wingS.request.sendEvent(event, false, true, eventName, eventValue);
+        AppCalendar.sendClickEvent(appointment, eventName, 'da', AppCalendar.shiftKey, AppCalendar.ctrlKey, AppCalendar.altKey);
+        AppCalendar.doubleClickDetect = false;
+    } else {
+        AppCalendar.doubleClickDetect = true;
+        AppCalendar.doubleClickDetectTimeout = window.setTimeout(function() {
+            AppCalendar.doubleClickDetect = false;
+            AppCalendar.sendClickEvent(appointment, eventName, 'a', AppCalendar.shiftKey, AppCalendar.ctrlKey, AppCalendar.altKey);
+        }, 200);
+    }
 
 	return false;
 };
@@ -64,26 +64,23 @@ AppCalendar.clickDate = function(date, event, eventName) {
 	if(eventName == null)
 		return false;
 
-	// send ajax request (selection of date)
-	var eventValue = 'shiftKey=' + event.shiftKey + ';ctrlKey=' + event.ctrlKey + ';altKey=' + event.altKey + ';d:' + date.id;
-	wingS.request.sendEvent(event, false, true, eventName, eventValue);
-	
-	return false;
-};
+    AppCalendar.shiftKey = event.shiftKey;
+    AppCalendar.ctrlKey = event.ctrlKey;
+    AppCalendar.altKey = event.altKey;
 
-/**
- * Function that is executed, when a click on a Date-Cell occured
- * @param date (HTML/DOM) Date element on which the click was registered
- * @param event Javascript-event-HAndler
- * @param eventName Name of the Event to send to the wingS-Framework
- */
-AppCalendar.doubleClickDate = function(date, event, eventName) {
-	if(eventName == null)
-		return false;
+    if(AppCalendar.doubleClickDetect) {
+        if(AppCalendar.doubleClickDetectTimeout != null)
+            window.clearTimeout(AppCalendar.doubleClickDetectTimeout);
 
-	// send ajax request (selection of date)
-	var eventValue = 'shiftKey=' + event.shiftKey + ';ctrlKey=' + event.ctrlKey + ';altKey=' + event.altKey + ';dd:' + date.id;
-	wingS.request.sendEvent(event, false, true, eventName, eventValue);
+        AppCalendar.sendClickEvent(date, eventName, 'dd', AppCalendar.shiftKey, AppCalendar.ctrlKey, AppCalendar.altKey);
+        AppCalendar.doubleClickDetect = false;
+    } else {
+        AppCalendar.doubleClickDetect = true;
+        AppCalendar.doubleClickDetectTimeout = window.setTimeout(function() {
+            AppCalendar.doubleClickDetect = false;
+            AppCalendar.sendClickEvent(date, eventName, 'd', AppCalendar.shiftKey, AppCalendar.ctrlKey, AppCalendar.altKey);
+        }, 200);
+    }
 
 	return false;
 };
