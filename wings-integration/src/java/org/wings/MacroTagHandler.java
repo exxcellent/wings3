@@ -116,11 +116,16 @@ public class MacroTagHandler implements SpecialTagHandler {
                     c.setCG(cg);
                     c.write(sink);
                 } else {
-                    IntegrationComponentCG cg = new IntegrationComponentCG();
-                    cg.setMacros(macroContainer);
-                    if (c.getClientProperty("cg") == null)
-                        c.putClientProperty("cg", c.getCG());
-                    c.setCG(cg);
+                    ComponentCG cg = c.getCG();
+                    if (cg instanceof IntegrationComponentCG) {
+                       ((IntegrationComponentCG) cg).setMacros(macroContainer);
+                    } else {
+                        cg = new IntegrationComponentCG();
+                        ((IntegrationComponentCG) cg).setMacros(macroContainer);
+                        if (c.getClientProperty("cg") == null)
+                            c.putClientProperty("cg", c.getCG());
+                        c.setCG(cg);
+                    }
                     c.write(sink);
                 }
             }

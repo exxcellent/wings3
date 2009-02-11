@@ -3,6 +3,7 @@ package org.wings.macro;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.SComponent;
+import org.wings.plaf.ComponentCG;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -22,103 +23,94 @@ public class MethodCallMacro extends AbstractMacro {
     private static final Log LOG = LogFactory.getLog(MethodCallMacro.class);
 
     private boolean storeResultInContext = false;
-    private String methodName;
-    private String[] methodParameters = new String[0];
+    private String name;
+    private String[] parameters = new String[0];
 
     public MethodCallMacro(String name, String instructions) {
         if (name != null && name.length() > 1 && name.startsWith("$")) {
             storeResultInContext = true;
-            methodName = name.substring(1);
+            this.name = name.substring(1);
         } else {
-            methodName = name;
+            this.name = name;
         }
         if (instructions != null && !"".equals(instructions)) {
-            methodParameters = instructions.split(",");
+            this.parameters = instructions.split(",");
         }
     }
 
     public void execute(MacroContext ctx) {
-        invokeMethodOnComponent(ctx);
-    }
-
-    private Object[] resolveMethodParameters(MacroContext ctx) {
-        Object[] paramsResolved = new Object[methodParameters.length];
-        for (int ix = 0; ix < methodParameters.length; ix++) {
-            paramsResolved[ix] = resolveValue(ctx, methodParameters[ix]);
-        }
-        return paramsResolved;
-    }
-
-    private void invokeMethodOnComponent(MacroContext ctx) {
         SComponent component = ctx.getComponent();
-        if (component != null) {
-            Method[] methods = component.getClass().getMethods();
-            for (Method method : methods) {
-                if (methodName.equals(method.getName())) {
-                    try {
-                        Object result = method.invoke(component, resolveMethodParameters(ctx));
-                        if (storeResultInContext) {
-                            // store result in context
-                            ctx.put(methodName, result); // null values allowed
-                        } else if (result != null) {
-                            // write result to output device
-                            new StringInstruction(result.toString()).execute(ctx);
-                        }
-                    }
-                    catch (IllegalAccessException e) {
-                        LOG.error(e.getMessage(), e);
-                    }
-                    catch (InvocationTargetException e) {
-                        LOG.error(e.getMessage(), e);
-                    }
-                    break;
+
+        // step 1: try to invoke method on the component's cg
+        boolean invoked = invokeMethodOnCG(component.getCG(), ctx);
+
+        if (!invoked) {
+            // step 2: try to invoke method on the component itself
+            invokeMethodOnComponent(component, ctx);
+        }
+    }
+
+    private boolean invokeMethodOnCG(ComponentCG cg, MacroContext ctx) {
+        Object[] parametersResolved = new Object[parameters.length + 1];
+        parametersResolved[0] = ctx;
+        for (int ix = 0; ix < parameters.length; ix++) {
+            parametersResolved[ix + 1] = resolveValue(ctx, parameters[ix]);
+        }
+
+        Method[] methods = cg.getClass().getMethods();
+        for (Method method : methods) {
+            MacroTag macroTag = method.getAnnotation(MacroTag.class);
+            String methodName = method.getName();
+
+            if ((macroTag != null && name.equals(macroTag.name())) ||
+                    name.equals(methodName) ||
+                    getWriteMethodName(name).equals(methodName)) {
+                try {
+                    method.invoke(cg, parametersResolved);
+                    return true;
                 }
+                catch (IllegalAccessException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+                catch (InvocationTargetException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+            }
+        }
+        return false;
+    }
+
+    private void invokeMethodOnComponent(SComponent component, MacroContext ctx) {
+        Object[] parametersResolved = new Object[parameters.length];
+        for (int ix = 0; ix < parameters.length; ix++) {
+            parametersResolved[ix] = resolveValue(ctx, parameters[ix]);
+        }
+
+        Method[] methods = component.getClass().getMethods();
+        for (Method method : methods) {
+            if (name.equals(method.getName())) {
+                try {
+                    Object result = method.invoke(component, parametersResolved);
+                    if (storeResultInContext) {
+                        // store result in context
+                        ctx.put(name, result); // null values allowed
+                    } else if (result != null) {
+                        // write result to output device
+                        new StringInstruction(result.toString()).execute(ctx);
+                    }
+                }
+                catch (IllegalAccessException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+                catch (InvocationTargetException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+                break;
             }
         }
     }
 
-//    public void execute(MacroContext ctx) {
-//        SComponent component = ctx.getComponent();
-//
-//        // step 1: try to invoke method on the component's cg
-//        invokeMethodOnCG(component.getCG(), ctx);
-//
-//        // step 2: try to invoke method on the component itself
-//        invokeMethodOnComponent(component, ctx);
-//    }
-//
-//    private void invokeMethodOnCG(Object target, MacroContext ctx) {
-//        Object[] parameters = new Object[methodParameters.length + 1];
-//        parameters[0] = ctx;
-//        for (int i = 0; i < methodParameters.length; i++) {
-//            parameters[i + 1] = ctx.get(methodParameters[i]);
-//            if (parameters[i + 1] == null)
-//            parameters[i + 1] = resolveValue(ctx, methodParameters[i]);
-//        }
-//
-//        Method[] methods = target.getClass().getMethods();
-//        for (Method method : methods) {
-//            MacroTag macroTag = method.getAnnotation(MacroTag.class);
-//            String methodName = method.getName();
-//
-//            if ((macroTag != null && methodName.equals(macroTag.methodName())) ||
-//                    methodName.equals(methodName) ||
-//                    getWriteMethodName(methodName).equals(methodName)) {
-//                try {
-//                    method.invoke(target, parameters);
-//                }
-//                catch (IllegalAccessException e) {
-//                    LOG.error(e.getMessage(), e);
-//                }
-//                catch (InvocationTargetException e) {
-//                    LOG.error(e.getMessage(), e);
-//                }
-//            }
-//        }
-//    }
-//
-//    private String getWriteMethodName(String methodName) {
-//        return "write" + methodName.substring(0, 1) + methodName.substring(1, methodName.length());
-//    }
-
+    private String getWriteMethodName(String methodName) {
+        return "write" + methodName.substring(0, 1) + methodName.substring(1, methodName.length());
+    }
 }
