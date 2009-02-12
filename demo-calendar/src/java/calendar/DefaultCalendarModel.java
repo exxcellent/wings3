@@ -119,7 +119,6 @@ public class DefaultCalendarModel implements CalendarModel {
                 end.set(Calendar.MINUTE, 0);
                 end.set(Calendar.SECOND, 0);
                 end.set(Calendar.MILLISECOND, 0);
-                end.add(Calendar.DAY_OF_YEAR, 1);
 
                 if(Locale.US.equals(getLocale()) || Locale.GERMANY.equals(getLocale())) {
                     if(begin.get(Calendar.DAY_OF_MONTH) == 1 && begin.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
@@ -300,7 +299,7 @@ public class DefaultCalendarModel implements CalendarModel {
         return false;
     }
 
-    private void updateDateAppointmentMapping()
+    protected void updateDateAppointmentMapping()
     {
         tempCalUntil.setTime(getVisibleUntil());
         tempCalFrom.setTime(getVisibleFrom());

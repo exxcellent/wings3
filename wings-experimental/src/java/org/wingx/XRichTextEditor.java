@@ -44,7 +44,8 @@ public class XRichTextEditor extends STextComponent {
         builder.append("window." + name + " = new YAHOO.widget." + editor + "('" + getName() + "', " +
                 "{" +
                     "height:\"" + height + "\"," +
-                    "width:\"" + width + "\"" + (config.trim().length() > 0 ? "," + config : "") +
+                    "width:\"" + width + "\"" +
+                    (config.trim().length() > 0 ? "," + config : "") +
                 "});\n");
         //disable titlebar
         builder.append(name + "._defaultToolbar.titlebar = false;");

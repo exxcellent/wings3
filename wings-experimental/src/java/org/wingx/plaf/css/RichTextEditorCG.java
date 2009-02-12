@@ -7,11 +7,12 @@ import org.wings.plaf.css.Utils;
 import org.wings.plaf.css.AbstractUpdate;
 import org.wings.plaf.css.UpdateHandler;
 import org.wings.plaf.css.AbstractComponentCG;
+import org.wings.SDimension;
 
 import java.io.IOException;
 
 public class RichTextEditorCG extends AbstractComponentCG<XRichTextEditor> implements org.wingx.plaf.RichTextEditorCG<XRichTextEditor> {
-    int horizontalOversize = 4;
+    int horizontalOversize = 2;
 
     public int getHorizontalOversize() {
         return horizontalOversize;
@@ -38,13 +39,28 @@ public class RichTextEditorCG extends AbstractComponentCG<XRichTextEditor> imple
     }
 
     public void writeInternal(Device device, final XRichTextEditor component) throws IOException {
+        SDimension preferredSize = component.getPreferredSize();
+        boolean tableWrapping = Utils.isMSIE(component) && preferredSize != null && "%".equals(preferredSize.getWidthUnit());
+        String actualWidth = null;
+        if (tableWrapping) {
+            actualWidth = preferredSize.getWidth();
+            Utils.setPreferredSize(component, "100%", preferredSize.getHeight());
+            device.print("<table style=\"table-layout: fixed; width: " + actualWidth + "\"><tr>");
+            device.print("<td style=\"padding-right: " + Utils.calculateHorizontalOversize(component, true) + "px\">");
+        }
+
         device.print("<textarea");
         Utils.optAttribute(device, "id", component.getName());
         Utils.optAttribute(device, "eid", component.getName());
         Utils.optAttribute(device, "name", component.getName());
+        Utils.optAttribute(device, "tabindex", component.getFocusTraversalIndex());
         device.print(">");
         device.print(getText(component));
         device.print("</textarea>");
+
+        if(tableWrapping) {
+            device.print("</td></tr></table>");
+        }
     }
 
     public Update getTextUpdate(XRichTextEditor component) {

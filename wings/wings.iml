@@ -12,12 +12,12 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="J2EE Servlet API" level="project" />
-    <orderEntry type="library" exported="" name="BeanShell" level="project" />
-    <orderEntry type="library" exported="" name="commons-logging" level="project" />
-    <orderEntry type="library" exported="" name="commons-httpclient" level="project" />
-    <orderEntry type="library" exported="" name="DWR" level="project" />
-    <orderEntry type="library" exported="" name="Log4J" level="project" />
+    <orderEntry type="library" name="J2EE Servlet API" level="project" />
+    <orderEntry type="library" name="BeanShell" level="project" />
+    <orderEntry type="library" name="commons-logging" level="project" />
+    <orderEntry type="library" name="commons-httpclient" level="project" />
+    <orderEntry type="library" name="DWR" level="project" />
+    <orderEntry type="library" name="Log4J" level="project" />
     <orderEntry type="library" name="JUnit" level="project" />
   </component>
   <component name="POM File Configuration" pomFile="" />

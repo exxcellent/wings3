@@ -110,7 +110,7 @@ public class XSuggest extends STextField implements XSuggestDataSource {
      * fully processed, extracted, parsed and ready to be returned to the
      * caller.
      * 
-     * @param maxResultsDisplayed
+     * @param maxCacheEntries
      *            defaults to 0
      */
     public void setMaxCacheEntries(int maxCacheEntries) {
@@ -268,7 +268,7 @@ public class XSuggest extends STextField implements XSuggestDataSource {
     /**
      * Some browsers support a non-standard attribute on form elements called
      * "autocomplete". When "autocomplete" is set to "on", the browser provides
-     * a built-in automatic completion mechanism — and it will cache the user
+     * a built-in automatic completion mechanism ï¿½ and it will cache the user
      * input for automatic display if the user uses the "Back" button to
      * navigate back to the page. In order for the YUI AutoComplete control to
      * perform properly, the built-in browser completion mechanism needs to be

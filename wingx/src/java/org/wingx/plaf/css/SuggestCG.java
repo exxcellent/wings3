@@ -22,7 +22,7 @@ public class SuggestCG extends TextFieldCG implements org.wingx.plaf.SuggestCG {
     private static final long serialVersionUID = 8395625026802022216L;
     
     protected final List<Header> headers = new ArrayList<Header>();
-    
+
     public SuggestCG() {
         headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_DATASOURCE));
         headers.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_AUTOCOMPLETE));

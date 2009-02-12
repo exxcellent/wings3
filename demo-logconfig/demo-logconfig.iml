@@ -21,10 +21,6 @@
             <attribute name="method" value="1" />
             <attribute name="URI" value="/WEB-INF/classes" />
           </containerElement>
-          <containerElement type="module" name="wings">
-            <attribute name="method" value="0" />
-            <attribute name="URI" value="/WEB-INF/classes" />
-          </containerElement>
           <containerElement type="module" name="wingx">
             <attribute name="method" value="0" />
             <attribute name="URI" value="/WEB-INF/classes" />
@@ -77,7 +73,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="wings" exported="" />
     <orderEntry type="module" module-name="wingx" exported="" />
     <orderEntry type="module-library" exported="">
       <library>
