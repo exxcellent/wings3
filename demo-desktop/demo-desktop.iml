@@ -73,7 +73,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="wings" exported="" />
     <orderEntry type="module" module-name="wingx" />
+    <orderEntry type="module" module-name="wings-experimental" />
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>

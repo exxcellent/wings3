@@ -65,6 +65,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="wingx" />
     <orderEntry type="module" module-name="wings-experimental" />
+    <orderEntry type="module" module-name="wings" />
   </component>
   <component name="copyright">
     <Base>
