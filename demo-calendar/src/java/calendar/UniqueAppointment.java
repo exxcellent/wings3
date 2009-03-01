@@ -67,7 +67,7 @@ public class UniqueAppointment {
 			if(cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
 				cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR))
 			{
-				if(cmp.getAppointment().equals(this.getAppointment()))
+				if(cmp.getAppointment() != null && cmp.getAppointment().equals(this.getAppointment()))
 				{
 					return true;
 				}

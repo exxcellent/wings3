@@ -34,9 +34,15 @@ public class DefaultCalendarModel implements CalendarModel {
 	 */
 	public DefaultCalendarModel()
 	{
+        setLocale(Locale.getDefault());
 		setDate(new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
-		setLocale(Locale.getDefault());
 		setView(CalendarView.MONTH);
+    }
+
+    public DefaultCalendarModel(Locale locale) {
+        setLocale(locale);
+        setDate(new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+        setView(CalendarView.MONTH);
     }
 
 	public CalendarView getView() {
@@ -120,7 +126,7 @@ public class DefaultCalendarModel implements CalendarModel {
                 end.set(Calendar.SECOND, 0);
                 end.set(Calendar.MILLISECOND, 0);
 
-                if(Locale.US.equals(getLocale()) || Locale.GERMANY.equals(getLocale())) {
+                if(Locale.US.equals(getLocale())) {
                     if(begin.get(Calendar.DAY_OF_MONTH) == 1 && begin.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
 
                     } else {
