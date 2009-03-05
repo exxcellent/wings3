@@ -122,10 +122,6 @@ public class VelocityMacroProcessor implements MacroProcessor {
             return new SetMacro(instructions);
         } else if ("get".equals(type)) {
             return new GetMacro(instructions);
-        } else if ("lookup".equals(type)) {
-            return new LookupMacro(instructions);
-        } else if ("lookup_set".equals(type)) {
-            return new LookupSetMacro(instructions);
         } else {
             return new MethodCallMacro(type, instructions);
         }
