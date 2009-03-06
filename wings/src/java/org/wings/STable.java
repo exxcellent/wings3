@@ -1258,6 +1258,9 @@ public class STable extends SComponent
     private int lastSelectedIndex;
 
     protected void addSelectionEvent(int row, boolean ctrlKey, boolean shiftKey) {
+        if(getModel() != null && row >= getModel().getRowCount())
+            return;
+        
         if ( ctrlKey == true && shiftKey == false && getSelectionModel().isSelectedIndex(row)) {
             getSelectionModel().removeSelectionInterval(row, row);
             lastSelectedIndex = row;

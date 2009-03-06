@@ -3,6 +3,7 @@ package calendar;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.sql.Date;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -366,9 +367,18 @@ public class DefaultCalendarSelectionModel implements CalendarSelectionModel {
             for(CalendarSelectionListener l:selectionListener)
 			{
                 if(e.getAffectedComponent() == CalendarSelectionEvent.SelectionComponent.APPOINTMENT) // check if an appointment was removed from the list before firing a selection remove event
-                    if(e.getType() == CalendarSelectionEvent.SelectionType.REMOVED)
-                        if(!calendar.getCalendarModel().getAppointments(e.getDate()).contains(e.getAppointment()))
+                    if(e.getType() == CalendarSelectionEvent.SelectionType.REMOVED) {
+                        if(calendar == null || calendar.getCalendarModel() == null)
                             continue;
+
+                        Collection<Appointment> appointments = calendar.getCalendarModel().getAppointments(e.getDate());
+                        if(appointments == null)
+                            continue;
+
+                        if(!calendar.getCalendarModel().getAppointments(e.getDate()).contains(e.getAppointment())) {
+                            continue;
+                        }
+                    }
                 l.valueChanged(e);
 			}
 		}
