@@ -12,11 +12,9 @@ import java.util.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.DataFlavor;
 import org.wings.plaf.Update;
 import org.wings.*;
 import org.wings.event.SMouseEvent;
-import org.wings.sdnd.DefaultTransferable;
 import org.wings.sdnd.CustomDragHandler;
 import org.wings.sdnd.SDropMode;
 
@@ -452,8 +450,6 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
     private SDropMode dropMode = null;
     private boolean dragEnabled = false;
 
-
-
     protected static final class DropLocation extends STransferHandler.DropLocation {
         private Date date = null;
 
@@ -517,38 +513,6 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
             }
 
             this.dragEnabled = dragEnabled;
-        }
-    }
-
-    protected static class AppointmentTransferable extends DefaultTransferable {
-        private static DataFlavor[] flavors;
-        private Collection collection;
-
-        static {
-            try
-            {
-                flavors = new DataFlavor[] {
-                    new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + "; class=java.util.Collection")
-                };
-            } catch(ClassNotFoundException e) {
-            }
-        }
-
-        public AppointmentTransferable(Collection appointments) {
-            super(flavors);
-
-            this.collection = appointments;
-        }
-
-        protected Object getDataForClass(DataFlavor dataFlavor, Class<?> aClass) {
-            if(dataFlavor.getPrimaryType().equals("application")) {
-                // application/x-java-jvm-local-objectref
-                if(dataFlavor.getMimeType().startsWith(DataFlavor.javaJVMLocalObjectMimeType)) {
-                    return collection;
-                }
-            }
-            
-            return null;
         }
     }
 
