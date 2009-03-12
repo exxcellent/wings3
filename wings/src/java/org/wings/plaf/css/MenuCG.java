@@ -67,7 +67,9 @@ public final class MenuCG extends org.wings.plaf.css.MenuItemCG implements
                     }
                     device.print(">");
                     if (menuItem instanceof SMenuItem) {
-                        device.print("<a href=\"#\"");
+                        device.print("<a href=\"#\" id=\"");
+                        device.print(menuItem.getName());
+                        device.print("\"");
                         if (menuItem instanceof SMenu) {
                             if (menuItem.isEnabled()) {
                                 device.print(" class=\"x sub\"");
