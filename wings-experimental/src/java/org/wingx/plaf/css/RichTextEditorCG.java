@@ -32,6 +32,7 @@ public class RichTextEditorCG extends AbstractComponentCG<XRichTextEditor> imple
 
     public String getText(XRichTextEditor component) {
         String text = component.getText();
+        text = text.replaceAll("\r", "");
         text = text.replaceAll("\n", "<BR />");
         text = text.replaceAll("'", "\'");
 
