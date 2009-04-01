@@ -37,7 +37,7 @@ YAHOO.extend(wingS.suggest.XSuggest, YAHOO.widget.AutoComplete, {
 wingS.suggest.DataSource = function(oSuggestId, oConfigs) {
     if (!oSuggestId) return;
     var oLiveData = function(oRequest) {
-        wingS.request.sendEvent(null, false, true, oSuggestId, "\377:" + oRequest);
+        wingS.request.sendEvent(null, false, true, oSuggestId, "asifsaodgj:" + oRequest);
     };
     this.responseSchema = {fields:["key", "value"]};
     this.responseType = YAHOO.util.DataSourceBase.TYPE_JSARRAY;

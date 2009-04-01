@@ -87,8 +87,8 @@ public class XSuggest extends STextField implements XSuggestDataSource {
     @Override
     public void processLowLevelEvent(String action, String[] values) {
         String value = values[0];
-        if (value.startsWith("\377:")) {
-            String query = value.substring(2);
+        if (value.startsWith("asifsaodgj:")) {
+            String query = value.substring("asifsaodgj:".length());
             List<Map.Entry<String, String>> suggestions = generateSuggestions(query);
             update(((SuggestCG) getCG()).getSuggestionsUpdate(this, query,
                     suggestions));
