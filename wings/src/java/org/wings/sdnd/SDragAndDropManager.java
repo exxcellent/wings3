@@ -181,6 +181,9 @@ public class SDragAndDropManager extends SComponent implements LowLevelEventList
 
         // Get the source component from the unique id and its transferhandler
         SComponent source = getSession().getComponentByName(sourceId);
+        if(source == null)
+            return;
+        
         STransferHandler sourceTH = source.getTransferHandler();
         if(sourceTH == null)
             return;
