@@ -2,6 +2,7 @@ package calendar;
 
 import java.util.Collection;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.beans.PropertyChangeListener;
 import java.sql.Date;
 
@@ -103,6 +104,18 @@ public abstract interface CalendarModel {
 	 */
 	public Locale getLocale();
 	
+    /**
+     * Sets the Locale in this Model
+     * @param timeZone
+     */
+    public void setTimeZone(TimeZone timeZone);
+
+    /**
+     * Gets the TimeZone for this Model
+     * @return
+     */
+    public TimeZone getTimeZone();
+
 	/**
 	 * Adds a Property Change Listener to the CalendarSelectionModel
 	 * @param listener The Listener to be added to the CalendarSelectionModel 
