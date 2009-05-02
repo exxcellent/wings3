@@ -2,10 +2,13 @@ package org.wingx;
 
 import org.wings.SDimension;
 import org.wings.STextComponent;
+import org.wings.io.Device;
 import org.wings.event.SDocumentEvent;
 import org.wings.script.JavaScriptListener;
 import org.wings.script.ScriptListener;
 import org.wingx.plaf.RichTextEditorCG;
+
+import java.io.IOException;
 
 public class XRichTextEditor extends STextComponent {
     private String configuration;
@@ -27,11 +30,10 @@ public class XRichTextEditor extends STextComponent {
         if(listener != null)
             removeScriptListener(listener);
 
-        final StringBuilder builder = new StringBuilder();
-        builder.append("wingS.global.onHeadersLoaded(function() {");
         String name = "editor_" + getName();
         String height = "";
         String width = "";
+
         if(getPreferredSize() != null) {
             height = getPreferredSize().getHeight();
             width = getPreferredSize().getWidth();
@@ -39,29 +41,73 @@ public class XRichTextEditor extends STextComponent {
             height = "100%";
             width = "100%";
         }
+
+        final StringBuilder builder = new StringBuilder();
+        builder.append("wingS.global.onHeadersLoaded(function() {");
+
         String editor = type.getYuiClassName();
         final String config = getConfiguration();
-        builder.append("window." + name + " = new YAHOO.widget." + editor + "('" + getName() + "', " +
+        builder.append("window.").append(name).append(" = new YAHOO.widget.").append(editor).append("('").append(getName()).append("', " +
                 "{" +
-                    "height:\"" + height + "\"," +
-                    "width:\"" + width + "\"" +
-                    (config.trim().length() > 0 ? "," + config : "") +
-                "});\n");
+                    "height:\"").append(height).append("\"," +
+                    "width:\"").append(width).append("\"")
+                    .append((config.trim().length() > 0 ? "," + config : ""))
+                .append("});\n");
         //disable titlebar
-        builder.append(name + "._defaultToolbar.titlebar = false;");
+        builder.append(name).append("._defaultToolbar.titlebar = false;\n");
 
         //todo if necessary increase number of undos
-        builder.append(name + ".maxUndo = 250;");
+        builder.append(name).append(".maxUndo = 250;\n");
 
-        builder.append(name + ".on('afterNodeChange', function(o) { var elt = document.getElementById('" + getName() + "'); " + name + ".saveHTML(); }, " + name + ", true);");
-        builder.append(name + ".on('editorKeyUp', function(o) { var elt = document.getElementById('" + getName() + "'); " + name + ".saveHTML(); }, " + name + ", true);");
+        builder.append(name).append(".on('afterNodeChange', function(o) { var elt = document.getElementById('").append(getName()).append("'); " + name + ".saveHTML(); }, ").append(name).append(", true);\n");
+        builder.append(name).append(".on('editorKeyUp', function(o) { var elt = document.getElementById('").append(getName()).append("'); " + name + ".saveHTML(); }, ").append(name).append(", true);\n");
         
-        builder.append(name + ".on('afterRender', function(o) { var elt = document.getElementById('" + getName() + "'); " + name + ".setEditorHTML('" + getText(this) + "'); }, true);");
-        builder.append(name + ".render();");
+        builder.append(name).append(".on('afterRender', function(o) { ");
+
+        builder.append("document.getElementById(").append(name).append(".get('iframe').get('id')).tabIndex = '").append(getFocusTraversalIndex()).append("';");
+        builder.append(" var elt = document.getElementById('").append(getName()).append("'); " + name + ".setEditorHTML('").append(getCG().getText(this)).append("'); }, true);\n");
+        builder.append(name).append(".render();\n");
         builder.append("});");
 
         listener = new JavaScriptListener(null, null, builder.toString());
         addScriptListener(listener);
+    }
+
+    @Override
+    public void write(Device s) throws IOException {
+        updateListener();
+        
+        super.write(s);
+    }
+
+    @Override
+    public void setText(String text) {
+        if(text == null) {
+            text = "";
+        }
+        
+        text = text.replaceAll("\r", "");
+        text = text.replaceAll("\n", "");
+
+        super.setText(text);
+    }
+
+    public void setPlainText(String text) {
+        setText(convertFromPlain(text));
+    }
+
+    private String convertFromPlain(String text) {
+        text = text.replaceAll("\r", "");
+        text = text.replaceAll("\n", "<BR />");
+        text = text.replaceAll("<", "%lt;");
+        text = text.replaceAll(">", "%gt;");
+
+        return text;
+    }
+    
+    @Override
+    public RichTextEditorCG getCG() {
+        return (RichTextEditorCG)super.getCG();
     }
 
     @Override
@@ -71,19 +117,11 @@ public class XRichTextEditor extends STextComponent {
         updateListener();
     }
 
-    public String getText(XRichTextEditor component) {
-        String text = component.getText();
-        text = text.replaceAll("\n", "<BR />");
-        text = text.replaceAll("'", "\'");
-
-        return text;
-    }
-
     @Override
     public void changedUpdate(SDocumentEvent e) {
         if(isUpdatePossible()) {
-            update(((RichTextEditorCG)getCG()).getTextUpdate(this));
-        }
+            update(getCG().getTextUpdate(this));
+        } 
     }
 
     /**

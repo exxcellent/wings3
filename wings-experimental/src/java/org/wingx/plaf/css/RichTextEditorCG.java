@@ -32,10 +32,14 @@ public class RichTextEditorCG extends AbstractComponentCG<XRichTextEditor> imple
 
     public String getText(XRichTextEditor component) {
         String text = component.getText();
-        text = text.replaceAll("\r", "");
-        text = text.replaceAll("\n", "<BR />");
-        text = text.replaceAll("'", "\'");
 
+        text = text.replaceAll("'", "\\'");
+
+        return text;
+    }
+
+    private String doubleEscape(String text) {
+        text = text.replaceAll("\\\'", "\\\\'");
         return text;
     }
 
@@ -54,11 +58,12 @@ public class RichTextEditorCG extends AbstractComponentCG<XRichTextEditor> imple
         Utils.optAttribute(device, "id", component.getName());
         Utils.optAttribute(device, "eid", component.getName());
         Utils.optAttribute(device, "name", component.getName());
-        Utils.optAttribute(device, "tabindex", component.getFocusTraversalIndex());
+        Utils.optAttribute(device, "tabIndex", "-1");
         device.print(">");
         device.print(getText(component));
         device.print("</textarea>");
 
+//        Utils.optAttribute(device, "tabindex", component.getFocusTraversalIndex());
         if(tableWrapping) {
             device.print("</td></tr></table>");
         }
@@ -80,7 +85,10 @@ public class RichTextEditorCG extends AbstractComponentCG<XRichTextEditor> imple
         public Handler getHandler() {
             UpdateHandler update = new UpdateHandler("runScript");
             String name = "editor_" + component.getName();
-            update.addParameter("wingS.global.onHeadersLoaded(function() { window." + name + ".setEditorHTML('" + getText(editor) + "'); });");
+            StringBuilder builder = new StringBuilder("wingS.global.onHeadersLoaded(function() {");
+            builder.append("window.").append(name);
+            builder.append(".setEditorHTML('").append(doubleEscape(getText(editor))).append("'); });");
+            update.addParameter(builder.toString());
             // TODO: update size, border, etc.
             return update;
         }
