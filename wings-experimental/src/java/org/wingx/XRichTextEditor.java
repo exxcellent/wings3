@@ -45,32 +45,35 @@ public class XRichTextEditor extends STextComponent {
         final StringBuilder builder = new StringBuilder();
         builder.append("wingS.global.onHeadersLoaded(function() {");
 
-        String editor = type.getYuiClassName();
-        final String config = getConfiguration();
-        builder.append("window.").append(name).append(" = new YAHOO.widget.").append(editor).append("('").append(getName()).append("', " +
-                "{" +
-                    "height:\"").append(height).append("\"," +
-                    "width:\"").append(width).append("\"")
-                    .append((config.trim().length() > 0 ? "," + config : ""))
-                .append("});\n");
-        //disable titlebar
-        builder.append(name).append("._defaultToolbar.titlebar = false;\n");
+            String editor = type.getYuiClassName();
+            final String config = getConfiguration();
+            builder.append("window.").append(name).append(" = new YAHOO.widget.").append(editor).append("('").append(getName()).append("', " +
+                    "{" +
+                        "height:\"").append(height).append("\"," +
+                        "width:\"").append(width).append("\"")
+                        .append((config.trim().length() > 0 ? "," + config : ""))
+                    .append("});\n");
+            //disable titlebar
+            builder.append(name).append("._defaultToolbar.titlebar = false;\n");
 
-        //todo if necessary increase number of undos
-        builder.append(name).append(".maxUndo = 250;\n");
+            //todo if necessary increase number of undos
+            builder.append(name).append(".maxUndo = 250;\n");
 
-        builder.append(name).append(".on('afterNodeChange', function(o) { var elt = document.getElementById('").append(getName()).append("'); " + name + ".saveHTML(); }, ").append(name).append(", true);\n");
-        builder.append(name).append(".on('editorKeyUp', function(o) { var elt = document.getElementById('").append(getName()).append("'); " + name + ".saveHTML(); }, ").append(name).append(", true);\n");
-        
-        builder.append(name).append(".on('afterRender', function(o) { ");
+            builder.append(name).append(".on('afterNodeChange', function(o) { var elt = document.getElementById('").append(getName()).append("'); " + name + ".saveHTML(); }, ").append(name).append(", true);\n");
+            builder.append(name).append(".on('editorKeyUp', function(o) { var elt = document.getElementById('").append(getName()).append("'); " + name + ".saveHTML(); }, ").append(name).append(", true);\n");
+            builder.append(name).append(".on('afterRender', function(o) { ").append("document.getElementById(").append(name).append(".get('iframe').get('id')).tabIndex = '").append(getFocusTraversalIndex()).append("'; }, true);\n");
+            builder.append(name).append(".on('afterRender', function(o) { ").append(name).append(".setEditorHTML('").append(doubleEscape(getCG().getText(this))).append("'); }, true);\n");
+            builder.append(name).append(".render();\n");
 
-        builder.append("document.getElementById(").append(name).append(".get('iframe').get('id')).tabIndex = '").append(getFocusTraversalIndex()).append("';");
-        builder.append(" var elt = document.getElementById('").append(getName()).append("'); " + name + ".setEditorHTML('").append(getCG().getText(this)).append("'); }, true);\n");
-        builder.append(name).append(".render();\n");
         builder.append("});");
 
         listener = new JavaScriptListener(null, null, builder.toString());
         addScriptListener(listener);
+    }
+
+    private String doubleEscape(String text) {
+        text = text.replaceAll("\\\'", "\\\\'");
+        return text;
     }
 
     @Override
