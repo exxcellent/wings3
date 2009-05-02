@@ -97,6 +97,9 @@ public class XRichTextEditor extends STextComponent {
     }
 
     private String convertFromPlain(String text) {
+        if(text == null)
+            text = "";
+        
         text = text.replaceAll("\r", "");
         text = text.replaceAll("\n", "<BR />");
         text = text.replaceAll("<", "%lt;");
