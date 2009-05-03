@@ -216,14 +216,21 @@ public final class LowLevelEventDispatcher
     void invokeRunnables() {
         synchronized (this.runnables) {
             for (Iterator iterator = runnables.iterator(); iterator.hasNext();) {
-                Runnable runnable = (Runnable)iterator.next();
+                Runnable runnable = null;
                 try {
-                    runnable.run();
+                    runnable = (Runnable)iterator.next();
+
+                    try {
+                        runnable.run();
+                    }
+                    catch (Throwable e) {
+                        log.error(runnable, e);
+                    }
+
+                    iterator.remove();
+                } catch(ConcurrentModificationException e) {
+                    throw new RuntimeException("Runnable class: " + runnable.getClass().getName(), e);
                 }
-                catch (Throwable e) {
-                    log.error(runnable, e);
-                }
-                iterator.remove();
             }
         }
     }
