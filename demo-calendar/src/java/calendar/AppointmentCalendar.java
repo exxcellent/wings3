@@ -130,7 +130,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	 * @param model CalendarModel to use
 	 */
 	public AppointmentCalendar(Locale locale, CalendarModel model) {
-		this(new Date(Calendar.getInstance().getTimeInMillis()), locale, model);
+		this(new Date(Calendar.getInstance(model.getTimeZone()).getTimeInMillis()), locale, model);
 	}
 
     /**
@@ -138,7 +138,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
      * @param locale Locale to create the calendar with
      */
 	public AppointmentCalendar(Locale locale) {
-		this(Calendar.getInstance().getTime(), locale);
+		this(new Date(System.currentTimeMillis()), locale);
 	}
 
 
@@ -147,8 +147,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	 * @param date Date to build the calendar around
 	 * @param locale Locale for the calendar instance
 	 */
-	public AppointmentCalendar(java.util.Date date, Locale locale)
-	{
+	public AppointmentCalendar(java.util.Date date, Locale locale) {
 		this(new Date(date.getTime()), locale);
 	}
 
@@ -157,8 +156,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 	 * @param date <code>Date</code> to be used for the Calendar
 	 * @param locale Locale to be used for the calendar instance
 	 */
-	public AppointmentCalendar(Date date, Locale locale)
-	{
+	public AppointmentCalendar(Date date, Locale locale) {
 		this(date, locale, null);
 
 	}
@@ -377,7 +375,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 			} else if(value.startsWith("altKey")) {
 				modifierKeyStatus.altKey = Boolean.parseBoolean(value.split("=")[1]);
 			} else if(value.startsWith("d:")) {
-				Calendar cal = Calendar.getInstance();
+				Calendar cal = Calendar.getInstance(model.getTimeZone());
                 String[] data = value.substring(2).split("_")[1].split(":");
                 cal.set(Calendar.YEAR, Integer.parseInt(data[0]));
 				cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(data[1]));
@@ -389,7 +387,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
                 }
 				this.getSelectionModel().clickDate(new java.sql.Date(cal.getTimeInMillis()), modifierKeyStatus);
 			} else if(value.startsWith("a:")) {
-				Calendar cal = Calendar.getInstance();
+				Calendar cal = Calendar.getInstance(model.getTimeZone());
 				String[] data = value.substring(2).split("_")[1].split(":");
 				cal.set(Calendar.YEAR, Integer.parseInt(data[0]));
 				cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(data[1]));
@@ -397,7 +395,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 
 				this.getSelectionModel().clickAppointment(appointment, new Date(cal.getTimeInMillis()), modifierKeyStatus);
 			} else if(value.startsWith("da:")) {
-				Calendar cal = Calendar.getInstance();
+				Calendar cal = Calendar.getInstance(model.getTimeZone());
 				String[] data = value.substring(2).split("_")[1].split(":");
 				cal.set(Calendar.YEAR, Integer.parseInt(data[0]));
 				cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(data[1]));
@@ -405,7 +403,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
 
 				this.getSelectionModel().doubleClickAppointment(appointment, new Date(cal.getTimeInMillis()), modifierKeyStatus);
 			} else if(value.startsWith("dd:")) {
-                Calendar cal = Calendar.getInstance();
+                Calendar cal = Calendar.getInstance(model.getTimeZone());
                 String[] data = value.substring(2).split("_")[1].split(":");
                 cal.set(Calendar.YEAR, Integer.parseInt(data[0]));
                 cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(data[1]));
@@ -463,7 +461,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
             if(!dateString.matches("[0-9]+:[0-9]+")) // java matches with /^$/, so this is fine
                 return;
 
-            Calendar cal = Calendar.getInstance();
+            Calendar cal = Calendar.getInstance(calendar.getCalendarModel().getTimeZone());
             String[] dateParts = dateString.split(":");
 
             cal.set(Calendar.YEAR, Integer.parseInt(dateParts[0]));
@@ -557,7 +555,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
                     keyStatus.ctrlKey = ctrlKey;
                     keyStatus.shiftKey = shiftKey;
                     Appointment appointment = calendar.getCalendarModel().getAppointmentFromID(coords[2].substring(coords[2].indexOf("_")+1) + ":" + coords[3] + ":" + coords[4]);
-                    Calendar cal = Calendar.getInstance();
+                    Calendar cal = Calendar.getInstance(calendar.getCalendarModel().getTimeZone());
                     cal.set(Calendar.YEAR, Integer.parseInt(coords[2].substring(coords[2].indexOf("_")+1)));
                     cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(coords[3]));
                     Date date = new Date(cal.getTimeInMillis());

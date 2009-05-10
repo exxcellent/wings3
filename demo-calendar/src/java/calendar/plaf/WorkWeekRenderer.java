@@ -60,23 +60,10 @@ public class WorkWeekRenderer extends CalendarViewRenderer {
     protected void writeAllTimeCells(Device device, Calendar dateIterator, AppointmentCalendar component) throws IOException {
     }
 
-    protected boolean occursInTime(Calendar timeIterator, Appointment appointment) {
-        // only compare time - if you compare dates it causes problems with recurring appointments
-        long startTime = appointment.getAppointmentStartDate().getTime() % (24*60*60*1000);
-        long endTime = appointment.getAppointmentEndDate().getTime() % (24*60*60*1000);
-        long timeFrameStart = (timeIterator.getTimeInMillis()) % (24*60*60*1000);
-        long timeFrameEnd = (timeIterator.getTimeInMillis()+60*60*1000) % (24*60*60*1000);
-
-        if(startTime < timeFrameEnd && endTime > timeFrameStart)
-            return true;
-
-        return false;
-    }
-
     protected void writeAllCells(Device device, AppointmentCalendar component) throws IOException {
         CalendarModel model = component.getCalendarModel();
 
-        Calendar iterator = Calendar.getInstance(model.getLocale());
+        Calendar iterator = Calendar.getInstance(component.getCalendarModel().getTimeZone(), model.getLocale());
         iterator.setTimeInMillis(model.getVisibleFrom().getTime());
         iterator.set(Calendar.HOUR_OF_DAY, 0);
         iterator.set(Calendar.MINUTE, 0);
@@ -170,7 +157,12 @@ public class WorkWeekRenderer extends CalendarViewRenderer {
 
                         // appointment start date BEFORE end of cell AND
                         // appointment end date AFTER start of cell
-                        if(!occursInTime(iterator, appointment))
+                        Date intervalStart = iterator.getTime();
+                        iterator.add(Calendar.HOUR_OF_DAY, 1);
+                        Date intervalEnd = iterator.getTime();
+                        iterator.add(Calendar.HOUR_OF_DAY, -1);
+                        
+                        if(!occursInTime(appointment, intervalStart, intervalEnd))
                             continue;
 
                         appointments.add(appointment);
@@ -225,9 +217,9 @@ public class WorkWeekRenderer extends CalendarViewRenderer {
     public String getDateCellClassname(Calendar iterator, AppointmentCalendar appointmentCalendar) throws IOException {
         CalendarModel model = appointmentCalendar.getCalendarModel();
 
-        Calendar activeMonth = Calendar.getInstance(model.getLocale());
+        Calendar activeMonth = Calendar.getInstance(model.getTimeZone(), model.getLocale());
         activeMonth.setTimeInMillis((model.getVisibleFrom().getTime()));
-        Calendar today = Calendar.getInstance();
+        Calendar today = Calendar.getInstance(model.getTimeZone());
 
         boolean isActiveMonth = iterator.get(Calendar.MONTH) == activeMonth.get(Calendar.MONTH);
         boolean isToday = iterator.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR);

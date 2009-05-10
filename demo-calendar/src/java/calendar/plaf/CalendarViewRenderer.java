@@ -10,6 +10,29 @@ import java.sql.Date;
 import java.util.Calendar;
 
 public abstract class CalendarViewRenderer {
+    protected boolean occursInTime(Appointment appointment, java.util.Date intervalStart, java.util.Date intervalEnd) {
+        // only compare time - if you compare dates it causes problems with recurring appointments
+        Date startDate = appointment.getAppointmentStartDate();
+        Date endDate = appointment.getAppointmentEndDate();
+        if(startDate == null || endDate == null)
+            return false;
+        
+        if(!appointment.isAppointmentRecurring()) {
+            if(startDate.before(intervalEnd) && endDate.after(intervalStart))
+                return true;
+        } else {
+            long startTime = startDate.getTime() % (24*60*60*1000);
+            long endTime = endDate.getTime() % (24*60*60*1000);
+            long timeFrameStart = intervalStart.getTime() % (24*60*60*1000);
+            long timeFrameEnd = intervalEnd.getTime() % (24*60*60*1000);
+
+            if(startTime < timeFrameEnd && endTime > timeFrameStart)
+                return true;
+        }
+
+        return false;
+    }
+
     protected void writeClickability(final Device device, final String dateOrApp, final AppointmentCalendar calendar) throws IOException
     {
         device.print(" onClick=\"");

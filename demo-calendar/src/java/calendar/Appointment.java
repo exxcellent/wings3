@@ -3,6 +3,7 @@ package calendar;
 import java.sql.Date;
 import java.util.EnumSet;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.awt.Color;
  
 public interface Appointment {
@@ -97,14 +98,14 @@ public interface Appointment {
 	 * Gets a localized String of the Start/End Date of a Appointment
 	 * @return
 	 */
-	public abstract String getAppointmentStartEndDateString(Locale locale);
+	public abstract String getAppointmentStartEndDateString(TimeZone tz, Locale locale);
 	
 	/**
 	 * Gets a localized String of the Start/end Time of a Appointment
 	 * @param locale
 	 * @return
 	 */
-	public abstract String getAppointmentStartEndTimeString(Locale locale);
+	public abstract String getAppointmentStartEndTimeString(TimeZone tz, Locale locale);
 
     /**
 	 * A Enumeration representing the Type of an Appointment (either NORMAL or ALLDAY) 

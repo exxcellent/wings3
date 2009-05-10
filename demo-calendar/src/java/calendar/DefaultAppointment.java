@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.util.EnumSet;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -370,15 +371,15 @@ public class DefaultAppointment implements Appointment {
         return false;
     }
 
-	public String getAppointmentStartEndDateString(Locale locale) {
-		return DefaultAppointment.StaticGetAppointmentStartEndDateString(this, locale);
+	public String getAppointmentStartEndDateString(TimeZone tz, Locale locale) {
+		return DefaultAppointment.StaticGetAppointmentStartEndDateString(this, tz, locale);
 	}
 
 
-    private static Calendar cal1 = Calendar.getInstance();
-    private static Calendar cal2 = Calendar.getInstance();
+    public static String StaticGetAppointmentStartEndDateString(Appointment appointment, TimeZone tz, Locale locale) {
+        Calendar cal1 = Calendar.getInstance(tz);
+        Calendar cal2 = (Calendar)cal1.clone();
 
-    public static String StaticGetAppointmentStartEndDateString(Appointment appointment, Locale locale) {
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);
 
         cal1.setTime(appointment.getAppointmentStartDate());
@@ -391,14 +392,14 @@ public class DefaultAppointment implements Appointment {
             return dateFormat.format(appointment.getAppointmentStartDate()) + " - " + dateFormat.format(appointment.getAppointmentEndDate());
     }
 
-	public String getAppointmentStartEndTimeString(Locale locale) {
-        return DefaultAppointment.StaticGetAppointmentStartEndTimeString(this, locale);
+	public String getAppointmentStartEndTimeString(TimeZone tz, Locale locale) {
+        return DefaultAppointment.StaticGetAppointmentStartEndTimeString(this, tz, locale);
     }
 
-    public static String StaticGetAppointmentStartEndTimeString(Appointment appointment, Locale locale)
+    public static String StaticGetAppointmentStartEndTimeString(Appointment appointment, TimeZone tz, Locale locale)
     {
         DateFormat formatTime = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
 
-        return formatTime.format(appointment.getAppointmentStartDate()) + "-" + formatTime.format(appointment.getAppointmentEndDate());
+        return formatTime.format(appointment.getAppointmentStartDate()) + " - " + formatTime.format(appointment.getAppointmentEndDate());
     }
 }

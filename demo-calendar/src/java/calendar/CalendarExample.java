@@ -58,9 +58,9 @@ public class CalendarExample {
 		}
 
         generateAndSetTestAppointments2();
-        calendar.getCalendarModel().setView(CalendarView.WORKWEEK);
+        calendar.getCalendarModel().setView(CalendarView.MONTH);
         calendar.getSelectionModel().setSelectionMode(CalendarSelectionModel.SINGLE_APPOINTMENT_SELECTION | CalendarSelectionModel.SINGLE_DATE_SELECTION);
-        
+
 		SFrame rootFrame = new SFrame();
 		rootFrame.setTitle("Demo Event-Calendar!");
 		rootFrame.setBackground(Color.LIGHT_GRAY);
@@ -72,7 +72,7 @@ public class CalendarExample {
 		mainPanel.add(titleLabel, SBorderLayout.NORTH);
 
 		calendar.setBorder(SBorderFactory.createSLineBorder(new java.awt.Color(100, 100, 255), 2));
-		calendar.setPreferredSize(new SDimension("100%", "600"));
+		calendar.setPreferredSize(new SDimension("100%", "700px"));
 		calendar.setHorizontalAlignment(SConstants.CENTER);
         calendar.setDragEnabled(true);
         calendar.setDropMode(SDropMode.USE_SELECTION);
@@ -80,7 +80,9 @@ public class CalendarExample {
         mainPanel.add(calendar, SBorderLayout.CENTER);
 		mainPanel.add(getBottomPanel(), SBorderLayout.SOUTH);
 		mainPanel.add(getNavigationPanel(), SBorderLayout.NORTH);
+        mainPanel.setPreferredSize(SDimension.FULLAREA);
 
+        rootFrame.setPreferredSize(SDimension.FULLAREA);
 		rootFrame.getContentPane().add(mainPanel);
 		rootFrame.setVisible(true);
 	}
@@ -94,7 +96,6 @@ public class CalendarExample {
 		forwardButton.setShowAsFormComponent(false);
 		forwardButton.addActionListener(
 					new ActionListener() {
-
 						public void actionPerformed(ActionEvent e) {
 							Calendar tempCal = Calendar.getInstance();
 
@@ -337,11 +338,19 @@ public class CalendarExample {
 
 		Date startDate = new Date(todayCal.getTime().getTime());
 		Date endDate = new Date(todayCal.getTime().getTime()+120*ONE_MINUTE_IN_MILLISECONDS);
-		DefaultAppointment simpleEvent = new DefaultAppointment("NormalEvent lang lang lang lang lang lang lang", null, Appointment.AppointmentType.NORMAL, startDate, endDate);
+/*		DefaultAppointment simpleEvent = new DefaultAppointment("NormalEvent lang lang lang lang lang lang lang", null, Appointment.AppointmentType.NORMAL, startDate, endDate);
 		simpleEvent.setForegroundColor(Color.BLACK);
 		simpleEvent.setBackgroundColor(Color.MAGENTA);
 		appointments.add(simpleEvent);
+*/
+        startDate = new Date(todayCal.getTime().getTime());
+        endDate = new Date(todayCal.getTime().getTime()+3*23*60*ONE_MINUTE_IN_MILLISECONDS);
+        DefaultAppointment simpleMultipleDayEvent = new DefaultAppointment("NormalEvent multiple day lang lang lang lang lang lang lang", null, Appointment.AppointmentType.NORMAL, startDate, endDate);
+        simpleMultipleDayEvent.setForegroundColor(Color.BLACK);
+        simpleMultipleDayEvent.setBackgroundColor(Color.MAGENTA);                                                                           
+        appointments.add(simpleMultipleDayEvent);
 
+/*
 		startDate = new Date(todayCal.getTime().getTime()+-3*24*60*ONE_MINUTE_IN_MILLISECONDS);
 		endDate = new Date(todayCal.getTime().getTime()+2*24*60*ONE_MINUTE_IN_MILLISECONDS);
 		DefaultAppointment alldayEvent = new DefaultAppointment("AlldayEvent", "Description", Appointment.AppointmentType.ALLDAY, startDate, endDate);
@@ -362,7 +371,7 @@ public class CalendarExample {
         endDate = new Date(todayCal.getTime().getTime()+2*60*ONE_MINUTE_IN_MILLISECONDS);
         DefaultAppointment longEvent = new DefaultAppointment("long event", "Description", Appointment.AppointmentType.NORMAL, startDate, endDate);
         appointments.add(longEvent);
-        
+                                                                                               */
         ((DefaultCalendarModel)this.calendar.getCalendarModel()).setAppointments(appointments);
 	}
 }

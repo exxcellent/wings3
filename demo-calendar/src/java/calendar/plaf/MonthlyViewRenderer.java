@@ -19,7 +19,7 @@ public class MonthlyViewRenderer extends CalendarViewRenderer {
     public void writeAllCellHeader(Device device, AppointmentCalendar appointmentCalendar) throws IOException {
         CalendarModel model = appointmentCalendar.getCalendarModel();
         
-        Calendar iterator = Calendar.getInstance(model.getLocale());
+        Calendar iterator = Calendar.getInstance(model.getTimeZone(), model.getLocale());
         iterator.setTimeInMillis(model.getVisibleFrom().getTime());
 
         DateFormat formatter = new SimpleDateFormat("EE", model.getLocale());
@@ -115,7 +115,7 @@ public class MonthlyViewRenderer extends CalendarViewRenderer {
     public void writeAllCells(Device device, AppointmentCalendar appointmentCalendar) throws IOException {
         CalendarModel model = appointmentCalendar.getCalendarModel();
         
-        Calendar iterator = Calendar.getInstance(model.getLocale());
+        Calendar iterator = Calendar.getInstance(model.getTimeZone(), model.getLocale());
         iterator.setTime(model.getVisibleFrom());
 
         Calendar end = (Calendar)iterator.clone();
@@ -145,9 +145,9 @@ public class MonthlyViewRenderer extends CalendarViewRenderer {
     public String getDateCellClassname(Calendar iterator, AppointmentCalendar appointmentCalendar) throws IOException {
         CalendarModel model = appointmentCalendar.getCalendarModel();
 
-        Calendar activeMonth = Calendar.getInstance(model.getLocale());
+        Calendar activeMonth = Calendar.getInstance(model.getTimeZone(), model.getLocale());
         activeMonth.setTimeInMillis((model.getVisibleFrom().getTime() + model.getVisibleUntil().getTime()) / 2);
-        Calendar today = Calendar.getInstance();
+        Calendar today = Calendar.getInstance(appointmentCalendar.getCalendarModel().getTimeZone());
 
         boolean isActiveMonth = iterator.get(Calendar.MONTH) == activeMonth.get(Calendar.MONTH);
         boolean isToday = iterator.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR);

@@ -26,7 +26,7 @@ import java.sql.Timestamp;
 public class WeeklyViewRenderer extends CalendarViewRenderer {
     public void write(Device device, AppointmentCalendar component) throws IOException {
         CalendarModel model = component.getCalendarModel();
-        Calendar startCal = Calendar.getInstance();
+        Calendar startCal = Calendar.getInstance(component.getCalendarModel().getTimeZone());
         startCal.setTimeInMillis(component.getCalendarModel().getVisibleFrom().getTime());
         startCal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         startCal.set(Calendar.HOUR_OF_DAY, 0);
@@ -133,9 +133,9 @@ public class WeeklyViewRenderer extends CalendarViewRenderer {
     public String getDateCellClassname(Calendar iterator, AppointmentCalendar appointmentCalendar) throws IOException {
         CalendarModel model = appointmentCalendar.getCalendarModel();
 
-        Calendar activeMonth = Calendar.getInstance(model.getLocale());
+        Calendar activeMonth = Calendar.getInstance(model.getTimeZone(), model.getLocale());
         activeMonth.setTimeInMillis((model.getVisibleFrom().getTime()));
-        Calendar today = Calendar.getInstance();
+        Calendar today = Calendar.getInstance(model.getTimeZone());
 
         boolean isActiveMonth = iterator.get(Calendar.MONTH) == activeMonth.get(Calendar.MONTH);
         boolean isToday = iterator.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR);

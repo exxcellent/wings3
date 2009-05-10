@@ -129,15 +129,15 @@ public class NewCalendarCG extends AbstractComponentCG<AppointmentCalendar> {
         if(appointment.getAppointmentDescription() != null && appointment.getAppointmentDescription().length() > 0)
             device.print(appointment.getAppointmentDescription() + "<br />");
 
-        Calendar cal1 = Calendar.getInstance();
+        Calendar cal1 = Calendar.getInstance(calendar.getCalendarModel().getTimeZone());
         cal1.setTime(appointment.getAppointmentStartDate());
-        Calendar cal2 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance(calendar.getCalendarModel().getTimeZone());
         cal2.setTime(appointment.getAppointmentEndDate());
 
-        device.print(appointment.getAppointmentStartEndDateString(calendar.getLocale()) + "<br />");
+        device.print(appointment.getAppointmentStartEndDateString(calendar.getCalendarModel().getTimeZone(), calendar.getLocale()) + "<br />");
 
         if(appointment.getAppointmentType() == Appointment.AppointmentType.NORMAL)
-            device.print(appointment.getAppointmentStartEndTimeString(calendar.getLocale()) + "<br />");
+            device.print(appointment.getAppointmentStartEndTimeString(calendar.getCalendarModel().getTimeZone(), calendar.getLocale()) + "<br />");
         else // if the appointment ain't normal, it must be ALLDAY => timeframe is useless
             device.print(appointment.getAppointmentTypeString(appointment.getAppointmentType(), calendar.getLocale()) + "<br />");
 
@@ -160,7 +160,7 @@ public class NewCalendarCG extends AbstractComponentCG<AppointmentCalendar> {
         String[] data = uniqueAppointmentID.split(":");
         // data[0] = Year, data[1] = day of year, data[2] appointment number of the day (starting with 0)
         // this is NOT safe, as the input from browser could be manipulated and lead to a exception
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(calendar.getCalendarModel().getTimeZone());
         cal.set(Calendar.YEAR, Integer.parseInt(data[0]));
         cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(data[1]));
 
@@ -314,12 +314,12 @@ public class NewCalendarCG extends AbstractComponentCG<AppointmentCalendar> {
 
         @Override
         public Handler getHandler() {
-            Calendar cal = Calendar.getInstance();
+            Calendar cal = Calendar.getInstance(((AppointmentCalendar)getComponent()).getCalendarModel().getTimeZone());
             cal.setTime(event.getDate());
             Date visibleFrom = ((AppointmentCalendar)getComponent()).getCalendarModel().getVisibleFrom();
             Date visibleUntil = ((AppointmentCalendar)getComponent()).getCalendarModel().getVisibleUntil();
-            Calendar from = Calendar.getInstance();
-            Calendar until = Calendar.getInstance();
+            Calendar from = Calendar.getInstance(((AppointmentCalendar)getComponent()).getCalendarModel().getTimeZone());
+            Calendar until = Calendar.getInstance(((AppointmentCalendar)getComponent()).getCalendarModel().getTimeZone());
             from.setTime(visibleFrom);
             until.setTime(visibleUntil);
             StringBuilderDevice htmlDevice = new StringBuilderDevice(1024);
