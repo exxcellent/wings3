@@ -91,7 +91,6 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         final CGManager manager = SessionManager.getSession().getCGManager();
         final String userDocType = (String) manager.getObject("FrameCG.userDocType", String.class);
         final Boolean userRenderXmlDecl = (Boolean) manager.getObject("FrameCG.renderXmlDeclaration", Boolean.class);
-
         if (userDocType != null) {
             setDocumentType(userDocType);
         }
@@ -99,6 +98,8 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         if (userRenderXmlDecl != null) {
             setRenderXmlDeclaration(userRenderXmlDecl);
         }
+        
+
         
         // Add JS headers which should be included in every frames by default
         // (JS_YUI_UTILITIES = aggregate: yahoo, dom, event, connection, animation, dragdrop, element)
@@ -110,6 +111,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
 
         // Add CSS headers which should be included in every frames by default
         // (DO use files under "yui/assets" and DO NOT use those under "yui/<component>/assets")
+        headers.add(new Meta("X-UA-Compatible", null, null, "IE=7"));
         headers.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_CONTAINER));
         headers.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_EDITOR));
         headers.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_SIMPLE_EDITOR));
@@ -129,7 +131,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
 
     public void installCG(final SComponent comp) {
         final SFrame component = (SFrame) comp;
-
+        
         // Add dynamic resources to the frame
         ReloadResource reloadResource = new ReloadResource(component);
         component.addDynamicResource(reloadResource);
@@ -154,7 +156,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         component.addScriptListener(Utils.isMSIE(component) ? storeFocusIE : storeFocusFF);
 
         SessionHeaders.getInstance().registerHeaders(0, headers);
-        SessionHeaders.getInstance().registerHeaders(0, defaultHeaders);
+        SessionHeaders.getInstance().registerHeaders(1, defaultHeaders);
         SessionHeaders.getInstance().registerHeaders(getBrowserStylesheets());
 
         new InputMapRequestListener(component);
