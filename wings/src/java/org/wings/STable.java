@@ -1406,7 +1406,7 @@ public class STable extends SComponent
 
     public void tableChanged(TableModelEvent e) {
         // kill active editors
-        editingCanceled(null);
+        //editingCanceled(null);
 
         if (e == null || e.getFirstRow() == TableModelEvent.HEADER_ROW) {
             // The whole thing changed
