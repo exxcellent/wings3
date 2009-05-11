@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project basedir="." default="build" name="wingX experimental">
+<project basedir="." default="build" name="wingS experimental">
     
     <!-- read properties from file -->
     <property file="../etc/custom-build.properties"/>

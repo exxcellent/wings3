@@ -203,6 +203,10 @@
         <ant dir="wingx" target="build"/>
     </target>
 
+    <target name="wings-experimental" description="build wings experimental">
+        <ant dir="wings-experimental" target="build"/>
+    </target>
+
     <target name="deploy-demo-wingset" description="deploy demo-wingset">
         <ant dir="wings" target="build"/>
         <ant dir="wingx" target="build"/>
