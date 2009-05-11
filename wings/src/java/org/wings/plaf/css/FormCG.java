@@ -88,7 +88,7 @@ public class FormCG extends AbstractComponentCG implements org.wings.plaf.FormCG
 
         SDimension preferredSize = form.getPreferredSize();
         String height = preferredSize != null ? preferredSize.getHeight() : null;
-        boolean clientLayout = isMSIE(form) && height != null && !"auto".equals(height)
+        boolean clientLayout = Utils.isMSIE(form) && height != null && !"auto".equals(height)
             && (layout instanceof SBorderLayout || layout instanceof SGridBagLayout);
 
         String tableName = form.getName() + (formTagRequired ? "_table" : "");

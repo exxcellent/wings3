@@ -46,7 +46,7 @@ public final class ScrollBarCG extends org.wings.plaf.css.AbstractComponentCG<SS
     private void writeVerticalScrollbar(Device device, SScrollBar sb) throws IOException {
         SDimension preferredSize = sb.getPreferredSize();
         String height = preferredSize != null ? preferredSize.getHeight() : null;
-        boolean clientLayout = isMSIE(sb) && height != null && !"auto".equals(height);
+        boolean clientLayout = Utils.isMSIE(sb) && height != null && !"auto".equals(height);
 
         Utils.printNewline(device, sb);
         device.print("<table");

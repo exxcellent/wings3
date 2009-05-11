@@ -39,7 +39,7 @@ public class GridBagLayoutCG extends AbstractLayoutCG {
 
         SDimension preferredSize = container.getPreferredSize();
         String height = preferredSize != null ? preferredSize.getHeight() : null;
-        boolean clientLayout = isMSIE(container) && height != null && !"auto".equals(height);
+        boolean clientLayout = Utils.isMSIE(container) && height != null && !"auto".equals(height);
         int vertivalOversize = layoutOversize(layout);
 
         if (grid.cols == 0) {

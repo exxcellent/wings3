@@ -77,7 +77,6 @@ public abstract class AbstractLayoutCG implements LayoutCG {
                                           int cols, final List components, final TableCellStyle cellStyle)
             throws IOException {
         final int componentCount = components.size();
-        final boolean isMSIE = SessionManager.getSession().getUserAgent().getBrowserType() == BrowserType.IE;
         final TableCellStyle origCellStyle = cellStyle.makeACopy();
 
         int col = 0;
@@ -238,12 +237,5 @@ public abstract class AbstractLayoutCG implements LayoutCG {
 
     protected final int cellOversize(SGridBagLayout layout, Insets insets) {
         return insets.top + insets.bottom + layout.getBorder();
-    }
-
-    /**
-     * @return true if current browser is microsoft exploder
-     */
-    protected final boolean isMSIE(final SComponent component) {
-        return component.getSession().getUserAgent().getBrowserType() == BrowserType.IE;
     }
 }

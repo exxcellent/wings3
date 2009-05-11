@@ -51,7 +51,7 @@ public class DivisionCG
             Utils.printClickability(device, division, "t", division.isEnabled(), true);
         }
 
-        if (isMSIE(component) && PaddingVoodoo.hasPaddingInsets(division)) {
+        if (Utils.isMSIE(component) && PaddingVoodoo.hasPaddingInsets(division)) {
             final Insets patchedInsets = new Insets(0,0,0,0);
             PaddingVoodoo.doBorderPaddingsWorkaround(division.getBorder(), patchedInsets, true, true, false, false);
             Utils.optAttribute(device, "style", Utils.createInlineStylesForInsets(patchedInsets).toString());
@@ -61,7 +61,7 @@ public class DivisionCG
         writeIcon(device, icon, null);
         device.print("</td><td class=\"DivisionTitle\"");
         Style style = component.getDynamicStyle(XDivision.SELECTOR_TITLE);
-        if (isMSIE(component) && PaddingVoodoo.hasPaddingInsets(division)) {
+        if (Utils.isMSIE(component) && PaddingVoodoo.hasPaddingInsets(division)) {
             final Insets patchedInsets = new Insets(0,0,0,0);
             PaddingVoodoo.doBorderPaddingsWorkaround(division.getBorder(), patchedInsets, true, false, true, false);
             Utils.optAttribute(device, "style", Utils.createInlineStylesForInsets(patchedInsets).toString());
@@ -86,7 +86,7 @@ public class DivisionCG
         device.print("</table>");
     }
 
-    private void writeTitle(Device device, String text) throws IOException {
+    protected void writeTitle(Device device, String text) throws IOException {
         if ((text.length() > 5) && (text.substring(0,6).equalsIgnoreCase("<html>")))
             Utils.writeRaw(device, text.substring(6));
         else

@@ -62,7 +62,7 @@ public class Browser implements Serializable {
      * @return A classification of the browser {@link BrowserType}
      */
     public BrowserType getBrowserType() {
-        return browserType;
+        return BrowserType.GECKO; // browserType;
     }
 
     /**

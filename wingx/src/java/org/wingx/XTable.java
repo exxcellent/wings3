@@ -28,8 +28,6 @@ public class XTable extends STable
     private boolean refresh;
     private SMouseListener linkMouseListener;
     private StringBuilder nameBuffer = new StringBuilder();
-    private String noDataFoundLabel = "- - -";
-    private String noDataAvailableLabel = "- - -";
 
     public XTable() {
     }
@@ -423,25 +421,4 @@ public class XTable extends STable
     protected STableColumnModel createDefaultColumnModel() {
         return new XDefaultTableColumnModel();
     }
-    
-    public String getNoDataFoundLabel() {
-        return noDataFoundLabel;
-    }
-
-    public void setNoDataFoundLabel(String noDataFoundLabel) {
-        String oldVal = this.noDataFoundLabel;
-        this.noDataFoundLabel = noDataFoundLabel;
-        propertyChangeSupport.firePropertyChange("noDataFoundLabel", oldVal, this.noDataFoundLabel);
-    }
-    
-    public String getNoDataAvailableLabel() {
-        return noDataAvailableLabel;
-    }
-
-    public void setNoDataAvailableLabel(String noDataAvailableLabel) {
-        String oldVal = this.noDataAvailableLabel;
-        this.noDataAvailableLabel = noDataAvailableLabel;
-        propertyChangeSupport.firePropertyChange("noDataAvailableLabel", oldVal, this.noDataAvailableLabel);
-    }
-
 }

@@ -37,7 +37,7 @@ public class TextFieldCG extends AbstractComponentCG implements
 
     public void installCG( SComponent comp ) {
         super.installCG( comp );
-        if (isMSIE(comp))
+        if (Utils.isMSIE(comp))
             comp.putClientProperty("horizontalOversize", new Integer(horizontalOversize));
     }
 

@@ -38,7 +38,7 @@ public final class TextAreaCG extends AbstractComponentCG implements
 
     public void installCG(SComponent component) {
         super.installCG(component);
-        if (isMSIE(component))
+        if (Utils.isMSIE(component))
             component.putClientProperty("horizontalOversize", new Integer(horizontalOversize));
     }
 

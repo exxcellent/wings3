@@ -1697,6 +1697,18 @@ public final class Utils {
         }
     }
 
+    /**
+     * Write Tooltip code.
+     */
+    public static void writeTooltipMouseOver(Device device, String toolTipText)
+        throws IOException {
+        if (toolTipText != null && toolTipText.length() > 0) {
+            device.print(" onmouseover=\"Tip('");
+            quote(device, toolTipText, true, false, true);
+            device.print("')\"");
+        }
+    }
+
     public static final boolean hasDimension(final SComponent component) {
         SDimension dim = component.getPreferredSize();
         return dim != null && (dim.getHeightInt() != SDimension.AUTO_INT

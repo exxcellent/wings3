@@ -24,7 +24,7 @@ public class RichTextEditorCG extends AbstractComponentCG<XRichTextEditor> imple
 
     @Override
     public void installCG(XRichTextEditor component) {
-        if (isMSIE(component))
+        if (Utils.isMSIE(component))
             component.putClientProperty("horizontalOversize", new Integer(horizontalOversize));
 
         super.installCG(component);

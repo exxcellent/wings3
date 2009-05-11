@@ -148,22 +148,22 @@ public class SOptionPane extends SDialog implements ActionListener {
     /**
      * OK Button
      */
-    protected final SButton optionOK = createButton(UIManager.getString("OptionPane.okButtonText", SessionManager.getSession().getLocale()));
+    protected final SButton optionOK = createButton(SessionManager.getSession().getCGManager().getString("OptionPane.okButtonText"));
 
     /**
      * Cancel Button
      */
-    protected final SButton optionCancel = createButton(UIManager.getString("OptionPane.cancelButtonText", SessionManager.getSession().getLocale()));
+    protected final SButton optionCancel = createButton(SessionManager.getSession().getCGManager().getString("OptionPane.cancelButtonText"));
 
     /**
      * Yes Button
      */
-    protected final SButton optionYes = createButton(UIManager.getString("OptionPane.yesButtonText", SessionManager.getSession().getLocale()));
+    protected final SButton optionYes = createButton(SessionManager.getSession().getCGManager().getString("OptionPane.yesButtonText"));
 
     /**
      * No Button
      */
-    protected final SButton optionNo = createButton(UIManager.getString("OptionPane.noButtonText", SessionManager.getSession().getLocale()));
+    protected final SButton optionNo = createButton(SessionManager.getSession().getCGManager().getString("OptionPane.noButtonText"));
 
     /**
      * Icon for Inform Dialog

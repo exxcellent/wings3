@@ -427,14 +427,7 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
 
     public abstract void writeInternal(Device device, COMPONENT_TYPE component) throws IOException;
 
-    /**
-     * @return true if current browser is Microsoft Internet Explorer
-     */
-    protected final boolean isMSIE(final SComponent component) {
-        return component.getSession().getUserAgent().getBrowserType() == BrowserType.IE;
-    }
-
-	public Update getComponentUpdate(COMPONENT_TYPE component) {
+    public Update getComponentUpdate(COMPONENT_TYPE component) {
         updateDragAndDrop(component);
         return new ComponentUpdate<COMPONENT_TYPE>(this, component);
 	}

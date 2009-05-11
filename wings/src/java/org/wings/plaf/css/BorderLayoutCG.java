@@ -39,7 +39,7 @@ public class BorderLayoutCG extends AbstractLayoutCG {
 
         SDimension preferredSize = container.getPreferredSize();
         String height = preferredSize != null ? preferredSize.getHeight() : null;
-        boolean clientLayout = isMSIE(container) && height != null && !"auto".equals(height);
+        boolean clientLayout = Utils.isMSIE(container) && height != null && !"auto".equals(height);
         int oversize = layoutOversize(l);
 
         int cols = 1;

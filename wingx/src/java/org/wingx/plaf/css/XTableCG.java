@@ -42,6 +42,11 @@ public class XTableCG
     protected final SLabel refreshLabel = new SLabel(XTable.ICON_REFRESH);
     int horizontalOversize = 22;
 
+    {
+        refreshLabel.setToolTipText(getText("org.wingx.XTable.refreshToolTip", null));
+        resetLabel.setToolTipText(getText("org.wingx.XTable.resetFilterToolTip", null));
+    }
+
     /**
      * Initialize properties from config
      */
@@ -537,13 +542,23 @@ public class XTableCG
             device.print("  <td>&nbsp;</td>\n");
 
         device.print("  <td colspan=\"" + colspan + "\" align=\"center\" valign=\"middle\">");
-        device.print(filtered ? table.getNoDataFoundLabel() : table.getNoDataAvailableLabel());
+        device.print(filtered ? getText(table, "org.wingx.XTable.noDataFoundText", "- - -") : getText(table, "org.wingx.XTable.noDataAvailableText", "- - -"));
         device.print("</td>\n");
         device.print("</tr>\n");
 
         for (int i = middle + 1; i < endY; ++i) {
             device.print("<tr class=\"empty\"><td colspan=\"" + (colspan + 1) + "\">&nbsp;</td></tr>");
         }
+    }
+
+    private String getText(SComponent component, String key, String fallback) {
+        String text = component.getSession().getCGManager().getString(key);
+        return text != null ? text : fallback;
+    }
+
+    private String getText(String key, String fallback) {
+        String text = SessionManager.getSession().getCGManager().getString(key);
+        return text != null ? text : fallback;
     }
 
     /**

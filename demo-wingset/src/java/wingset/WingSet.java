@@ -18,8 +18,7 @@ import org.wings.header.StyleSheetHeader;
 import org.wings.plaf.WingSetExample;
 import org.wings.plaf.css.Utils;
 import org.wings.resource.ReloadResource;
-import org.wings.session.ResourceMapper;
-import org.wings.session.SessionManager;
+import org.wings.session.*;
 import org.wings.style.CSSProperty;
 import org.wings.tree.SDefaultTreeCellRenderer;
 
@@ -28,9 +27,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.Color;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The root of the WingSet demo application.
@@ -72,6 +69,16 @@ public class WingSet {
      * {@link org.wings.session.Session} is created which constructs a new instance of this class.
      */
     public WingSet() {
+        SessionManager.getSession().setLocalizer(new DefaultLocalizer() {
+            @Override
+            public String getString(String key, Locale locale) {
+                if ("org.wingx.XTable.refreshToolTip".equals(key))
+                    return "refresh";
+                else if ("org.wingx.XTable.resetFilterToolTip".equals(key))
+                    return "reset";
+                return super.getString(key, locale);
+            }
+        });
         wingsImage = new WingsImage();
 
         WingSetTreeModel treeModel = new WingSetTreeModel();

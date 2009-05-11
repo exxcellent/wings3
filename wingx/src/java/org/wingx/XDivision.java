@@ -9,12 +9,6 @@ import org.wings.style.CSSStyleSheet;
 import org.wings.style.Selector;
 import org.wings.style.Style;
 
-/**
- * Created by IntelliJ IDEA.
- * User: hengels
- * Date: Aug 27, 2006
- * Time: 9:58:56 PM
- */
 public class XDivision
     extends SContainer
     implements LowLevelEventListener

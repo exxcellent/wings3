@@ -79,7 +79,7 @@ public class TabbedPaneCG extends AbstractComponentCG {
 
             SDimension preferredSize = component.getPreferredSize();
             String height = preferredSize != null ? preferredSize.getHeight() : null;
-            boolean clientLayout = isMSIE(component) && height != null && !"auto".equals(height)
+            boolean clientLayout = Utils.isMSIE(component) && height != null && !"auto".equals(height)
                 && (placement == SConstants.TOP || placement == SConstants.BOTTOM);
 
             device.print("<table");

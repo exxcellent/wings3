@@ -126,6 +126,18 @@ public class CGManager implements Serializable {
     }
 
     /**
+     * Get a String from the locale specific defaults table.
+     * If the there's no value associated to the <code>key</code>, the request
+     * is delegated to the laf's defaults table.
+     *
+     * @param key the lookup key
+     */
+    public String getString(String key) {
+        Session session = SessionManager.getSession();
+        return session.getLocalizer().getString(key, session.getLocale());
+    }
+
+    /**
      * Set the defaults table.
      *
      * @param defaults the defaults table

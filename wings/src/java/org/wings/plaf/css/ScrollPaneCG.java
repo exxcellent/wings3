@@ -62,9 +62,9 @@ public class ScrollPaneCG extends org.wings.plaf.css.AbstractComponentCG impleme
 
         SDimension preferredSize = scrollPane.getPreferredSize();
         String height = preferredSize != null ? preferredSize.getHeight() : null;
-        boolean clientLayout = isMSIE(scrollPane) && height != null && !"auto".equals(height)
+        boolean clientLayout = Utils.isMSIE(scrollPane) && height != null && !"auto".equals(height)
             && scrollPane.getMode() != SScrollPane.MODE_COMPLETE;
-        boolean clientFix = isMSIE(scrollPane) && (height == null || "auto".equals(height))
+        boolean clientFix = Utils.isMSIE(scrollPane) && (height == null || "auto".equals(height))
             && scrollPane.getMode() != SScrollPane.MODE_COMPLETE;
 
         device.print("<table");

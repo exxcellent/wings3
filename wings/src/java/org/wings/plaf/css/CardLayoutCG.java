@@ -13,7 +13,6 @@
 package org.wings.plaf.css;
 
 import org.wings.*;
-import org.wings.session.BrowserType;
 import org.wings.io.Device;
 import org.wings.plaf.LayoutCG;
 
@@ -36,7 +35,7 @@ public class CardLayoutCG implements LayoutCG {
 
         SDimension preferredSize = container.getPreferredSize();
         String height = preferredSize != null ? preferredSize.getHeight() : null;
-        boolean clientLayout = isMSIE(container) && height != null && !"auto".equals(height);
+        boolean clientLayout = Utils.isMSIE(container) && height != null && !"auto".equals(height);
 
         if (clientLayout)
             d.print("<tr yweight=\"100\">");
@@ -72,13 +71,4 @@ public class CardLayoutCG implements LayoutCG {
     public static void closeLayouterRow(final Device d) throws IOException {
         d.print("</tr>");
     }
-
-    /**
-     * @return true if current browser is microsoft exploder
-     */
-    protected final boolean isMSIE(final SComponent component) {
-        return component.getSession().getUserAgent().getBrowserType() == BrowserType.IE;
-    }
 }
-
-

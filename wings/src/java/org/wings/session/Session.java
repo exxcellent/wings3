@@ -45,15 +45,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.swing.event.EventListenerList;
 import java.beans.PropertyChangeListener;
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.EventListener;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.awt.datatransfer.Clipboard;
 
 /**
@@ -160,6 +152,7 @@ public class Session implements PropertyService, Serializable {
 
     private final WeakPropertyChangeSupport propertyChangeSupport = new WeakPropertyChangeSupport(this);
     private ResourceMapper resourceMapper;
+    private Localizer localizer;
 
 
     public final SessionStatistics getStatistics() {
@@ -1005,5 +998,15 @@ public class Session implements PropertyService, Serializable {
 
     public void setResourceMapper(ResourceMapper resourceMapper) {
         this.resourceMapper = resourceMapper;
+    }
+
+    public Localizer getLocalizer() {
+        if (localizer == null)
+            localizer = new DefaultLocalizer();
+        return localizer;
+    }
+
+    public void setLocalizer(Localizer localizer) {
+        this.localizer = localizer;
     }
 }

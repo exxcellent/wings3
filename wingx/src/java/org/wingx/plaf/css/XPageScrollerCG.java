@@ -93,7 +93,7 @@ public final class XPageScrollerCG extends AbstractComponentCG implements org.wi
         boolean forwardEnabled = value < maximum - extent;
         boolean firstPage = (value == minimum);
         boolean lastPage = (value >= (maximum - extent));
-        boolean msie = isMSIE(sb);
+        boolean msie = Utils.isMSIE(sb);
 
         d.print("<table");
         Utils.writeAllAttributes(d, sb);
@@ -164,7 +164,7 @@ public final class XPageScrollerCG extends AbstractComponentCG implements org.wi
         boolean forwardEnabled = value < maximum - extent;
         boolean firstPage = (value == minimum);
         boolean lastPage = (value >= (maximum - extent));
-        boolean msie = isMSIE(sb);
+        boolean msie = Utils.isMSIE(sb);
 
         d.print("<table");
         Utils.writeAllAttributes(d, sb);

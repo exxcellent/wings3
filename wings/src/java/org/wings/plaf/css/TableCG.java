@@ -125,7 +125,7 @@ public final class TableCG
             table.setRowSelectionRenderer((org.wings.table.STableCellRenderer)value);
         }
 
-        if (isMSIE(table))
+        if (Utils.isMSIE(table))
             table.putClientProperty("horizontalOversize", new Integer(horizontalOversize));
     }
 
