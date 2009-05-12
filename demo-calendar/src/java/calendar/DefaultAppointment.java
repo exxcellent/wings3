@@ -377,7 +377,7 @@ public class DefaultAppointment implements Appointment {
 
 
     public static String StaticGetAppointmentStartEndDateString(Appointment appointment, TimeZone tz, Locale locale) {
-        Calendar cal1 = Calendar.getInstance(tz);
+        Calendar cal1 = Calendar.getInstance(tz, locale);
         Calendar cal2 = (Calendar)cal1.clone();
 
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);

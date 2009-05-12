@@ -66,7 +66,7 @@ public class MonthlyViewRenderer extends CalendarViewRenderer {
 
         if(appointment.getAppointmentType() == Appointment.AppointmentType.NORMAL)
         {
-            String startTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(appointment.getAppointmentStartDate());
+            String startTime = DateFormat.getTimeInstance(DateFormat.SHORT, appointmentCalendar.getCalendarModel().getLocale()).format(appointment.getAppointmentStartDate());
             device.print(startTime + " ");
         }
 				
