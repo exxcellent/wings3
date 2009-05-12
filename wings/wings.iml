@@ -14,7 +14,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="J2EE Servlet API" level="project" />
     <orderEntry type="library" name="BeanShell" level="project" />
-    <orderEntry type="library" name="commons-logging" level="project" />
+    <orderEntry type="library" exported="" name="commons-logging" level="project" />
     <orderEntry type="library" name="commons-httpclient" level="project" />
     <orderEntry type="library" name="DWR" level="project" />
     <orderEntry type="library" name="Log4J" level="project" />

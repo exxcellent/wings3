@@ -74,8 +74,10 @@ public class TabbedPaneCG extends AbstractComponentCG {
         if (tabbedPane.getTabCount() > 0) {
             final int placement = tabbedPane.getTabPlacement();
 
-            StringBuilder tabArea = Utils.inlineStyles(component.getDynamicStyle(STabbedPane.SELECTOR_TABS));
-            StringBuilder contentArea = Utils.inlineStyles(component.getDynamicStyle(STabbedPane.SELECTOR_CONTENT));
+            String tabAreaStyle = component.getStyle(STabbedPane.SELECTOR_TABS);
+            String contentAreaStyle = component.getStyle(STabbedPane.SELECTOR_CONTENT);
+            StringBuilder tabAreaInline = Utils.inlineStyles(component.getDynamicStyle(STabbedPane.SELECTOR_TABS));
+            StringBuilder contentAreaInline = Utils.inlineStyles(component.getDynamicStyle(STabbedPane.SELECTOR_CONTENT));
 
             SDimension preferredSize = component.getPreferredSize();
             String height = preferredSize != null ? preferredSize.getHeight() : null;
@@ -113,14 +115,14 @@ public class TabbedPaneCG extends AbstractComponentCG {
             }
 
             if (placement == SConstants.TOP) {
-                Utils.optAttribute(device, "class", "STabbedPane_top");
-                Utils.optAttribute(device, "style", tabArea);
+                Utils.optAttribute(device, "class", tabAreaStyle != null ? tabAreaStyle + "_top" : "STabbedPane_top");
+                Utils.optAttribute(device, "style", tabAreaInline);
             } else if (placement == SConstants.LEFT) {
-                Utils.optAttribute(device, "class", "STabbedPane_left");
-                Utils.optAttribute(device, "style", tabArea);
+                Utils.optAttribute(device, "class", tabAreaStyle != null ? tabAreaStyle + "_left" : "STabbedPane_left");
+                Utils.optAttribute(device, "style", tabAreaInline);
             } else {
-                Utils.optAttribute(device, "class", "STabbedPane_pane");
-                Utils.optAttribute(device, "style", contentArea);
+                Utils.optAttribute(device, "class", contentAreaStyle != null ? contentAreaStyle + "_pane" : "STabbedPane_pane");
+                Utils.optAttribute(device, "style", contentAreaInline);
             }
             device.print(">");
 
@@ -133,25 +135,24 @@ public class TabbedPaneCG extends AbstractComponentCG {
             if (placement == SConstants.TOP) {
                 device.print("</th></tr>\n<tr yweight=\"100\" oversize=\"2\"><td");
                 Utils.printTableCellAlignment(device, tabbedPane.getSelectedComponent(), SConstants.LEFT, SConstants.TOP);
-                Utils.optAttribute(device, "style", contentArea);
             } else if (placement == SConstants.LEFT) {
                 device.print("</th><td");
                 Utils.printTableCellAlignment(device, tabbedPane.getSelectedComponent(), SConstants.LEFT, SConstants.TOP);
-                Utils.optAttribute(device, "style", contentArea);
             } else if (placement == SConstants.RIGHT) {
                 device.print("</td><th");
-                Utils.optAttribute(device, "style", tabArea);
             } else if (placement == SConstants.BOTTOM) {
                 device.print("</td></tr>\n<tr><th");
-                Utils.optAttribute(device, "style", tabArea);
             }
 
             if (placement == SConstants.RIGHT) {
-                Utils.optAttribute(device, "class", "STabbedPane_right");
+                Utils.optAttribute(device, "class", tabAreaStyle != null ? tabAreaStyle + "_right" : "STabbedPane_right");
+                Utils.optAttribute(device, "style", tabAreaInline);
             } else if (placement == SConstants.BOTTOM) {
-                Utils.optAttribute(device, "class", "STabbedPane_bottom");
+                Utils.optAttribute(device, "class", tabAreaStyle != null ? tabAreaStyle + "_bottom" : "STabbedPane_bottom");
+                Utils.optAttribute(device, "style", tabAreaInline);
             } else {
-                Utils.optAttribute(device, "class", "STabbedPane_pane");
+                Utils.optAttribute(device, "class", tabAreaStyle != null ? tabAreaStyle + "_pane" : "STabbedPane_pane");
+                Utils.optAttribute(device, "style", contentAreaInline);
             }
             device.print(">");
 
@@ -182,9 +183,12 @@ public class TabbedPaneCG extends AbstractComponentCG {
         // substitute whitespaces for konqueror and ie5.0x
         final boolean nbspWorkaround = browser.getBrowserType().equals(BrowserType.KONQUEROR);
 
-        StringBuilder selectedTab = Utils.inlineStyles(tabbedPane.getDynamicStyle(STabbedPane.SELECTOR_SELECTED_TAB));
-        StringBuilder unselectedTab = Utils.inlineStyles(tabbedPane.getDynamicStyle(STabbedPane.SELECTOR_UNSELECTED_TAB));
-        StringBuilder disabledTab = Utils.inlineStyles(tabbedPane.getDynamicStyle(STabbedPane.SELECTOR_DISABLED_TAB));
+        String selectedTabStyle = tabbedPane.getStyle(STabbedPane.SELECTOR_SELECTED_TAB);
+        String unselectedTabStyle = tabbedPane.getStyle(STabbedPane.SELECTOR_UNSELECTED_TAB);
+        String disabledTabStyle = tabbedPane.getStyle(STabbedPane.SELECTOR_DISABLED_TAB);
+        StringBuilder selectedTabInline = Utils.inlineStyles(tabbedPane.getDynamicStyle(STabbedPane.SELECTOR_SELECTED_TAB));
+        StringBuilder unselectedTabInline = Utils.inlineStyles(tabbedPane.getDynamicStyle(STabbedPane.SELECTOR_UNSELECTED_TAB));
+        StringBuilder disabledTabInline = Utils.inlineStyles(tabbedPane.getDynamicStyle(STabbedPane.SELECTOR_DISABLED_TAB));
 
         for (int i = 0; i < tabbedPane.getTabCount(); i++) {
             final SIcon icon = tabbedPane.getIconAt(i);
@@ -209,6 +213,7 @@ public class TabbedPaneCG extends AbstractComponentCG {
                 Utils.optAttribute(device, "foc", tabbedPane.getName());
             }
 
+            // TODO: selector styles
             final StringBuilder cssClassName = new StringBuilder("STabbedPane_Tab_");
             cssClassName.append(placements.get(tabbedPane.getTabPlacement()));
             if (i == tabbedPane.getSelectedIndex()) {
@@ -219,11 +224,11 @@ public class TabbedPaneCG extends AbstractComponentCG {
                 cssClassName.append(" STabbedPane_Tab_unselected");
             }
             if (i == tabbedPane.getSelectedIndex()) {
-                Utils.optAttribute(device, "style", selectedTab);
+                Utils.optAttribute(device, "style", selectedTabInline);
             } else if (!enabledTab) {
-                Utils.optAttribute(device, "style", disabledTab);
+                Utils.optAttribute(device, "style", disabledTabInline);
             } else {
-                Utils.optAttribute(device, "style", unselectedTab);
+                Utils.optAttribute(device, "style", unselectedTabInline);
             }
             Utils.optAttribute(device, "class", cssClassName);
 

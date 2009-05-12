@@ -32,30 +32,6 @@ public class CSSStyle extends CSSAttributeSet implements Style {
         this.selector = selector;
     }
 
-    // BSC: We don't need the backling to the style.
-    /* *
-     * The style sheet owning this style.
-     * @param sheet The style sheet owning this style.
-     * /
-    public void setSheet(StyleSheet sheet) {
-        this.sheet = sheet;
-    }*/
-
-    /* *
-     * @return  The style sheet owning this style.
-     * /
-    public StyleSheet getSheet() { return sheet; }
-    */
-
-    /**
-     * @return Rendered Style: css selector { attribute/values }
-     */
-    /*
-    public String toString() {
-        return selector.getSelector() + " { " + super.toString() + "}";
-    }
-    */
-
     /* @see Style */
     public Selector getSelector() {
         return selector;

@@ -59,15 +59,19 @@ public class DivisionCG
 
         device.print(">");
         writeIcon(device, icon, null);
-        device.print("</td><td class=\"DivisionTitle\"");
-        Style style = component.getDynamicStyle(XDivision.SELECTOR_TITLE);
+        String style = component.getStyle(XDivision.SELECTOR_TITLE);
+        if (style != null)
+            device.print("</td><td class=\"" + style + "\"");
+        else
+            device.print("</td><td class=\"DivisionTitle\"");
+        Style inlineStyle = component.getDynamicStyle(XDivision.SELECTOR_TITLE);
         if (Utils.isMSIE(component) && PaddingVoodoo.hasPaddingInsets(division)) {
             final Insets patchedInsets = new Insets(0,0,0,0);
             PaddingVoodoo.doBorderPaddingsWorkaround(division.getBorder(), patchedInsets, true, false, true, false);
             Utils.optAttribute(device, "style", Utils.createInlineStylesForInsets(patchedInsets).toString());
         }
         else
-            Utils.optAttribute( device, "style", style );
+            Utils.optAttribute( device, "style", inlineStyle);
 
         device.print(">");
         if (division.getIcon() != null) {

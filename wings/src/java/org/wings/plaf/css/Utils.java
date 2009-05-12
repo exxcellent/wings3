@@ -1134,10 +1134,10 @@ public final class Utils {
         return result.toArray(new JavaScriptListener[result.size()]);
     }
 
-    public static StringBuilder inlineStyles(Style tabAreaStyle) {
-        if (tabAreaStyle != null) {
+    public static StringBuilder inlineStyles(Style style) {
+        if (style != null) {
             StringBuilder tabArea = new StringBuilder();
-            tabArea.append(tabAreaStyle.toString());
+            tabArea.append(style.toString());
             return tabArea;
         }
         else {

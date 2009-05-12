@@ -576,6 +576,7 @@
       <module fileurl="file://$PROJECT_DIR$/demo-wingset/demo-wingset.iml" filepath="$PROJECT_DIR$/demo-wingset/demo-wingset.iml" />
       <module fileurl="file://$PROJECT_DIR$/global.iml" filepath="$PROJECT_DIR$/global.iml" />
       <module fileurl="file://$PROJECT_DIR$/wings/wings.iml" filepath="$PROJECT_DIR$/wings/wings.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wings-integration/wings-cms.iml" filepath="$PROJECT_DIR$/wings-integration/wings-cms.iml" />
       <module fileurl="file://$PROJECT_DIR$/wings-experimental/wings-experimental.iml" filepath="$PROJECT_DIR$/wings-experimental/wings-experimental.iml" />
       <module fileurl="file://$PROJECT_DIR$/wingx/wingx.iml" filepath="$PROJECT_DIR$/wingx/wingx.iml" />
     </modules>

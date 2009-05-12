@@ -12,8 +12,6 @@ import java.util.*;
 
 public class XTable extends STable
 {
-    private static final String MESSAGE_PREFIX = "org.wingx.XTable.";
-    private static final SIcon ICON_TRANS = new SResourceIcon("org/wings/icons/transdot.gif");
     private static final SIcon ICON_NONE = new SResourceIcon("org/wingx/table/images/sort_none.png");
     private static final SIcon ICON_ASCENDING = new SResourceIcon("org/wingx/table/images/sort_up.png");
     private static final SIcon ICON_DESCENDING = new SResourceIcon("org/wingx/table/images/sort_down.png");

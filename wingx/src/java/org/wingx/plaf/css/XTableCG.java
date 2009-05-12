@@ -16,6 +16,7 @@ import org.wings.plaf.css.*;
 import org.wings.plaf.CGManager;
 import org.wings.plaf.Update;
 import org.wings.*;
+import org.wings.style.Style;
 import org.wings.session.SessionManager;
 import org.wings.io.Device;
 import org.wings.io.StringBuilderDevice;
@@ -187,14 +188,26 @@ public class XTableCG
             parameter = table.getEditParameter(row, col);
         else if (selectableCell)
             parameter = table.getToggleSelectionParameter(row, col) + ";shiftKey='+event.shiftKey+';ctrlKey='+event.ctrlKey+'";
-        
+
+        String style = component.getStyle(STable.SELECTOR_CELL);
+        if (style == null)
+            style = table.getStyle(STable.SELECTOR_CELL);
+        if (style == null)
+            style = "cell";
+
         if (parameter != null && (selectableCell || editableCell) && !isClickable) {
             printClickability(device, table, parameter, table.getShowAsFormComponent());
             device.print(isEditingCell || isEditableCellRenderer ? " editing=\"true\"" : " editing=\"false\"");
-            device.print(isEditingCell || isEditableCellRenderer ? " class=\"cell\"" : " class=\"cell clickable\"");
+            device.print(isEditingCell || isEditableCellRenderer ? " class=\"" + style + "\"" : " class=\"" + style + " clickable\"");
         }
         else
-            device.print(" class=\"cell\"");
+            device.print(" class=\"" + style + "\"");
+
+        Style inlineStyle = component.getDynamicStyle(STable.SELECTOR_CELL);
+        if (inlineStyle == null)
+            inlineStyle = table.getDynamicStyle(STable.SELECTOR_CELL);
+        Utils.optAttribute(device, "style", Utils.inlineStyles(inlineStyle));
+
         device.print(">");
 
         rendererPane.writeComponent(device, component, table);
@@ -212,7 +225,7 @@ public class XTableCG
 
         device.print("<th col=\"");
         device.print(col);
-        device.print("\"");
+        device.print("\" class=\"head\"");
 
         Utils.printTableCellAlignment(device, comp, SConstants.CENTER, SConstants.CENTER);
 
@@ -366,9 +379,13 @@ public class XTableCG
         final SCellRendererPane rendererPane = table.getCellRendererPane();
         STableColumnModel columnModel = table.getColumnModel();
 
-        StringBuilder headerArea = Utils.inlineStyles(table.getDynamicStyle(STable.SELECTOR_HEADER));
-        device.print("<tr class=\"header\"");
-        Utils.optAttribute(device, "style", headerArea);
+        String headerAreaStyle = table.getStyle(STable.SELECTOR_HEADER);
+        if (headerAreaStyle != null)
+            device.print("<tr class=\"" + headerAreaStyle + "\"");
+        else
+            device.print("<tr class=\"header\"");
+        StringBuilder headerAreaInline = Utils.inlineStyles(table.getDynamicStyle(STable.SELECTOR_HEADER));
+        Utils.optAttribute(device, "style", headerAreaInline);
         device.print(">");
 
         Utils.printNewline(device, table, 1);
@@ -412,15 +429,18 @@ public class XTableCG
             int startX, int endX, int startY, int endY, int emptyIndex) throws IOException {
         final SListSelectionModel selectionModel = table.getSelectionModel();
 
-        StringBuilder selectedArea = Utils.inlineStyles(table.getDynamicStyle(STable.SELECTOR_SELECTED));
-        StringBuilder evenArea = Utils.inlineStyles(table.getDynamicStyle(STable.SELECTOR_EVEN_ROWS));
-        StringBuilder oddArea = Utils.inlineStyles(table.getDynamicStyle(STable.SELECTOR_ODD_ROWS));
+        String selectedAreaStyle = table.getStyle(STable.SELECTOR_SELECTED);
+        String evenAreaStyle = table.getStyle(STable.SELECTOR_EVEN_ROWS);
+        String oddAreaStyle = table.getStyle(STable.SELECTOR_ODD_ROWS);
+        StringBuilder selectedAreaInline = Utils.inlineStyles(table.getDynamicStyle(STable.SELECTOR_SELECTED));
+        StringBuilder evenAreaInline = Utils.inlineStyles(table.getDynamicStyle(STable.SELECTOR_EVEN_ROWS));
+        StringBuilder oddAreaInline = Utils.inlineStyles(table.getDynamicStyle(STable.SELECTOR_ODD_ROWS));
         final SCellRendererPane rendererPane = table.getCellRendererPane();
         STableColumnModel columnModel = table.getColumnModel();
 
         for (int r = startY; r < endY; ++r) {
             writeTableRow(device, table, columnModel, selectionModel, rendererPane, r,
-                    startX, endX, emptyIndex, selectedArea, oddArea, evenArea);
+                    startX, endX, emptyIndex, selectedAreaInline, oddAreaInline, evenAreaInline, selectedAreaStyle, oddAreaStyle, evenAreaStyle);
         }
     }
 
@@ -428,15 +448,16 @@ public class XTableCG
             Device device, XTable table, STableColumnModel columnModel,
             SListSelectionModel selectionModel, SCellRendererPane rendererPane,
             final int rowIndex, int startX, int endX,
-            int emptyIndex, StringBuilder selectedArea,
-            StringBuilder oddArea, StringBuilder evenArea) throws IOException {
+        int emptyIndex, StringBuilder selectedAreaInline,
+        StringBuilder oddAreaInline, StringBuilder evenAreaInline,
+        String selectedAreaStyle, String oddAreaStyle, String evenAreaStyle) throws IOException {
         if (rowIndex >= emptyIndex) {
             int colspan = endX - startX;
             device.print("<tr class=\"empty\">\n");
             if (isSelectionColumnVisible(table)) {
                 device.print("  <td></td>\n");
             }
-            device.print("  <td colspan=\"" + colspan + "\">&nbsp;</td>\n");
+            device.print("  <td class=\"empty\" colspan=\"" + colspan + "\">&nbsp;</td>\n");
             device.print("</tr>\n");
             return;
         }
@@ -445,15 +466,17 @@ public class XTableCG
         StringBuilder rowClass = new StringBuilder(rowStyle != null ? rowStyle + " " : "");
         device.print("<tr");
         if (selectionModel.isSelectedIndex(rowIndex)) {
-            Utils.optAttribute(device, "style", selectedArea);
-            rowClass.append("selected ");
+            Utils.optAttribute(device, "style", selectedAreaInline);
+            rowClass.append(selectedAreaStyle != null ? selectedAreaStyle + " " : "selected ");
         }
         else if (rowIndex % 2 != 0)
-            Utils.optAttribute(device, "style", oddArea);
+            Utils.optAttribute(device, "style", oddAreaInline);
         else
-            Utils.optAttribute(device, "style", evenArea);
+            Utils.optAttribute(device, "style", evenAreaInline);
 
-        rowClass.append(rowIndex % 2 != 0 ? "odd" : "even");
+        rowClass.append(rowIndex % 2 != 0
+            ? oddAreaStyle != null ? oddAreaStyle + " " : "odd"
+            : evenAreaStyle != null ? evenAreaStyle + " " : "even");
         Utils.optAttribute(device, "class", rowClass);
         device.print(">");
 
@@ -471,23 +494,6 @@ public class XTableCG
         Utils.printNewline(device, table);
     }
 
-    private void writeSelectionFilter(Device device, XTable table) throws IOException {
-        if (isSelectionColumnVisible(table)) {
-            device.print("<th valign=\"middle\"");
-            Utils.optAttribute(device, "width", selectionColumnWidth);
-
-            String parameter = table.getResetParameter();
-            Utils.printClickability(device, table, parameter, true, table.getShowAsFormComponent());
-            device.print(" class=\"num clickable\"");
-
-            device.print(">");
-
-            resetLabel.write(device);
-
-            device.print("</th>");
-        }
-    }
-
     protected void writeSelectionHeader(Device device, XTable table) throws IOException {
         if (isSelectionColumnVisible(table)) {
             device.print("<th valign=\"middle\"");
@@ -503,6 +509,23 @@ public class XTableCG
             else {
                 device.print(" class=\"num\">");
             }
+            device.print("</th>");
+        }
+    }
+
+    private void writeSelectionFilter(Device device, XTable table) throws IOException {
+        if (isSelectionColumnVisible(table)) {
+            device.print("<th valign=\"middle\"");
+            Utils.optAttribute(device, "width", selectionColumnWidth);
+
+            String parameter = table.getResetParameter();
+            Utils.printClickability(device, table, parameter, true, table.getShowAsFormComponent());
+            device.print(" class=\"num clickable\"");
+
+            device.print(">");
+
+            resetLabel.write(device);
+
             device.print("</th>");
         }
     }

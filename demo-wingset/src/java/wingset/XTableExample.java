@@ -33,28 +33,39 @@ import java.util.List;
 /**
  * @author Holger Engels
  */
-public class XTableExample extends WingSetPane{
+public class XTableExample extends WingSetPane
+{
+    static final SIcon image = new SResourceIcon("org/wings/icons/JavaCup.gif");
+
+    final static Color[] colors = {
+        Color.yellow,
+        Color.orange,
+        Color.red,
+        Color.magenta,
+        Color.blue,
+        Color.gray,
+        Color.green,
+        Color.white,
+        Color.lightGray,
+        Color.darkGray,
+    };
+    static {
+        for (int i = 0; i < colors.length; i++)
+            colors[i] = pastel(colors[i]);
+    }
+
+    private static Color pastel(Color color) {
+        return new Color(
+            color.getRed() / 2 + 127,
+            color.getGreen() / 2 + 127,
+            color.getBlue() / 2 + 127);
+    }
+
     private XTable table;
     private SLabel clicks = new SLabel();
     private TableControls controls;
     private boolean consume = false;
     protected final MyCellRenderer cellRenderer = new MyCellRenderer();
-    protected final Color[] colors = {
-            Color.black,
-            Color.cyan,
-            Color.yellow,
-            Color.magenta,
-            Color.orange,
-            Color.pink,
-            Color.red,
-            Color.darkGray,
-            Color.gray,
-            Color.green,
-            Color.lightGray,
-            Color.white,
-            Color.blue
-    };
-    protected final SIcon image = new SResourceIcon("org/wings/icons/JavaCup.gif");
 
     protected SComponent createControls() {
         controls = new TableControls();
@@ -510,10 +521,13 @@ public class XTableExample extends WingSetPane{
                 Color c = (Color) value;
                 setFont(MONOSPACE);
                 setText(colorToHex(c));
-                setForeground(c);
+                setAttribute(STable.SELECTOR_CELL, CSSProperty.BACKGROUND_COLOR, c);
                 return this;
             }
-            else if (value instanceof Boolean && row != -1) {
+            else
+                removeDynamicStyle(STable.SELECTOR_CELL);
+            
+            if (value instanceof Boolean && row != -1) {
                 setText("" + value);
                 return this;
             }

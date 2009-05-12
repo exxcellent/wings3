@@ -227,6 +227,13 @@ public class STable extends SComponent
     public static final Selector SELECTOR_EVEN_ROWS = new Selector("EVEN_ROWS");
 
     /**
+     * A Pseudo CSS selector addressing the cell.
+     * Can be applied to the table globally and gets overridden, if applied to cell renderer components
+     * Refer to {@link SComponent#setAttribute(org.wings.style.Selector, org.wings.style.CSSProperty, String)}
+     */
+    public static final Selector SELECTOR_CELL = new Selector("CELL");
+
+    /**
      * The last low level event values this table received.
      */
     private String[] lastReceivedLowLevelEvents;

@@ -84,6 +84,8 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      */
     private String style;
 
+    private HashMap<Selector, String> styles;
+
     /**
      * Map of {@link Selector} to CSS {@link Style}s currently assigned to this component.
      */
@@ -319,15 +321,6 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
         propertyChangeSupport.firePropertyChange("parentFrame", oldVal, this.parentFrame);
     }
 
-    /*public void setInheritsPopupMenu(boolean inheritsPopupMenu) {
-        reloadIfChange(this.inheritsPopupMenu, inheritsPopupMenu);
-        this.inheritsPopupMenu = inheritsPopupMenu;
-    }
-
-    public boolean getInheritsPopupMenu() {
-        return inheritsPopupMenu;
-    }*/
-
     public void setComponentPopupMenu(SPopupMenu popupMenu) {
         reloadIfChange(this.popupMenu, popupMenu);
         if (this.popupMenu != null) {
@@ -344,32 +337,8 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
     }
 
     public SPopupMenu getComponentPopupMenu() {
-        /* (OL) we probably don't need the recursive stuff here... */
-//        if (!getInheritsPopupMenu())
-//            return popupMenu;
-//
-//        if (popupMenu == null) {
-//            // Search parents for its popup
-//            SContainer parent = getParent();
-//            while (parent != null) {
-//                if (parent instanceof SComponent) {
-//                    return ((SComponent) parent).getComponentPopupMenu();
-//                }
-//                if (parent instanceof SFrame)
-//                    break;
-//
-//                parent = parent.getParent();
-//            }
-//            return null;
-//        }
         return popupMenu;
     }
-
-    /*  No reason -- even JComponent does not define such a method.
-        Undo change also in DynamicScriptResource.visit().
-    public boolean hasComponentPopupMenu() {
-        return popupMenu != null;
-    } */
 
     /**
      * The URL under which this component is accessible for the browser.
@@ -759,12 +728,12 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * default value, the default wingS style will no longer take effect, as they operate on these
      * default styles. To avoid this you should append your CSS styles via spaces i.e.<br>
      * <code>c.setStyle(c.getStyle + "myStyle");</code>
+     * <p>Please consider using {@link #addStyle(String)} to avoid disabling of default wingS stylesheet set.
      *
      * @param cssClassName The new CSS name value for this component
      * @see #addStyle(String)
      * @see #removeStyle(String)
      */
-    // <p>Please consider using {@link #addStyle(String)} to avoid disabling of default wingS stylesheet set.
     public void setStyle(String cssClassName) {
         String oldVal = this.style;
         reloadIfChange(style, cssClassName);
@@ -810,6 +779,25 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
         return style;
     }
 
+    /**
+     * Set an CSS class name for a certain area of the component which is addressed by the pseudo selector.
+     *
+     * @param selector The pseudo selector addressing an area of the component
+     * @param cssClassName The new CSS name value for this component
+     */
+    public void setStyle(Selector selector, String cssClassName) {
+        if (styles == null)
+            styles = new HashMap<Selector, String>(4);
+        if (cssClassName == null)
+            styles.remove(selector);
+        else
+            styles.put(selector, cssClassName);
+        reload();
+    }
+
+    public String getStyle(Selector selector) {
+        return styles != null ? styles.get(selector) : null;
+    }
 
     /**
      * Register a new CSS style on this component for a specfic CSS selector.

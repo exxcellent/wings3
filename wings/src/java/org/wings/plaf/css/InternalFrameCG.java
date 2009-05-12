@@ -95,7 +95,11 @@ public class InternalFrameCG extends AbstractComponentCG implements
         writeWindowBar(device, frame);
         // write the actual content
         if (!frame.isIconified()) {
-            device.print("<div class=\"WindowContent\"");
+            String style = frame.getStyle(SInternalFrame.SELECTOR_CONTENT);
+            if (style != null)
+                device.print("<div class=\"" + style + "\"");
+            else
+                device.print("<div class=\"WindowContent\"");
             StringBuilder contentArea = Utils.inlineStyles(frame.getDynamicStyle(SInternalFrame.SELECTOR_CONTENT));
             Utils.optAttribute(device, "style", contentArea);
             device.print(">");
@@ -118,7 +122,11 @@ public class InternalFrameCG extends AbstractComponentCG implements
         if (text == null)
             text = "wingS";
 
-        device.print("<div class=\"WindowBar\" id=\"");
+        String style = frame.getStyle(SInternalFrame.SELECTOR_TITLE);
+        if (style != null)
+            device.print("<div class=\"" + style + "\" id=\"");
+        else
+            device.print("<div class=\"WindowBar\" id=\"");
         device.print(frame.getName());
         device.print("_titlebar\"");
 

@@ -13,8 +13,7 @@
 package wingset;
 
 import org.wings.*;
-import org.wings.style.CSSProperty;
-import org.wings.style.CSSStyleSheet;
+import org.wings.style.*;
 import org.wings.event.SMouseEvent;
 import org.wings.event.SMouseListener;
 import org.wings.plaf.css.TableCG;
@@ -32,32 +31,39 @@ import java.util.*;
  * @author <a href="mailto:haaf@mercatis.de">Armin Haaf</a>
  */
 public class TableExample
-        extends WingSetPane {
+        extends WingSetPane
+{
     static final SIcon image = new SResourceIcon("org/wings/icons/JavaCup.gif");
 
-    public final MyCellRenderer cellRenderer = new MyCellRenderer();
-
     final static Color[] colors = {
-            Color.black,
-            Color.cyan,
-            Color.yellow,
-            Color.magenta,
-            Color.orange,
-            Color.pink,
-            Color.red,
-            Color.darkGray,
-            Color.gray,
-            Color.green,
-            Color.lightGray,
-            Color.white,
-            Color.blue
+        Color.yellow,
+        Color.orange,
+        Color.red,
+        Color.magenta,
+        Color.blue,
+        Color.gray,
+        Color.green,
+        Color.white,
+        Color.lightGray,
+        Color.darkGray,
     };
+    static {
+        for (int i = 0; i < colors.length; i++)
+            colors[i] = pastel(colors[i]);
+    }
+
+    private static Color pastel(Color color) {
+        return new Color(
+            color.getRed() / 2 + 127,
+            color.getGreen() / 2 + 127,
+            color.getBlue() / 2 + 127);
+    }
 
     private STable table;
     private SLabel clicks = new SLabel();
     private TableControls controls;
     private boolean consume = false;
-
+    protected final MyCellRenderer cellRenderer = new MyCellRenderer();
 
     protected SComponent createControls() {
         controls = new TableControls();
@@ -120,10 +126,13 @@ public class TableExample
                 Color c = (Color) value;
                 setFont(MONOSPACE);
                 setText(colorToHex(c));
-                setForeground(c);
+                setAttribute(STable.SELECTOR_CELL, CSSProperty.BACKGROUND_COLOR, c);
                 return this;
             }
-            else if (value instanceof Boolean && row != -1) {
+            else
+                removeDynamicStyle(STable.SELECTOR_CELL);
+
+            if (value instanceof Boolean && row != -1) {
                 setText("" + value);
                 return this;
             }
