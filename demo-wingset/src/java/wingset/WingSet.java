@@ -137,18 +137,8 @@ public class WingSet {
         panel.add(content, SBorderLayout.CENTER);
 
         frame.getContentPane().add(panel, SBorderLayout.CENTER);
-        frame.getContentPane().setPreferredSize(SDimension.FULLAREA);
-        if (!Utils.isMSIE(frame)) {
-            frame.getContentPane().setAttribute(CSSProperty.POSITION, "absolute");
-            frame.getContentPane().setAttribute(CSSProperty.HEIGHT, "100%");
-            frame.getContentPane().setAttribute(CSSProperty.WIDTH, "100%");
-        }
-        frame.setAttribute(CSSProperty.POSITION, "absolute");
-        frame.setAttribute(CSSProperty.HEIGHT, "100%");
-        frame.setAttribute(CSSProperty.WIDTH, "100%");
-
+        frame.setFullScreen(true);
         frame.addHeader(new StyleSheetHeader("../css/wingset2.css"));
-
         frame.show();
 
         Enumeration enumeration = ((DefaultMutableTreeNode) treeModel.getRoot()).breadthFirstEnumeration();

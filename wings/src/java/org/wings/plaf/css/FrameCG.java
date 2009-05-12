@@ -17,6 +17,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.plaf.Update;
 import org.wings.*;
+import org.wings.style.CSSProperty;
 import org.wings.sdnd.SDragAndDropManager;
 import org.wings.event.SRequestListener;
 import org.wings.event.SRequestEvent;
@@ -315,6 +316,8 @@ public class FrameCG implements org.wings.plaf.FrameCG {
     public void write(final Device device, final SComponent component) throws IOException {
         final SFrame frame = (SFrame) component;
 
+        fullScreenAttributes(frame);
+
         String strokes = strokes(frame.getGlobalInputMapComponents());
         if (strokes != null)
             component.getSession().getScriptManager().addScriptListener(new JavaScriptListener(null, null, strokes));
@@ -463,6 +466,32 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         device.print("</body>\n</html>\n");
 
         component.fireRenderEvent(SComponent.DONE_RENDERING);
+    }
+
+    private void fullScreenAttributes(SFrame frame) {
+        Boolean fullScreenAttributesApplied = (Boolean)frame.getClientProperty("fullScreenAttributesApplied");
+        if (frame.isFullScreen() && !Boolean.TRUE.equals(fullScreenAttributesApplied)) {
+            if (!Utils.isMSIE(frame)) {
+                frame.getContentPane().setAttribute(CSSProperty.POSITION, "absolute");
+                frame.getContentPane().setAttribute(CSSProperty.HEIGHT, "100%");
+                frame.getContentPane().setAttribute(CSSProperty.WIDTH, "100%");
+            }
+            frame.setAttribute(CSSProperty.POSITION, "absolute");
+            frame.setAttribute(CSSProperty.HEIGHT, "100%");
+            frame.setAttribute(CSSProperty.WIDTH, "100%");
+            frame.putClientProperty("fullScreenAttributesApplied", Boolean.TRUE);
+        }
+        else if (!frame.isFullScreen() && Boolean.TRUE.equals(fullScreenAttributesApplied)){
+            if (!Utils.isMSIE(frame)) {
+                frame.getContentPane().setAttribute(CSSProperty.POSITION, null);
+                frame.getContentPane().setAttribute(CSSProperty.HEIGHT, null);
+                frame.getContentPane().setAttribute(CSSProperty.WIDTH, null);
+            }
+            frame.setAttribute(CSSProperty.POSITION, null);
+            frame.setAttribute(CSSProperty.HEIGHT, null);
+            frame.setAttribute(CSSProperty.WIDTH, null);
+            frame.putClientProperty("fullScreenAttributesApplied", Boolean.FALSE);
+        }
     }
 
     protected void handleScripts(Device device, SComponent component) throws IOException {

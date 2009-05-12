@@ -45,7 +45,8 @@ import java.util.*;
  */
 public class SFrame
         extends SRootContainer
-        implements PropertyChangeListener, LowLevelEventListener {
+        implements PropertyChangeListener, LowLevelEventListener
+{
 	private final transient static Log log = LogFactory.getLog(SFrame.class);
 
     /**
@@ -129,6 +130,11 @@ public class SFrame
      * Should we send JS Headers in debug mode?
      */
     private String logLevel = "off";
+
+    /**
+     * In full screen mode, the html content spans the whole size of the browser window.
+     */
+    private boolean fullScreen;
 
     /**
      * Creates a new SFrame
@@ -752,6 +758,21 @@ public class SFrame
             propertyChangeSupport.firePropertyChange("updateCursor", oldVal, this.updateCursor);
         }
 	}
+
+    public boolean isFullScreen() {
+        return fullScreen;
+    }
+
+    public void setFullScreen(boolean fullScreen) {
+        if (isDifferent(this.fullScreen, fullScreen)) {
+            boolean oldFullScreen = this.fullScreen;
+            this.fullScreen = fullScreen;
+            if (fullScreen)
+                getContentPane().setPreferredSize(SDimension.FULLAREA);
+            reload();
+            propertyChangeSupport.firePropertyChange("fullScreen", oldFullScreen, this.fullScreen);
+        }
+    }
 
     public Map<String, Object> getAutoAdjustLayout() {
         return autoAdjustLayout;
