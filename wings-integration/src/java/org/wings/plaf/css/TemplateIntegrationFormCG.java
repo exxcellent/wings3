@@ -91,7 +91,7 @@ public class TemplateIntegrationFormCG extends FormCG implements org.wings.plaf.
 
         SDimension preferredSize = form.getPreferredSize();
         String height = preferredSize != null ? preferredSize.getHeight() : null;
-        boolean clientLayout = isMSIE(form) && height != null && !"auto".equals(height)
+        boolean clientLayout = Utils.isMSIE(form) && height != null && !"auto".equals(height)
             && (layout instanceof SBorderLayout || layout instanceof SGridBagLayout);
 
         String tableName = form.getName() + "_div";
