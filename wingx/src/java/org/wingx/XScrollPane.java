@@ -1,6 +1,7 @@
 package org.wingx;
 
 import org.wings.*;
+import org.wings.session.SessionManager;
 import org.wingx.table.TruncatableModel;
 
 import javax.swing.*;
@@ -28,7 +29,12 @@ public class XScrollPane extends SScrollPane {
     protected final SLabel extentComboLabel = new SLabel();
     protected final SLabel totalLabel = new SLabel();
     private STable tableComponent;
-    private String visibleSectionLabel = "{0} .. {1} of {2}";
+    private String visibleSectionLabel;
+    {
+        visibleSectionLabel = getSession().getCGManager().getString("org.wingx.XScrollPane.visibleSection");
+        if (visibleSectionLabel == null)
+            visibleSectionLabel = "{0} .. {1} / {2}";
+    }
 
     public XScrollPane() {
         this(null);
@@ -66,7 +72,6 @@ public class XScrollPane extends SScrollPane {
         if (locale == null) {
             locale = Locale.ENGLISH;
         }
-        visibleSectionLabel = ResourceBundle.getBundle("Bundle", locale).getString("visibleSection");
         if (tableComponent != null) {
             setViewportView(tableComponent);
         }
@@ -168,16 +173,6 @@ public class XScrollPane extends SScrollPane {
 
     public void setExtentLabel(String label) {
         extentComboLabel.setText(label);
-    }
-
-    public String getVisibleSectionLabel() {
-        return visibleSectionLabel;
-    }
-
-    public void setVisibleSectionLabel(String visibleSectionLabel) {
-        String oldVal = this.visibleSectionLabel;
-        this.visibleSectionLabel = visibleSectionLabel;
-        propertyChangeSupport.firePropertyChange("visibleSectionLabel", oldVal, this.visibleSectionLabel);
     }
 
     /**

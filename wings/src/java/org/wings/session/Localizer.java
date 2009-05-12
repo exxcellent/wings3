@@ -7,5 +7,5 @@ import java.util.*;
  */
 public interface Localizer
 {
-    String getString(String key, Locale locale);
+    String getString(String key);
 }

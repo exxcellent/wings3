@@ -134,7 +134,7 @@ public class CGManager implements Serializable {
      */
     public String getString(String key) {
         Session session = SessionManager.getSession();
-        return session.getLocalizer().getString(key, session.getLocale());
+        return session.getLocalizer().getString(key);
     }
 
     /**

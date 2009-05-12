@@ -1002,7 +1002,11 @@ public class Session implements PropertyService, Serializable {
 
     public Localizer getLocalizer() {
         if (localizer == null)
-            localizer = new DefaultLocalizer();
+            localizer = new Localizer() {
+                public String getString(String key) {
+                    return ResourceBundle.getBundle("Bundle", getLocale()).getString(key);
+                }
+            };
         return localizer;
     }
 

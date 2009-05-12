@@ -69,16 +69,9 @@ public class WingSet {
      * {@link org.wings.session.Session} is created which constructs a new instance of this class.
      */
     public WingSet() {
-        SessionManager.getSession().setLocalizer(new DefaultLocalizer() {
-            @Override
-            public String getString(String key, Locale locale) {
-                if ("org.wingx.XTable.refreshToolTip".equals(key))
-                    return "refresh";
-                else if ("org.wingx.XTable.resetFilterToolTip".equals(key))
-                    return "reset";
-                return super.getString(key, locale);
-            }
-        });
+        Session session = SessionManager.getSession();
+        session.setLocaleFromHeader(false);
+        session.setLocale(Locale.ENGLISH);
         wingsImage = new WingsImage();
 
         WingSetTreeModel treeModel = new WingSetTreeModel();
@@ -151,7 +144,7 @@ public class WingSet {
             }
         }
 
-        SessionManager.getSession().setResourceMapper(new ResourceMapper() {
+        session.setResourceMapper(new ResourceMapper() {
             public Resource mapResource(String url) {
                 String name = url.substring(1);
                 WingSetExample pane = exampleByName.get(name);

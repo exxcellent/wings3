@@ -130,6 +130,11 @@ public class SOptionPane extends SDialog implements ActionListener {
      */
     public static final int PLAIN_MESSAGE = javax.swing.JOptionPane.PLAIN_MESSAGE;
 
+    /*
+     * Default size for all option panes.
+     */
+    private static SDimension defaultSize = null;
+
     /**
      * ContentPane with border layout.
      */
@@ -148,22 +153,22 @@ public class SOptionPane extends SDialog implements ActionListener {
     /**
      * OK Button
      */
-    protected final SButton optionOK = createButton(SessionManager.getSession().getCGManager().getString("OptionPane.okButtonText"));
+    protected final SButton optionOK = createButton("ok");
 
     /**
      * Cancel Button
      */
-    protected final SButton optionCancel = createButton(SessionManager.getSession().getCGManager().getString("OptionPane.cancelButtonText"));
+    protected final SButton optionCancel = createButton("cancel");
 
     /**
      * Yes Button
      */
-    protected final SButton optionYes = createButton(SessionManager.getSession().getCGManager().getString("OptionPane.yesButtonText"));
+    protected final SButton optionYes = createButton("yes");
 
     /**
      * No Button
      */
-    protected final SButton optionNo = createButton(SessionManager.getSession().getCGManager().getString("OptionPane.noButtonText"));
+    protected final SButton optionNo = createButton("no");
 
     /**
      * Icon for Inform Dialog
@@ -411,9 +416,10 @@ public class SOptionPane extends SDialog implements ActionListener {
     /**
      * Generic Button creation
      */
-    protected final SButton createButton(String label) {
+    protected final SButton createButton(String key) {
+        String label = getSession().getCGManager().getString("org.wings.SOptionPane." + key + "ButtonText");
         SButton b = new SButton(label);
-        b.setName(getName() + label);
+        b.setName(getName() + key);
         b.addActionListener(this);
         return b;
     }
@@ -489,6 +495,7 @@ public class SOptionPane extends SDialog implements ActionListener {
      *                description: The option pane's message type.
      */
     public void setMessageType(int newType) {
+        imageLabel.setVisible(true);
         switch (newType) {
             case ERROR_MESSAGE: {
                 imageLabel.setIcon(ERROR_IMAGE);
@@ -508,6 +515,7 @@ public class SOptionPane extends SDialog implements ActionListener {
             }
             case PLAIN_MESSAGE:
             default: {
+                imageLabel.setVisible(false);
                 imageLabel.setIcon(null);
             }
         }
@@ -589,10 +597,15 @@ public class SOptionPane extends SDialog implements ActionListener {
         if (message instanceof SComponent) {
             optionData.add((SComponent) message);
         }
-        else {
+        else if (message != null) {
             StringTokenizer stringTokenizer = new StringTokenizer(message.toString(), "\n");
             while (stringTokenizer.hasMoreElements()) {
-                optionData.add(new SLabel(stringTokenizer.nextElement().toString()));
+                SLabel label = new SLabel(stringTokenizer.nextElement().toString());
+                if (SOptionPane.defaultSize != null &&
+                    SOptionPane.defaultSize.getWidthInt() != SDimension.AUTO_INT) {
+                    label.setWordWrap(true);
+                }
+                optionData.add(label);
             }
         }
         show(c);
@@ -765,5 +778,17 @@ public class SOptionPane extends SDialog implements ActionListener {
         p.addActionListener(al);
 
         p.showYesNo(parent, question, title);
+    }
+
+    // -------------------------------------------------------------------
+    // DEFAULT SIZE
+    // -------------------------------------------------------------------
+
+    public static SDimension getDefaultSize() {
+        return defaultSize;
+    }
+
+    public static void setDefaultSize(SDimension defaultSize) {
+        SOptionPane.defaultSize = defaultSize;
     }
 }
