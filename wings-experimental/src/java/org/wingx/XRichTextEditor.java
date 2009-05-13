@@ -17,6 +17,7 @@ public class XRichTextEditor extends STextComponent {
     private String configuration;
     private XRichTextEditorType type;
     private ScriptListener listener;
+    private boolean editable;
 
     public XRichTextEditor() {
         this(XRichTextEditorType.Simple);
@@ -74,9 +75,9 @@ public class XRichTextEditor extends STextComponent {
             builder.append(name).append(".on('afterNodeChange', function(o) { var elt = document.getElementById('").append(getName()).append("'); " + name + ".saveHTML(); }, ").append(name).append(", true);\n");
             builder.append(name).append(".on('editorKeyUp', function(o) { var elt = document.getElementById('").append(getName()).append("'); " + name + ".saveHTML(); }, ").append(name).append(", true);\n");
             builder.append(name).append(".on('afterRender', function(o) { ").append("document.getElementById(").append(name).append(".get('iframe').get('id')).tabIndex = '").append(getFocusTraversalIndex()).append("'; }, true);\n");
-            builder.append(name).append(".on('afterRender', function(o) { ").append(name).append(".setEditorHTML('").append(doubleEscape(getCG().getText(this))).append("'); }, true);\n");
+            builder.append(name).append(".on('afterRender', function(o) { ").append(name).append(".setEditorHTML('").append(doubleEscape(getCG().getText(this))).append("</div>'); }, true);\n");
             builder.append(name).append(".on('afterRender', function(o) { ").append(name).append(".set('disabled', ").append(!isEnabled()).append("); }, true);\n");
-            builder.append(name).append(".render();\n");
+        builder.append(name).append(".render();\n");
         builder.append("});");
 
         listener = new JavaScriptListener("special", null, builder.toString());
@@ -93,19 +94,13 @@ public class XRichTextEditor extends STextComponent {
     }
 
     @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    @Override
     public void setEditable(boolean ed) {
-        // editor_x.get("iframe").get
-        super.setEditable(ed);    //To change body of overridden methods use File | Settings | File Templates.
+        this.editable = ed;
     }
 
     @Override
     public boolean isEditable() {
-        return super.isEditable();    //To change body of overridden methods use File | Settings | File Templates.
+        return this.editable;
     }
 
     private String doubleEscape(String text) {
@@ -187,6 +182,9 @@ public class XRichTextEditor extends STextComponent {
 
     @Override
     public void processLowLevelEvent(String action, String[] values) {
-        super.processLowLevelEvent(action, values);
+        if(isEditable()) {
+            super.processLowLevelEvent(action, values);
+        }
+        // otherwise ignore the texts sent from clients
     }
 }

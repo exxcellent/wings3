@@ -109,7 +109,8 @@ public class RichTextEditorCG extends AbstractComponentCG<XRichTextEditor> imple
             String name = "editor_" + component.getName();
             StringBuilder builder = new StringBuilder("wingS.global.onHeadersLoaded(function() {");
             builder.append("window.").append(name);
-            builder.append(".setEditorHTML('").append(doubleEscape(getText(editor))).append("'); });");
+            builder.append(".setEditorHTML('").append(doubleEscape(getText(editor))).append("');");
+            builder.append(" });");
             update.addParameter(builder.toString());
             // TODO: update size, border, etc.
             return update;
@@ -139,6 +140,8 @@ public class RichTextEditorCG extends AbstractComponentCG<XRichTextEditor> imple
             builder.append(");");
 
             handler.addParameter(builder.toString());
+
+            // TODO: find a solution for editable
 
             return handler;
         }
