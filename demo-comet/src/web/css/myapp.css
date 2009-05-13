@@ -1,0 +1,22 @@
+.SForm {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.STextArea {
+    position: relative;
+    top: 10px;
+    background-color: #EEEEEE;
+    padding: 5px;
+}
+
+#j {
+    position: relative;
+    top: 10px;
+    background-color: #DDDDDD;
+}
+
+body {
+    background-color: #FFFFFF;
+}

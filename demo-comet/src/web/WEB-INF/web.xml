@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+    <servlet>
+        <servlet-name>Chat</servlet-name>
+        <servlet-class>org.wings.comet.JettyCometWingServlet</servlet-class>
+        <init-param>
+            <param-name>wings.mainclass</param-name>
+            <param-value>Chat</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ProgressBar</servlet-name>
+        <servlet-class>org.wings.comet.JettyCometWingServlet</servlet-class>
+        <init-param>
+            <param-name>wings.mainclass</param-name>
+            <param-value>SProgressBarExample</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Chat</servlet-name>
+        <url-pattern>/Chat/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ProgressBar</servlet-name>
+        <url-pattern>/ProgressBar/*</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+        <session-timeout>10</session-timeout>
+    </session-config>
+
+</web-app>
