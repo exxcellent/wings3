@@ -61,6 +61,7 @@ public class Chat implements ActionListener, SExitListener {
         button_right.setVisible(false);
 
         textArea = new STextArea();
+        textArea.setEditable(false);
         textArea.setFont(font);
         textArea.setPreferredSize(new SDimension("800px", "300px"));
 

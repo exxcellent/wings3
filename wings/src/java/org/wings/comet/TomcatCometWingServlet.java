@@ -19,7 +19,7 @@ public class TomcatCometWingServlet
         //cometEvent.setTimeout(TIMEOUT);
 
         if (cometEvent.getEventType() == CometEvent.EventType.BEGIN) {
-            log.info("BEGIN: " + request.getSession());
+            log.debug("BEGIN: " + request.getSession());
 
             final Session session = getSession(request);
             if (session == null) {
@@ -73,10 +73,10 @@ public class TomcatCometWingServlet
             }
 
         } else if (cometEvent.getEventType() == CometEvent.EventType.ERROR) {
-            log.info("ERROR: " + request.getSession() + "\n");
+            log.error("ERROR: " + request.getSession() + "\n");
 
             if (cometEvent.getEventSubType() == CometEvent.EventSubType.TIMEOUT) {
-                log.info("---Timeout: " + request.getSession() + "\n");
+                log.debug("---Timeout: " + request.getSession() + "\n");
 
                 final Pushable pushable = getPushable(request);
                 synchronized (pushable) {
@@ -85,25 +85,25 @@ public class TomcatCometWingServlet
                 }
             }
             if (cometEvent.getEventSubType() == CometEvent.EventSubType.CLIENT_DISCONNECT) {
-                log.info("---Client_Disconnect: " + request.getSession() + "\n");
+                log.debug("---Client_Disconnect: " + request.getSession() + "\n");
             }
             if (cometEvent.getEventSubType() == CometEvent.EventSubType.IOEXCEPTION) {
-                log.info("---IOException: " + request.getSession() + "\n");
+                log.debug("---IOException: " + request.getSession() + "\n");
             }
 
             cometEvent.close();
 
         } else if (cometEvent.getEventType() == CometEvent.EventType.END) {
-            log.info("END: " + request.getSession() + "\n");
+            log.debug("END: " + request.getSession() + "\n");
 
             if (cometEvent.getEventSubType() == CometEvent.EventSubType.WEBAPP_RELOAD) {
-                log.info("---Webapp_Reload: " + request.getSession() + "\n");
+                log.debug("---Webapp_Reload: " + request.getSession() + "\n");
             }
             if (cometEvent.getEventSubType() == CometEvent.EventSubType.SESSION_END) {
-                log.info("---Session_End: " + request.getSession() + "\n");
+                log.debug("---Session_End: " + request.getSession() + "\n");
             }
             if (cometEvent.getEventSubType() == CometEvent.EventSubType.SERVER_SHUTDOWN) {
-                log.info("---Server_Shutdown: " + request.getSession() + "\n");
+                log.debug("---Server_Shutdown: " + request.getSession() + "\n");
             }
 
             final Pushable pushable = getPushable(request);
