@@ -16,22 +16,18 @@ public class LayoutScript implements ScriptListener {
 		this.layoutCandidates = layoutCandidates;
 	}
 	
-	@Override
 	public String getCode() {
 		return null;
 	}
 
-	@Override
 	public String getEvent() {
 		return null;
 	}
 
-	@Override
 	public int getPriority() {
 		return 0;
 	}
 
-	@Override
 	public String getScript() {
 		StringBuilder result = new StringBuilder();
 		for (Entry<SComponent, String> entry  : layoutCandidates.entrySet()) {
