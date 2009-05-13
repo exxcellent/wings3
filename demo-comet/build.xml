@@ -10,7 +10,6 @@
 
     <path id="build.classpath">
         <fileset dir="../wings/build/web/WEB-INF/lib" includes="*.jar"/>
-        <fileset dir="../wingx/build/web/WEB-INF/lib" includes="*.jar"/>
         <fileset dir="../thirdparty/lib" includes="servlet.jar"/>
     </path>
 
@@ -37,7 +36,6 @@
         <copy todir="build/web">
             <fileset dir="src/web"/>
             <fileset dir="../wings/build/web"/>
-            <fileset dir="../wingx/build/web"/>
             <fileset dir="src/java"/>
         </copy>
         <copy todir="build/web/WEB-INF/classes">
@@ -76,7 +74,7 @@
 
     <target name="clean">
         <delete dir="build"/>
-        <delete dir="${deploy.wingset}"/>
+        <delete dir="${deploy.comet}"/>
         <delete>
             <fileset dir="src">
                 <include name="**/*.class"/>
