@@ -17,6 +17,8 @@ import org.apache.commons.logging.LogFactory;
 import org.wings.LowLevelEventListener;
 import org.wings.SComponent;
 import org.wings.SFrame;
+import org.wings.comet.Comet;
+import org.wings.comet.Pushable;
 
 import java.util.*;
 
@@ -43,7 +45,11 @@ public final class LowLevelEventDispatcher
 
     protected boolean namedEvents = true;
 
-    public LowLevelEventDispatcher() {
+    private final Session session;
+
+    public LowLevelEventDispatcher(Session session) {
+
+        this.session = session;
     }
 
     public final void addLowLevelEventListener(LowLevelEventListener gl,
@@ -208,15 +214,40 @@ public final class LowLevelEventDispatcher
     private final List<Runnable> runnables = new LinkedList<Runnable>();
 
     public void invokeLater(Runnable runnable) {
+        invokeLater_pullUpdates(runnable);
+    }
+
+    public void invokeLater_piggyback(Runnable runnable) {
         synchronized (this.runnables) {
             runnables.add(runnable);
+        }
+    }
+
+    public void invokeLater_pullUpdates(Runnable runnable) {
+        synchronized (this.runnables) {
+            runnables.add(runnable);
+        }
+
+        final Comet comet = session.getComet();
+        if (comet == null) return;
+
+        final Pushable pushable = comet.getPushable();
+        if (SessionManager.getSession() != session) {
+            synchronized (pushable) {
+                if (pushable.isValid()) {
+                    pushable.push();
+                    log.info("push called (Pushable: " + pushable + ")\n");
+                } 
+            }
         }
     }
 
     void invokeRunnables() {
         synchronized (this.runnables) {
             for (Iterator iterator = runnables.iterator(); iterator.hasNext();) {
+
                 Runnable runnable = null;
+                
                 try {
                     runnable = (Runnable)iterator.next();
 
@@ -232,6 +263,12 @@ public final class LowLevelEventDispatcher
                     throw new RuntimeException("Runnable class: " + runnable.getClass().getName(), e);
                 }
             }
+        }
+    }
+
+    public boolean isRunnablesListEmpty() {
+        synchronized (this.runnables) {
+            return runnables.isEmpty();
         }
     }
 

@@ -15,33 +15,21 @@ package org.wings.session;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wings.DefaultReloadManager;
-import org.wings.ReloadManager;
-import org.wings.SComponent;
-import org.wings.SContainer;
-import org.wings.SFrame;
-import org.wings.SToolTipManager;
+import org.wings.*;
+import org.wings.comet.Comet;
+import org.wings.comet.CometWingServlet;
+import org.wings.sdnd.SDragAndDropManager;
+import org.wings.sdnd.SDragAndDropManager;
 import org.wings.sdnd.SDragAndDropManager;
 import org.wings.dnd.DragAndDropManager;
-import org.wings.event.ExitVetoException;
-import org.wings.event.SExitEvent;
-import org.wings.event.SExitListener;
-import org.wings.event.SRequestEvent;
-import org.wings.event.SRequestListener;
+import org.wings.event.*;
 import org.wings.externalizer.ExternalizeManager;
 import org.wings.externalizer.ExternalizedResource;
-import org.wings.plaf.CGManager;
-import org.wings.plaf.LookAndFeel;
-import org.wings.plaf.LookAndFeelFactory;
-import org.wings.util.LocaleCharSet;
-import org.wings.util.StringUtil;
-import org.wings.util.WeakPropertyChangeSupport;
+import org.wings.plaf.*;
+import org.wings.util.*;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.*;
+import javax.servlet.http.*;
 import javax.swing.event.EventListenerList;
 import java.beans.PropertyChangeListener;
 import java.io.Serializable;
@@ -92,7 +80,7 @@ public class Session implements PropertyService, Serializable {
 
     private transient ExternalizeManager externalizeManager;
 
-    private LowLevelEventDispatcher dispatcher = new LowLevelEventDispatcher();
+    private LowLevelEventDispatcher dispatcher = new LowLevelEventDispatcher(this);
 
     private final HashMap<String, Object> props = new HashMap<String, Object>();
 
@@ -129,6 +117,9 @@ public class Session implements PropertyService, Serializable {
     
     private ScriptManager scriptManager;
 
+    private Comet comet = null;
+
+    private HttpServlet wingServlet;
 
     /**
      * Which locales are supported by this servlet. If null, every locale from
@@ -205,6 +196,11 @@ public class Session implements PropertyService, Serializable {
         } // end of if ()
     }
 
+    public Session(HttpServlet wingServlet) {
+        this();
+        this.wingServlet = wingServlet;
+    }
+
     /**
      * Detect user agent (userAgent). Copy init parameters. Set max content length for uploads / requests.
      * Install look and feel.
@@ -219,6 +215,10 @@ public class Session implements PropertyService, Serializable {
         setServletRequest(request);
         setServletResponse(response);
         setUserAgentFromRequest(request);
+
+        if (isCometWingServletEnabled()) {
+            comet = new Comet(this, wingServlet);
+        }
 
         initProps(servletConfig);
         initMaxContentLength();
@@ -998,6 +998,14 @@ public class Session implements PropertyService, Serializable {
 
     public void setResourceMapper(ResourceMapper resourceMapper) {
         this.resourceMapper = resourceMapper;
+    }
+
+    public Comet getComet() {
+        return comet;
+    }
+
+    public boolean isCometWingServletEnabled() {
+        return (wingServlet instanceof CometWingServlet);
     }
 
     public Localizer getLocalizer() {

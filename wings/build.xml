@@ -13,8 +13,10 @@
     <property name="httpclient.version" value="commons-httpclient-3.1.jar"/>
 	<property name="dwr.version" value="dwr.jar"/>
     <property name="xalan.version" value="xalan.jar"/>
+    <property name="catalina.version" value="catalina.jar"/>
+    <property name="jetty.version" value="jetty-util-6.1.6rc0.jar"/>
+    <property name="glassfish.version" value="appserv-rt.jar"/>
     <property name="junit.version" value="junit-4.4.jar"/>
-
     <property name="test.log.dir" value="/tmp/" />
 
     <path id="build.classpath">
@@ -27,6 +29,9 @@
             <include name="${httpclient.version}"/>
             <include name="${dwr.version}"/>
             <include name="${xalan.version}"/>
+            <include name="${catalina.version}"/>
+            <include name="${jetty.version}"/>
+            <include name="${glassfish.version}"/>
             <include name="${junit.version}"/>
         </fileset>
     </path>
@@ -63,6 +68,7 @@
     	<file name="table.js"/>
     	<file name="splitpane.js"/>
         <file name="dialog.js"/>
+        <file name="comet.js"/>
     </filelist>
 
 	<fileset id="yui.js.modules" dir="src/res" >

@@ -37,6 +37,7 @@ wingS.global.init =  function(configObject) {
     wingS.global.updateEnabled = configObject.updateEnabled;
     wingS.global.updateCursor = configObject.updateCursor;
     wingS.global.autoAdjustLayout = configObject.autoAdjustLayout;
+    wingS.global.cometEnabled = configObject.cometEnabled;
     wingS.global.overlayManager = new YAHOO.widget.OverlayManager();
 
     // Initialize -wingS.ajax-
@@ -102,6 +103,11 @@ wingS.global.init =  function(configObject) {
         if (loglevel == "yui") {
             wingS.global.enableYuiConsole();
         }
+    }
+
+    // Initialize -wingS.comet-
+    if (wingS.global.cometEnabled) {
+        wingS.comet.init();
     }
 };
 

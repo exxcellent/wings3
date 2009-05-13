@@ -191,6 +191,13 @@ wingS.ajax.dequeueNextRequest = function() {
         var request = wingS.ajax.requestQueue.shift();
         var args = request.args;
         request.send(args[0], args[1], args[2], args[3], args[4]);
+    } //else {
+        //wingS.ajax.connectionObject =
+            //YAHOO.util.Connect.asyncRequest('GET', wingS.comet.cometPath, wingS.comet.callbackObject);
+    //}
+    else if (wingS.comet.newHangingGetAllowed) {
+        wingS.comet.newHangingGetAllowed = false;
+        wingS.comet.sendHangingGetRequest();
     }
 };
 

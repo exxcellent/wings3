@@ -36,6 +36,7 @@ import org.wings.RequestURL;
 import org.wings.Resource;
 import org.wings.SForm;
 import org.wings.SFrame;
+import org.wings.comet.*;
 import org.wings.event.ExitVetoException;
 import org.wings.event.SRequestEvent;
 import org.wings.externalizer.ExternalizeManager;
@@ -66,7 +67,7 @@ import org.wings.script.ScriptListener;
  *
  * @author <a href="mailto:haaf@mercatis.de">Armin Haaf</a>
  */
-final class SessionServlet
+public final class SessionServlet
         extends HttpServlet
         implements HttpSessionBindingListener {
     private final transient static Log log = LogFactory.getLog(SessionServlet.class);
@@ -202,7 +203,7 @@ final class SessionServlet
                            HttpServletRequest request,
                            HttpServletResponse response) throws ServletException {
         try {
-            session = new Session();
+            session = new Session(parent);
             SessionManager.setSession(session);
 
             // set request.url in session, if used in constructor of wings main classs
@@ -300,6 +301,14 @@ final class SessionServlet
 
         ReloadManager reloadManager = session.getReloadManager();
 
+        Comet comet = session.getComet();
+        if (comet != null) {
+            CometConnectionManager connectionManager = comet.getConnectionManager();
+            if (connectionManager != null && !(connectionManager instanceof SessionCometConnectionManager)) {
+                connectionManager.setBrowserId(req, response);
+            }
+        }
+
         try {
             /*
              * The tomcat 3.x has a bug, in that it does not encode the URL
@@ -376,6 +385,14 @@ final class SessionServlet
 
             if (extInfo != null && extInfo.getObject() instanceof UpdateResource) {
                 reloadManager.setUpdateMode(true);
+
+                String eventEpoch = req.getParameter("event_epoch");
+                UpdateResource updateResource = (UpdateResource) extInfo.getObject();
+                updateResource.getFrame().getEventEpoch();
+
+                if (!eventEpoch.equals(updateResource.getFrame().getEventEpoch())) {
+                    reloadManager.setUpdateMode(false);
+                }
             } else {
                 reloadManager.setUpdateMode(false);
             }
@@ -452,10 +469,11 @@ final class SessionServlet
                     String paramName = (String) en.nextElement();
                     String[] values = req.getParameterValues(paramName);
 
-                    // We do not need to dispatch the event epoch since it is already
-                    // handled a few lines above. Furthermore we will not dispatch any
-                    // names that start with an '_' (e.g. _xhrId or parts of XCalendar).
-                    if (paramName.equals("event_epoch") || paramName.startsWith("_")) {
+					//We do not need to dispatch the event epoch since it is already
+					// handled a few lines above. Furthermore we will not dispatch any
+					// names that start with an '_' (e.g. _xhrId or parts of XCalendar).
+                    if (paramName.equals("event_epoch") || paramName.startsWith("_")
+                            || paramName.equals("comet") || paramName.equals("polling")) {
                         continue;
                     }
 

@@ -24,11 +24,22 @@ import java.io.Writer;
  *
  * @author <a href="mailto:H.Zeller@acm.org">Henner Zeller</a>
  */
-public final class ServletDevice implements Device {
-    private final ServletOutputStream out;
-    private final Writer writer;
+public class ServletDevice implements Device {
+    protected ServletOutputStream out;
+    private Writer writer;
+    private String encoding;
 
     public ServletDevice(ServletOutputStream out, String encoding) throws IOException {
+        this.out = out;
+        this.encoding = encoding;
+        writer = new BufferedWriter(new OutputStreamWriter(out, encoding));
+    }
+
+    public ServletDevice(String encoding) {
+        this.encoding = encoding;
+    }
+
+    public void setServletOutputStream(ServletOutputStream out) throws IOException {
         this.out = out;
         writer = new BufferedWriter(new OutputStreamWriter(out, encoding));
     }

@@ -203,6 +203,10 @@ wingS.request.followLink = function(target, async, eventName, eventValue, script
     if (wingS.util.invokeScriptCodeArray(scriptCodeArray)) {
         var data = wingS.request.encodeEvent(eventName, eventValue);
 
+        if (eventName == "comet") {
+            wingS.comet.newHangingGetAllowed = true;
+        }
+
         // Send the event...
         if (wingS.global.updateEnabled && async) {
             // asynchronously

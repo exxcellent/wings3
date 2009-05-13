@@ -536,6 +536,8 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         initConfig.put("updateEnabled", frame.isUpdateEnabled());
         initConfig.put("updateCursor", Utils.mapToJsObject(frame.getUpdateCursor()));
         initConfig.put("autoAdjustLayout", Utils.mapToJsObject(frame.getAutoAdjustLayout()));
+        initConfig.put("cometEnabled", frame.getSession().getComet() != null && frame.getSession().getComet().isCometEnabled(frame));
+
         final String logLevel = frame.getLogLevel();
         if (logLevel != null && !"".equals(logLevel)) {
             initConfig.put("loglevel", logLevel);
@@ -618,6 +620,10 @@ public class FrameCG implements org.wings.plaf.FrameCG {
 
     public Update getEpochUpdate(SFrame frame, String epoch) {
         return new EpochUpdate(frame, epoch);
+    }
+
+    public Update getCometUpdate(SFrame frame, String task) {
+        return new CometUpdate(frame, task);
     }
 
     public Update getFocusUpdate(SFrame frame, SComponent focus) {
@@ -750,6 +756,26 @@ public class FrameCG implements org.wings.plaf.FrameCG {
             return handler;
         }
 
+    }
+
+    protected class CometUpdate extends AbstractUpdate {
+
+        private String task;
+
+        public CometUpdate(SComponent component, String task) {
+            super(component);
+            this.task = task;
+        }
+
+        public int getPriority() {
+            return 0;
+        }
+
+        public Handler getHandler() {
+            UpdateHandler handler = new UpdateHandler("comet");
+            handler.addParameter(task);
+            return handler;
+        }
     }
 
     protected class FocusUpdate extends AbstractUpdate<SFrame> {

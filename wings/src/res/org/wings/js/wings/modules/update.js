@@ -563,6 +563,16 @@ wingS.update.runScript = function(scriptToEval) {
     eval(scriptToEval);
 };
 
+wingS.update.comet = function(task) {
+    if (task == "connect") {
+        wingS.comet.connect();
+    } else if (task == "disconnect") {
+        wingS.comet.disconnect();
+    } else if (task == "switchToHanging") {
+        wingS.comet.switchToHanging();
+    }
+};
+
 /**
  * Updates the current default button name of this frame.
  * @param {String} defaultButtonName - the current default button name
