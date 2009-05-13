@@ -72,6 +72,7 @@ public final class XPopupCG extends FormCG implements org.wingx.plaf.XPopupCG {
         if (widthUnit != null && !widthUnit.equals("px")) {
             throw new IllegalStateException("Only 'px' is a valid unit, but width was specified as " + dim.getWidth());
         }
+        code.append("if (document.getElementById('" + popup.getName() + "yahoo') != null) { return; }\n");
         code.append(name).
                 append(" = new wingS.XPopup(").
                 append("'").append(popup.getName()).append("', ").

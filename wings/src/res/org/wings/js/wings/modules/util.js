@@ -223,7 +223,9 @@ wingS.util.requestFocus = function(id) {
                 // Workaround for IE6! Without timeout IE6 hangs the complete
                 // GUI in case 'parent' is a combobox and the newly selected
                 // index is smaller than before. Unbelieveable, but true!!!
-                window.setTimeout(function() { parent.focus() }, 100);
+                // Also, IE complains sometimes whe the focus is set on non focusable elements
+                // That's why we're wrapping the focus request call inside a try / catch block
+                window.setTimeout(function() { try { parent.focus(); } catch (er) {}}, 100);
             }
             return;
         }
