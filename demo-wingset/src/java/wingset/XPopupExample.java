@@ -63,21 +63,38 @@ public class XPopupExample
     }
 
     public SComponent createExample() {
-        SPanel panel = new SPanel(new SGridLayout(2, 1, 50, 50));
+        SPanel panel = new SPanel(new SGridLayout(1, 2, 50, 50));
 
-        SButton popupButton = new SButton("Popup button 1");
-        panel.add(popupButton);
-        final XPopup popup = new XPopup(popupButton, XPopup.BOTTOM_LEFT, 2, 2);
-        popup.setPreferredSize(new SDimension(400, 200));
-        popup.setLayout(new SBorderLayout());
-        popup.add(createContent(), SBorderLayout.CENTER);
-        popupButton.addActionListener(new ActionListener() {
+        SButton popupButton1 = new SButton("Popup button 1");
+        SButton popupButton2 = new SButton("Popup button 2");
+        panel.add(popupButton1);
+        panel.add(popupButton2);
+        final XPopup popup1 = new XPopup(popupButton1, XPopup.BOTTOM_LEFT, 2, 2);
+        popup1.setPreferredSize(new SDimension(400, 200));
+        popup1.setLayout(new SBorderLayout());
+        popup1.add(createContent(), SBorderLayout.CENTER);
+        final XPopup popup2 = new XPopup(popupButton2, XPopup.BOTTOM_LEFT, 2, 2);
+        popup2.setPreferredSize(new SDimension(300, 100));
+        popup2.setLayout(new SBorderLayout());
+        popup2.add(createContent(), SBorderLayout.CENTER);
+
+        popupButton1.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                if (popup.isVisible()) {
-                    popup.setVisible(false);
+                if (popup1.isVisible()) {
+                    popup1.setVisible(false);
                 } else {
-                    popup.setVisible(true);
+                    popup1.setVisible(true);
+                }
+            }
+        });
+        popupButton2.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                if (popup2.isVisible()) {
+                    popup2.setVisible(false);
+                } else {
+                    popup2.setVisible(true);
                 }
             }
         });
