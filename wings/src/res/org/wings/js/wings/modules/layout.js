@@ -65,5 +65,17 @@ wingS.layout.scrollPane = function(tableId) {
         div.style.display = "block";
         //div.style.overflow = "auto";
     }
+    // The following two lines are a hack needed to make IE work properly. The browser displays
+    // scrollpanes in dialogs only after the mouse hovers the dialog. By playing with the display CSS attribute
+    // we can work around this problem.
+    div.style.display = 'none';
+    setTimeout('wingS.layout.updateScrollPaneDiv("' + tableId + '")', 1);
+};
+
+// Part of the hack described earlier
+wingS.layout.updateScrollPaneDiv = function(tableId) {
+    var table = document.getElementById(tableId);
+    var div = table.getElementsByTagName("DIV")[0];
+    div.style.display = "block";
 };
 
