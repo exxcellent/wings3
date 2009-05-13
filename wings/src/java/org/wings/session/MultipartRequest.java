@@ -122,6 +122,16 @@ public final class MultipartRequest extends HttpServletRequestWrapper {
         return files.keySet().iterator();
     }
 
+    public String getParameter(String name) {
+      if (urlencodedRequest) 
+        return super.getParameter(name);
+      
+      List<String> v = parameters.get(name);
+      if ( v == null || v.isEmpty() )
+        return null;
+      return v.get( 0 );
+    }
+    
     public String[] getParameterValues(String name) {
         if (urlencodedRequest) return super.getParameterValues(name);
         
