@@ -40,6 +40,8 @@ public class XPopup extends SWindow {
 
     private SComponent focusedComponent;
 
+    private final SComponentAdapter componentListener;
+
     /**
      * Creates a <code>XPopup</code> which will pe absolutely placed at the specified
      * coordinates.
@@ -69,14 +71,15 @@ public class XPopup extends SWindow {
     public XPopup(SComponent anchor, String corner, int offsetX, int offsetY) {
         this.anchor = anchor;
         this.corner = corner;
-        this.anchor.addComponentListener(new SComponentAdapter() {
+        this.componentListener = new SComponentAdapter() {
 
             @Override
             public void componentHidden(SComponentEvent e) {
                 setVisible(false);
             }
 
-        });
+        };
+        this.anchor.addComponentListener(componentListener);
         setX(offsetX);
         setY(offsetY);
         setVisible(false);
@@ -96,10 +99,34 @@ public class XPopup extends SWindow {
 
     @Override
     public void setVisible(boolean visible) {
+        if (visible) {
+            if (anchor != null) {
+                addComponentListener(anchor);
+            }
+        } else {
+            if (anchor != null) {
+                removeComponentListener(anchor);
+            }
+        }
         if (isVisible() == visible) {
             return;
         }
         super.setVisible(visible);
+    }
+
+    private void addComponentListener(SComponent component) {
+        if (component != null) {
+            component.removeComponentListener(componentListener);
+            component.addComponentListener(componentListener);
+            addComponentListener(component.getParent());
+        }
+    }
+
+    private void removeComponentListener(SComponent component) {
+        if (component != null) {
+            component.removeComponentListener(componentListener);
+            removeComponentListener(component.getParent());
+        }
     }
 
     @Override
