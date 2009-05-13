@@ -33,7 +33,6 @@ public class XRichTextEditorSimpleExample extends WingSetPane {
         textArea = new STextArea();
         textArea.setText(editor.getText());
         textArea.setPreferredSize(SDimension.FULLAREA);
-        textArea.setEditable(false);
         
         panel.add(editor);
         panel.add(new SSpacer("100%", "5px"));

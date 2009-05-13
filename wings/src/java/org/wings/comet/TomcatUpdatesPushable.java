@@ -11,6 +11,7 @@ import javax.servlet.ServletOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
+// This class isn't used currently - but it may be used in the future? TODO: Jens Hagel
 class TomcatUpdatesPushable extends TomcatPushable {
 
     private final ReloadManager reloadManager;
