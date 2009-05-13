@@ -6,9 +6,12 @@ import org.wings.io.Device;
 import org.wings.event.SDocumentEvent;
 import org.wings.script.JavaScriptListener;
 import org.wings.script.ScriptListener;
+import org.wings.script.JavaScriptEvent;
 import org.wingx.plaf.RichTextEditorCG;
 
 import java.io.IOException;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 public class XRichTextEditor extends STextComponent {
     private String configuration;
@@ -24,13 +27,21 @@ public class XRichTextEditor extends STextComponent {
 
         this.type = type;
         updateListener();
+        addPropertyChangeListener("enabled", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+            }
+        });
+    }
+
+    public String getEditorName() {
+        return "editor_" + getName();
     }
 
     private void updateListener() {
         if(listener != null)
             removeScriptListener(listener);
 
-        String name = "editor_" + getName();
+        String name = getEditorName();
         String height = "";
         String width = "";
 
@@ -50,7 +61,8 @@ public class XRichTextEditor extends STextComponent {
             builder.append("window.").append(name).append(" = new YAHOO.widget.").append(editor).append("('").append(getName()).append("', " +
                     "{" +
                         "height:\"").append(height).append("\"," +
-                        "width:\"").append(width).append("\"")
+                        "width:\"").append(width).append("\",")
+                        .append("allowNoEdit : ").append(true) // last , is added by next line
                         .append((config.trim().length() > 0 ? "," + config : ""))
                     .append("});\n");
             //disable titlebar
@@ -63,12 +75,37 @@ public class XRichTextEditor extends STextComponent {
             builder.append(name).append(".on('editorKeyUp', function(o) { var elt = document.getElementById('").append(getName()).append("'); " + name + ".saveHTML(); }, ").append(name).append(", true);\n");
             builder.append(name).append(".on('afterRender', function(o) { ").append("document.getElementById(").append(name).append(".get('iframe').get('id')).tabIndex = '").append(getFocusTraversalIndex()).append("'; }, true);\n");
             builder.append(name).append(".on('afterRender', function(o) { ").append(name).append(".setEditorHTML('").append(doubleEscape(getCG().getText(this))).append("'); }, true);\n");
+            builder.append(name).append(".on('afterRender', function(o) { ").append(name).append(".set('disabled', ").append(!isEnabled()).append("); }, true);\n");
             builder.append(name).append(".render();\n");
-
         builder.append("});");
 
-        listener = new JavaScriptListener(null, null, builder.toString());
+        listener = new JavaScriptListener("special", null, builder.toString());
         addScriptListener(listener);
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        boolean oldVal = this.enabled;
+        this.enabled = enabled;
+        if(oldVal != enabled)
+            update(getCG().getEnabledAndWritabilityUpdate(XRichTextEditor.this));
+        // editor_x.set("disabled", !enabled)
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void setEditable(boolean ed) {
+        // editor_x.get("iframe").get
+        super.setEditable(ed);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean isEditable() {
+        return super.isEditable();    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     private String doubleEscape(String text) {

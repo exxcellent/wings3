@@ -53,12 +53,34 @@ public class RichTextEditorCG extends AbstractComponentCG<XRichTextEditor> imple
             device.print("<table style=\"table-layout: fixed; width: " + actualWidth + "\"><tr>");
             device.print("<td style=\"padding-right: " + Utils.calculateHorizontalOversize(component, true) + "px\">");
         }
-
-        device.print("<textarea");
+        /*
+        Object clientProperty = component.getClientProperty("onChangeSubmitListener");
+        // If the application developer attached any SDocumentListeners to this
+    	// STextArea, the surrounding form gets submitted as soon as the content
+        // of this STextArea changed.
+        if (component.getDocumentListeners().length > 1) {
+        	// We need to test if there are at least 2 document
+        	// listeners because each text component registers
+        	// itself as a listener of its document as well.
+            if (clientProperty == null) {
+            	String event = JavaScriptEvent.ON_CHANGE;
+            	String code = "wingS.request.sendEvent(event, true, " + !component.isReloadForced() + ");";
+                JavaScriptListener javaScriptListener = new JavaScriptListener(event, code);
+                component.addScriptListener(javaScriptListener);
+                component.putClientProperty("onChangeSubmitListener", javaScriptListener);
+            }
+        } else if (clientProperty != null && clientProperty instanceof JavaScriptListener) {
+        	component.removeScriptListener((JavaScriptListener) clientProperty);
+        	component.putClientProperty("onChangeSubmitListener", null);
+        }
+                          */
+        device.print("<textarea ");
         Utils.optAttribute(device, "id", component.getName());
         Utils.optAttribute(device, "eid", component.getName());
         Utils.optAttribute(device, "name", component.getName());
         Utils.optAttribute(device, "tabIndex", "-1");
+        //Utils.writeEvents(device, component, new String[] { "special" });
+
         device.print(">");
         device.print(getText(component));
         device.print("</textarea>");
@@ -91,6 +113,39 @@ public class RichTextEditorCG extends AbstractComponentCG<XRichTextEditor> imple
             update.addParameter(builder.toString());
             // TODO: update size, border, etc.
             return update;
+        }
+
+        @Override
+        public int getPriority() {
+            return 1;
+        }
+    }
+
+    public Update getEnabledAndWritabilityUpdate(XRichTextEditor component) {
+        return new EnabledAndWritabilityUpdate(component);
+    }
+
+    private class EnabledAndWritabilityUpdate extends AbstractUpdate {
+        private EnabledAndWritabilityUpdate(XRichTextEditor component) {
+            super(component);
+        }
+
+        public Handler getHandler() {
+            XRichTextEditor editor = (XRichTextEditor)component;
+            UpdateHandler handler = new UpdateHandler("runScript");
+            StringBuilder builder = new StringBuilder(editor.getEditorName());
+            builder.append(".set('disabled', ");
+            builder.append(!editor.isEnabled());
+            builder.append(");");
+
+            handler.addParameter(builder.toString());
+
+            return handler;
+        }
+
+        @Override
+        public int getPriority() {
+            return 2;
         }
     }
 }
