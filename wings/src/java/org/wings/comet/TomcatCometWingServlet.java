@@ -109,6 +109,7 @@ public class TomcatCometWingServlet
 
         if(cometEvent.getEventSubType() == null) {
             pushable.reset();
+            cometEvent.close();
             return;
         }
 
