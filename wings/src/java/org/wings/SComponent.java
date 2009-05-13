@@ -1091,6 +1091,19 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
     }
 
     /**
+     * This method tries to find the given SComponent recursively 
+     * in the children of this Component. Only SContainers have children, 
+     * so the default returns false;  
+     * 
+     * @param component
+     * @return true if the given component was recursively found in the 
+     * children of <code> this </code>, false otherwise.
+     */
+    public boolean isParentOf(SComponent component) {
+    	return false;
+    }
+    
+    /**
      * Set wether this component should be enabled.
      *
      * @param enabled true if the component is enabled, false otherwise

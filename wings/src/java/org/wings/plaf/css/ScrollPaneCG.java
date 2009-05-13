@@ -40,7 +40,7 @@ public class ScrollPaneCG extends org.wings.plaf.css.AbstractComponentCG impleme
                 if (preferredSize.getHeightInt() < 0) Utils.setPreferredSize(component, preferredSize.getWidth(), "400");;
             }
 
-            ScriptManager.getInstance().addScriptListener(new LayoutScrollPaneScript(component.getName()));
+            reLayout( component, RELAYOUT_SCROLLPANE);
             writeContent(device, component);
         } else {
             writeContent(device, component);
@@ -83,10 +83,10 @@ public class ScrollPaneCG extends org.wings.plaf.css.AbstractComponentCG impleme
 
         if (clientLayout) {
             Utils.setPreferredSize(scrollPane, preferredSize.getWidth(), height);
-            scrollPane.getSession().getScriptManager().addScriptListener(new LayoutFillScript(scrollPane.getName()));
+            reLayout(scrollPane, RELAYOUT_FILL);
         }
         else if (clientFix)
-            scrollPane.getSession().getScriptManager().addScriptListener(new LayoutFixScript(scrollPane.getName()));
+        	reLayout(scrollPane, RELAYOUT_FIX);
    
         device.print(">");
        

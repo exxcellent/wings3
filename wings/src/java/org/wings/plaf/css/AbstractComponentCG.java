@@ -431,6 +431,22 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
         updateDragAndDrop(component);
         return new ComponentUpdate<COMPONENT_TYPE>(this, component);
 	}
+    
+    /**
+     * Marks this component for later layout. If null, the attribute will not 
+     * be set in {@link Utils#writeAllAttributes(Device, SComponent)}. <br>
+     * Currently the following Options are supported: <br> 
+     * <code>fix</code> -  to call the Method wings.layout.fix,<br>
+     * <code>fill</code> - to call the Method wings.layout.scrollpane.fill, <br>
+     * <code>scrollpane</code> - to call the Method wings.layout.scrollpane, <br>
+     * on this component.
+     *   
+     */
+	protected void reLayout(SComponent component, String layoutOption) {
+		
+		component.getParentFrame().addLayoutCandidate(component, layoutOption);
+		
+	}
 
 	protected static class ComponentUpdate<COMPONENT_TYPE extends SComponent> extends AbstractUpdate<COMPONENT_TYPE> {
         private final AbstractComponentCG<COMPONENT_TYPE> cg;
@@ -472,4 +488,5 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
 			return handler;
 		}
 	}
+	
 }

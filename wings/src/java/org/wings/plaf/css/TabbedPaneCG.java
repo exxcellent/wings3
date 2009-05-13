@@ -96,7 +96,7 @@ public class TabbedPaneCG extends AbstractComponentCG {
 
             if (clientLayout) {
                 Utils.setPreferredSize(component, preferredSize.getWidth(), height);
-                ScriptManager.getInstance().addScriptListener(new LayoutFillScript(component.getName()));
+                reLayout(component, RELAYOUT_FILL);
             }
 
             device.print(">");

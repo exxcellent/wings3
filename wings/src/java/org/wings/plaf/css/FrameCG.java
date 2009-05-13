@@ -13,34 +13,59 @@
 package org.wings.plaf.css;
 
 
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+
+import javax.swing.InputMap;
+import javax.swing.KeyStroke;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wings.plaf.Update;
-import org.wings.*;
-import org.wings.style.CSSProperty;
-import org.wings.sdnd.SDragAndDropManager;
-import org.wings.event.SRequestListener;
-import org.wings.event.SRequestEvent;
+import org.wings.Renderable;
+import org.wings.SComponent;
+import org.wings.SContainer;
+import org.wings.SFrame;
+import org.wings.SResourceIcon;
+import org.wings.SToolTipManager;
+import org.wings.SWindow;
+import org.wings.Version;
 import org.wings.dnd.DragAndDropManager;
-import org.wings.header.*;
+import org.wings.event.SRequestEvent;
+import org.wings.event.SRequestListener;
+import org.wings.header.Header;
+import org.wings.header.JavaScriptHeader;
+import org.wings.header.Link;
+import org.wings.header.Meta;
+import org.wings.header.Script;
+import org.wings.header.SessionHeaders;
 import org.wings.io.Device;
 import org.wings.plaf.CGManager;
-import org.wings.plaf.css.script.OnHeadersLoadedScript;
+import org.wings.plaf.Update;
+import org.wings.plaf.css.script.LayoutScript;
 import org.wings.plaf.css.script.OnPageRenderedScript;
 import org.wings.resource.ClassPathResource;
 import org.wings.resource.ReloadResource;
 import org.wings.resource.ResourceManager;
-import org.wings.resource.UpdateResource;
 import org.wings.resource.ResourceNotFoundException;
-import org.wings.script.*;
-import org.wings.session.*;
-
-import javax.swing.*;
-
-import java.io.IOException;
-import java.util.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.InputEvent;
+import org.wings.resource.UpdateResource;
+import org.wings.script.JavaScriptDOMListener;
+import org.wings.script.JavaScriptEvent;
+import org.wings.script.JavaScriptListener;
+import org.wings.script.ScriptListener;
+import org.wings.sdnd.SDragAndDropManager;
+import org.wings.session.SCursor;
+import org.wings.session.ScriptManager;
+import org.wings.session.Session;
+import org.wings.session.SessionManager;
+import org.wings.style.CSSProperty;
 
 /**
  * PLAF renderer for SFrames.
@@ -501,6 +526,10 @@ public class FrameCG implements org.wings.plaf.FrameCG {
 
         // hand script listeners of frame to script manager
         scriptManager.addScriptListeners(frame.getScriptListeners());
+        
+        // handle re-layout of components
+        scriptManager.addScriptListener( new LayoutScript(frame.getLayoutCandidates()) );
+        
 
         device.print("<script type=\"text/javascript\">\n");
 
@@ -516,7 +545,8 @@ public class FrameCG implements org.wings.plaf.FrameCG {
             }
         }
         scriptManager.clearScriptListeners();
-
+        frame.clearLayoutCandidatesMap();
+        
         device.print("</script>\n");
     }
     

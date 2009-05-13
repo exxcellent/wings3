@@ -10,6 +10,7 @@ import org.wings.ReloadManager;
 import org.wings.SFrame;
 import org.wings.plaf.Update;
 import org.wings.plaf.css.Utils;
+import org.wings.plaf.css.script.LayoutScript;
 import org.wings.io.Device;
 import org.wings.script.ScriptListener;
 import org.wings.session.ScriptManager;
@@ -63,6 +64,9 @@ public class UpdateResource extends DynamicResource {
                     writeUpdate(out, (Update) i.next());
                 }
 
+                // handle re-layout of components
+                scriptManager.addScriptListener( new LayoutScript(frame.getLayoutCandidates()) );
+                
                 // update scripts
                 ScriptListener[] scriptListeners = scriptManager.getScriptListeners();
                 for (int i = 0; i < scriptListeners.length; ++i) {
@@ -71,6 +75,7 @@ public class UpdateResource extends DynamicResource {
                     }
                 }
                 scriptManager.clearScriptListeners();
+                frame.clearLayoutCandidatesMap();
 			}
             writeFooter(out);
 

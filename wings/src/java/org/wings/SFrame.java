@@ -857,4 +857,63 @@ public class SFrame
     public void setCometUpdate(String task) {
         update(((FrameCG) getCG()).getCometUpdate(this, task));
     }
+
+    /**
+     * Adds the component to the list of components that the layout script 
+     * has to handle after rendering. The components must be hold in an 
+     * ordered (tree) mode. 
+     * 
+     * @param component
+     * @param layoutOption
+     */
+	public void addLayoutCandidate(SComponent component, String layoutOption) {
+        layoutCandidates.put(component, layoutOption);
+    }
+
+	/**
+	 * resets the list of components
+	 * 
+	 */
+    public void clearLayoutCandidatesMap() {
+        layoutCandidates = new TreeMap<SComponent, String>(
+                new ParentChildComparator());
+    }
+
+    /**
+     * Gives the list of components that the layout script 
+     * has to handle after rendering. This method will be called at 
+     * {@link FrameCG#handleScripts} .
+     * 
+     * @return
+     */
+    public TreeMap<SComponent, String> getLayoutCandidates() {
+        return layoutCandidates;
+    }
+
+    /**
+     * Holds the list of components that the layout script 
+     * has to handle after rendering. The components must be hold in an 
+     * ordered (tree) mode.
+     */ 
+    TreeMap<SComponent, String> layoutCandidates = new TreeMap<SComponent, String>(
+            new ParentChildComparator());
+
+    /** 
+     * This comparator is used to sort the list of components that the layout script 
+     * has to handle after rendering. 
+     * 
+     */
+    class ParentChildComparator implements Comparator<SComponent> {
+        @Override
+        public int compare(SComponent o1, SComponent o2) {
+            if (o1.getName().equals(o2.getName()))
+                return 0; // components with same name will be overwritten.
+            if (o1.isParentOf(o2))
+                return -1;
+            if (o2.isParentOf(o1))
+                return 1;
+            return -1; // no Relationship -> append !
+        }
+    };
+
 }

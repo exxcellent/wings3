@@ -61,7 +61,7 @@ public final class ScrollBarCG extends org.wings.plaf.css.AbstractComponentCG<SS
 
         if (clientLayout) {
             Utils.setPreferredSize(sb, preferredSize.getWidth(), height);
-            sb.getSession().getScriptManager().addScriptListener(new LayoutFillScript(sb.getName()));
+            reLayout(sb, RELAYOUT_FILL);
         }
 
         device.print("><tbody><tr><td>\n");
