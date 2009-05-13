@@ -19,6 +19,7 @@
     <orderEntry type="library" name="DWR" level="project" />
     <orderEntry type="library" name="Log4J" level="project" />
     <orderEntry type="library" name="JUnit" level="project" />
+    <orderEntry type="library" name="Catalina" level="project" />
   </component>
   <component name="POM File Configuration" pomFile="" />
   <component name="copyright">
