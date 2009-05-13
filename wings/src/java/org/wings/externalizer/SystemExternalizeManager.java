@@ -52,7 +52,7 @@ public class SystemExternalizeManager extends AbstractExternalizeManager {
     public void setPrefix(final String prefix) {
         if (prefix.startsWith("-"))
             super.setPrefix(prefix);
-        else  // The prefix MUST start with a - as this is the identifiert for global resources.
+        else  // The prefix MUST start with a - as this is the identifier for global resources.
             super.setPrefix("-" + prefix);
     }
 

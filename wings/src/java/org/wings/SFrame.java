@@ -904,7 +904,6 @@ public class SFrame
      * 
      */
     class ParentChildComparator implements Comparator<SComponent> {
-        @Override
         public int compare(SComponent o1, SComponent o2) {
             if (o1.getName().equals(o2.getName()))
                 return 0; // components with same name will be overwritten.

@@ -12,6 +12,20 @@ import java.io.IOException;
 import java.util.Iterator;
 
 // This class isn't used currently - but it may be used in the future? TODO: Jens Hagel
+/*
+Info about this class from Jens Hagel: (german)      
+ 
+Die Klasse ist dazu da die Updates des Komponentenbaums direkt über
+den hangingGetRequest zu schicken (also nicht nur ein Trigger).
+Dazu kann es aber zu Schwierigkeiten kommen, weil dann über
+2 Verbindungen Updates zum Client kommen können und die
+korrekte Reihenfolge somit nicht sichergestellt ist. Du kannst
+sie ja mal noch drin lassen (zumindest im air branch).
+Wenn man mag kann man das ja später aufgreifen und irgendwas
+mit Sequenznummern einbauen damit die konkreten Updates auch
+über den HGetRequest geschickt werden können.
+
+ */
 class TomcatUpdatesPushable extends TomcatPushable {
 
     private final ReloadManager reloadManager;
