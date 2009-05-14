@@ -24,6 +24,7 @@ import org.wings.session.SessionManager;
 import org.wings.style.StyleSheet;
 import org.wings.util.ComponentVisitor;
 import org.wings.util.StringUtil;
+import org.wings.script.ScriptListener;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
@@ -864,19 +865,18 @@ public class SFrame
      * ordered (tree) mode. 
      * 
      * @param component
-     * @param layoutOption
+     * @param scriptListener
      */
-	public void addLayoutCandidate(SComponent component, String layoutOption) {
-        layoutCandidates.put(component, layoutOption);
+	public void addSortedScriptListener(SComponent component, ScriptListener scriptListener) {
+        this.sortedScriptListeners.put(component, scriptListener);
     }
 
 	/**
 	 * resets the list of components
 	 * 
 	 */
-    public void clearLayoutCandidatesMap() {
-        layoutCandidates = new TreeMap<SComponent, String>(
-                new ParentChildComparator());
+    public void clearSortedScriptListeners() {
+        sortedScriptListeners.clear();
     }
 
     /**
@@ -886,8 +886,8 @@ public class SFrame
      * 
      * @return
      */
-    public TreeMap<SComponent, String> getLayoutCandidates() {
-        return layoutCandidates;
+    public Collection<ScriptListener> getSortedScriptListeners() {
+        return sortedScriptListeners.values();
     }
 
     /**
@@ -895,7 +895,7 @@ public class SFrame
      * has to handle after rendering. The components must be hold in an 
      * ordered (tree) mode.
      */ 
-    TreeMap<SComponent, String> layoutCandidates = new TreeMap<SComponent, String>(
+    TreeMap<SComponent, ScriptListener> sortedScriptListeners = new TreeMap<SComponent, ScriptListener>(
             new ParentChildComparator());
 
     /** 
@@ -905,13 +905,11 @@ public class SFrame
      */
     class ParentChildComparator implements Comparator<SComponent> {
         public int compare(SComponent o1, SComponent o2) {
-            if (o1.getName().equals(o2.getName()))
-                return 0; // components with same name will be overwritten.
             if (o1.isParentOf(o2))
                 return -1;
-            if (o2.isParentOf(o1))
+            else if (o2.isParentOf(o1))
                 return 1;
-            return -1; // no Relationship -> append !
+            return 1; // no Relationship -> append !
         }
     };
 

@@ -61,15 +61,15 @@ public final class ScrollBarCG extends org.wings.plaf.css.AbstractComponentCG<SS
 
         if (clientLayout) {
             Utils.setPreferredSize(sb, preferredSize.getWidth(), height);
-            reLayout(sb, RELAYOUT_FILL);
+            addScriptLater(sb, new LayoutFillScript(sb.getName()));
         }
 
         device.print("><tbody><tr><td>\n");
         device.print("<div class=\"outer\"><div class=\"inner\"/></div>\n");
         device.print("</td></tr></tbody></table>");
 
-        sb.getSession().getScriptManager().addScriptListener(new VerticalScrollBarLayoutScript(sb));
-        sb.getSession().getScriptManager().addScriptListener(new VerticalScrollBarSetScript(sb));
+        addScriptLater(sb, new VerticalScrollBarLayoutScript(sb));
+        addScriptLater(sb, new VerticalScrollBarSetScript(sb));
     }
 
     private void writeHorizontalScrollbar(Device device, SScrollBar sb) throws IOException {
@@ -79,8 +79,8 @@ public final class ScrollBarCG extends org.wings.plaf.css.AbstractComponentCG<SS
         device.print("<div class=\"outer\"><div class=\"inner\"/></div>\n");
         device.print("</td></tr></tbody></table>");
 
-        sb.getSession().getScriptManager().addScriptListener(new HorizontalScrollBarLayoutScript(sb));
-        sb.getSession().getScriptManager().addScriptListener(new HorizontalScrollBarSetScript(sb));
+        addScriptLater(sb, new HorizontalScrollBarLayoutScript(sb));
+        addScriptLater(sb, new HorizontalScrollBarSetScript(sb));
     }
 
     public Update getAdjustmentUpdate(SScrollBar scrollBar, int value, int extent, int size) {

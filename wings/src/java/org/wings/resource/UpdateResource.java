@@ -2,7 +2,7 @@ package org.wings.resource;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Collection;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -64,9 +64,12 @@ public class UpdateResource extends DynamicResource {
                     writeUpdate(out, (Update) i.next());
                 }
 
-                // handle re-layout of components
-                scriptManager.addScriptListener( new LayoutScript(frame.getLayoutCandidates()) );
-                
+                // handle delayed script listeners
+                Collection<ScriptListener> listeners = frame.getSortedScriptListeners();
+                for(ScriptListener listener : listeners) {
+                    scriptManager.addScriptListener(listener);
+                }
+
                 // update scripts
                 ScriptListener[] scriptListeners = scriptManager.getScriptListeners();
                 for (int i = 0; i < scriptListeners.length; ++i) {
@@ -75,7 +78,7 @@ public class UpdateResource extends DynamicResource {
                     }
                 }
                 scriptManager.clearScriptListeners();
-                frame.clearLayoutCandidatesMap();
+                frame.clearSortedScriptListeners();
 			}
             writeFooter(out);
 

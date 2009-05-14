@@ -16,13 +16,7 @@ package org.wings.plaf.css;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import javax.swing.InputMap;
 import javax.swing.KeyStroke;
@@ -49,7 +43,6 @@ import org.wings.header.SessionHeaders;
 import org.wings.io.Device;
 import org.wings.plaf.CGManager;
 import org.wings.plaf.Update;
-import org.wings.plaf.css.script.LayoutScript;
 import org.wings.plaf.css.script.OnPageRenderedScript;
 import org.wings.resource.ClassPathResource;
 import org.wings.resource.ReloadResource;
@@ -527,9 +520,11 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         // hand script listeners of frame to script manager
         scriptManager.addScriptListeners(frame.getScriptListeners());
         
-        // handle re-layout of components
-        scriptManager.addScriptListener( new LayoutScript(frame.getLayoutCandidates()) );
-        
+        // handle delayed script listeners
+        Collection<ScriptListener> listeners = frame.getSortedScriptListeners();
+        for(ScriptListener listener : listeners) {
+            scriptManager.addScriptListener(listener);
+        }
 
         device.print("<script type=\"text/javascript\">\n");
 
@@ -545,7 +540,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
             }
         }
         scriptManager.clearScriptListeners();
-        frame.clearLayoutCandidatesMap();
+        frame.clearSortedScriptListeners();
         
         device.print("</script>\n");
     }

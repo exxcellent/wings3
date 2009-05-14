@@ -14,6 +14,8 @@ package org.wings.plaf.css;
 
 
 import org.wings.*;
+import org.wings.plaf.css.script.LayoutFixScript;
+import org.wings.plaf.css.script.LayoutFillScript;
 import org.wings.io.Device;
 
 public class ContainerCG extends AbstractComponentCG implements org.wings.plaf.PanelCG {
@@ -40,7 +42,7 @@ public class ContainerCG extends AbstractComponentCG implements org.wings.plaf.P
 
         if (clientLayout) {
             Utils.setPreferredSize(component, preferredSize.getWidth(), height);
-            reLayout(component, RELAYOUT_FILL);
+            addScriptLater(component, new LayoutFillScript(component.getName()));
         }
 
         device.print(">");

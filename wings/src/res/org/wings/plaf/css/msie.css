@@ -139,8 +139,9 @@ TABLE.formbutton_hover {
 /* this is the SScrollbar definition used by msie7 and msie6 - msie6 ignores max and min-width and uses
     the style defined in msie6.css */
 .SScrollBar_vertical * {
-    max-width:18px;
-    min-width:17px;
+    width:18px;
+  /*  max-width:18px;
+    min-width:17px; */
 }
 
 .DivisionControl {

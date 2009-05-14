@@ -25,7 +25,6 @@ import org.wings.plaf.*;
 import org.wings.plaf.css.dwr.CallableManager;
 import org.wings.plaf.css.script.OnPageRenderedScript;
 import org.wings.script.ScriptListener;
-import org.wings.session.BrowserType;
 import org.wings.session.ScriptManager;
 import org.wings.util.SessionLocal;
 
@@ -432,21 +431,9 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
         return new ComponentUpdate<COMPONENT_TYPE>(this, component);
 	}
     
-    /**
-     * Marks this component for later layout. If null, the attribute will not 
-     * be set in {@link Utils#writeAllAttributes(Device, SComponent)}. <br>
-     * Currently the following Options are supported: <br> 
-     * <code>fix</code> -  to call the Method wings.layout.fix,<br>
-     * <code>fill</code> - to call the Method wings.layout.scrollpane.fill, <br>
-     * <code>scrollpane</code> - to call the Method wings.layout.scrollpane, <br>
-     * on this component.
-     *   
-     */
-	protected void reLayout(SComponent component, String layoutOption) {
-		
-		component.getParentFrame().addLayoutCandidate(component, layoutOption);
-		
-	}
+    protected void addScriptLater(SComponent component, ScriptListener listener) {
+        component.getParentFrame().addSortedScriptListener(component, listener);
+    }
 
 	protected static class ComponentUpdate<COMPONENT_TYPE extends SComponent> extends AbstractUpdate<COMPONENT_TYPE> {
         private final AbstractComponentCG<COMPONENT_TYPE> cg;
