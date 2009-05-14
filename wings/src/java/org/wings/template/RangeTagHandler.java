@@ -12,13 +12,13 @@
  */
 package org.wings.template;
 
+import java.io.IOException;
+import java.io.Reader;
+
 import org.wings.io.Device;
 import org.wings.template.parser.ParseContext;
 import org.wings.template.parser.PositionReader;
 import org.wings.template.parser.SGMLTag;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * A TemplateTagHandler
@@ -102,7 +102,7 @@ public class RangeTagHandler extends TemplateTagHandler {
      * @throws Exception anything can happen .. and throw an Exception
      *                   which is caught in PageParser
      */
-    public void executeTag(ParseContext context, InputStream input)
+    public void executeTag(ParseContext context, Reader input)
             throws Exception {
         super.executeTag(context, input);
 

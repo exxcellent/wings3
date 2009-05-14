@@ -12,15 +12,15 @@
  */
 package org.wings.template;
 
+import java.io.Reader;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.wings.SComponent;
 import org.wings.STemplateLayout;
 import org.wings.io.Device;
 import org.wings.template.parser.ParseContext;
 import org.wings.template.parser.SpecialTagHandler;
-
-import java.io.InputStream;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * A TemplateTagHandler
@@ -59,7 +59,7 @@ abstract class TemplateTagHandler implements SpecialTagHandler {
      * @throws Exception anything can happen .. and throw an Exception
      *                   which is caught in PageParser
      */
-    public void executeTag(ParseContext context, InputStream input)
+    public void executeTag(ParseContext context, Reader input)
             throws Exception {
         TemplateParseContext tcontext = (TemplateParseContext) context;
         Device sink = tcontext.getDevice();

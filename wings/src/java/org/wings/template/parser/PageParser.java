@@ -12,14 +12,25 @@
  */
 package org.wings.template.parser;
 
-import org.wings.template.FileTemplateSource;
-import org.wings.template.LabelTagHandler;
-import org.wings.template.TemplateSource;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.io.*;
-import java.util.*;
+import org.wings.session.SessionManager;
+import org.wings.template.LabelTagHandler;
+import org.wings.template.TemplateSource;
 
 /**
  * <CODE>PageParser</CODE>
@@ -202,17 +213,15 @@ public class PageParser {
      * @param parts page sections, as provide by parsePage()
      * @see #parsePage
      */
-    private void interpretPage(TemplateSource source,
-                               List parts, ParseContext context)
-            throws IOException {
+    private void interpretPage(TemplateSource source, List parts, ParseContext context) throws IOException {
 
-        OutputStream out = context.getOutputStream();
-        InputStream inStream = null;
-        byte buf[] = null;
+    	Writer out = new OutputStreamWriter(context.getOutputStream(), getStreamEncoding());
+        Reader in = null;
+        char[] buf = null;
 
         try {
             // input
-            inStream = source.getInputStream();
+            in = new InputStreamReader(source.getInputStream(), getStreamEncoding());
             long inPos = 0;
 
             /*
@@ -227,17 +236,17 @@ public class PageParser {
              * created here, so we may use larger Buffers
              * here.
              */
-            buf = new byte[4096]; // Get buffer from Buffer Manager
+            buf = new char[4096]; // Get buffer from Buffer Manager
 
             for (int i = 0; i < parts.size(); i++) {
                 /** <critical-path> **/
                 SpecialTagHandler part = (SpecialTagHandler) parts.get(i);
                 // copy TemplateSource content till the beginning of the Tag:
-                copy(inStream, out, part.getTagStart() - inPos, buf);
+                copy(in, out, part.getTagStart() - inPos, buf);
 
                 context.startTag(i);
                 try {
-                    part.executeTag(context, inStream);
+                    part.executeTag(context, in);
                 }
                         /*
                          * Display any Exceptions or Errors as
@@ -256,11 +265,11 @@ public class PageParser {
                 /** </critical-path> **/
             }
             // copy rest until end of TemplateSource
-            copy(inStream, out, -1, buf);
+            copy(in, out, -1, buf);
         } finally {
             // clean up resouce: opened input stream
-            if (inStream != null)
-                inStream.close();
+            if (in != null)
+                in.close();
             buf = null; // return buffer to Buffer Manager
         }
         out.flush();
@@ -270,21 +279,17 @@ public class PageParser {
      * copies an InputStream to an OutputStream. copies max. length
      * bytes.
      *
-     * @param in     The source stream
-     * @param out    The destination stream
+     * @param in     The source reader
+     * @param out    The destination writer
      * @param length number of bytes to copy; -1 for unlimited
      * @param buf    Buffer used as temporary space to copy
      *               block-wise.
      */
-    private static void copy(InputStream in, OutputStream out, long length,
-                             byte buf[])
-            throws IOException {
+    private static void copy(Reader in, Writer out, long length, char[] buf) throws IOException {
         int len;
         boolean limited = (length >= 0);
         int rest = limited ? (int) length : buf.length;
-        while (rest > 0 &&
-                (len = in.read(buf, 0,
-                        (rest > buf.length) ? buf.length : rest)) > 0) {
+        while (rest > 0 && (len = in.read(buf, 0, (rest > buf.length) ? buf.length : rest)) > 0) {
             out.write(buf, 0, len);
             if (limited) rest -= len;
         }
@@ -307,6 +312,7 @@ public class PageParser {
      */
     private TemplateSourceInfo parsePage(TemplateSource source, ParseContext context)
             throws IOException {
+    	
         /*
          * read source contents. The SGMLTag requires
          * to read from a Reader which supports the
@@ -329,7 +335,7 @@ public class PageParser {
         PositionReader fin = null;
         // from JDK 1.1.6, the name of the encoding is ISO8859_1, but the old
         // value is still accepted.
-        fin = new PositionReader(new BufferedReader(new InputStreamReader(source.getInputStream(), "8859_1")));
+        fin = new PositionReader(new BufferedReader(new InputStreamReader(source.getInputStream(), getStreamEncoding())));
         TemplateSourceInfo sourceInfo = new TemplateSourceInfo();
 
         try {
@@ -396,5 +402,19 @@ public class PageParser {
 
 
         public TemplateSourceInfo() {}
+    }
+    
+    /**
+     * Returns the encoding of the streams.
+     * 
+     * @return The encoding of the streams.
+     */
+    private final String getStreamEncoding() {
+
+    	String encoding = (String) SessionManager.getSession().getProperty("wings.template.layout.encoding");
+    	if (encoding == null || "".equals(encoding)) {
+    		encoding = "UTF-8";
+    	}
+    	return encoding;
     }
 }

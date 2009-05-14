@@ -27,6 +27,11 @@
             <param-value>/templates/ErrorTemplate.thtml</param-value>
     	    <description>The template for the default error catcher</description>
         </init-param>
+        <init-param>
+            <param-name>wings.template.layout.encoding</param-name>
+            <param-value>ISO-8859-1</param-value>
+    	    <description>The encoding used to read template layouts</description>
+        </init-param>
     </servlet>
 
     <servlet>

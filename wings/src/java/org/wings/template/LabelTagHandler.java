@@ -12,14 +12,13 @@
  */
 package org.wings.template;
 
+import java.io.IOException;
+import java.io.Reader;
+
 import org.wings.io.Device;
 import org.wings.template.parser.ParseContext;
 import org.wings.template.parser.PositionReader;
 import org.wings.template.parser.SGMLTag;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
 
 /**
  * A TemplateTagHandler
@@ -110,10 +109,10 @@ public class LabelTagHandler
      * @throws Exception anything can happen .. and throw an Exception
      *                   which is caught in PageParser
      */
-    public void executeTag(ParseContext context, InputStream input)
+    public void executeTag(ParseContext context, Reader input)
             throws Exception {
         TemplateParseContext tcontext = (TemplateParseContext) context;
-        copy(input, tcontext.getDevice(), getTagLength(), new byte[512]);
+        copy(input, tcontext.getDevice(), getTagLength(), new char[512]);
 
         // warn, if the closing tag was not found ..
         if (close_is_missing) {
@@ -127,15 +126,16 @@ public class LabelTagHandler
         }
     }
 
-    private static void copy(InputStream in, Device device, long length, byte buf[])
+    private static void copy(Reader in, Device device, long length, char[] buf)
             throws IOException {
         int len;
         boolean limited = (length >= 0);
         int rest = limited ? (int) length : buf.length;
+        
         while (rest > 0 &&
                 (len = in.read(buf, 0,
                         (rest > buf.length) ? buf.length : rest)) > 0) {
-            device.write(buf, 0, len);
+            device.print(buf, 0, len);
             if (limited) rest -= len;
         }
     }

@@ -81,7 +81,7 @@
 package org.wings.template.parser;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 
 public interface SpecialTagHandler {
     /**
@@ -138,6 +138,6 @@ public interface SpecialTagHandler {
      * @throws Exception anything can happen .. and throw an Exception
      *                   which is caught in PageParser
      */
-    void executeTag(ParseContext context, InputStream input)
+    void executeTag(ParseContext context, Reader input)
             throws Exception;
 }
