@@ -75,7 +75,7 @@ public class TomcatCometWingServlet
 
         log.error("ERROR: " + request.getSession() + "\n");
 
-        if(cometEvent.getEventSubType() != null) {
+        if(cometEvent.getEventSubType() == null) {
             cometEvent.close();
             return;
         }
