@@ -12,24 +12,33 @@ wingS.layout.fill = function(tableId) {
 
     var consumedHeight = 0;
     var rows = table.rows;
-    for (var i = 0; i < rows.length; i++) {
-        var row = rows[i];
-        var yweight = row.getAttribute("yweight");
-        if (!yweight) consumedHeight += row.offsetHeight;
+    if(rows != undefined) {
+        for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            var yweight = row.getAttribute("yweight");
+            if (!yweight) consumedHeight += row.offsetHeight;
+        }
+    } else {
+        return;
+        // there may be a need for component specific code here
     }
 
     table.style.height = table.getAttribute("layoutHeight");
     var diff = table.clientHeight - consumedHeight;
 
     if (diff > 0) {
-        for (var i = 0; i < rows.length; i++) {
-            var row = rows[i];
-            var yweight = row.getAttribute("yweight");
-            if (yweight) {
-                var oversize = row.getAttribute("oversize");
-                if (oversize == null) oversize = 0;
-                row.height = Math.max(Math.floor((diff * yweight) / 100) - oversize, oversize);
+        if(rows != undefined) {
+            for (var i = 0; i < rows.length; i++) {
+                var row = rows[i];
+                var yweight = row.getAttribute("yweight");
+                if (yweight) {
+                    var oversize = row.getAttribute("oversize");
+                    if (oversize == null) oversize = 0;
+                    row.height = Math.max(Math.floor((diff * yweight) / 100) - oversize, oversize);
+                }
             }
+        } else {
+            // there may be a need for component specific code here
         }
     }
     wingS.layout.rememberLayoutCandidate(tableId, "fill");

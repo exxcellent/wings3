@@ -15,8 +15,6 @@ package org.wings.plaf.css;
 
 import org.wings.*;
 import org.wings.io.Device;
-import org.wings.plaf.css.script.LayoutFillScript;
-import org.wings.session.ScriptManager;
 
 public class ContainerCG extends AbstractComponentCG implements org.wings.plaf.PanelCG {
     private static final long serialVersionUID = 1L;
