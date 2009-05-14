@@ -32,6 +32,7 @@ wingS.layout.fill = function(tableId) {
             }
         }
     }
+    wingS.layout.rememberLayoutCandidate(tableId, "fill");
 };
 
 wingS.layout.fix = function(tableId) {
@@ -46,6 +47,7 @@ wingS.layout.fix = function(tableId) {
     }
 
     table.style.height = consumedHeight + "px";
+    wingS.layout.rememberLayoutCandidate(tableId, "fix" );
 };
 
 wingS.layout.scrollPane = function(tableId) {
@@ -70,6 +72,7 @@ wingS.layout.scrollPane = function(tableId) {
     // we can work around this problem.
     div.style.display = 'none';
     setTimeout('wingS.layout.updateScrollPaneDiv("' + tableId + '")', 1);
+    wingS.layout.rememberLayoutCandidate(tableId, "scrollPane");
 };
 
 // Part of the hack described earlier
@@ -77,5 +80,35 @@ wingS.layout.updateScrollPaneDiv = function(tableId) {
     var table = document.getElementById(tableId);
     var div = table.getElementsByTagName("DIV")[0];
     div.style.display = "block";
+    wingS.layout.rememberLayoutCandidate(tableId, "updateScrollPaneDiv");
 };
 
+wingS.layout.rememberLayoutCandidate = function( id, method ) {
+	if ( ! document["layoutCandidates"] ){
+		document["layoutCandidates"] = new Array();
+	};
+	document["layoutCandidates"].push( { "id": id, "method": method } );
+	wingS.layout.filterLayoutCandidates();
+};
+
+wingS.layout.filterLayoutCandidates = function () {
+	if ( document["layoutCandidates"] ) {
+		var validCandidates = new Array();
+		for ( var i = 0; i < document["layoutCandidates"].length; i++) {
+			var candidate = document["layoutCandidates"][i];
+			var element = document.getElementById( candidate["id"] );
+			if ( element && ! containsCandidate(validCandidates, candidate) ) 
+					validCandidates.push( candidate );
+		};
+		document["layoutCandidates"] = validCandidates;
+	};
+};
+
+function containsCandidate(array, candidate) {
+	for ( var i = 0 ; i < array.length ; i++ ){
+		if ( array[i]["id"] == candidate ["id"] ) {
+			return true;
+		};
+	};
+	return false;
+};
