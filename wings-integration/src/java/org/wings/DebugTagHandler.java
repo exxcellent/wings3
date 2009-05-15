@@ -21,7 +21,7 @@ import org.wings.template.parser.SpecialTagHandler;
 import org.wingx.XDivision;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.Map;
 
 /**
@@ -50,7 +50,7 @@ public class DebugTagHandler implements SpecialTagHandler {
         return endPos - startPos;
     }
 
-    public void executeTag(ParseContext context, InputStream input) throws Exception {
+    public void executeTag(ParseContext context, Reader input) throws Exception {
         IntegrationTemplateParseContext tcontext = (IntegrationTemplateParseContext) context;
         Device sink = tcontext.getDevice();
 

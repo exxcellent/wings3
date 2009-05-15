@@ -13,11 +13,12 @@
 package org.wings;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.wings.io.Device;
+import org.wings.io.StringBuilderDevice;
 import org.wings.macro.MacroContainer;
 import org.wings.macro.MacroContext;
 import org.wings.macro.impl.VelocityMacroProcessor;
@@ -58,7 +59,21 @@ public class MacroTagHandler implements SpecialTagHandler {
         return endPos - startPos;
     }
 
-    public void executeTag(ParseContext context, InputStream input) throws Exception {
+    private static void copy(Reader in, Device device, long length, char[] buf)
+            throws IOException {
+        int len;
+        boolean limited = (length >= 0);
+        int rest = limited ? (int) length : buf.length;
+
+        while (rest > 0 &&
+                (len = in.read(buf, 0,
+                        (rest > buf.length) ? buf.length : rest)) > 0) {
+            device.print(buf, 0, len);
+            if (limited) rest -= len;
+        }
+    }
+
+    public void executeTag(ParseContext context, Reader input) throws Exception {
         IntegrationTemplateParseContext tcontext = (IntegrationTemplateParseContext) context;
         Device sink = tcontext.getDevice();
 
@@ -75,10 +90,9 @@ public class MacroTagHandler implements SpecialTagHandler {
             properties(c);
 
             if (macroTemplate == null) {
-                int length = (int)getTagLength();
-                byte[] bytes = new byte[length];
-                input.read(bytes, 0, length);
-                macroTemplate = new String(bytes, "8859_1"); // force iso-8859_1 encoding!
+                StringBuilderDevice d = new StringBuilderDevice();
+                copy(input, d, getTagLength(), new char[512]);
+                macroTemplate = d.toString();
                 macroTemplate = macroTemplate.substring(macroTemplate.indexOf('>') + 1, macroTemplate.lastIndexOf('<'));
             }
             else
