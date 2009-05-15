@@ -113,6 +113,11 @@ public class XTable extends STable
     }
 
     public void processLowLevelEvent(String action, String[] values) {
+        if (action.endsWith("_keystroke")) {
+            processKeyEvents(values);
+            return;
+        }
+        
         if (model instanceof FilterableTableModel && action.indexOf("_f_") != -1) {
             FilterableTableModel filterableTableModel = (FilterableTableModel)getModel();
 
