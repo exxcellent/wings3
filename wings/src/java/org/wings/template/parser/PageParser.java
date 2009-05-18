@@ -293,6 +293,7 @@ public class PageParser {
             out.write(buf, 0, len);
             if (limited) rest -= len;
         }
+        out.flush();
     }
 
     /**
