@@ -215,13 +215,13 @@ public class PageParser {
      */
     private void interpretPage(TemplateSource source, List parts, ParseContext context) throws IOException {
 
-    	Writer out = new OutputStreamWriter(context.getOutputStream(), getStreamEncoding());
+    	Writer out = new OutputStreamWriter(context.getOutputStream(), ParserUtils.getStreamEncoding());
         Reader in = null;
         char[] buf = null;
 
         try {
             // input
-            in = new InputStreamReader(source.getInputStream(), getStreamEncoding());
+            in = new InputStreamReader(source.getInputStream(), ParserUtils.getStreamEncoding());
             long inPos = 0;
 
             /*
@@ -242,7 +242,7 @@ public class PageParser {
                 /** <critical-path> **/
                 SpecialTagHandler part = (SpecialTagHandler) parts.get(i);
                 // copy TemplateSource content till the beginning of the Tag:
-                copy(in, out, part.getTagStart() - inPos, buf);
+                ParserUtils.copy(in, out, part.getTagStart() - inPos, buf);
 
                 context.startTag(i);
                 try {
@@ -265,33 +265,12 @@ public class PageParser {
                 /** </critical-path> **/
             }
             // copy rest until end of TemplateSource
-            copy(in, out, -1, buf);
+            ParserUtils.copy(in, out, -1, buf);
         } finally {
             // clean up resouce: opened input stream
             if (in != null)
                 in.close();
             buf = null; // return buffer to Buffer Manager
-        }
-        out.flush();
-    }
-
-    /**
-     * copies an InputStream to an OutputStream. copies max. length
-     * bytes.
-     *
-     * @param in     The source reader
-     * @param out    The destination writer
-     * @param length number of bytes to copy; -1 for unlimited
-     * @param buf    Buffer used as temporary space to copy
-     *               block-wise.
-     */
-    private static void copy(Reader in, Writer out, long length, char[] buf) throws IOException {
-        int len;
-        boolean limited = (length >= 0);
-        int rest = limited ? (int) length : buf.length;
-        while (rest > 0 && (len = in.read(buf, 0, (rest > buf.length) ? buf.length : rest)) > 0) {
-            out.write(buf, 0, len);
-            if (limited) rest -= len;
         }
         out.flush();
     }
@@ -336,7 +315,7 @@ public class PageParser {
         PositionReader fin = null;
         // from JDK 1.1.6, the name of the encoding is ISO8859_1, but the old
         // value is still accepted.
-        fin = new PositionReader(new BufferedReader(new InputStreamReader(source.getInputStream(), getStreamEncoding())));
+        fin = new PositionReader(new BufferedReader(new InputStreamReader(source.getInputStream(), ParserUtils.getStreamEncoding())));
         TemplateSourceInfo sourceInfo = new TemplateSourceInfo();
 
         try {
@@ -403,18 +382,5 @@ public class PageParser {
 
 
         public TemplateSourceInfo() {}
-    }
-    
-    /**
-     * Returns the encoding of the streams.
-     * 
-     * @return The encoding of the streams.
-     */
-    private String getStreamEncoding() {
-    	String encoding = (String) SessionManager.getSession().getProperty("wings.template.layout.encoding");
-    	if (encoding == null || "".equals(encoding)) {
-    		encoding = "UTF-8";
-    	}
-    	return encoding;
     }
 }

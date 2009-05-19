@@ -14,6 +14,7 @@ import org.wings.conf.UrlExtension;
 import org.wings.session.Session;
 import org.wings.session.SessionManager;
 import org.wings.template.StringTemplateSource;
+import org.wings.template.parser.ParserUtils;
 import org.wings.util.HtmlParserUtils;
 
 import au.id.jericho.lib.html.Element;
@@ -82,7 +83,7 @@ public class LocalAdapter extends AbstractTemplateIntegrationAdapter {
     private String getFileContent(File file) throws IOException {
         StringBuilder contents = new StringBuilder();
         
-        BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(file), getStreamEncoding()));
+        BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(file), ParserUtils.getStreamEncoding()));
         try {
             String line = null;
             String nl = System.getProperty("line.separator");
@@ -94,19 +95,6 @@ public class LocalAdapter extends AbstractTemplateIntegrationAdapter {
         }
 
         return contents.toString();
-    }
-
-    /**
-     * Returns the encoding of the streams.
-     *
-     * @return The encoding of the streams.
-     */
-    private String getStreamEncoding() {
-    	String encoding = (String) SessionManager.getSession().getProperty("wings.template.layout.encoding");
-    	if (encoding == null || "".equals(encoding)) {
-    		encoding = "UTF-8";
-    	}
-    	return encoding;
     }
 
     @Override

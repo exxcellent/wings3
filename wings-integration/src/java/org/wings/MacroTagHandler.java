@@ -14,6 +14,7 @@ package org.wings;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ import org.wings.plaf.IntegrationComponentCG;
 import org.wings.template.IntegrationTemplateParseContext;
 import org.wings.template.PropertyManager;
 import org.wings.template.parser.ParseContext;
+import org.wings.template.parser.ParserUtils;
 import org.wings.template.parser.PositionReader;
 import org.wings.template.parser.SGMLTag;
 import org.wings.template.parser.SpecialTagHandler;
@@ -59,20 +61,6 @@ public class MacroTagHandler implements SpecialTagHandler {
         return endPos - startPos;
     }
 
-    private static void copy(Reader in, Device device, long length, char[] buf)
-            throws IOException {
-        int len;
-        boolean limited = (length >= 0);
-        int rest = limited ? (int) length : buf.length;
-
-        while (rest > 0 &&
-                (len = in.read(buf, 0,
-                        (rest > buf.length) ? buf.length : rest)) > 0) {
-            device.print(buf, 0, len);
-            if (limited) rest -= len;
-        }
-    }
-
     public void executeTag(ParseContext context, Reader input) throws Exception {
         IntegrationTemplateParseContext tcontext = (IntegrationTemplateParseContext) context;
         Device sink = tcontext.getDevice();
@@ -89,26 +77,16 @@ public class MacroTagHandler implements SpecialTagHandler {
         else {
             properties(c);
 
+            int length = (int) getTagLength();
             if (macroTemplate == null) {
-                StringBuilderDevice d = new StringBuilderDevice();
-                copy(input, d, getTagLength(), new char[512]);
-                macroTemplate = d.toString();
+            	StringWriter output = new StringWriter();
+            	ParserUtils.copy(input, output, length, new char[length]);
+                macroTemplate = output.toString();
                 macroTemplate = macroTemplate.substring(macroTemplate.indexOf('>') + 1, macroTemplate.lastIndexOf('<'));
             }
-            else
-                input.skip(getTagLength());
-
-//            String content = sb.toString().replaceAll(System.getProperty("line.separator"), "");
-//            content = content.replaceAll("\n", "");
-//            Pattern pattern = Pattern.compile("<object[\\s]*name[\\s]*=[\\s]*\\\".*\\\"[\\s]*>\\n*(.*\\n)*\\n*<[\\s]*/object[\\s]*>");
-//            Matcher matcher = pattern.matcher(sb.toString());
-//
-//            String macroTemplate = null;
-//            if (matcher.matches()) {
-//                macroTemplate = matcher.group(0);
-//                macroTemplate = macroTemplate.substring(macroTemplate.indexOf('>') + 1, macroTemplate.lastIndexOf('<'));
-//            }
-
+            else {
+                input.skip(length);
+            }
 
             if (macroTemplate != null && !"".equals(macroTemplate.trim())) {
                 VelocityMacroProcessor macroProcessor = VelocityMacroProcessor.getInstance();
