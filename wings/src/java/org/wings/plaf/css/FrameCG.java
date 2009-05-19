@@ -861,6 +861,28 @@ public class FrameCG implements org.wings.plaf.FrameCG {
             handler.addParameter("<div id=\"" + window.getName() + "\"/>");
 			return handler;
         }
+		
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final AddWindowUpdate other = (AddWindowUpdate) obj;
+            if (this.window != other.window && (this.window == null || !this.window.equals(other.window))) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 19 * hash + (this.window != null ? this.window.hashCode() : 0);
+            return hash;
+        }
     }
 
     protected class RemoveWindowUpdate extends AbstractUpdate<SContainer> {
