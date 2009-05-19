@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Please do NOT reformat this class!
-public final class TableCG
+public class TableCG
     extends AbstractComponentCG
     implements org.wings.plaf.TableCG
 {
@@ -473,7 +473,7 @@ public final class TableCG
         device.print(");\"");
     }
 
-    private boolean isSelectionColumnVisible(STable table) {
+    protected boolean isSelectionColumnVisible(STable table) {
         if (table.getRowSelectionRenderer() != null && table.getSelectionModel().getSelectionMode() != SListSelectionModel.NO_SELECTION)
             return true;
         return false;
