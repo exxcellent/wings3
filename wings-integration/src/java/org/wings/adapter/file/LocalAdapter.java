@@ -11,10 +11,10 @@ import org.wings.TemplateIntegrationFrame;
 import org.wings.adapter.AbstractTemplateIntegrationAdapter;
 import org.wings.conf.Integration;
 import org.wings.conf.UrlExtension;
+import org.wings.io.IOUtil;
 import org.wings.session.Session;
 import org.wings.session.SessionManager;
 import org.wings.template.StringTemplateSource;
-import org.wings.template.parser.ParserUtils;
 import org.wings.util.HtmlParserUtils;
 
 import au.id.jericho.lib.html.Element;
@@ -83,7 +83,7 @@ public class LocalAdapter extends AbstractTemplateIntegrationAdapter {
     private String getFileContent(File file) throws IOException {
         StringBuilder contents = new StringBuilder();
         
-        BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(file), ParserUtils.getStreamEncoding()));
+        BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(file), IOUtil.getIOEncoding()));
         try {
             String line = null;
             String nl = System.getProperty("line.separator");

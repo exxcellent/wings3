@@ -28,6 +28,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wings.io.IOUtil;
 import org.wings.session.SessionManager;
 import org.wings.template.LabelTagHandler;
 import org.wings.template.TemplateSource;
@@ -215,13 +216,13 @@ public class PageParser {
      */
     private void interpretPage(TemplateSource source, List parts, ParseContext context) throws IOException {
 
-    	Writer out = new OutputStreamWriter(context.getOutputStream(), ParserUtils.getStreamEncoding());
+    	Writer out = new OutputStreamWriter(context.getOutputStream(), IOUtil.getIOEncoding());
         Reader in = null;
         char[] buf = null;
 
         try {
             // input
-            in = new InputStreamReader(source.getInputStream(), ParserUtils.getStreamEncoding());
+            in = new InputStreamReader(source.getInputStream(), IOUtil.getIOEncoding());
             long inPos = 0;
 
             /*
@@ -242,7 +243,7 @@ public class PageParser {
                 /** <critical-path> **/
                 SpecialTagHandler part = (SpecialTagHandler) parts.get(i);
                 // copy TemplateSource content till the beginning of the Tag:
-                ParserUtils.copy(in, out, part.getTagStart() - inPos, buf);
+                IOUtil.copy(in, out, part.getTagStart() - inPos, buf);
 
                 context.startTag(i);
                 try {
@@ -265,7 +266,7 @@ public class PageParser {
                 /** </critical-path> **/
             }
             // copy rest until end of TemplateSource
-            ParserUtils.copy(in, out, -1, buf);
+            IOUtil.copy(in, out, -1, buf);
         } finally {
             // clean up resouce: opened input stream
             if (in != null)
@@ -315,7 +316,7 @@ public class PageParser {
         PositionReader fin = null;
         // from JDK 1.1.6, the name of the encoding is ISO8859_1, but the old
         // value is still accepted.
-        fin = new PositionReader(new BufferedReader(new InputStreamReader(source.getInputStream(), ParserUtils.getStreamEncoding())));
+        fin = new PositionReader(new BufferedReader(new InputStreamReader(source.getInputStream(), IOUtil.getIOEncoding())));
         TemplateSourceInfo sourceInfo = new TemplateSourceInfo();
 
         try {

@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.wings.io.Device;
+import org.wings.io.IOUtil;
 import org.wings.io.StringBuilderDevice;
 import org.wings.macro.MacroContainer;
 import org.wings.macro.MacroContext;
@@ -29,7 +30,6 @@ import org.wings.plaf.IntegrationComponentCG;
 import org.wings.template.IntegrationTemplateParseContext;
 import org.wings.template.PropertyManager;
 import org.wings.template.parser.ParseContext;
-import org.wings.template.parser.ParserUtils;
 import org.wings.template.parser.PositionReader;
 import org.wings.template.parser.SGMLTag;
 import org.wings.template.parser.SpecialTagHandler;
@@ -80,7 +80,7 @@ public class MacroTagHandler implements SpecialTagHandler {
             int length = (int) getTagLength();
             if (macroTemplate == null) {
             	StringWriter output = new StringWriter();
-            	ParserUtils.copy(input, output, length, new char[length]);
+            	IOUtil.copy(input, output, length, new char[length]);
                 macroTemplate = output.toString();
                 macroTemplate = macroTemplate.substring(macroTemplate.indexOf('>') + 1, macroTemplate.lastIndexOf('<'));
             }
