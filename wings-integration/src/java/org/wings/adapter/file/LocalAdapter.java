@@ -82,7 +82,7 @@ public class LocalAdapter extends AbstractTemplateIntegrationAdapter {
     private String getFileContent(File file) throws IOException {
         StringBuilder contents = new StringBuilder();
         
-        BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+        BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(file), getStreamEncoding()));
         try {
             String line = null;
             String nl = System.getProperty("line.separator");
@@ -95,7 +95,20 @@ public class LocalAdapter extends AbstractTemplateIntegrationAdapter {
 
         return contents.toString();
     }
-    
+
+    /**
+     * Returns the encoding of the streams.
+     *
+     * @return The encoding of the streams.
+     */
+    private String getStreamEncoding() {
+    	String encoding = (String) SessionManager.getSession().getProperty("wings.template.layout.encoding");
+    	if (encoding == null || "".equals(encoding)) {
+    		encoding = "UTF-8";
+    	}
+    	return encoding;
+    }
+
     @Override
     protected String prepareUrl(String extensionUrl) {
         String baseUrl = integration.getBaseUrl().toExternalForm();

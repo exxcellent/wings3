@@ -410,8 +410,7 @@ public class PageParser {
      * 
      * @return The encoding of the streams.
      */
-    private final String getStreamEncoding() {
-
+    private String getStreamEncoding() {
     	String encoding = (String) SessionManager.getSession().getProperty("wings.template.layout.encoding");
     	if (encoding == null || "".equals(encoding)) {
     		encoding = "UTF-8";
