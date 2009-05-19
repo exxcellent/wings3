@@ -175,6 +175,8 @@ wingS.request.submitForm = function(target, async, eventName, eventValue, script
             if (eventName == null) {
                 eventName = target.id;
                 var eventNode = document.getElementById(eventName);
+                if (eventNode == null)
+                		return;
                 if (eventNode.value) eventValue = eventNode.value;
             }
             var data = wingS.request.encodeEvent(eventName, eventValue);
