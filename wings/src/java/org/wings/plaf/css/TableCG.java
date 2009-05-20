@@ -252,11 +252,13 @@ public class TableCG
 
         device.print("</thead>");
         Utils.printNewline(device, table);
-        device.print("<tbody>");
 
-        writeBody(device, table, startX, endX, startY, endY, emptyIndex);
-
-        device.print("</tbody></table>");
+        if (endY > endX) {
+            device.print("<tbody>");
+            writeBody(device, table, startX, endX, startY, endY, emptyIndex);
+            device.print("</tbody>");
+        }
+        device.print("</table>");
     }
 
     private void writeTableAttributes(Device device, STable table) throws IOException {

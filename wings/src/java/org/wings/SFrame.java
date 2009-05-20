@@ -24,7 +24,6 @@ import org.wings.session.SessionManager;
 import org.wings.style.StyleSheet;
 import org.wings.util.ComponentVisitor;
 import org.wings.util.StringUtil;
-import org.wings.script.ScriptListener;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
@@ -858,59 +857,4 @@ public class SFrame
     public void setCometUpdate(String task) {
         update(((FrameCG) getCG()).getCometUpdate(this, task));
     }
-
-    /**
-     * Adds the component to the list of components that the layout script 
-     * has to handle after rendering. The components must be hold in an 
-     * ordered (tree) mode. 
-     * 
-     * @param component
-     * @param scriptListener
-     */
-	public void addSortedScriptListener(SComponent component, ScriptListener scriptListener) {
-        this.sortedScriptListeners.put(component, scriptListener);
-    }
-
-	/**
-	 * resets the list of components
-	 * 
-	 */
-    public void clearSortedScriptListeners() {
-        sortedScriptListeners.clear();
-    }
-
-    /**
-     * Gives the list of components that the layout script 
-     * has to handle after rendering. This method will be called at 
-     * {@link FrameCG#handleScripts} .
-     * 
-     * @return
-     */
-    public Collection<ScriptListener> getSortedScriptListeners() {
-        return sortedScriptListeners.values();
-    }
-
-    /**
-     * Holds the list of components that the layout script 
-     * has to handle after rendering. The components must be hold in an 
-     * ordered (tree) mode.
-     */ 
-    TreeMap<SComponent, ScriptListener> sortedScriptListeners = new TreeMap<SComponent, ScriptListener>(
-            new ParentChildComparator());
-
-    /** 
-     * This comparator is used to sort the list of components that the layout script 
-     * has to handle after rendering. 
-     * 
-     */
-    class ParentChildComparator implements Comparator<SComponent> {
-        public int compare(SComponent o1, SComponent o2) {
-            if (o1.isParentOf(o2))
-                return -1;
-            else if (o2.isParentOf(o1))
-                return 1;
-            return 1; // no Relationship -> append !
-        }
-    };
-
 }

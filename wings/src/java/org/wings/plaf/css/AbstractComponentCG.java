@@ -25,6 +25,7 @@ import org.wings.plaf.*;
 import org.wings.plaf.css.dwr.CallableManager;
 import org.wings.plaf.css.script.OnPageRenderedScript;
 import org.wings.script.ScriptListener;
+import org.wings.session.BrowserType;
 import org.wings.session.ScriptManager;
 import org.wings.util.SessionLocal;
 
@@ -430,10 +431,6 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
         updateDragAndDrop(component);
         return new ComponentUpdate<COMPONENT_TYPE>(this, component);
 	}
-    
-    protected void addScriptLater(SComponent component, ScriptListener listener) {
-        component.getParentFrame().addSortedScriptListener(component, listener);
-    }
 
 	protected static class ComponentUpdate<COMPONENT_TYPE extends SComponent> extends AbstractUpdate<COMPONENT_TYPE> {
         private final AbstractComponentCG<COMPONENT_TYPE> cg;
@@ -475,5 +472,4 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
 			return handler;
 		}
 	}
-	
 }

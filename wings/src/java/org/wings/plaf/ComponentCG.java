@@ -14,7 +14,6 @@ package org.wings.plaf;
 
 import org.wings.SComponent;
 import org.wings.io.Device;
-import org.wings.plaf.css.Utils;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -61,4 +60,12 @@ public interface ComponentCG<COMPONENT_TYPE extends SComponent> extends Serializ
      * @param component the component to be updated.
      */
     public Update getComponentUpdate(COMPONENT_TYPE component);
+    
+    /**
+     * Options to pass to the Layout-Script for a component 
+     */
+    public static String RELAYOUT_FILL = "fill";
+    public static String RELAYOUT_FIX = "fix";
+    public static String RELAYOUT_SCROLLPANE = "scrollPane";
+    
 }

@@ -16,12 +16,11 @@ import java.awt.Adjustable;
 import java.io.IOException;
 
 import org.wings.*;
-import org.wings.plaf.css.script.LayoutScrollPaneScript;
-import org.wings.plaf.css.script.LayoutFillScript;
-import org.wings.plaf.css.script.LayoutFixScript;
 import org.wings.style.CSSProperty;
 import org.wings.io.Device;
 import org.wings.script.JavaScriptDOMListener;
+import org.wings.session.ScriptManager;
+import org.wings.plaf.css.script.*;
 
 public class ScrollPaneCG extends org.wings.plaf.css.AbstractComponentCG implements org.wings.plaf.ScrollPaneCG {
 
@@ -39,7 +38,7 @@ public class ScrollPaneCG extends org.wings.plaf.css.AbstractComponentCG impleme
                 if (preferredSize.getHeightInt() < 0) Utils.setPreferredSize(component, preferredSize.getWidth(), "400");;
             }
 
-            addScriptLater(component, new LayoutScrollPaneScript(component.getName()));
+            ScriptManager.getInstance().addScriptListener(new LayoutScrollPaneScript(component.getName()));
             writeContent(device, component);
         } else {
             writeContent(device, component);
@@ -82,10 +81,10 @@ public class ScrollPaneCG extends org.wings.plaf.css.AbstractComponentCG impleme
 
         if (clientLayout) {
             Utils.setPreferredSize(scrollPane, preferredSize.getWidth(), height);
-            addScriptLater(scrollPane, new LayoutFillScript(scrollPane.getName()));
+            scrollPane.getSession().getScriptManager().addScriptListener(new LayoutFillScript(scrollPane.getName()));
         }
         else if (clientFix)
-            addScriptLater(scrollPane, new LayoutFixScript(scrollPane.getName()));
+            scrollPane.getSession().getScriptManager().addScriptListener(new LayoutFixScript(scrollPane.getName()));
    
         device.print(">");
        

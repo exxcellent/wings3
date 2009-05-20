@@ -46,7 +46,7 @@ public class SContainer extends SComponent {
     /**
      * The components in this container.
      */
-    private ArrayList<SComponent> componentList;
+    private ArrayList componentList;
 
     /**
      * The constraints for the components.
@@ -196,9 +196,9 @@ public class SContainer extends SComponent {
         }
     }
 
-    protected ArrayList<SComponent> getComponentList() {
+    protected ArrayList getComponentList() {
         if (componentList == null) {
-            componentList = new ArrayList<SComponent>(3);
+            componentList = new ArrayList(3);
         }
         return componentList;
     }
@@ -540,25 +540,5 @@ public class SContainer extends SComponent {
      */
     protected boolean isShowingChildren() {
         return true;
-    }
-    
-    /**
-     * This method tries to find the given SComponent recursively 
-     * in the children of this Component. Only SContainers have children, 
-     * so the default returns false;  
-     * 
-     * @param component
-     * @return true if the given component was recursively found in the 
-     * children of <code> this </code>, false otherwise.
-     */
-    @Override
-    public boolean isParentOf( SComponent component ) {
-    	if ( getComponentList().contains(component) )
-    		return true;
-    	for ( SComponent child : getComponentList() ) {
-    		if (child.isParentOf(component))
-    			return true;
-    	}
-    	return false;
     }
 }
