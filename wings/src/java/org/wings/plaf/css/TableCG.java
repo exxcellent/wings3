@@ -253,7 +253,7 @@ public class TableCG
         device.print("</thead>");
         Utils.printNewline(device, table);
 
-        if (endY > endX) {
+        if (endY > startY) {
             device.print("<tbody>");
             writeBody(device, table, startX, endX, startY, endY, emptyIndex);
             device.print("</tbody>");
