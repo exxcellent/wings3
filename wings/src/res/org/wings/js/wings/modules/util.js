@@ -225,7 +225,7 @@ wingS.util.requestFocus = function(id) {
                 // index is smaller than before. Unbelieveable, but true!!!
                 // Also, IE complains sometimes whe the focus is set on non focusable elements
                 // That's why we're wrapping the focus request call inside a try / catch block
-                window.setTimeout(function() { try { parent.focus(); } catch (er) {}}, 100);
+                window.setTimeout(function() { try { wingS.util.focus(parent); } catch (er) {}}, 100);
             }
             return;
         }
@@ -238,13 +238,19 @@ wingS.util.requestFocus = function(id) {
                 if (element.getAttribute("foc") == id &&
                     element.style.display != "none" &&
                     !element.disabled) {
-                    window.setTimeout(function() { element.focus() }, 100);
+                    window.setTimeout(function() { wingS.util.focus(element); }, 100);
                     return;
                 }
             }
         }
     }
 };
+
+wingS.util.focus = function(component){
+    component.focus();
+    if (component.tagName == "INPUT")
+        component.select();
+}
 
 wingS.util.storeFocus = function(event) {
     var target = wingS.event.getTarget(event);

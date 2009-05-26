@@ -308,6 +308,7 @@ public class SDefaultCellEditor
                                                  boolean leaf, int row) {
 
         delegate.setValue(value);
+        tree.getParentFrame().setFocus( editorComponent );
         return editorPanel;
     }
 
@@ -315,7 +316,7 @@ public class SDefaultCellEditor
                                                   boolean isSelected,
                                                   int row, int column) {
         delegate.setValue(value);
-
+        table.getParentFrame().setFocus( editorComponent );
         return editorPanel;
     }
 
