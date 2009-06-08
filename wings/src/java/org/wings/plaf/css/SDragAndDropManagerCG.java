@@ -32,6 +32,7 @@ import java.util.Map;
 
 /**
  * SDragAndDropManager Default CG
+ *
  * @author Florian Roks
  */
 public class SDragAndDropManagerCG extends AbstractComponentCG implements org.wings.plaf.SDragAndDropManagerCG {
@@ -52,14 +53,14 @@ public class SDragAndDropManagerCG extends AbstractComponentCG implements org.wi
     protected String getAddDropTargetString(SDragAndDropManager manager, SComponent dropTarget) {
         String dropCode = manager.getCustomDropCode(dropTarget);
 
-        if(dropCode == null) {
-            if(dropTarget instanceof STextComponent)
+        if (dropCode == null) {
+            if (dropTarget instanceof STextComponent)
                 dropCode = "text";
-            else if(dropTarget instanceof SList)
+            else if (dropTarget instanceof SList)
                 dropCode = "list";
-            else if(dropTarget instanceof STree)
+            else if (dropTarget instanceof STree)
                 dropCode = "tree";
-            else if(dropTarget instanceof STable)
+            else if (dropTarget instanceof STable)
                 dropCode = "table";
             else
                 dropCode = "default";
@@ -67,43 +68,43 @@ public class SDragAndDropManagerCG extends AbstractComponentCG implements org.wi
 
         String configuration = null;
         STransferHandler handler = dropTarget.getTransferHandler();
-        if(handler instanceof CustomDropStayHandler) {
+        if (handler instanceof CustomDropStayHandler) {
             configuration = "{"; /* { blah = 123, blub = 321 } */
-            Map<String, Object> map = ((CustomDropStayHandler)handler).getDropStayConfiguration();
-            for(Map.Entry<String, Object> entry:map.entrySet()) {
+            Map<String, Object> map = ((CustomDropStayHandler) handler).getDropStayConfiguration();
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
                 configuration += entry.getKey() + ":";
                 Object value = entry.getValue();
-                if(value instanceof Integer)
+                if (value instanceof Integer)
                     configuration += value + ", ";
-                else if(value instanceof String)
+                else if (value instanceof String)
                     configuration += "'" + value + "', ";
             }
-            configuration = configuration.substring(0, configuration.length()-2); // removes the last ", "
+            configuration = configuration.substring(0, configuration.length() - 2); // removes the last ", "
             configuration += "}";
         }
 
-        return "wingS.global.onHeadersLoaded(function() { wingS.sdnd.addDropTarget('" + dropTarget.getName() + "', '"+ dropCode + "', " + configuration + "); });";
+        return "wingS.global.onHeadersLoaded(function() { wingS.sdnd.addDropTarget('" + dropTarget.getName() + "', '" + dropCode + "', " + configuration + "); });";
     }
 
     protected String getAddDragSourceString(SDragAndDropManager manager, SComponent dragSource) {
         String dragCode = manager.getCustomDragCode(dragSource);
 
-        if(dragCode == null) {
-            if(dragSource instanceof STextComponent)
+        if (dragCode == null) {
+            if (dragSource instanceof STextComponent)
                 dragCode = "text";
-            else if(dragSource instanceof SList)
+            else if (dragSource instanceof SList)
                 dragCode = "list";
-            else if(dragSource instanceof STree)
+            else if (dragSource instanceof STree)
                 dragCode = "tree";
-            else if(dragSource instanceof STable)
+            else if (dragSource instanceof STable)
                 dragCode = "table";
             else
                 dragCode = "default";
         }
-        
+
         return "wingS.global.onHeadersLoaded(function() { wingS.sdnd.addDragSource('" + dragSource.getName() + "', " + dragSource.getTransferHandler().getSourceActions(dragSource) + ", '" + dragCode + "'); });";
     }
-    
+
     protected String getRemoveDragSourceString(SComponent dragSource) {
         return "wingS.sdnd.removeDragSource('" + dragSource.getName() + "');";
     }
@@ -119,7 +120,7 @@ public class SDragAndDropManagerCG extends AbstractComponentCG implements org.wi
     @Override
     public void writeInternal(Device device, SComponent component) throws IOException {
         // it is guaranteed to be called at the end of the page by SFrame/CmsFrameCG
-        final SDragAndDropManager manager = (SDragAndDropManager)component;
+        final SDragAndDropManager manager = (SDragAndDropManager) component;
         ScriptManager.getInstance().addScriptListener(new ScriptListener() {
             public String getScript() {
                 StringBuilder builder = AbstractComponentCG.STRING_BUILDER.get();
@@ -128,19 +129,19 @@ public class SDragAndDropManagerCG extends AbstractComponentCG implements org.wi
                 builder.append("wingS.sdnd.setManager('" + manager.getName() + "');\n");
 
                 Collection<SComponent> dragSources = manager.getDragSources();
-                if(dragSources != null) {
-                    for(SComponent dragSource:manager.getDragSources()) {
-                        if(dragSource.getTransferHandler() == null)
+                if (dragSources != null) {
+                    for (SComponent dragSource : dragSources.toArray(new SComponent[0])) {
+                        if (dragSource == null || dragSource.getTransferHandler() == null)
                             continue;
-                        
+
                         builder.append(getAddDragSourceString(manager, dragSource));
                     }
                 }
 
                 Collection<SComponent> dropTargets = manager.getDropTargets();
-                if(dragSources != null && dropTargets != null) {
-                    for(SComponent dropTarget:manager.getDropTargets()) {
-                        if(dropTarget.getTransferHandler() == null)
+                if (dragSources != null && dropTargets != null) {
+                    for (SComponent dropTarget : dropTargets.toArray(new SComponent[0])) {
+                        if (dropTarget == null || dropTarget.getTransferHandler() == null)
                             continue;
 
                         builder.append(getAddDropTargetString(manager, dropTarget));
@@ -176,26 +177,26 @@ public class SDragAndDropManagerCG extends AbstractComponentCG implements org.wi
         public RegistrationUpdate(SComponent component, SDragAndDropManager.DragAndDropRegistrationEvent event) {
             super(component); // act as if this update was from the affected component
 
-            this.manager = (SDragAndDropManager)component;
+            this.manager = (SDragAndDropManager) component;
             this.event = event;
         }
 
         public Handler getHandler() {
             UpdateHandler handler = new UpdateHandler("runScript");
             String runScriptParam = "";
-            switch(event.getEventType()) {
+            switch (event.getEventType()) {
                 case ADD_DRAGSOURCE:
                     runScriptParam = getAddDragSourceString(manager, event.getComponent());
-                break;
+                    break;
                 case REMOVE_DRAGSOURCE:
                     runScriptParam = getRemoveDragSourceString(event.getComponent());
-                break;
+                    break;
                 case ADD_DROPTARGET:
                     runScriptParam = getAddDropTargetString(manager, event.getComponent());
-                break;
+                    break;
                 case REMOVE_DROPTARGET:
                     runScriptParam = getRemoveDropTargetString(event.getComponent());
-                break;
+                    break;
             }
             handler.addParameter(runScriptParam);
             return handler;
