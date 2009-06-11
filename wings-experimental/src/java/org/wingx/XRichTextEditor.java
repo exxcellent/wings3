@@ -63,7 +63,7 @@ public class XRichTextEditor extends STextComponent {
                     "{" +
                         "height:\"").append(height).append("\"," +
                         "width:\"").append(width).append("\",")
-                        .append("allowNoEdit : ").append(true) // last , is added by next line
+                        .append("allowNoEdit : ").append("true") // last , is added by next line
                         .append((config.trim().length() > 0 ? "," + config : ""))
                     .append("});\n");
             //disable titlebar

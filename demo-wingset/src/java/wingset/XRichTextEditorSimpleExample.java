@@ -9,13 +9,25 @@ import java.awt.event.ActionEvent;
 
 public class XRichTextEditorSimpleExample extends WingSetPane {
     protected SComponent createControls() {
+        SPanel panel = new SPanel();
+
         SButton button = new SButton("Update Textarea");
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 textArea.setText(editor.getText());
             }
         });
-        return button;
+        panel.add(button);
+
+        SButton button2 = new SButton("Disable/Enable");
+        button2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                editor.setEnabled(!editor.isEnabled());
+            }
+        });
+        panel.add(button2);
+
+        return panel;
     }
 
     private XRichTextEditor editor;
