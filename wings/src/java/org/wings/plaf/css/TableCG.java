@@ -276,7 +276,11 @@ public class TableCG
 
     private void writeColumnWidths(Device device, STable table, int startX, int endX) throws IOException {
         STableColumnModel columnModel = table.getColumnModel();
-        if (columnModel != null && atLeastOneColumnWidthIsNotNull(columnModel)) {
+        // IE-6 crashes if there is a colgroup element but the table body is empty.
+        // That's why, we're writing the colgroup element only if the header is visible OR the model contains at least
+        // one row
+        if (columnModel != null && atLeastOneColumnWidthIsNotNull(columnModel) && (table.isHeaderVisible() ||
+                table.getModel().getRowCount() > 0)) {
             device.print("<colgroup>");
             if (isSelectionColumnVisible(table))
                 writeCol(device, selectionColumnWidth);
