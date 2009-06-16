@@ -110,9 +110,11 @@ public abstract class AbstractTemplateIntegrationAdapter extends
             StringBuffer sb = new StringBuffer();
             sb.append(source.subSequence(0, begin));
 
-            // Resolves nested of includes.
+            // Resolve nested includes
             String url = prepareUrl(urlExtension.getReplacedValue(values.toArray(new String[values.size()])));
-            sb.append(resolveIncludes0(new Source(requestInclude(url))).toString());
+            if (url != null) {
+                sb.append(resolveIncludes0(new Source(requestInclude(url))).toString());
+            }
             sb.append(source.subSequence(end, end2));
             source = new Source(sb);
         }
