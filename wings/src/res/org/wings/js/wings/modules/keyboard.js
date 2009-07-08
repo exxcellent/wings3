@@ -63,7 +63,8 @@ wingS.keyboard.handler.match = function(event, element) {
         if (keyStroke.keyCode == keyCode && keyStroke.shiftKey == shiftKey && keyStroke.ctrlKey == ctrlKey && keyStroke.altKey == altKey) {
             if (!keyStroke.focussed || wu.getParentByAttributeAndValue(element, "id", keyStroke.component) != null) {
                 wingS.request.sendEvent(event, true, true, keyStroke.component + '_keystroke', keyStroke.command);
-                window.console.log("match true");
+                if ("console" in window && window.console)
+                    window.console.log("match true");
                 return true;
             }
         }
