@@ -15,6 +15,7 @@ package org.wings.io;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 
 /**
  * A Device encapsulating a StringBuilder
@@ -45,7 +46,11 @@ public final class StringBuilderDevice implements Device, Serializable {
      */
     public void flush() {
         if (byteStream != null) {
-            builder.append(byteStream.toString());
+            try {
+                builder.append(byteStream.toString(IOUtil.getIOEncoding()));
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
             byteStream = null;
         }
     }
