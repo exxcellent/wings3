@@ -57,7 +57,11 @@ public class SFont implements Serializable {
         setStyle(style);
         setSize(size);
     }
-    
+
+    /**
+     * Note: Face is essentially what is set after the CSS font-family: 
+     * @param f
+     */
     public void setFace(String f) {
         face = f;
         if (face != null && face.trim().length() == 0)

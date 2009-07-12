@@ -202,7 +202,7 @@ public class STransferHandler implements Serializable {
         }
 
         public Object getValue(String key) {
-            if(key == NAME) {
+            if(NAME.equals(key)) {
                 return name;
             }
             return null;

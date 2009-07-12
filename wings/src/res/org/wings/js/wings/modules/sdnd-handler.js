@@ -107,6 +107,8 @@
 
         function getClickedPosition(event, target) {
             if(event.rangeOffset) { // gecko code
+                /* unfortunately this code only worked until firefox 3.5 */
+                /*
                 var range = document.createRange(); // unfortunately .rangeOffset only provides us with the position within the current line
                 var rangeStart = event.rangeOffset; // therefore we create a range and extend it using the "internal" anonymous div that
                 var rangeEnd = event.rangeOffset;   // ff uses to render the element, other methods (.previousSibling etc. do not work, as
@@ -122,11 +124,13 @@
                     } else { //assume it's a <br> tag
                         lengthOfRange += 1;
                     }
-                }
+                }*/
 
-                return lengthOfRange;
+                // append dragged content
+                return target.value.length;
             }
 
+            // IE-Handling code
             if(target.tagName == "INPUT") {
                 if(!target.createTextRange) { // if there is no .rangeOffset available, but the browser isn't ie (most likely a click into the scrollfield, decide on server what position to use)
                     return -1;
