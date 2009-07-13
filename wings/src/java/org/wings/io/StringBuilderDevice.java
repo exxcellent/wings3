@@ -12,6 +12,8 @@
  */
 package org.wings.io;
 
+import org.wings.session.SessionManager;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
@@ -39,7 +41,9 @@ public final class StringBuilderDevice implements Device, Serializable {
         return builder.toString();
     }
 
-    public boolean isSizePreserving() { return true; }
+    public boolean isSizePreserving() {
+        return true;
+    }
 
     /**
      * Flush this Stream.
@@ -47,7 +51,7 @@ public final class StringBuilderDevice implements Device, Serializable {
     public void flush() {
         if (byteStream != null) {
             try {
-                builder.append(byteStream.toString(IOUtil.getIOEncoding()));
+                builder.append(byteStream.toString(SessionManager.getSession().getCharacterEncoding()));
             } catch (UnsupportedEncodingException e) {
                 throw new RuntimeException(e);
             }
