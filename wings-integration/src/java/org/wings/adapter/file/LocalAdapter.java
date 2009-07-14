@@ -79,22 +79,46 @@ public class LocalAdapter extends AbstractTemplateIntegrationAdapter {
     public Object getResource(String type, String[] params) throws IOException {
         return getResource(params);
     }
-    
+
+    private String removeBOM(String line) {
+        if (line != null && line.length() > 1) {
+            int codePoint0 = line.codePointAt(0);
+            int codePoint1 = line.codePointAt(1);
+            if (codePoint0 == 0xFEFF) {
+                // utf-16, big-endian
+                return line.substring(1);
+            } else if (codePoint0 == 0xFFFE) {
+                // utf-16, little-endian
+                return line.substring(1);
+            } else if (codePoint0 == 0xEFBB && codePoint1 == 0xBF00) {
+                // utf-8
+                return line.substring(2); // ??? untestet...
+            }
+        }
+        return line;
+    }
+
     private String getFileContent(File file) throws IOException {
-        StringBuilder contents = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         
         BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(file), IOUtil.getIOEncoding()));
         try {
-            String line = null;
             String nl = System.getProperty("line.separator");
-            while ((line = input.readLine()) != null) {
-                contents.append(line).append(nl);
+            // read first line
+            String line = input.readLine();
+            if (line != null) {
+                // detect & remove BOM from line 1
+                sb.append(removeBOM(line)).append(nl);
+                // read other lines
+                while ((line = input.readLine()) != null) {
+                    sb.append(line).append(nl);
+                }
             }
         } finally {
             input.close();
         }
 
-        return contents.toString();
+        return sb.toString();
     }
 
     @Override
