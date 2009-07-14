@@ -1300,7 +1300,7 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
         map.put(STransferHandler.getPasteAction().getValue(Action.NAME), STransferHandler.getPasteAction());
     }
 
-    protected static final class DropLocation extends STransferHandler.DropLocation {
+    public static final class DropLocation extends STransferHandler.DropLocation {
         private int row = -1;
         private TreePath path = null;
 
@@ -1360,7 +1360,7 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
         }
     }
 
-    protected static class DefaultTransferHandler extends STransferHandler implements Comparator<TreePath>, CustomDragHandler, CustomDropStayHandler {
+    public static class DefaultTransferHandler extends STransferHandler implements Comparator<TreePath>, CustomDragHandler, CustomDropStayHandler {
         private STree tree;
 
         public DefaultTransferHandler() {

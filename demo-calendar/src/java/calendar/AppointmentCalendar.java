@@ -448,7 +448,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
     private SDropMode dropMode = null;
     private boolean dragEnabled = false;
 
-    protected static final class DropLocation extends STransferHandler.DropLocation {
+    public static final class DropLocation extends STransferHandler.DropLocation {
         private Date date = null;
 
         public DropLocation(AppointmentCalendar calendar, SPoint point) {
@@ -514,7 +514,7 @@ public class AppointmentCalendar extends SComponent implements LowLevelEventList
         }
     }
 
-    protected static class DefaultTransferHandler extends STransferHandler implements CustomDragHandler {
+    public static class DefaultTransferHandler extends STransferHandler implements CustomDragHandler {
         public DefaultTransferHandler() {
             super(null);
         }

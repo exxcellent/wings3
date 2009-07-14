@@ -382,7 +382,7 @@ public class NewDragAndDropExample extends WingSetPane {
         }
     }
 
-    protected class DragDropLabelTransferHandler extends STransferHandler {
+    public class DragDropLabelTransferHandler extends STransferHandler {
         public DragDropLabelTransferHandler() {
             super(null);
         }

@@ -1985,7 +1985,7 @@ public class STable extends SComponent
         map.put(STransferHandler.getPasteAction().getValue(Action.NAME), STransferHandler.getPasteAction());
     }
 
-    protected static class DropLocation extends STransferHandler.DropLocation {
+    public static class DropLocation extends STransferHandler.DropLocation {
         private int row, col;
 
         public DropLocation(STable table, SPoint point) {
@@ -2053,7 +2053,7 @@ public class STable extends SComponent
         }
     }
 
-    protected static class DefaultTransferHandler extends STransferHandler implements CustomDragHandler {
+    public static class DefaultTransferHandler extends STransferHandler implements CustomDragHandler {
         public DefaultTransferHandler() {
             super(null);
         }

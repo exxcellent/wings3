@@ -338,7 +338,7 @@ public abstract class STextComponent extends SComponent implements LowLevelEvent
         return new DropLocation(point);
     }
 
-    protected static final class DropLocation extends STransferHandler.DropLocation {
+    public static final class DropLocation extends STransferHandler.DropLocation {
         private int index;
 
         public DropLocation(SPoint point) {
@@ -392,7 +392,7 @@ public abstract class STextComponent extends SComponent implements LowLevelEvent
         }
     }
 
-    protected static class DefaultTransferHandler extends STransferHandler {
+    public static class DefaultTransferHandler extends STransferHandler {
         public DefaultTransferHandler() {
             super("text");
         }

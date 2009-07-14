@@ -1254,7 +1254,7 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
         map.put(STransferHandler.getPasteAction().getValue(Action.NAME), STransferHandler.getPasteAction());
     }
 
-    protected static final class DropLocation extends STransferHandler.DropLocation {
+    public static final class DropLocation extends STransferHandler.DropLocation {
         private int index;
 
         public DropLocation(SList list, SPoint point) {
@@ -1317,7 +1317,7 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
         }
     }
 
-    protected static class DefaultTransferHandler extends STransferHandler implements CustomDragHandler {
+    public static class DefaultTransferHandler extends STransferHandler implements CustomDragHandler {
         public DefaultTransferHandler() {
             super(null);
         }
