@@ -103,11 +103,18 @@ public class ListExample
         this.anchorList.setName("noform");
         anchorList.setShowAsFormComponent(false);
         anchorList.setSelectionMode(SList.SINGLE_SELECTION);
+        anchorList.setCellRenderer(new MyCellRenderer());
         addAnchorElements(anchorList);
         cont.add(anchorList);
         controls.addControllable(anchorList);
-
         return cont;
+    }
+
+    class MyCellRenderer extends SDefaultListCellRenderer {
+        public SComponent getListCellRendererComponent(SComponent list, Object value, boolean selected, int index) {
+            setToolTipText(value.getClass().getSimpleName());
+            return super.getListCellRendererComponent(list, value, selected, index);
+        }
     }
 
     public void addListElements(SList list) {

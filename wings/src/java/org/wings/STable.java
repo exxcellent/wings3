@@ -1132,10 +1132,11 @@ public class STable extends SComponent
 
 
     public int getSelectedRowCount() {
+        SListSelectionModel selectionModel = getSelectionModel();
         int result = 0;
-        for (int i = getSelectionModel().getMinSelectionIndex();
-             i <= getSelectionModel().getMaxSelectionIndex(); i++) {
-            if (getSelectionModel().isSelectedIndex(i))
+        for (int i = selectionModel.getMinSelectionIndex();
+             i <= selectionModel.getMaxSelectionIndex(); i++) {
+            if (selectionModel.isSelectedIndex(i))
                 result++;
         }
 
@@ -1150,10 +1151,11 @@ public class STable extends SComponent
     public int[] getSelectedRows() {
         int[] result = new int[getSelectedRowCount()];
 
+        SListSelectionModel selectionModel = getSelectionModel();
         int index = 0;
-        for (int i = getSelectionModel().getMinSelectionIndex();
-             i <= getSelectionModel().getMaxSelectionIndex(); i++) {
-            if (getSelectionModel().isSelectedIndex(i))
+        for (int i = selectionModel.getMinSelectionIndex();
+             i <= selectionModel.getMaxSelectionIndex(); i++) {
+            if (selectionModel.isSelectedIndex(i))
                 result[index++] = i;
         }
 

@@ -68,10 +68,6 @@ public class XScrollPane extends SScrollPane {
         setHorizontalExtent(20);
         setVerticalExtent(verticalExtent);
 
-        Locale locale = getSession().getLocale();
-        if (locale == null) {
-            locale = Locale.ENGLISH;
-        }
         if (tableComponent != null) {
             setViewportView(tableComponent);
         }

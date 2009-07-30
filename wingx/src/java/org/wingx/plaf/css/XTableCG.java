@@ -574,7 +574,7 @@ public class XTableCG
         }
     }
 
-    private String getText(SComponent component, String key, String fallback) {
+    protected String getText(SComponent component, String key, String fallback) {
         String text = component.getSession().getCGManager().getString(key);
         return text != null ? text : fallback;
     }
@@ -645,7 +645,7 @@ public class XTableCG
         device.print(");\"");
     }
 
-    private boolean isSelectionColumnVisible(STable table) {
+    protected boolean isSelectionColumnVisible(STable table) {
         if (table.getRowSelectionRenderer() != null && table.getSelectionModel().getSelectionMode() != SListSelectionModel.NO_SELECTION)
             return true;
         return false;
@@ -657,15 +657,27 @@ public class XTableCG
     }
 
     public Update getSelectionUpdate(STable table, List deselectedIndices, List selectedIndices) {
-        return new SelectionUpdate((XTable) table, deselectedIndices, selectedIndices);
+        int indexOffset = indexOffset((XTable)table);
+        return new SelectionUpdate((XTable)table, indexOffset, deselectedIndices, selectedIndices);
     }
 
     public Update getEditCellUpdate(STable table, int row, int column) {
-        return new EditCellUpdate((XTable)table, row, column);
+        return new EditCellUpdate((XTable)table, indexOffset((XTable)table), row, column);
     }
 
     public Update getRenderCellUpdate(STable table, int row, int column) {
-        return new RenderCellUpdate((XTable)table, row, column);
+        return new RenderCellUpdate((XTable)table, indexOffset((XTable)table), row, column);
+    }
+
+    protected int indexOffset(XTable table) {
+        int indexOffset = 0;
+        if (table.isHeaderVisible()) {
+            ++indexOffset;
+        }
+        if (table.isFilterVisible() && table.getModel() instanceof FilterableTableModel) {
+            ++indexOffset;
+        }
+        return indexOffset;
     }
 
     protected class TableScrollUpdate
@@ -717,22 +729,16 @@ public class XTableCG
     protected class SelectionUpdate extends AbstractUpdate<XTable> {
         private List<Integer> deselectedIndices;
         private List<Integer> selectedIndices;
+        private int indexOffset;
 
-        public SelectionUpdate(XTable component, List<Integer> deselectedIndices, List<Integer> selectedIndices) {
+        public SelectionUpdate(XTable component, int indexOffset, List<Integer> deselectedIndices, List<Integer> selectedIndices) {
             super(component);
             this.deselectedIndices = deselectedIndices;
             this.selectedIndices = selectedIndices;
+            this.indexOffset = indexOffset;
         }
 
         public Handler getHandler() {
-            int indexOffset = 0;
-            if (component.isHeaderVisible()) {
-                ++indexOffset;
-            }
-            if (component.isFilterVisible() && component.getModel() instanceof FilterableTableModel) {
-                ++indexOffset;
-            }
-
             UpdateHandler handler = new UpdateHandler("selectionTable");
             handler.addParameter(component.getName());
             handler.addParameter(new Integer(indexOffset));
@@ -780,11 +786,13 @@ public class XTableCG
     {
         private int row;
         private int column;
+        private int indexOffset;
 
-        public EditCellUpdate(XTable table, int row, int column) {
+        public EditCellUpdate(XTable table, int indexOffset, int row, int column) {
             super(table);
             this.row = row;
             this.column = column;
+            this.indexOffset = indexOffset;
         }
 
         public Handler getHandler() {
@@ -808,8 +816,7 @@ public class XTableCG
                 exception = t.getClass().getName();
             }
 
-            row = table.isHeaderVisible() ? this.row + 1 : this.row;
-            row = (table.isFilterVisible() && table.getModel() instanceof FilterableTableModel) ? this.row + 1 : this.row;
+            row += indexOffset;
             column = columnInView(table, column);
             column = isSelectionColumnVisible(table) ? column + 1 : column;
 
@@ -837,11 +844,13 @@ public class XTableCG
     {
         private int row;
         private int column;
+        private int indexOffset;
 
-        public RenderCellUpdate(XTable table, int row, int column) {
+        public RenderCellUpdate(XTable table, int indexOffset, int row, int column) {
             super(table);
             this.row = row;
             this.column = column;
+            this.indexOffset = indexOffset;
         }
 
         public Handler getHandler() {
@@ -867,8 +876,7 @@ public class XTableCG
                 exception = t.getClass().getName();
             }
 
-            row = table.isHeaderVisible() ? this.row + 1 : this.row;
-            row = (table.isFilterVisible() && table.getModel() instanceof FilterableTableModel) ? this.row + 1 : this.row;
+            row += indexOffset;
             column = columnInView(table, column);
             column = isSelectionColumnVisible(table) ? column + 1 : column;
 
