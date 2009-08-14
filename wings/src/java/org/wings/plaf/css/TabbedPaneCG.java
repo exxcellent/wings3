@@ -205,6 +205,8 @@ public class TabbedPaneCG extends AbstractComponentCG {
 
             Utils.printButtonStart(device, tabbedPane, eventValue, enabledTab, tabbedPane.getShowAsFormComponent());
 
+            Utils.optAttribute(device, "tab", i);
+
             if (tooltip != null) {
                 Utils.optAttribute(device, "title", tooltip);
             }
