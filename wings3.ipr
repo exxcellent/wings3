@@ -365,20 +365,25 @@
   <component name="IdProvider" IDEtalkID="DC56C651EF612FC450C5C9F93D72CDAC" />
   <component name="InspectionProjectProfileManager">
     <option name="PROJECT_PROFILE" value="Project Default" />
-    <option name="USE_PROJECT_LEVEL_SETTINGS" value="false" />
-    <scopes />
+    <option name="USE_PROJECT_PROFILE" value="true" />
+    <version value="1.0" />
     <profiles>
       <profile version="1.0" is_locked="false">
         <option name="myName" value="Project Default" />
         <option name="myLocal" value="false" />
-        <inspection_tool class="MissingDeprecatedAnnotation" level="WARNING" enabled="true" />
-        <inspection_tool class="UtilityClassWithoutPrivateConstructor" level="WARNING" enabled="true">
+        <inspection_tool class="MissingDeprecatedAnnotation" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="SpringBeanDepedencyCheckInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="UtilityClassWithoutPrivateConstructor" enabled="true" level="WARNING" enabled_by_default="true">
           <option name="ignoreClassesWithOnlyMain" value="false" />
         </inspection_tool>
-        <inspection_tool class="SpringBeanDepedencyCheckInspection" level="WARNING" enabled="true" />
       </profile>
     </profiles>
-    <list size="0" />
+    <list size="4">
+      <item index="0" class="java.lang.String" itemvalue="INFO" />
+      <item index="1" class="java.lang.String" itemvalue="WARNING" />
+      <item index="2" class="java.lang.String" itemvalue="ERROR" />
+      <item index="3" class="java.lang.String" itemvalue="SERVER PROBLEM" />
+    </list>
   </component>
   <component name="JavacSettings">
     <option name="DEBUGGING_INFO" value="true" />
@@ -674,11 +679,6 @@
     <option name="ALTERNATIVE_WORKING_PATH" value="" />
     <option name="LOCK_ON_CHECKOUT" value="false" />
     <option name="UNLOCK_ON_CHECKIN" value="false" />
-  </component>
-  <component name="StructureViewFactory">
-    <option name="AUTOSCROLL_MODE" value="true" />
-    <option name="AUTOSCROLL_FROM_SOURCE" value="false" />
-    <option name="ACTIVE_ACTIONS" value="" />
   </component>
   <component name="Struts Assistant">
     <option name="showInputs" value="true" />

@@ -17,8 +17,8 @@ public class DivisionCG
     extends AbstractComponentCG
     implements org.wingx.plaf.DivisionCG
 {
-    private SIcon openIcon;
-    private SIcon closedIcon;
+    protected SIcon openIcon;
+    protected SIcon closedIcon;
 
     public DivisionCG() {
         final CGManager manager = SessionManager.getSession().getCGManager();
