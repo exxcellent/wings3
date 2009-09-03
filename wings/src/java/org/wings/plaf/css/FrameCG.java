@@ -94,13 +94,13 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         if (userDocType != null) {
             setDocumentType(userDocType);
         }
-
         if (userRenderXmlDecl != null) {
             setRenderXmlDeclaration(userRenderXmlDecl);
         }
-        
+        addHeaders();
+    }
 
-        
+    public void addHeaders() {
         // Add JS headers which should be included in every frames by default
         // (JS_YUI_UTILITIES = aggregate: yahoo, dom, event, connection, animation, dragdrop, element)
         defaultHeaders.add(Utils.createExternalizedJSHeaderFromProperty(Utils.JS_YUI_UTILITIES));
@@ -115,7 +115,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         headers.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_CONTAINER));
         headers.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_EDITOR));
         headers.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_SIMPLE_EDITOR));
-        
+
         // Externalize images needed for default skin
         new SResourceIcon((String) ResourceManager.getObject(Utils.IMG_YUI_ASSETS_SPRITE, String.class)).getId();
         new SResourceIcon((String) ResourceManager.getObject(Utils.IMG_YUI_ASSETS_EDITOR_SPRITE, String.class)).getId();
