@@ -67,6 +67,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
     public final static String QUIRKS_DOCTYPE = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" " +
         "\"http://www.w3.org/TR/2002/REC-xhtml1-20020801/DTD/xhtml1-transitional.dtd\">";
 
+    // EmulateIE7 means 5 in quirks mode and 7 in standard mode .. this is what 7 actually did
     public final static String IE_COMPATIBILITY_MODE = "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=EmulateIE7\" />";
 
     /**
@@ -113,7 +114,6 @@ public class FrameCG implements org.wings.plaf.FrameCG {
 
         // Add CSS headers which should be included in every frames by default
         // (DO use files under "yui/assets" and DO NOT use those under "yui/<component>/assets")
-        headers.add(new Meta("X-UA-Compatible", null, null, "IE=7"));
         headers.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_CONTAINER));
         headers.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_EDITOR));
         headers.add(Utils.createExternalizedCSSHeaderFromProperty(Utils.CSS_YUI_ASSETS_SIMPLE_EDITOR));
