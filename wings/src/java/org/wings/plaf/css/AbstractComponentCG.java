@@ -22,16 +22,12 @@ import org.wings.dnd.DropTarget;
 import org.wings.io.Device;
 import org.wings.io.StringBuilderDevice;
 import org.wings.plaf.*;
-import org.wings.plaf.css.dwr.CallableManager;
 import org.wings.plaf.css.script.OnPageRenderedScript;
-import org.wings.script.ScriptListener;
-import org.wings.session.BrowserType;
 import org.wings.session.ScriptManager;
 import org.wings.util.SessionLocal;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -274,74 +270,6 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
     }
 
     public void componentChanged(COMPONENT_TYPE component) {
-        /*
-        InputMap inputMap = component.getInputMap();
-        if (inputMap != null && inputMap.size() > 0) {
-            if (!(inputMap instanceof VersionedInputMap)) {
-                inputMap = new VersionedInputMap(inputMap);
-                component.setInputMap(inputMap);
-            }
-
-            final VersionedInputMap versionedInputMap = (VersionedInputMap) inputMap;
-            final Integer inputMapVersion = (Integer) component.getClientProperty("inputMapVersion");
-            if (inputMapVersion == null || versionedInputMap.getVersion() != inputMapVersion.intValue()) {
-                //InputMapScriptListener.install(component);
-                component.putClientProperty("inputMapVersion", new Integer(versionedInputMap.getVersion()));
-            }
-        }
-        */
-
-        // Add script listener support.
-        List scriptListenerList = component.getScriptListenerList();
-        if (scriptListenerList != null && !scriptListenerList.isEmpty()) {
-            // BSC START ----------------: Bad code : behaviour injection !!!
-            /*
-
-            HINT: Just try a
-               - oldList = xx;
-               - if (!currerntList.equals(oldList) !!!!!!!!!
-
-            if (!(scriptListenerList instanceof VersionedList)) {
-                scriptListenerList = new VersionedList(scriptListenerList);
-                component.setScriptListenerList(scriptListenerList);
-            }
-
-
-            final VersionedList versionedList = (VersionedList) scriptListenerList;
-            final Integer scriptListenerListVersion = (Integer) component.getClientProperty("scriptListenerListVersion");
-            if (scriptListenerListVersion == null || versionedList.getVersion() != scriptListenerListVersion.intValue())
-            */if (true) // BSC ------------ END
-        {
-            /* TODO: this code destroys the dwr functionality
-            List removeCallables = new ArrayList();
-            // Remove all existing - and maybe unusable - DWR script listeners.
-            for (Iterator iter = CallableManager.getInstance().callableNames().iterator(); iter.hasNext();) {
-                Object o = iter.next();
-                if (o instanceof String) {
-                    removeCallables.add(o);
-                }
-            }
-
-            for (Iterator iter = removeCallables.iterator(); iter.hasNext(); ) {
-                Object o = iter.next();
-                if (o instanceof String) {
-                    CallableManager.getInstance().unregisterCallable((String) o);
-                }
-            }
-            */
-
-            // Add DWR script listener support.
-            ScriptListener[] scriptListeners = component.getScriptListeners();
-            for (ScriptListener scriptListener1 : scriptListeners) {
-                if (scriptListener1 instanceof DWRScriptListener) {
-                    DWRScriptListener scriptListener = (DWRScriptListener) scriptListener1;
-                    CallableManager.getInstance().registerCallable(scriptListener.getCallableName(), scriptListener.getCallable());
-                }
-            }
-
-            //component.putClientProperty("scriptListenerListVersion", new Integer(versionedList.getVersion()));
-        }
-        }
     }
 
     /**

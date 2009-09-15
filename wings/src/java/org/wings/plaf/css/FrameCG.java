@@ -67,6 +67,8 @@ public class FrameCG implements org.wings.plaf.FrameCG {
     public final static String QUIRKS_DOCTYPE = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" " +
         "\"http://www.w3.org/TR/2002/REC-xhtml1-20020801/DTD/xhtml1-transitional.dtd\">";
 
+    public final static String IE_COMPATIBILITY_MODE = "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=EmulateIE7\" />";
+
     /**
      * Lookup for a property Stylesheet.BROWSERNAME to know fitting stylesheets
      */
@@ -356,6 +358,11 @@ public class FrameCG implements org.wings.plaf.FrameCG {
             Utils.write(device, title);
             device.print("</title>\n");
         }
+
+        if (Utils.isMSIE(frame))
+            device.print(IE_COMPATIBILITY_MODE);
+
+        device.print("<meta http-equiv=\"Content-type\" content=\"text/html; charset=");
 
         // Character set encoding, the default is typically utf-8.
         device.print("<meta http-equiv=\"Content-type\" content=\"text/html; charset=");

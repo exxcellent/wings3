@@ -271,6 +271,10 @@ public class SFileChooser
         return currentFile;
     }
 
+    protected void setSelectedFile(TempFile file) {
+        currentFile = file;
+    }
+
     /**
      * resets this FileChooser (no file selected). It does not remove an upload filter!. reset() will <em>not</em> remove a
      * previously selected file from the local tmp disk space, so as long as you have a reference to such a file, you can still
@@ -365,7 +369,7 @@ public class SFileChooser
             this.fileId = params.get("id");
             this.fileType = params.get("type");
             if (fileDir != null && fileId != null) {
-                currentFile = new TempFile(fileDir, fileId);
+                setSelectedFile(new TempFile(fileDir, fileId));
             }
         } catch (UnsupportedEncodingException e) {
             log.warn("Failed to url-decode '" + values[0] + "'.");
@@ -405,7 +409,7 @@ public class SFileChooser
      * A temporary file. This file removes its representation in the filesysten, when there are no references to it (i.e. it is
      * garbage collected)
      */
-    private static class TempFile extends File {
+    protected static class TempFile extends File {
 
         private boolean isTemp;
 

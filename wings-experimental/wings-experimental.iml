@@ -7,13 +7,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="wingx" />
     <orderEntry type="module" module-name="wings" />
-  </component>
-  <component name="copyright">
-    <Base>
-      <setting name="state" value="2" />
-    </Base>
+    <orderEntry type="module" module-name="wingx" />
+    <orderEntry type="library" name="thirdparty" level="project" />
   </component>
 </module>
 
