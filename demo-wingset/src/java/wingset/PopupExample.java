@@ -13,20 +13,13 @@
 
 package wingset;
 
-import java.awt.Color;
-import org.wings.SBorderLayout;
-import org.wings.SComponent;
-import org.wings.SContainer;
-import org.wings.SDimension;
-import org.wings.SGridLayout;
-import org.wings.SIcon;
-import org.wings.SPanel;
-import org.wings.SPopup;
-import org.wings.SLabel;
-import org.wings.SURLIcon;
+import org.wings.*;
 import org.wings.border.SLineBorder;
-import org.wings.script.JavaScriptEvent;
-import org.wings.script.PopupListener;
+
+import javax.swing.AbstractAction;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  *
@@ -44,44 +37,60 @@ public class PopupExample
             "components are arranged in a hierarchy of containers, whose root\n" +
             "container is hooked to a frame.";
 
-    public SContainer createContent() {
-        SContainer content = new SContainer(new SBorderLayout());
+    private SPanel createContent() {
+        SPanel content = new SPanel(new SBorderLayout());
         content.setBorder(new SLineBorder(1));
         content.setBackground(Color.WHITE);
         content.setPreferredSize(new SDimension(200, 200));
         content.add(new SLabel(WINGS_IMAGE), SBorderLayout.NORTH);
-        SLabel label = new SLabel(SOME_TEXT);
-        content.add(new SLabel(SOME_TEXT), SBorderLayout.SOUTH);
+        content.add(new SLabel(SOME_TEXT), SBorderLayout.CENTER);
+        final SButton button = new SButton(new AbstractAction("Change button text") {
 
+            public void actionPerformed(ActionEvent e) {
+                ((SButton) e.getSource()).setText(String.valueOf(System.currentTimeMillis()));
+            }
+        });
+        content.add(button, SBorderLayout.SOUTH);
+        content.setPreferredSize(SDimension.FULLAREA);
         return content;
     }
 
     public SComponent createExample() {
-        SPanel panel = new SPanel(new SGridLayout(2, 1, 50, 50));
+        SPanel panel = new SPanel(new SGridLayout(1, 2, 50, 50));
 
-        SLabel mouseSensitiveLabel = new SLabel("mouse sensitive label");
-        SPopup popup = new SPopup(null, createContent(), 100, 100);
+        SButton popupButton1 = new SButton("Popup button 1");
+        SButton popupButton2 = new SButton("Popup button 2");
+        panel.add(popupButton1);
+        panel.add(popupButton2);
+        final SPopup popup1 = new SPopup(popupButton1, SPopup.BOTTOM_LEFT, 2, 2);
+        popup1.setPreferredSize(new SDimension(400, 200));
+        popup1.setLayout(new SBorderLayout());
+        popup1.add(createContent(), SBorderLayout.CENTER);
+        final SPopup popup2 = new SPopup(popupButton2, SPopup.BOTTOM_LEFT, 2, 2);
+        popup2.setPreferredSize(new SDimension(300, 100));
+        popup2.setLayout(new SBorderLayout());
+        popup2.add(createContent(), SBorderLayout.CENTER);
 
-        mouseSensitiveLabel.addScriptListener(
-                new PopupListener(JavaScriptEvent.ON_MOUSE_OVER, popup, PopupListener.SHOW, mouseSensitiveLabel));
-        mouseSensitiveLabel.addScriptListener(
-                new PopupListener(JavaScriptEvent.ON_MOUSE_OUT, popup, PopupListener.HIDE, mouseSensitiveLabel));
+        popupButton1.addActionListener(new ActionListener() {
 
-        panel.add(mouseSensitiveLabel);
+            public void actionPerformed(ActionEvent e) {
+                if (popup1.isVisible()) {
+                    popup1.setVisible(false);
+                } else {
+                    popup1.setVisible(true);
+                }
+            }
+        });
+        popupButton2.addActionListener(new ActionListener() {
 
-
-        SLabel mouseSensitiveLabel2 = new SLabel("mouse sensitive label, popup gets aligned");
-        SPopup popup2 = new SPopup(null, createContent(), 0, 0);
-        popup2.setContext(mouseSensitiveLabel2, SPopup.TOP_LEFT, SPopup.BOTTOM_LEFT);
-
-        mouseSensitiveLabel2.addScriptListener(
-                new PopupListener(JavaScriptEvent.ON_MOUSE_OVER, popup2, PopupListener.SHOW, mouseSensitiveLabel2));
-        mouseSensitiveLabel2.addScriptListener(
-                new PopupListener(JavaScriptEvent.ON_MOUSE_OUT, popup2, PopupListener.HIDE, mouseSensitiveLabel2));
-
-        panel.add(mouseSensitiveLabel2);
-
-
+            public void actionPerformed(ActionEvent e) {
+                if (popup2.isVisible()) {
+                    popup2.setVisible(false);
+                } else {
+                    popup2.setVisible(true);
+                }
+            }
+        });
         return panel;
     }
 

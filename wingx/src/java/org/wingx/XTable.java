@@ -38,6 +38,17 @@ public class XTable extends STable
         super(tableModel);
     }
 
+    /**
+     * Returns a <code>STableColumnModel</code> that contains information
+     * about all columns  of this table.
+     *
+     * @return  the object that provides the column state of the table
+     * @see     #setColumnModel
+     */
+    public XTableColumnModel getColumnModel() {
+        return (XTableColumnModel)columnModel;
+    }
+
     public EditableTableCellRenderer getFilterRenderer() {
         return filterRenderer;
     }
@@ -421,7 +432,7 @@ public class XTable extends STable
         }
     }
 
-    protected STableColumnModel createDefaultColumnModel() {
+    protected XTableColumnModel createDefaultColumnModel() {
         return new XDefaultTableColumnModel();
     }
 }
