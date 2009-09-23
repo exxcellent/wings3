@@ -210,7 +210,14 @@
     <target name="deploy-demo-wingset" description="deploy demo-wingset">
         <ant dir="wings" target="build"/>
         <ant dir="wingx" target="build"/>
+        <ant dir="wings-experimental" target="build"/>
         <ant dir="demo-wingset" target="deploy"/>
+    </target>
+
+    <target name="deploy-demo-explorer" description="deploy demo-explorer">
+        <ant dir="wings" target="build"/>
+        <ant dir="wingx" target="build"/>
+        <ant dir="demo-explorer" target="deploy"/>
     </target>
 
     <target name="run-demo-wingset" description="run demo-wingset from ant">

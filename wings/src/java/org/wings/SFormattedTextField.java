@@ -33,7 +33,7 @@ import org.wings.text.SDefaultFormatter;
 
 
 /**
- * Formats it content interactivly on the server side via DWR/AJAX.
+ * Formats it content interactivly on the server side via AJAX.
  *
  * @author theresia
  */

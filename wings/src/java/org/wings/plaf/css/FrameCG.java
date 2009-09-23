@@ -123,10 +123,6 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         new SResourceIcon((String) ResourceManager.getObject(Utils.IMG_YUI_ASSETS_EDITOR_SPRITE, String.class)).getId();
         new SResourceIcon((String) ResourceManager.getObject(Utils.IMG_YUI_ASSETS_EDITOR_SPRITE_ACTIVE, String.class)).getId();
 
-        // Add DWR headers
-        headers.add(new JavaScriptHeader("../dwr/engine.js"));
-        headers.add(new JavaScriptHeader("../dwr/util.js"));
-
         // Common hack to externalize the ugly .htc-file for dealing with form buttons in IE
         new ClassPathResource("org/wings/plaf/css/formbutton.htc", "text/x-component").getId();
     }
