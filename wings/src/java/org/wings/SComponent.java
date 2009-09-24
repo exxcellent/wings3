@@ -97,6 +97,11 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
     protected boolean visible = true;
 
     /**
+     * Visibility of the component.
+     */
+    protected boolean recursivelyVisible = false;
+
+    /**
      * Enabled / disabled.
      */
     protected boolean enabled = true;
@@ -319,6 +324,8 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
             reload();
 
         propertyChangeSupport.firePropertyChange("parentFrame", oldVal, this.parentFrame);
+
+        setRecursivelyVisible(getParent() != null ? parent.isRecursivelyVisible() : false);
     }
 
     public void setComponentPopupMenu(SPopupMenu popupMenu) {
@@ -1054,18 +1061,14 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
         boolean old = this.visible;
         this.visible = visible;
         if (visible != old) {
-            if (fireComponentChangeEvents) {
-                fireComponentChangeEvent(new SComponentEvent(this, visible
-                        ? SComponentEvent.COMPONENT_SHOWN
-                        : SComponentEvent.COMPONENT_HIDDEN));
-            }
-
             if (parent != null) {
             	parent.reload();
             } else {
             	reload();
             }
             propertyChangeSupport.firePropertyChange("visible", old, this.visible);
+
+            setRecursivelyVisible(isRecursivelyVisible());
         }
     }
 
@@ -1087,7 +1090,17 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
      * @return <code>true</code> if this component and all it's ancestors are visible, <code>false</code> otherwise.
      */
     public boolean isRecursivelyVisible() {
-        return visible && (parent == null || (parent.isShowingChildren() && parent.isRecursivelyVisible()));
+        return recursivelyVisible;
+    }
+
+    protected void setRecursivelyVisible(boolean recursivelyVisible) {
+        if (isRecursivelyVisible() != recursivelyVisible) {
+            this.recursivelyVisible = recursivelyVisible;
+            if (fireComponentChangeEvents)
+                fireComponentChangeEvent(new SComponentEvent(this, isRecursivelyVisible()
+                    ? SComponentEvent.COMPONENT_SHOWN
+                    : SComponentEvent.COMPONENT_HIDDEN));
+        }
     }
 
     /**

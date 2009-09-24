@@ -89,6 +89,7 @@ public class SInternalFrame
             reload();
             if (iconified)
                 setMaximized(false);
+            setRecursivelyVisible(isRecursivelyVisible());
         }
         propertyChangeSupport.firePropertyChange("iconified", oldVal, this.iconified);
     }
@@ -158,6 +159,7 @@ public class SInternalFrame
             show();
         else
             hide();
+        setRecursivelyVisible(visible);
     }
 
     public void show() {

@@ -86,7 +86,7 @@ public class WingSet {
                     Object userObject = node.getUserObject();
                     if (userObject instanceof WingSetExample) {
                         WingSetExample wingSetPane = (WingSetExample) userObject;
-                        wingSetPane.activateExample();
+                        //wingSetPane.activateExample();
                         show(wingSetPane.getExample());
                     } else {
                         show(wingsImage);

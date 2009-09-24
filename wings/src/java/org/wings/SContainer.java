@@ -428,6 +428,14 @@ public class SContainer extends SComponent {
         }
     }
 
+    protected void setRecursivelyVisible(boolean recursivelyVisible) {
+        super.setRecursivelyVisible(recursivelyVisible);
+        boolean childrenVisible = recursivelyVisible && isVisible() && isShowingChildren();
+        for (int i = 0; i < getComponentCount(); i++) {
+            getComponent(i).setRecursivelyVisible(childrenVisible);
+        }
+    }
+
     /**
      * CAVEAT this did not work yet... We need to clone the layout manager as
      * well, so SLayoutManager must be Cloneable
@@ -504,34 +512,6 @@ public class SContainer extends SComponent {
         }
         super.addNotify();
     }
-
-    /**
-     * Collects all {@link SComponent#getComponentPopupMenu()} of all contained and visible components.
-     * @return all menus of all sub components (recursively)
-     */
-    /*public ArrayList getMenus() {
-        ArrayList menus = new ArrayList();
-        if (isVisible()) {
-            final Iterator iter = getComponentList().iterator();
-            while (iter.hasNext()) {
-                final SComponent comp = (SComponent)iter.next();
-                if (comp.isVisible()) {
-                    final SPopupMenu componentMenu = comp.getComponentPopupMenu();
-                    if (componentMenu != null && menus.contains(componentMenu) == false)
-                        menus.add(componentMenu);
-                    if (comp instanceof SContainer) {
-                        SContainer container = (SContainer)comp;
-                        menus.addAll(container.getMenus());
-                    }
-                }
-            }
-            SPopupMenu pmenu = getComponentPopupMenu();
-            if (pmenu != null && !menus.contains(pmenu)) {
-                menus.add(pmenu);
-            }
-        }
-        return menus;
-    }*/
 
     /**
      * Indicates if this container is actually showing it's children. Default is <code>true</code>

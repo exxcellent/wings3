@@ -191,7 +191,7 @@ public class OptionPaneExample
                         if ("".equals(inputValue.getText().trim())) {
                             SOptionPane.showMessageDialog(null, "The profession field is empty.", "Empty profession field", SOptionPane.ERROR_MESSAGE, new ActionListener() {
                                 public void actionPerformed(ActionEvent e) {
-                                    optionPane.show(null);
+                                    optionPane.show();
                                 }
                             });
                         }

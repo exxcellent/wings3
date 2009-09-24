@@ -151,17 +151,17 @@ public class XDivision
      * @param shaded true if the XDivision is shaded
      */
     public void setShaded(boolean shaded) {
-        boolean oldVal = this.shaded;
-        reloadIfChange(this.shaded, shaded);
-        this.shaded = shaded;
-        propertyChangeSupport.firePropertyChange("shaded", oldVal, this.shaded);
+        if (this.shaded != shaded) {
+            reload();
+            this.shaded = shaded;
+            propertyChangeSupport.firePropertyChange("shaded", !this.shaded, this.shaded);
+            setRecursivelyVisible(isRecursivelyVisible());
+        }
     }
 
     public void processLowLevelEvent(String name, String[] values) {
-        if (values.length == 1 && "t".equals(values[0])) {
-            shaded = !shaded;
-            reload();
-        }
+        if (values.length == 1 && "t".equals(values[0]))
+            setShaded(!isShaded());
 
         /*
         TODO: first focusable component

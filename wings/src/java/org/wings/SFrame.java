@@ -484,6 +484,7 @@ public class SFrame
                 unregister();
             }
             super.setVisible(visible);
+            setRecursivelyVisible(visible);
         }
     }
 

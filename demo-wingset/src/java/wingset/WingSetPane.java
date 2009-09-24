@@ -84,10 +84,7 @@ abstract public class WingSetPane
             }
 
             public void componentHidden(SComponentEvent e) {
-                // TODO FIXME : Uncommenting the following line MUST work but doesnt:
-                // I leads to the correct unregistering of headers.
-                // Switch between XCalendar and XColorpicker i.e. --> Application hangs.
-                // passivateExample();
+                passivateExample();
             }
         });
     }

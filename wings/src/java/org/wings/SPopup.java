@@ -72,20 +72,18 @@ public class SPopup extends SWindow {
      * @param offsetY vertical offset.
      */
     public SPopup(SComponent anchor, String corner, int offsetX, int offsetY) {
-        this.anchor = anchor;
         this.corner = corner;
         this.componentListener = new SComponentAdapter() {
-
             @Override
             public void componentHidden(SComponentEvent e) {
                 setVisible(false);
             }
-
         };
-        this.anchor.addComponentListener(componentListener);
+
+        setAnchor(anchor);
         setX(offsetX);
         setY(offsetY);
-        setVisible(false);
+        super.setVisible(false);
     }
 
     public String getCorner() {
@@ -100,56 +98,14 @@ public class SPopup extends SWindow {
         return anchor;
     }
 
-    @Override
-    public void setVisible(boolean visible) {
-        manageComponentListener(visible);
-        if (isVisible() == visible) {
-            return;
-        }
-        super.setVisible(visible);
-    }
+    public void setAnchor(SComponent anchor) {
+        if (this.anchor != null)
+            this.anchor.removeComponentListener(componentListener);
+        this.anchor = anchor;
+        if (this.anchor != null)
+            this.anchor.addComponentListener(componentListener);
 
-    private void manageComponentListener(boolean visible) {
-        if (visible) {
-            if (anchor != null) {
-                addComponentListener(anchor);
-            }
-        } else {
-            if (anchor != null) {
-                removeComponentListener(anchor);
-            }
-        }
-    }
-
-    @Override
-    public void show(SComponent c) {
-        super.show(c);
-        requestFocus();
-    }
-
-    public void show() {
-        setVisible(true);
-    }
-
-    public void hide() {
-        visible = false;
-        super.hide();
-        manageComponentListener(false);
-    }
-
-    private void addComponentListener(SComponent component) {
-        if (component != null) {
-            component.removeComponentListener(componentListener);
-            component.addComponentListener(componentListener);
-            addComponentListener(component.getParent());
-        }
-    }
-
-    private void removeComponentListener(SComponent component) {
-        if (component != null) {
-            component.removeComponentListener(componentListener);
-            removeComponentListener(component.getParent());
-        }
+        super.setOwner(anchor);
     }
 
     @Override
@@ -188,5 +144,4 @@ public class SPopup extends SWindow {
     public SComponent getFocusedComponent() {
         return focusedComponent;
     }
-
 }

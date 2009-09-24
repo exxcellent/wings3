@@ -45,16 +45,6 @@ public class SWindow extends SForm implements LowLevelEventListener {
 	protected int x = -1;
 	protected int y = -1;
 
-	/**
-     * Returns the root container in which this dialog is to be displayed.
-     *
-     * @return The root container in which this dialog is to be displayed.
-     * @see this#getParent()
-     */
-    public SRootContainer getOwner() {
-        return owner;
-    }
-
 	public int getX() {
 		return x;
 	}
@@ -77,15 +67,6 @@ public class SWindow extends SForm implements LowLevelEventListener {
 			reload();
 	}
 
-    public void setVisible(boolean visible) {
-        if (visible) {
-            show(owner);
-        } else {
-            hide();
-        }
-        super.setVisible(visible);
-    }
-
     /**
      * Removes all <code>SComponents</code> from the pane
      */
@@ -96,39 +77,47 @@ public class SWindow extends SForm implements LowLevelEventListener {
         removeAll();
     }
 
+    public void setVisible(boolean visible) {
+        if (visible) {
+            show();
+        } else {
+            hide();
+        }
+    }
+
     /**
-     * shows this window in the given SRootContainer. If the component is
-     * not a root container, then the root container the component is in
-     * is used.
-     * If the component is null, the root frame of the session will be used.
+     * Returns the root container in which this dialog is to be displayed.
+     *
+     * @return The root container in which this dialog is to be displayed.
+     * @see this#getParent()
      */
-    public void show(SComponent c) {
-        LOG.debug("show window");
+    public SRootContainer getOwner() {
+        return owner;
+    }
 
+    public void setOwner(SRootContainer owner) {
         SComponent oldVal = this.owner;
+        this.owner = owner;
+        propertyChangeSupport.firePropertyChange("owner", oldVal, this.owner);
+    }
 
-        // If the owner is empty get the components root container.
-        if (owner == null) {
-            if (c != null) {
-                while (!(c instanceof SRootContainer)) {
-                    c = c.getParent();
-                }
-                owner = (SRootContainer) c;
-            }
-        }
+    public void setOwner(SComponent c) {
+        SComponent oldVal = this.owner;
+        if (c != null) {
+            while (!(c instanceof SRootContainer) && c != null)
+                c = c.getParent();
 
-        if (owner == null) {
-            owner = getSession().getRootFrame();
+            owner = (SRootContainer)c;
         }
+        propertyChangeSupport.firePropertyChange("owner", oldVal, owner);
+    }
+
+    public void show() {
+        if (owner == null)
+            setOwner(getSession().getRootFrame());
+
+        super.setVisible(true);
         owner.pushWindow(this);
-
-        propertyChangeSupport.firePropertyChange("owner", oldVal, c);
-
-        /*
-        if (isUpdatePossible() && SWindow.class.isAssignableFrom(getClass())) {
-            update(((WindowCG) getCG()).getWindowAddedUpdate(this));
-        }
-        */
     }
 
     /**
@@ -136,9 +125,10 @@ public class SWindow extends SForm implements LowLevelEventListener {
      */
     public void hide() {
         LOG.debug("hide window");
-        if (owner != null) {
+
+        if (owner != null)
             owner.removeWindow(this);
-        }
+        super.setVisible(false);
     }
 
     // LowLevelEventListener interface. Handle own events.

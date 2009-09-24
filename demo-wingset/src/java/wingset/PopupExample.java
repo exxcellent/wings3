@@ -72,17 +72,15 @@ public class PopupExample
         popup2.add(createContent(), SBorderLayout.CENTER);
 
         popupButton1.addActionListener(new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
                 if (popup1.isVisible()) {
-                    popup1.setVisible(false);
+                    popup1.hide();
                 } else {
-                    popup1.setVisible(true);
+                    popup1.show();
                 }
             }
         });
         popupButton2.addActionListener(new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
                 if (popup2.isVisible()) {
                     popup2.setVisible(false);

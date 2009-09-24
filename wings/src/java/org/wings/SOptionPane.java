@@ -608,7 +608,8 @@ public class SOptionPane extends SDialog implements ActionListener {
                 optionData.add(label);
             }
         }
-        show(c);
+        setOwner(c);
+        show();
     }
 
     public void showPlainMessage(SComponent parent, Object message, String title) {
