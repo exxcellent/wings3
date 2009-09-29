@@ -48,51 +48,12 @@
     	    <description>Do identation according to component depth.</description>
         </init-param> -->
     </servlet>
-<!--
-    <servlet>
-        <servlet-name>dwr-invoker</servlet-name>
-        <display-name>DWR Servlet</display-name>
-        <description>Direct Web Remoter Servlet</description>
-        <servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class>
-        <init-param>
-            <param-name>debug</param-name>
-            <param-value>true</param-value>
-            <description>Do we startup in debug/test mode?</description>
-        </init-param>
-        <init-param>
-            <param-name>logLevel</param-name>
-            <param-value>DEBUG</param-value>
-            <description>How verbose do we want logging to be?</description>
-        </init-param>
-        <init-param>
-            <param-name>org.directwebremoting.extend.CreatorManager</param-name>
-            <param-value>org.wings.plaf.css.dwr.SessionCreatorManager</param-value>
-            <description>Install a session local CreatorManager</description>
-        </init-param>
-        <init-param>
-            <param-name>org.directwebremoting.extend.AccessControl</param-name>
-            <param-value>org.wings.plaf.css.dwr.SessionAccessControl</param-value>
-            <description>Install a session local AccessControl</description>
-        </init-param>
-        <init-param>
-            <param-name>org.directwebremoting.extend.Remoter</param-name>
-            <param-value>org.wings.plaf.css.dwr.SessionRemoter</param-value>
-            <description>Install a session local Remoter</description>
-        </init-param>
-        <load-on-startup>-1</load-on-startup>
-    </servlet>
--->
+
     <servlet-mapping>
         <servlet-name>CalendarExample</servlet-name>
         <url-pattern>/calendarexample/*</url-pattern>
     </servlet-mapping>
 
-	<!--
-    <servlet-mapping>
-        <servlet-name>dwr-invoker</servlet-name>
-        <url-pattern>/dwr/*</url-pattern>
-    </servlet-mapping>
--->
     <session-config>
         <session-timeout>10</session-timeout>
     </session-config>
