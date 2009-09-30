@@ -124,6 +124,9 @@ public class GridBagLayoutCG extends AbstractLayoutCG {
                         cellStyle.defaultLayoutCellVAlignment = SConstants.CENTER;
                         break;
                     }
+                    if (c instanceof SGridBagConstraints) {
+                        cellStyle.optionalStyleClass = ((SGridBagConstraints) c).cellClass;
+                    }
 
                     if ((c.gridx == SGridBagLayout.LAST_CELL || c.gridx == col) &&
                             (c.gridy == SGridBagLayout.LAST_CELL || c.gridy == row)) {
@@ -237,6 +240,12 @@ public class GridBagLayoutCG extends AbstractLayoutCG {
 
     public int getDefaultLayoutCellVAlignment() {
         return SConstants.NO_ALIGN;  // Don't knoff.
+    }
+
+    public static class SGridBagConstraints extends GridBagConstraints {
+
+        public String cellClass;
+
     }
 
 }
