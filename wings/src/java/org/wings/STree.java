@@ -652,7 +652,7 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
         if (this.selectionModel != null)
             this.selectionModel.removeTreeSelectionListener(fwdSelectionEvents);
 
-        if (selectionModel != null)
+        if (selectionModel != null && selectionModel != SDefaultTreeSelectionModel.NO_SELECTION_MODEL)
             selectionModel.addTreeSelectionListener(fwdSelectionEvents);
 
         if (selectionModel == null)
