@@ -46,7 +46,8 @@ public class FileOpenerItem
 
                     }
                     catch (Exception e) {
-                        dialog.show((EditorPanel)getComponent()); // show again ..
+                    	dialog.setOwner((EditorPanel)getComponent());
+                        dialog.show(); // show again ..
                         // .. but first, show error-message on top ..
                         SOptionPane.showMessageDialog((EditorPanel)getComponent(),
                                                       "Error opening file",
