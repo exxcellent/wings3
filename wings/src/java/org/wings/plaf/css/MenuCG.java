@@ -16,6 +16,7 @@ package org.wings.plaf.css;
 import org.wings.*;
 import org.wings.io.Device;
 import org.wings.plaf.Update;
+import org.wings.util.KeystrokeUtil;
 
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -159,17 +160,24 @@ public final class MenuCG extends org.wings.plaf.css.MenuItemCG implements
         for (int i = 0; i < menu.getMenuComponentCount(); i++) {
             if (!(menu.getMenuComponent(i) instanceof SMenuItem))
                 continue;
+            int textLength = 0;
             String text = ((SMenuItem) menu.getMenuComponent(i)).getText();
-            if (text != null && text.length() > maxLength) {
-                maxLength = text.length();
+            
+            if ( text != null ) 
+              textLength = Double.valueOf(text.length()*menu.getWidthScaleFactor()).intValue();
+
+            if ( ((SMenuItem) menu.getMenuComponent(i)).getAccelerator() != null )
+              textLength = textLength + Double.valueOf(KeystrokeUtil.keyStroke2String(((SMenuItem) menu.getMenuComponent(i)).getAccelerator()).length() * ((SMenuItem) menu.getMenuComponent(i)).getAcceleratorWidthScaleFactor() ).intValue();
+            
+            if (textLength > maxLength) {
+                maxLength = textLength;
                 if (menu.getMenuComponent(i) instanceof SMenu) {
                     maxLength = maxLength + 2; //graphics
                 }
             }
         }
         device.print(" style=\"width:");
-        String stringLength = String.valueOf(maxLength * menu.getWidthScaleFactor());
-        device.print(stringLength.substring(0, stringLength.lastIndexOf('.') + 2));
+        device.print(maxLength);
         device.print("em;\"");
         device.print(" id=\"");
         device.print(menu.getName());

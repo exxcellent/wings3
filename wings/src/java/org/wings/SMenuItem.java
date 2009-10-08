@@ -24,6 +24,7 @@ import javax.swing.*;
 public class SMenuItem extends SButton {
     protected SComponent menuParent;
     private KeyStroke accelerator;
+    private double acceleratorWidthScaleFactor = 0.4f;
 
     public SMenuItem() {
         init();
@@ -90,4 +91,26 @@ public class SMenuItem extends SButton {
     public boolean getResidesInForm() {
         return true;
     }
+
+    /**
+     * This factor will be used to layout the menu. When we compute the menu width the
+     * accelerator's part will be <code>acceleratorWidthScaleFactor * accelerators text 
+     * width<code> in em measures. Default is 0.4 .    
+     *   
+     * @return
+     */
+    public double getAcceleratorWidthScaleFactor() {
+      return acceleratorWidthScaleFactor;
+    }
+
+    /**
+     * This factor will be used to layout the menu. When we compute the menu width, the
+     * accelerator's part will be <code>acceleratorWidthScaleFactor * accelerators text 
+     * width<code> in em measures. Default is 0.4 .    
+     *   
+     */
+    public void setAcceleratorWidthScaleFactor(double acceleratorWidthScaleFactor) {
+      this.acceleratorWidthScaleFactor = acceleratorWidthScaleFactor;
+    }
+
 }
