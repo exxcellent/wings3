@@ -210,4 +210,9 @@ public class SCursor extends SComponent {
 
         return retList;
     }
+
+    @Override
+    public boolean isRecursivelyVisible() {
+        return isVisible();
+    }
 }

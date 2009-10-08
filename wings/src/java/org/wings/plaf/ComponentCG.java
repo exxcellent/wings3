@@ -34,12 +34,6 @@ public interface ComponentCG<COMPONENT_TYPE extends SComponent> extends Serializ
     public void uninstallCG(COMPONENT_TYPE c);
 
     /**
-     * Notify the CG that the state of the according component has changed.
-     * @param c The 'dirty' component.
-     */
-    public void componentChanged(COMPONENT_TYPE c);
-
-    /**
      * Writes the given component to the Device.
      * <p/>
      * <p>This renders the component according to this pluggable look and

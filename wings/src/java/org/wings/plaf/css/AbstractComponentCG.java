@@ -269,9 +269,6 @@ public abstract class AbstractComponentCG<COMPONENT_TYPE
         return BLIND_ICON;
     }
 
-    public void componentChanged(COMPONENT_TYPE component) {
-    }
-
     /**
      * This method renders the component (and all of its subcomponents) to the given device.
      */

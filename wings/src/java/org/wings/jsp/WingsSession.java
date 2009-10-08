@@ -106,7 +106,6 @@ public class WingsSession
                 }
 
                 wingsSession.getReloadManager().invalidateFrames();
-                wingsSession.getReloadManager().notifyCGs();
             }
             finally {
                 wingsSession.getReloadManager().clear();

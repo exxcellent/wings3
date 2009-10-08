@@ -135,7 +135,20 @@ public class WeakArrayList<T> extends AbstractList<T> {
 
     @Override
     public Iterator<T> iterator() {
-        throw new RuntimeException("does not work - weaklists can't be iterated");
+        return new Iterator<T>() {
+            Iterator<Reference<T>> iterator = list.iterator();
+            public boolean hasNext() {
+                return iterator.hasNext();
+            }
+
+            public T next() {
+                return iterator.next().get();
+            }
+
+            public void remove() {
+                iterator.remove();
+            }
+        };
     }
 
     @Override

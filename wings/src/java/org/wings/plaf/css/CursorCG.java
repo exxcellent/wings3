@@ -19,22 +19,6 @@ public class CursorCG extends AbstractComponentCG implements org.wings.plaf.Curs
     public CursorCG() {
     }
 
-    public void installCG(SComponent component) {
-        super.installCG(component);
-    }
-
-    public void uninstallCG(SComponent component) {
-        super.uninstallCG(component);
-    }
-
-    public void componentChanged(SComponent component) {
-        super.componentChanged(component);
-    }
-
-    public Update getComponentUpdate(SComponent component) {
-        return super.getComponentUpdate(component);
-    }
-
     public void writeInnerComponent(Device device, SCursor component) throws IOException {
         List<SIcon> icons = component.getIconsByPriority();
 

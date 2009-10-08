@@ -565,7 +565,6 @@ public final class SessionServlet
                 return;
             }
 
-            reloadManager.notifyCGs();
             reloadManager.invalidateFrames();
 
             if (extInfo != null) {
@@ -717,7 +716,6 @@ public final class SessionServlet
             String url = session.getExternalizeManager().externalize(resource);
 
             ReloadManager reloadManager = session.getReloadManager();
-            reloadManager.notifyCGs();
 
             session.fireRequestEvent(SRequestEvent.DISPATCH_DONE);
             session.fireRequestEvent(SRequestEvent.PROCESS_REQUEST);

@@ -1985,18 +1985,6 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
         /* currently nothing to do */
     }
 
-    // Nice: undocumented and useless
-    /*public ArrayList getMenus() {
-        ArrayList menus = new ArrayList();
-        if (isVisible()) {
-            SPopupMenu pmenu = getComponentPopupMenu();
-            if (pmenu != null) {
-                menus.add(pmenu);
-            }
-        }
-        return menus;
-    } */
-
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         // preprocessing, e. g. serialize static vars or transient variables as cipher text
         in.defaultReadObject(); // default serialization

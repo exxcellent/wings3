@@ -59,9 +59,6 @@ public class DragAndDropManagerCG
         SessionHeaders.getInstance().deregisterHeaders(headers);
     }
 
-    public void componentChanged(SComponent c) {
-    }
-
     public Update getComponentUpdate(SComponent component) {
         return new ComponentUpdate(component);
     }

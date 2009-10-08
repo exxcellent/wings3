@@ -52,11 +52,6 @@ public interface ReloadManager extends Serializable {
     void invalidateFrames();
 
     /**
-     * Notifies the CG's of dirty components about changes.
-     */
-    void notifyCGs();
-
-    /**
      * Clears all requested reloads and updates.
      */
     void clear();

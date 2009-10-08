@@ -146,15 +146,6 @@ public class DefaultReloadManager implements ReloadManager {
         acceptChanges = false;
     }
 
-    public void notifyCGs() {
-        for (SComponent component : getDirtyComponents()) {
-            ComponentCG componentCG = component.getCG();
-            if (componentCG != null) {
-                componentCG.componentChanged(component);
-            }
-        }
-    }
-
     public void clear() {
         updateCount = 0;
         acceptChanges = true;

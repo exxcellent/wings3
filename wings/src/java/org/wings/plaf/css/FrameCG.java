@@ -307,9 +307,6 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         SessionHeaders.getInstance().deregisterHeaders(headers);
     }
 
-    public void componentChanged(SComponent c) {
-    }
-
     public void write(final Device device, final SComponent component) throws IOException {
         final SFrame frame = (SFrame) component;
 

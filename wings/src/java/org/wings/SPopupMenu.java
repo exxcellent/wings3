@@ -147,4 +147,10 @@ public class SPopupMenu
         }
         super.setEnabled(enabled);
     }
+
+    @Override
+    public boolean isRecursivelyVisible() {
+        return getSession().getMenuManager().isMenuLinked(this);
+        //return super.isRecursivelyVisible();
+    }
 }
