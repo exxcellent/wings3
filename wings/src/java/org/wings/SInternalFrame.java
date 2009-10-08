@@ -159,7 +159,7 @@ public class SInternalFrame
             show();
         else
             hide();
-        setRecursivelyVisible(visible);
+        setRecursivelyVisible(isRecursivelyVisible());
     }
 
     public void show() {

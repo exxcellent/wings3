@@ -9,7 +9,7 @@ public class XScrollablePanel
     extends SPanel
     implements Scrollable
 {
-    private SScrollPane scrollPane;
+    protected SScrollPane scrollPane;
 
     public XScrollablePanel() {
         super.setLayout(new SBorderLayout());

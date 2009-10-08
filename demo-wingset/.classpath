@@ -4,6 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/wings"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/wingx"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/wingx-3"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wings-experimental"/>
 	<classpathentry kind="output" path="build_eclipse/class"/>
 </classpath>

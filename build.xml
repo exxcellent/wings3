@@ -259,4 +259,10 @@
         <ant dir="wingx" target="build"/>
         <ant dir="demo-logconfig" target="deploy"/>
     </target>
+
+    <target name="deploy-demo-comet" description="deploy demo-comet">
+        <ant dir="wings" target="build"/>
+        <ant dir="wingx" target="build"/>
+        <ant dir="demo-comet" target="deploy"/>
+    </target>
 </project>

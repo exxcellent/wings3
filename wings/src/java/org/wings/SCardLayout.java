@@ -73,6 +73,7 @@ public class SCardLayout
                 parent.getComponent(i).setVisible(false);
             else
                 parent.getComponent(i).setVisible(true);
+        container.setRecursivelyVisible(container.isRecursivelyVisible());
     }
 
     /**
@@ -95,6 +96,7 @@ public class SCardLayout
                 return;
             }
         }
+        container.setRecursivelyVisible(container.isRecursivelyVisible());
     }
 
     /**
@@ -117,6 +119,7 @@ public class SCardLayout
                 return;
             }
         }
+        container.setRecursivelyVisible(container.isRecursivelyVisible());
     }
 
     /**
@@ -134,6 +137,7 @@ public class SCardLayout
             else
                 parent.getComponent(i).setVisible(true);
         }
+        container.setRecursivelyVisible(container.isRecursivelyVisible());
     }
 
 
@@ -146,6 +150,7 @@ public class SCardLayout
             c.setVisible(false);
         }
         comp.setVisible(true);
+        container.setRecursivelyVisible(container.isRecursivelyVisible());
     }
 
     /**
@@ -160,6 +165,7 @@ public class SCardLayout
             }
             visibleComponent.setVisible(true);
         }
+        container.setRecursivelyVisible(container.isRecursivelyVisible());
     }
 
     /**
@@ -179,6 +185,7 @@ public class SCardLayout
                 parent.getComponent(i).setVisible(false);
             next.setVisible(true);
         }
+        container.setRecursivelyVisible(container.isRecursivelyVisible());
     }
 
 

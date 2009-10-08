@@ -13,7 +13,7 @@
             <param-value>calendar.CalendarExample</param-value>
         </init-param>
 
-        <!-- NOTE: The entries below are optionally. We included them mainly for documentation purpose -->
+        <!-- NOTE: The entries below are optional. We included them mainly for documentation purpose -->
 <!--     
 	 <init-param>
             <param-name>wings.lookandfeel.factory</param-name>
@@ -46,7 +46,8 @@
             <param-name>SComponent.printPretty</param-name>
             <param-value>TRUE</param-value>
     	    <description>Do identation according to component depth.</description>
-        </init-param> -->
+        </init-param>
+-->
     </servlet>
 
     <servlet-mapping>

@@ -28,8 +28,9 @@ public class SProgressBarExample implements ActionListener {
         thread.start();
     }
 
-    private class AsyncTask implements Runnable {
-
+    private class AsyncTask
+    	implements Runnable
+  	{
         private final Session session;
 
         public AsyncTask(Session session) {
@@ -41,7 +42,9 @@ public class SProgressBarExample implements ActionListener {
                 final int percent = i;
                 try {
                     Thread.sleep(1000);
-                } catch (InterruptedException e) {}
+                }
+                catch (InterruptedException e) {}
+                
                 session.getDispatcher().invokeLater(new Runnable() {
                     public void run() {
                         progressBar.setValue(percent);

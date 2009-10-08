@@ -287,6 +287,8 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
         else
             setParentFrame(null);
         propertyChangeSupport.firePropertyChange("parent", oldVal, this.parent);
+
+        setRecursivelyVisible(parent != null ? parent.isRecursivelyVisible() : false);
     }
 
     /**
@@ -324,8 +326,6 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
             reload();
 
         propertyChangeSupport.firePropertyChange("parentFrame", oldVal, this.parentFrame);
-
-        setRecursivelyVisible(getParent() != null ? parent.isRecursivelyVisible() : false);
     }
 
     public void setComponentPopupMenu(SPopupMenu popupMenu) {
