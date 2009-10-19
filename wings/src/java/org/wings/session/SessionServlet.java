@@ -301,14 +301,6 @@ public final class SessionServlet
 
         ReloadManager reloadManager = session.getReloadManager();
 
-        Comet comet = session.getComet();
-        if (comet != null) {
-            CometConnectionManager connectionManager = comet.getConnectionManager();
-            if (connectionManager != null && !(connectionManager instanceof SessionCometConnectionManager)) {
-                connectionManager.setBrowserId(req, response);
-            }
-        }
-
         try {
             /*
              * The tomcat 3.x has a bug, in that it does not encode the URL

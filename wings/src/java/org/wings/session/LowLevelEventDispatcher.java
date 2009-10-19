@@ -214,16 +214,6 @@ public final class LowLevelEventDispatcher
     private final List<Runnable> runnables = new LinkedList<Runnable>();
 
     public void invokeLater(Runnable runnable) {
-        invokeLater_pullUpdates(runnable);
-    }
-
-    public void invokeLater_piggyback(Runnable runnable) {
-        synchronized (this.runnables) {
-            runnables.add(runnable);
-        }
-    }
-
-    public void invokeLater_pullUpdates(Runnable runnable) {
         synchronized (this.runnables) {
             runnables.add(runnable);
         }
@@ -239,6 +229,12 @@ public final class LowLevelEventDispatcher
                     log.info("push called (Pushable: " + pushable + ")\n");
                 } 
             }
+        }
+    }
+
+    public void invokeLater_piggyback(Runnable runnable) {
+        synchronized (this.runnables) {
+            runnables.add(runnable);
         }
     }
 

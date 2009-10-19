@@ -1,6 +1,8 @@
 package org.wings.comet;
 
-import org.wings.SFrame;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wings.session.ScriptManager;
 import org.wings.session.Session;
 
 import javax.servlet.http.HttpServlet;
@@ -11,10 +13,6 @@ public class Comet {
     public static final int SESSION_COMET_CONNECTION_MANAGER = 1;
     public static final int DEFAULT_COMET_CONNECTION_MANAGER = 2;
 
-    private static final String COMET_UPDATE_CONNECT = "connect";
-    private static final String COMET_UPDATE_DISCONNECT = "disconnect";
-    static final String COMET_UPDATE_HANGING = "switchToHanging";
-
     private final Session session;
     private final Pushable pushable;
 
@@ -22,16 +20,15 @@ public class Comet {
 
     private boolean cometActive;
 
-    private SFrame frame = null;
-    private boolean binding = false;
-
     private long longPollingTimeout = 1000*30;
     private long periodicPollingInterval = 1000*2;
+    
+    private static final transient Log log = LogFactory.getLog(Comet.class);
 
     public Comet(Session session, HttpServlet servlet) {
         this.session = session;
         cometActive = false;
-        this.setConnectionManager(1);
+        this.setConnectionManager( DEFAULT_COMET_CONNECTION_MANAGER );
 
         if (servlet instanceof JettyCometWingServlet) {
             pushable = new JettyPushable(session);
@@ -40,15 +37,6 @@ public class Comet {
         } else {
             pushable = new TomcatPushable(session);
         }
-    }
-
-    SFrame getBindedFrame() {
-        return frame;
-    }
-
-    public void bind(SFrame frame) {
-        binding = true;
-        this.frame = frame;
     }
 
     boolean isCometActive() {
@@ -71,30 +59,39 @@ public class Comet {
         this.periodicPollingInterval = periodicPollingInterval;
     }
 
-    public void connect() {
-        cometActive = true;
-        if (frame != null) {
-            frame.setCometUpdate(COMET_UPDATE_CONNECT);
-        }
-    }
+    
+    public synchronized void activateComet() {
+    	if (cometActive) {
+			log.warn("Could not activate Comet. Comet is already active.");
+			return;
+		}
+		cometActive = true;
+		ScriptManager.getInstance().addScriptListener( new CometScript(CometScript.COMET_CONNECT) );
+	}
 
-    public void disconnect() { 
+    public synchronized void deactivateComet() { 
+    	if (!cometActive) {
+    		log.warn("Could not deactivate Comet. Comet isn't active.");
+			return;
+		}
         cometActive = false;
-        //if (pushable == null) return;
+
         synchronized (pushable) {
             if (pushable.isValid()) {
                 pushable.disconnect();
             }
         }
-        frame.setCometUpdate(COMET_UPDATE_DISCONNECT);
+        ScriptManager.getInstance().addScriptListener( new CometScript(CometScript.COMET_DISCONNECT));
     }
 
-    public boolean isCometEnabled(SFrame frame) {
-        if (!binding) {
-            bind(session.getRootFrame());
-        }
-        return session.isCometWingServletEnabled() && cometActive && (this.frame == frame);
+    public boolean isCometEnabled() {
+        return session.isCometWingServletEnabled() && cometActive;
     }
+    
+    public void switchToHanging() {
+    	ScriptManager.getInstance().addScriptListener( new CometScript(CometScript.COMET_SWITCH_TO_HANGING) );
+    }
+
 
     public Pushable getPushable() {
         return pushable;
@@ -102,7 +99,7 @@ public class Comet {
 
     public void setConnectionManager(int cometConnectionManager) {
         switch (cometConnectionManager) {
-            case NO_COMET_CONNECTION_MANAGER: this.connectionManager = null; break;
+            case NO_COMET_CONNECTION_MANAGER: this.connectionManager = new NullCometConnectionManager(); break;
             case SESSION_COMET_CONNECTION_MANAGER: this.connectionManager = new SessionCometConnectionManager(); break;
             case DEFAULT_COMET_CONNECTION_MANAGER: this.connectionManager = new DefaultCometConnectionManager(); break;
             default: this.connectionManager = new DefaultCometConnectionManager();

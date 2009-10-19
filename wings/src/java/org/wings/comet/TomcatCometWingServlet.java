@@ -30,44 +30,35 @@ public class TomcatCometWingServlet
 
         final String pathInfo = request.getPathInfo();
 
-        if (connectionManager != null) {
-            if (HANGING_PATH.equals(pathInfo)) {
-                if (!connectionManager.hangingGetActive(true)) {
-                    synchronized (pushable) {
-                        cometEvent.setTimeout((int)comet.getLongPollingTimeout());
-                        pushable.setPushInfo(response);
-                    }
-                } else {
-                    pushable.setPeriodicPolling(response);
-                    cometEvent.close();
-                }
-            } else {
-                final String param = request.getParameter(PERIODIC_POLLING_PARAM);
-                if (param != null) {
-                    if (!connectionManager.isHangingGetActive()) {
-                        synchronized (pushable) {
-                            if (!pushable.isSwitchActive()) {
-                                pushable.setSwitchActive(true);
-                                pushable.switchToHanging();
-                            }
-                        }
-                    }
-                }
-                this.service(request, response);
-                cometEvent.close();
-            }
-        } else {
-            if (HANGING_PATH.equals(pathInfo)) {
+        if (pathInfo != null && pathInfo.startsWith(HANGING_PATH)) {
+            if (connectionManager.addHangingGet()) {
+            	log.debug("---addHangingGet: " + request.getSession() + "\n");
                 synchronized (pushable) {
                     cometEvent.setTimeout((int)comet.getLongPollingTimeout());
                     pushable.setPushInfo(response);
                 }
             } else {
-                this.service(request, response);
+            	log.debug("---switchToPeriodicPolling: " + request.getSession() + "\n");
+                pushable.setPeriodicPolling(response);
                 cometEvent.close();
             }
+        } else {
+            final String param = request.getParameter(PERIODIC_POLLING_PARAM);
+            if (param != null) {
+            	log.debug("---polling: " + request.getSession() + "\n");
+                if (connectionManager.canAddHangingGet()) {
+                	log.debug("---switchToHangingGet: " + request.getSession() + "\n");
+                    synchronized (pushable) {
+                        if (!pushable.isSwitchActive()) {
+                            pushable.setSwitchActive(true);
+                            pushable.switchToHanging();
+                        }
+                    }
+                }
+            }
+            this.service(request, response);
+            cometEvent.close();
         }
-
     }
 
     private void handleError(CometEvent cometEvent) throws IOException, ServletException {
@@ -85,9 +76,11 @@ public class TomcatCometWingServlet
                 log.debug("---Timeout: " + request.getSession() + "\n");
 
                 final Pushable pushable = getPushable(request);
-                synchronized (pushable) {
-                    pushable.reset();
-                    pushable.reconnect();
+                if (pushable != null) {
+                    synchronized (pushable) {
+                        pushable.reset();
+                        pushable.reconnect();
+                    }
                 }
             break;
             case CLIENT_DISCONNECT:
@@ -108,7 +101,8 @@ public class TomcatCometWingServlet
         final Pushable pushable = getPushable(request);
 
         if(cometEvent.getEventSubType() == null) {
-            pushable.reset();
+            if (pushable != null)
+                pushable.reset();
             cometEvent.close();
             return;
         }
@@ -125,7 +119,8 @@ public class TomcatCometWingServlet
                 break;
         }
 
-        pushable.reset();
+        if (pushable != null)
+            pushable.reset();
 
         cometEvent.close();
     }
@@ -152,7 +147,11 @@ public class TomcatCometWingServlet
 
     private Pushable getPushable(HttpServletRequest request) throws ServletException {
         Session session = getSession(request);
+        if (session == null)
+          return null;
         Comet comet = session.getComet();
+        if (comet == null)
+          return null;
         return comet.getPushable();
     }
 }

@@ -13,48 +13,40 @@ class RMICometConnectionManager extends CometConnectionManager {
         connectionSet = getSharedObject();
     }
 
-    public boolean isHangingGetActive() {
+    public boolean canAddHangingGet() {
         synchronized (connectionSet) {
             try {
-                return connectionSet.contains(browserId);
+                return !connectionSet.contains(getBrowserId());
             } catch (RemoteException e) {
                 //e.printStackTrace();
                 connectionSet = getSharedObject();
-                return isHangingGetActive();
+                return canAddHangingGet();
             }
         }
     }
 
-    public boolean hangingGetActive(boolean value) {
+    public boolean addHangingGet() {
         synchronized (connectionSet) {
             try {
-                final boolean oldValue = connectionSet.contains(browserId);
-                if (value) {
-                    connectionSet.add(browserId);
-                } else {
-                    connectionSet.remove(browserId);
-                }
-                return oldValue;
+                final boolean result = !connectionSet.contains(getBrowserId());
+                connectionSet.add(getBrowserId());
+                return result;
             } catch (RemoteException e) {
                 //e.printStackTrace();
                 connectionSet = getSharedObject();
-                return hangingGetActive(value);
+                return addHangingGet();
             }
         }
     }
 
-    public void setHangingGetActive(boolean value) {
+    public void removeHangingGet() {
         synchronized (connectionSet) {
             try {
-                if (value) {
-                    connectionSet.add(browserId);
-                } else {
-                    connectionSet.remove(browserId);
-                }
+                connectionSet.remove(getBrowserId());
             } catch (RemoteException e) {
                 //e.printStackTrace();
                 connectionSet = getSharedObject();
-                setHangingGetActive(value);
+                removeHangingGet();
             }
         }
     }

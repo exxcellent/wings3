@@ -36,39 +36,28 @@ public class GlassfishCometWingServlet extends CometWingServlet {
 
         final String pathInfo = request.getPathInfo();
 
-        if (connectionManager != null) {
-            if (HANGING_PATH.equals(pathInfo)) {
-                if (!connectionManager.hangingGetActive(true)) {
-                    synchronized (pushable) {
-                        context.setExpirationDelay(comet.getLongPollingTimeout());
-                        pushable.setPushInfo(response);
-                    }
-                } else {
-                    pushable.setPeriodicPolling(response);
-                }
-            } else {
-                final String param = request.getParameter(PERIODIC_POLLING_PARAM);
-                if (param != null) {
-                    if (!connectionManager.isHangingGetActive()) {
-                        synchronized (pushable) {
-                            if (!pushable.isSwitchActive()) {
-                                pushable.setSwitchActive(true);
-                                pushable.switchToHanging();
-                            }
-                        }
-                    }
-                }
-                super.doGet(request, response);
-            }
-        } else {
-            if (HANGING_PATH.equals(pathInfo)) {
+        if (pathInfo != null && pathInfo.startsWith(HANGING_PATH)) {
+            if (connectionManager.addHangingGet()) {
                 synchronized (pushable) {
                     context.setExpirationDelay(comet.getLongPollingTimeout());
                     pushable.setPushInfo(response);
                 }
             } else {
-                super.doGet(request, response);
+                pushable.setPeriodicPolling(response);
             }
+        } else {
+            final String param = request.getParameter(PERIODIC_POLLING_PARAM);
+            if (param != null) {
+                if (connectionManager.canAddHangingGet()) {
+                    synchronized (pushable) {
+                        if (!pushable.isSwitchActive()) {
+                            pushable.setSwitchActive(true);
+                            pushable.switchToHanging();
+                        }
+                    }
+                }
+            }
+            super.doGet(request, response);
         }
     }
 }

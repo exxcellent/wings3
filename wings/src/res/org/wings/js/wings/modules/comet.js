@@ -114,8 +114,11 @@ wingS.comet.callbackObject = {
 };
 
 wingS.comet.sendHangingGetRequest = function() {
+	uri = wingS.comet.cometPath 
+		+ "-" + wingS.global.updateResource  
+		+ "?_xhrID=" + new Date().getTime();
     wingS.comet.connectionObject = 
-        YAHOO.util.Connect.asyncRequest("GET", wingS.comet.cometPath + "?_xhrID=" + new Date().getTime(), wingS.comet.callbackObject);
+        YAHOO.util.Connect.asyncRequest("GET", uri, wingS.comet.callbackObject);
 };
 
 wingS.comet.streamTriggers = function() {

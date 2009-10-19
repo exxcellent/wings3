@@ -1,64 +1,60 @@
 package org.wings.comet;
 
-import javax.naming.*;
-import java.util.HashSet;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+/**
+ * Manages the number of open HangingGet requests per browser via a shared object in JNDI.
+ */
 class DefaultCometConnectionManager extends CometConnectionManager {
 
     private Context jndiContext;
-    private final HashSet<String> connectionSet;
-
+    
     public DefaultCometConnectionManager() {
         try {
             jndiContext = new InitialContext();
         } catch (NamingException e) {
             e.printStackTrace();
         }
-        synchronized (jndiContext) {
-            connectionSet = getSharedObject();
-        }
     }
 
-    public boolean isHangingGetActive() {
-        synchronized (connectionSet) {
-            return connectionSet.contains(browserId);
-        }
-    }
+    public boolean canAddHangingGet() {
+		int hGetCount = readHGetCount();
+		log.debug("canAddHangingGet: hGetCount=" + hGetCount);
+		return hGetCount < getMaxHangingGetCount();
+	}
 
-    public boolean hangingGetActive(boolean value) {
-        synchronized (connectionSet) {
-            final boolean oldValue = connectionSet.contains(browserId);
-            if (value) {
-                connectionSet.add(browserId);
-            } else {
-                connectionSet.remove(browserId);
-            }
-            return oldValue;
-        }
-    }
+	public boolean addHangingGet() {
+		int hGetCount = readHGetCount();
+		log.debug("addHangingGet: hGetCount before=" + hGetCount);
+		return hGetCount < getMaxHangingGetCount() && saveHGetCount(++hGetCount);
+	}
 
-    public void setHangingGetActive(boolean value) {
-        synchronized (connectionSet) {
-            if (value) {
-                connectionSet.add(browserId);
-            } else {
-                connectionSet.remove(browserId);
-            }
-        }
-    }
+	public void removeHangingGet() {
+		int hGetCount = readHGetCount();
+		log.debug("removeHangingGet: hGetCount before=" + hGetCount);
+		if (hGetCount > 0)
+			saveHGetCount(--hGetCount);
+	}
 
-    HashSet<String> getSharedObject() {
+   int readHGetCount() {
         try {
-            return (HashSet<String>) jndiContext.lookup(NAME);
+            return (Integer) jndiContext.lookup(NAME + getBrowserId());
         } catch (NamingException e) {
-            //e.printStackTrace();
-            final HashSet<String> connectionSet = new HashSet<String>();
-            try {
-                jndiContext.bind(NAME, connectionSet);
-            } catch (NamingException e1) {
-                e1.printStackTrace();
-            }
-            return connectionSet;
+        	return 0;
         }
     }
+   
+   private boolean saveHGetCount(int count) {
+		try {
+			jndiContext.rebind(NAME + getBrowserId(), count);
+			return true;
+		} catch (NamingException e) {
+			return false;
+		}
+	}
 }

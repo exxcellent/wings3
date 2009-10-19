@@ -218,6 +218,7 @@ public class Session implements PropertyService, Serializable {
 
         if (isCometWingServletEnabled()) {
             comet = new Comet(this, wingServlet);
+            comet.getConnectionManager().setBrowserId(request, response);
         }
 
         initProps(servletConfig);

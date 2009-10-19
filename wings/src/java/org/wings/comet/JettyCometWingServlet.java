@@ -25,62 +25,40 @@ public class JettyCometWingServlet extends CometWingServlet {
 
         final String pathInfo = request.getPathInfo();
 
-        if (connectionManager != null) {
-            if (HANGING_PATH.equals(pathInfo)) {
-                final Continuation continuation = ContinuationSupport.getContinuation(request, null);
-                boolean resumed;
-                synchronized (pushable) {
-                    if (!continuation.isPending()) {
-                        if (!connectionManager.hangingGetActive(true)) {
-                            pushable.setPushInfo(response, continuation);
-                            if (!pushable.isPushInfoValid()) return;
-                        } else {
-                            pushable.setPeriodicPolling(response);
-                            return;
-                        }
-                    }
-                    resumed = continuation.suspend(comet.getLongPollingTimeout());
-                }
-
-                if (!resumed) {
-                    pushable.reconnect();
-                }
-                pushable.write(response, continuation.getObject());
-                pushable.reset();
-            } else {
-                final String param = request.getParameter(PERIODIC_POLLING_PARAM);
-                if (param != null) {
-                    if (!connectionManager.isHangingGetActive()) {
-                        synchronized (pushable) {
-                            if (!pushable.isSwitchActive()) {
-                                pushable.setSwitchActive(true);
-                                pushable.switchToHanging();
-                            }
-                        }
-                    }
-                }
-                super.doGet(request, response);
-            }    
-        } else {
-            if (HANGING_PATH.equals(pathInfo)) {
-                final Continuation continuation = ContinuationSupport.getContinuation(request, null);
-                boolean resumed;
-                synchronized (pushable) {
-                    if (!continuation.isPending()) {
+        if (pathInfo != null && pathInfo.startsWith(HANGING_PATH)) {
+            final Continuation continuation = ContinuationSupport.getContinuation(request, null);
+            boolean resumed;
+            synchronized (pushable) {
+                if (!continuation.isPending()) {
+                    if (connectionManager.addHangingGet()) {
                         pushable.setPushInfo(response, continuation);
                         if (!pushable.isPushInfoValid()) return;
+                    } else {
+                        pushable.setPeriodicPolling(response);
+                        return;
                     }
-                    resumed = continuation.suspend(comet.getLongPollingTimeout());
                 }
-
-                if (!resumed) {
-                    pushable.reconnect();
-                }
-                pushable.write(response, continuation.getObject());
-                pushable.reset();
-            } else {
-                super.doGet(request, response);
+                resumed = continuation.suspend(comet.getLongPollingTimeout());
             }
-        }
+
+            if (!resumed) {
+                pushable.reconnect();
+            }
+            pushable.write(response, continuation.getObject());
+            pushable.reset();
+        } else {
+            final String param = request.getParameter(PERIODIC_POLLING_PARAM);
+            if (param != null) {
+                if (connectionManager.canAddHangingGet()) {
+                    synchronized (pushable) {
+                        if (!pushable.isSwitchActive()) {
+                            pushable.setSwitchActive(true);
+                            pushable.switchToHanging();
+                        }
+                    }
+                }
+            }
+            super.doGet(request, response);
+        }    
     }
 }

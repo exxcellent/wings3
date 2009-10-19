@@ -8,18 +8,18 @@ public class SessionCometConnectionManager extends CometConnectionManager {
         hangingGetActive = getSharedObject();
     }
 
-    public synchronized boolean isHangingGetActive() {
-        return hangingGetActive;
+    public synchronized boolean canAddHangingGet() {
+        return !hangingGetActive;
     }
 
-    public synchronized boolean hangingGetActive(boolean value) {
-        boolean oldValue = this.hangingGetActive;
-        this.hangingGetActive = value;
-        return oldValue;
+    public synchronized boolean addHangingGet() {
+        boolean result = !this.hangingGetActive;
+        this.hangingGetActive = true;
+        return result;
     }
 
-    public synchronized void setHangingGetActive(boolean value) {
-        this.hangingGetActive = value;
+    public synchronized void removeHangingGet() {
+        this.hangingGetActive = false;
     }
 
     Boolean getSharedObject() {

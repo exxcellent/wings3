@@ -855,7 +855,4 @@ public class SFrame
         return false;
     }
 
-    public void setCometUpdate(String task) {
-        update(((FrameCG) getCG()).getCometUpdate(this, task));
-    }
 }

@@ -102,14 +102,12 @@ public abstract class Pushable {
     }
 
     void switchToHanging() {
-        final Comet comet = session.getComet();
-        comet.getBindedFrame().setCometUpdate(Comet.COMET_UPDATE_HANGING);
+        session.getComet().switchToHanging();
     }
 
     void reset() {
         final Comet comet = session.getComet();
-        final CometConnectionManager connectionManager = comet.getConnectionManager();
-        if (connectionManager != null) connectionManager.setHangingGetActive(false);
+        comet.getConnectionManager().removeHangingGet();
         setValid(false);
         //timer.cancel();
     }

@@ -17,33 +17,25 @@ class ServletContextCometConnectionManager extends CometConnectionManager {
         }
     }
 
-    public boolean isHangingGetActive() {
+    public boolean canAddHangingGet() {
         synchronized (connectionSet) {
-            return connectionSet.contains(browserId);
+            return !connectionSet.contains(getBrowserId());
         }
     }
 
-    public boolean hangingGetActive(boolean value) {
+    public boolean addHangingGet() {
         synchronized (connectionSet) {
-            final boolean oldValue = connectionSet.contains(browserId);
-            if (value) {
-                connectionSet.add(browserId);
-            } else {
-                connectionSet.remove(browserId);
-            }
-            return oldValue;
+            final boolean result = !connectionSet.contains(getBrowserId());
+            connectionSet.add(getBrowserId());
+            return result;
         }
     }
 
-    public void setHangingGetActive(boolean value) {
-        synchronized (connectionSet) {
-            if (value) {
-                connectionSet.add(browserId);
-            } else {
-                connectionSet.remove(browserId);
-            }
-        }
-    }
+    public void removeHangingGet() {
+		synchronized (connectionSet) {
+			connectionSet.remove(getBrowserId());
+		}
+	}
 
     HashSet<String> getSharedObject() {
         HashSet<String> connectionSet = (HashSet<String>) servletContext.getAttribute(NAME);
