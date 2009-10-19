@@ -90,7 +90,7 @@ public class Chat implements ActionListener, SExitListener {
         if (e.getSource() == button_left) {
             if (login) {
                 if (!textField.getText().equals("")) {
-                    comet.connect();
+                    comet.activateComet();
                     client = new Client(SessionManager.getSession(), this);
                     nickName = textField.getText();
                     chatRoom.register(client);
@@ -109,7 +109,7 @@ public class Chat implements ActionListener, SExitListener {
             }
         } 
         if (e.getSource() == button_right) {
-            comet.disconnect();
+            comet.deactivateComet();
             chatRoom.addMessage(" ... " + nickName + " has left.");
             chatRoom.unregister(client);
             label.setText("Name:");
