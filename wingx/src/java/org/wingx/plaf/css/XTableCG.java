@@ -291,7 +291,7 @@ public class XTableCG
 
         TableModel model = table.getModel();
         boolean empty = model.getRowCount() == 0;
-        boolean filtered = isModelFiltered(model);
+        boolean filtered = table.isFilterVisible() && isModelFiltered(model);
 
         device.print("<table");
         if (empty) table.addStyle("nodata");

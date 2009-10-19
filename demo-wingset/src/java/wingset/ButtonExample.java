@@ -143,12 +143,6 @@ public class ButtonExample extends WingSetPane {
 
         public ButtonControls() {
             formComponentCheckBox.setSelected(true);
-            formComponentCheckBox.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    grid.setBorder(formComponentCheckBox.isSelected() ? 0 : 1);
-                    gridPanel.reload();
-                }
-            });
 
             final SCheckBox useImages = new SCheckBox("Use Icons");
             useImages.setSelected(true);

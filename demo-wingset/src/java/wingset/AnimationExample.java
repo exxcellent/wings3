@@ -41,6 +41,8 @@ public class AnimationExample extends WingSetPane {
 		showHide.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
+                if (hello.getParent() != null)
+                    content.remove(hello);
 				content.add(hello);
 				
 				Animation animation = new Animation(content, 2, 300, 200);

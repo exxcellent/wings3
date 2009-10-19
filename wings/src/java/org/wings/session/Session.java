@@ -834,6 +834,8 @@ public class Session implements PropertyService, Serializable {
      */
     public void exit(String redirectAddress) {
         this.exitAddress = redirectAddress;
+        for (SFrame frame : frames)
+            frame.hide();
     }
 
     /**
