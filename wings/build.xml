@@ -15,6 +15,7 @@
     <property name="catalina.version" value="catalina.jar"/>
     <property name="jetty.version" value="jetty-util-6.1.6rc0.jar"/>
     <property name="glassfish.version" value="appserv-rt.jar"/>
+	<property name="jbossweb.version" value="jbossweb.jar"/>
     <property name="junit.version" value="junit-4.4.jar"/>
     <property name="test.log.dir" value="/tmp/" />
 
@@ -30,6 +31,7 @@
             <include name="${catalina.version}"/>
             <include name="${jetty.version}"/>
             <include name="${glassfish.version}"/>
+        	<include name="${jbossweb.version}"/>
             <include name="${junit.version}"/>
         </fileset>
     </path>
