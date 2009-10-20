@@ -24,7 +24,7 @@ For Jetty:
 - in web.xml of demo-comet replace "org.wings.comet.TomcatCometWingServlet" by "org.wings.comet.JettyCometWingServlet" twice
 
 
-For JBoss (tested with JBoss 4.2.3 GA):
+For JBoss 4.2.3:
 - in server/default/deploy/jboss-web.deployer/server.xml use org.apache.coyote.http11.Http11NioProtocol:
    
   <Connector port="8080" address="${jboss.bind.address}" maxThreads="250" maxHttpHeaderSize="8192"
@@ -32,6 +32,13 @@ For JBoss (tested with JBoss 4.2.3 GA):
     redirectPort="8443" acceptCount="100" connectionTimeout="20000" disableUploadTimeout="true" />
     
 - in server/default/deploy/jboss-web.deployer/conf/web.xml comment out the filter and filter-mapping for CommonHeadersFilter
+
+
+For JBoss 5 (tested with Windows XP)
+- in web.xml of demo-comet replace "org.wings.comet.TomcatCometWingServlet" by "org.wings.comet.JBossWebCometWingServlet" twice
+- Install JBoss Native libraries from http://jboss.org/jbossweb/downloads/jboss-native
+  see http://www.jboss.org/file-access/default/members/jbossweb/freezone/docs/latest/apr.html
+- For Windows: add path to native DLL's (...\bin\META-INF\lib\windows\x86) to environment variable PATH
 
 
 Running the examples
