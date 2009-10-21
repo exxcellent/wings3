@@ -386,7 +386,7 @@ public class WingServlet
              */
             String pathInfo = getPathInfo(req);
 
-            if (pathInfo == null || pathInfo.length() == 0) {
+            if (pathInfo == null || pathInfo.length() == 0 && !response.isCommitted()) {
                 StringBuffer pathUrl = req.getRequestURL();
                 pathUrl.append('/');
                 if (req.getQueryString() != null) {
@@ -394,8 +394,10 @@ public class WingServlet
                 }
 
                 log.debug("redirect to " + pathUrl.toString());
-                response.sendRedirect(pathUrl.toString());
-                return;
+                if (!response.isCommitted()) {
+                    response.sendRedirect(pathUrl.toString());
+                    return;
+                }
             }
 
             /*
