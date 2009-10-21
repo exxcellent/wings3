@@ -385,7 +385,8 @@ public class WingServlet
              * generated page size.
              */
             String pathInfo = getPathInfo(req);
-
+            // XXX - response.isCommited() is needed because due to some bug
+            // when using the tomcat form authentication the response WILL get commited.
             if (pathInfo == null || pathInfo.length() == 0 && !response.isCommitted()) {
                 StringBuffer pathUrl = req.getRequestURL();
                 pathUrl.append('/');
@@ -394,6 +395,8 @@ public class WingServlet
                 }
 
                 log.debug("redirect to " + pathUrl.toString());
+                // XXX - response.isCommited() is needed because due to some bug
+                // when using the tomcat form authentication the response WILL get commited.
                 if (!response.isCommitted()) {
                     response.sendRedirect(pathUrl.toString());
                     return;
