@@ -618,7 +618,7 @@ public class Session implements PropertyService, Serializable {
      */
     public void removePropertyChangeListener(String propertyName,
                                              PropertyChangeListener listener) {
-        propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+        propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
     }
 
 
