@@ -26,7 +26,8 @@ public class XTable extends STable
     private boolean refresh;
     private SMouseListener linkMouseListener;
     private StringBuilder nameBuffer = new StringBuilder();
-
+    private long autoRefreshInterval;
+    
     public XTable() {
     }
 
@@ -432,7 +433,26 @@ public class XTable extends STable
         }
     }
 
+    @Override
     protected XTableColumnModel createDefaultColumnModel() {
         return new XDefaultTableColumnModel();
     }
+
+    /**
+     * Specifies the interval after which the table is automatically refreshed. 0 or a negative value will disable the autorefresh functionality.
+     * @param interval the interval after which the table is automatically refreshed.
+     */
+    public void setAutoRefreshInterval(long interval) {
+        this.autoRefreshInterval = interval;
+    }
+
+    /**
+     * Returns the interval after which the table is automatically refreshed. 0 or a negative value will disable the autorefresh functionality.
+     * @return the interval after which the table is automatically refreshed.
+     */
+    public long getAutoRefreshInterval() {
+        return autoRefreshInterval;
+    }
+
+
 }

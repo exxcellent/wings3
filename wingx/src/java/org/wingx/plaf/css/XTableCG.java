@@ -30,6 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.TableModel;
+import org.wings.plaf.css.script.OnHeadersLoadedScript;
+import org.wings.script.JavaScriptListener;
+import org.wings.session.ScriptManager;
 
 public class XTableCG
     extends AbstractComponentCG
@@ -505,6 +508,11 @@ public class XTableCG
                 device.print(" class=\"num clickable\">");
 
                 refreshLabel.write(device);
+                if (table.getAutoRefreshInterval() > 0) {
+                    String script = "\"wingS.request.sendEvent(null, true, true, '" + Utils.event(table) + "', 'r')\"";
+                    ScriptManager.getInstance().addScriptListener(
+                            new OnHeadersLoadedScript("setTimeout(" + script + ", " + table.getAutoRefreshInterval() + ");"));
+                }
             }
             else {
                 device.print(" class=\"num\">");
