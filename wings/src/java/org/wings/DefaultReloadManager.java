@@ -194,7 +194,7 @@ public class DefaultReloadManager implements ReloadManager {
         SortedMap<String, SComponent> componentHierarchy = new TreeMap<String, SComponent>();
 
         for (SComponent component : getDirtyComponents()) {
-            if (component.getParentFrame() == null || (!component.isRecursivelyVisible() && !(component instanceof SMenu))) {
+            if (component.getParentFrame() == null || !component.isVisible() || (!component.isRecursivelyVisible() && !(component instanceof SMenu))) {
                 fullReplaceUpdates.remove(component);
                 fineGrainedUpdates.remove(component);
             } else {
