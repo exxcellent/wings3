@@ -146,11 +146,22 @@ public class SSpinner extends SComponent implements LowLevelEventListener {
 	if (editor != null && !editor.equals(this.editor) ) {
         DefaultEditor oldVal = this.editor;
             this.editor.dismiss( this );
+        if (this.editor != null)
+            this.editor.setRecursivelyVisible(false);
 	    this.editor = editor;
+        if (this.editor != null)
+            this.editor.setRecursivelyVisible(isRecursivelyVisible());
+
         propertyChangeSupport.firePropertyChange("editor", oldVal, this.editor);
     }
     }
-    
+
+    @Override
+    protected void setRecursivelyVisible(boolean recursivelyVisible) {
+        if (editor != null)
+            editor.setRecursivelyVisible(recursivelyVisible);
+    }
+
     public void addChangeListener( ChangeListener changeListener ) {
         addEventListener( ChangeListener.class, changeListener );
         

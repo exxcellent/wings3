@@ -42,6 +42,10 @@ public class XDivision
     public XDivision() {
     }
 
+    public XDivision(String title) {
+        this.title = title;
+    }
+
     /**
      * Returns the title of the XDivision.
      * @return String the title
