@@ -157,7 +157,7 @@ public class ServletPreferences
         String baseDir = System.getProperty("java.util.prefs.userRoot",
                 System.getProperty("user.home"));
         
-        File userRootDir = new File(baseDir, ".java/.userPrefs/" + (userName != null ? userName.trim() : ""));
+        File userRootDir = new File(baseDir, ".java/.userPrefs/" + (userName != null ? userName.charAt(0) : '_') + "/" + (userName != null ? userName.trim() : ""));
         // Attempt to create root dir if it does not yet exist.
         if (!userRootDir.exists()) {
             if (userRootDir.mkdirs()) {
