@@ -1459,7 +1459,15 @@ public class STable extends SComponent
                 update(((TableCG) getCG()).getRenderCellUpdate(this, e.getFirstRow(), e.getColumn()));
             else
                 reload();
-        } else {
+        }
+/*        else if (e != null &&
+            e.getFirstRow() == 0 &&
+            e.getLastRow() == Integer.MAX_VALUE &&
+            e.getColumn() == TableModelEvent.ALL_COLUMNS &&
+            e.getType() == TableModelEvent.UPDATE) {
+            update(((TableCG)getCG()).getDataUpdate(this));
+        }*/
+        else {
             reload();
         }
     }

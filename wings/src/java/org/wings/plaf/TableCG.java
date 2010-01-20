@@ -27,4 +27,6 @@ public interface TableCG extends ComponentCG {
     Update getEditCellUpdate(STable table, int row, int column);
 
     Update getRenderCellUpdate(STable table, int row, int column);
+
+    //Update getDataUpdate(STable table);
 }

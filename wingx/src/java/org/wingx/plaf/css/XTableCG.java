@@ -30,9 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.TableModel;
-import org.wings.plaf.css.script.OnHeadersLoadedScript;
-import org.wings.script.JavaScriptListener;
-import org.wings.session.ScriptManager;
 
 public class XTableCG
     extends AbstractComponentCG
@@ -508,11 +505,6 @@ public class XTableCG
                 device.print(" class=\"num clickable\">");
 
                 refreshLabel.write(device);
-                if (table.getAutoRefreshInterval() > 0) {
-                    String script = "\"wingS.request.sendEvent(null, true, true, '" + Utils.event(table) + "', 'r')\"";
-                    ScriptManager.getInstance().addScriptListener(
-                            new OnHeadersLoadedScript("setTimeout(" + script + ", " + table.getAutoRefreshInterval() + ");"));
-                }
             }
             else {
                 device.print(" class=\"num\">");
@@ -661,23 +653,27 @@ public class XTableCG
 
 
     public Update getTableScrollUpdate(STable table, Rectangle newViewport, Rectangle oldViewport) {
-        return new ComponentUpdate(this, table);
+        return new ComponentUpdate<STable>(this, table);
     }
 
     public Update getSelectionUpdate(STable table, List deselectedIndices, List selectedIndices) {
-        int indexOffset = indexOffset((XTable)table);
+        int indexOffset = rowIndexOffset((XTable)table);
         return new SelectionUpdate((XTable)table, indexOffset, deselectedIndices, selectedIndices);
     }
 
     public Update getEditCellUpdate(STable table, int row, int column) {
-        return new EditCellUpdate((XTable)table, indexOffset((XTable)table), row, column);
+        return new EditCellUpdate((XTable)table, rowIndexOffset((XTable)table), row, column);
     }
 
     public Update getRenderCellUpdate(STable table, int row, int column) {
-        return new RenderCellUpdate((XTable)table, indexOffset((XTable)table), row, column);
+        return new RenderCellUpdate((XTable)table, rowIndexOffset((XTable)table), row, column);
     }
 
-    protected int indexOffset(XTable table) {
+    public Update getDataUpdate(STable table) {
+        return new DataUpdate((XTable)table);
+    }
+
+    protected int rowIndexOffset(XTable table) {
         int indexOffset = 0;
         if (table.isHeaderVisible()) {
             ++indexOffset;
@@ -688,6 +684,11 @@ public class XTableCG
         return indexOffset;
     }
 
+    protected int columnIndexOffset(XTable table) {
+        return isSelectionColumnVisible(table) ? 1 : 0;
+    }
+
+    // TODO: not used yet
     protected class TableScrollUpdate
         extends AbstractUpdate {
 
@@ -928,6 +929,85 @@ public class XTableCG
             hashCode = hashCode * dispersionFactor + column;
 
             return hashCode;
+        }
+    }
+
+    // TODO: not used yet 
+    private class DataUpdate
+        extends AbstractUpdate<XTable>
+    {
+        public DataUpdate(XTable table) {
+            super(table);
+        }
+
+        public Handler getHandler() {
+            XTable table = component;
+            STableColumnModel columnModel = table.getColumnModel();
+
+            Rectangle currentViewport = table.getViewportSize();
+            Rectangle maximalViewport = table.getScrollableViewportSize();
+            int startX = 0;
+            int endX = table.getVisibleColumnCount();
+            int startY = 0;
+            int endY = table.getRowCount();
+            int emptyIndex = maximalViewport != null ? maximalViewport.height : endY;
+
+            if (currentViewport != null) {
+                startX = currentViewport.x;
+                endX = startX + currentViewport.width;
+                startY = currentViewport.y;
+                endY = startY + currentViewport.height;
+            }
+
+            String exception = null;
+            int size = (endY - startY) * (endX - startX);
+            System.out.println("expected size = " + size);
+            List<String> cells = new ArrayList<String>(size);
+
+            StringBuilderDevice htmlDevice = new StringBuilderDevice();
+            try {
+                for (int r = startY; r < endY; r++) {
+                    if (r == emptyIndex)
+                        break;
+
+                    int endXX = endX;
+                    for (int c = startX; c < endXX; ++c) {
+                        STableColumn column = columnModel.getColumn(c);
+                        if (!column.isHidden()) {
+                            cells.add(writeCellData(htmlDevice, r, c));
+                            htmlDevice.reset();
+                        }
+                        else
+                            ++endXX;
+                    }
+                }
+            }
+            catch (Throwable t) {
+                exception = t.getClass().getName();
+            }
+            System.out.println("actual size = " + cells.size());
+
+            UpdateHandler handler = new UpdateHandler("tableData");
+            handler.addParameter(table.getName());
+            handler.addParameter(rowIndexOffset(table));
+            handler.addParameter(columnIndexOffset(table));
+            handler.addParameter(Utils.listToJsArray(cells));
+            if (exception != null) {
+                handler.addParameter(exception);
+            }
+            return handler;
+        }
+
+        private String writeCellData(StringBuilderDevice device, int row, int column) {
+            STable table = component;
+            try {
+                SComponent component = table.prepareRenderer(table.getCellRenderer(row, column), row, column);
+                table.getCellRendererPane().writeComponent(device, component, table);
+                return device.toString();
+            }
+            catch (Throwable t) {
+                return t.getClass().getName();
+            }
         }
     }
 

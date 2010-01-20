@@ -412,6 +412,25 @@ wingS.update.tableScroll = function(tableId, oldmin, min, max, tabledata) {
 };
 
 /**
+ * An update which replaces the whole data of the table with the given ID.
+ * @param {String} tableId - the ID of the table which has to be updated
+ * @param {Array} data - the new cell data to show
+ */
+wingS.update.tableData = function(tableId, rowOffset, columnOffset, data, exception) {
+    var table = document.getElementById(tableId);
+    var rows = table.rows;
+
+    var i=0;
+    for (var r = rowOffset; r < rows.length; r++) {
+        var tr = rows[r];
+        var cells = tr.cells;
+        for (var c = columnOffset; c < cells.length; c++) {
+            cells[c].innerHTML = data[i++];
+        }
+    }
+};
+
+/**
  * An update which replaces the cell content of the table with the given ID.
  * @param {String} tableId - the ID of the table which has to be updated
  * @param {int} r - the row index of the cell to be replaced
@@ -420,7 +439,7 @@ wingS.update.tableScroll = function(tableId, oldmin, min, max, tabledata) {
  * @param {String} html - the html code for the cell
  */
 wingS.update.tableCell = function(tableId, r, c, editing, html) {
-    var table = document.getElementById(tableId);
+    var table = document.getElementById(tableId);x
     var row = table.rows[r];
     var col = row.cells[c];
     col.innerHTML = html;
