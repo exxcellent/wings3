@@ -14,6 +14,8 @@ package org.wings.border;
 
 import org.wings.SComponent;
 import org.wings.SConstants;
+import org.wings.session.Session;
+import org.wings.session.SessionManager;
 import org.wings.style.CSSAttributeSet;
 import org.wings.style.CSSProperty;
 import org.wings.style.CSSStyleSheet;
@@ -44,6 +46,10 @@ public abstract class SAbstractBorder
     private CSSAttributeSet attributes = new CSSAttributeSet();
     protected SComponent component;
     private BorderCG borderCG;
+
+    private Session session;
+
+    private String name;
 
     public SAbstractBorder() {
         this(null, -1, null);
@@ -248,6 +254,30 @@ public abstract class SAbstractBorder
         return attributes;
     }
 
+    /**
+     * Gets the name property of a component. This property is an identifier,so it should be always unique.
+     * For details refer to {@link #setName(String)}
+     *
+     * @return The name of the component.
+     */
+    public final String getName() {
+        if (name == null)
+            name = getSession().createUniqueId();
+        return name;
+    }
+
+    /**
+     * Return the session this component belongs to.
+     *
+     * @return the session
+     */
+    public final Session getSession() {
+        if (session == null) {
+            session = SessionManager.getSession();
+        }
+
+        return session;
+    }
 
     static class BorderSpec {
         public int thickness;

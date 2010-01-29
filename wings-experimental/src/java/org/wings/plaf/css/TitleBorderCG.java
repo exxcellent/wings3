@@ -17,7 +17,7 @@ public class TitleBorderCG extends BorderCG
         if (component != null && component.getBorder() instanceof STitledBorder) {
             STitledBorder titledBorder = (STitledBorder)component.getBorder();
             device.print("<fieldset ");
-            Utils.optAttribute(device, "id", component.getName()); /* Gives the Fieldset an id to get update working */
+            Utils.optAttribute(device, "id", titledBorder.getName()); /* Gives the Fieldset an id to get update working */
 
             if (titledBorder.getBorder() != null && titledBorder.getBorder().getAttributes() != null) {
                 Utils.optAttribute(device, "style", titledBorder.getBorder().getAttributes().toString());
