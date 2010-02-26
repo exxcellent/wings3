@@ -355,8 +355,6 @@ public class FrameCG implements org.wings.plaf.FrameCG {
         if (Utils.isMSIE(frame))
             device.print(IE_COMPATIBILITY_MODE);
 
-        device.print("<meta http-equiv=\"Content-type\" content=\"text/html; charset=");
-
         // Character set encoding, the default is typically utf-8.
         device.print("<meta http-equiv=\"Content-type\" content=\"text/html; charset=");
         Utils.write(device, encoding);
