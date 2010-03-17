@@ -587,6 +587,27 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
             scriptListenerList.add(listener);
     }
 
+    public final void addScriptListenerWithoutReload(ScriptListener listener) {
+        if (scriptListenerList != null && scriptListenerList.contains(listener))
+            return;
+
+        if (scriptListenerList == null) {
+            scriptListenerList  = new LinkedList<ScriptListener>();
+        }
+
+        int placingPosition = -1;
+        for (int i = 0; i < scriptListenerList.size() && placingPosition < 0; i++) {
+            ScriptListener existingListener = scriptListenerList.get(i);
+            if (existingListener.getPriority() < listener.getPriority())
+                placingPosition = i;
+        }
+        
+        if (placingPosition >= 0)
+            scriptListenerList.add(placingPosition, listener);
+        else
+            scriptListenerList.add(listener);
+    }
+
 
     /**
      * Removes the specified component listener so that it no longer
@@ -604,6 +625,12 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
         if (scriptListenerList != null) {
             scriptListenerList.remove(listener);
             reload();
+        }
+    }
+
+    public final void removeScriptListenerWithoutReload(ScriptListener listener) {
+        if(scriptListenerList != null) {
+            scriptListenerList.remove(listener);
         }
     }
 
