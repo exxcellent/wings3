@@ -21,19 +21,26 @@ import java.util.EventObject;
  *
  * @author <a href="mailto:armin.haaf@mercatis.de">Armin Haaf</a>
  */
-public class SExitEvent extends EventObject {
+public class SExitEvent
+    extends EventObject
+{
+    boolean preparing;
 
     /**
      * Constructs a exit event.
      * @param source Session is the source.
      */
-    public SExitEvent(Session source) {
+    public SExitEvent(Session source, boolean preparing) {
         super(source);
+        this.preparing = preparing;
     }
 
     public Session getSourceSession() {
         return (Session) getSource();
     }
 
+    public boolean isPreparing() {
+        return preparing;
+    }
 }
 

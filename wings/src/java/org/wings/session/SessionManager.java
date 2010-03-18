@@ -45,5 +45,3 @@ public final class SessionManager {
         currentSession.set(null);
     }
 }
-
-

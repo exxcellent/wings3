@@ -13,6 +13,7 @@
 package org.wings.util;
 
 import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * Some string manipulation utilities.
@@ -130,6 +131,23 @@ public class StringUtil {
 
     public static final int MAX_RADIX = DIGITS.length;
 
+    private final static Set<String> RESERVED_WORDS = new HashSet<String>(Arrays.asList(
+        "all",
+        "as",
+        "do",
+        "for",
+        "if",
+        "in",
+        "int",
+        "is",
+        "new",
+        "sun",
+        "top",
+        "try",
+        "use",
+        "var"
+    ));
+
     /**
      * Codes number up to radix 62.
      * Note, this method is only public for backward compatiblity. don't
@@ -192,7 +210,10 @@ public class StringUtil {
             buf[i++] = DIGITS[(int) (val % DIGITS.length)];
             val /= DIGITS.length;
         }
-        return new String(buf, 0, i);
+        String s = new String(buf, 0, i);
+        if (RESERVED_WORDS.contains(s))
+            s += s;
+        return s;
     }
 
     /**

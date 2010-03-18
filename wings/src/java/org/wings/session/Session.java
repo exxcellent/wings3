@@ -834,8 +834,10 @@ public class Session implements PropertyService, Serializable {
      */
     public void exit(String redirectAddress) {
         this.exitAddress = redirectAddress;
-        for (SFrame frame : frames)
+        getReloadManager().setSuppressMode(true);
+        for (SFrame frame : new ArrayList<SFrame>(frames))
             frame.hide();
+        getReloadManager().setSuppressMode(false);
     }
 
     /**
@@ -902,7 +904,7 @@ public class Session implements PropertyService, Serializable {
             if (listeners[i] == SExitListener.class) {
                 // Lazily create the event:
                 if (event == null) {
-                    event = new SExitEvent(this);
+                    event = new SExitEvent(this, !ignoreVeto);
                 }
                 try {
                     ((SExitListener) listeners[i + 1]).prepareExit(event);

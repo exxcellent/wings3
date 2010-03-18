@@ -1430,7 +1430,7 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
                     }
                 }
             } catch(Exception e) {
-
+e.printStackTrace();
             }
             return false;
         }
