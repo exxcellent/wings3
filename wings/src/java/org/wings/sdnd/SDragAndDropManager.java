@@ -203,8 +203,9 @@ public class SDragAndDropManager extends SComponent implements LowLevelEventList
         STransferHandler targetTH = null;
         if (target == null) {
             // if there's no target, it's ok if it's a dragstart or abort-operation
-            if (!("ds".equals(operation) || "ab".equals(operation)))
+            if (!("ds".equals(operation) || "ab".equals(operation))) {
                 LOG.fatal("target not found: " + targetId + " " + valuesToProcess);
+            }
         } else {
             targetTH = target.getTransferHandler();
         }
@@ -309,6 +310,9 @@ public class SDragAndDropManager extends SComponent implements LowLevelEventList
                 cursor.addIcon("dnd", DND_ICON_STOP, SCursor.HIGH_PRIORITY);
             }
         } else if (operation.equals("dl")) { // dragLeave
+            if (target == null) {
+                return;
+            }
             if (getTransferSupport() == null) // if a drag operation wasn't started, return
                 return;
 
@@ -325,6 +329,9 @@ public class SDragAndDropManager extends SComponent implements LowLevelEventList
             cursor.removeIcons("dnd");
             cursor.addIcon("dnd", DND_ICON_STOP, SCursor.HIGH_PRIORITY);
         } else if (operation.equals("st")) { // stayed on element
+            if (target == null) {
+                return;
+            }
             if (getTransferSupport() == null)
                 return;
 
@@ -333,6 +340,13 @@ public class SDragAndDropManager extends SComponent implements LowLevelEventList
                 ((CustomDropStayHandler) targetTH).dropStay(source, target, action, mouseEvent);
             }
         } else if (operation.equals("dr")) { // drop
+            if (target == null) {
+                setTransferSupport(null);
+                cursor.setLabel(null);
+                cursor.removeIcons("dnd");
+                cursor.hideCursorIfPossible();
+                return;
+            }
             if (getTransferSupport() == null) // if a drag operation wasn't started, return
                 return;
 
