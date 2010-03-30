@@ -1,6 +1,7 @@
 package org.wings;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -109,9 +110,18 @@ public class DefaultReloadManager implements ReloadManager {
 
         filterUpdates();
 
-        List<PotentialUpdate> filteredUpdates = new ArrayList<PotentialUpdate>(fullReplaceUpdates.values());
+        List<PotentialUpdate> filteredUpdates = new ArrayList<PotentialUpdate>();
+        for (PotentialUpdate potentialUpdate : fullReplaceUpdates.values()) {
+            if (potentialUpdate != null) {
+                filteredUpdates.add(potentialUpdate);
+            }
+        }
         for (Set<PotentialUpdate> updates : fineGrainedUpdates.values()) {
-            filteredUpdates.addAll(updates);
+            for (PotentialUpdate potentialUpdate : updates) {
+                if (potentialUpdate != null) {
+                    filteredUpdates.add(potentialUpdate);
+                }
+            }
         }
         Collections.sort(filteredUpdates, getUpdateComparator());
 
