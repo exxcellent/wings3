@@ -1430,7 +1430,7 @@ public class STree extends SComponent implements Scrollable, LowLevelEventListen
                     }
                 }
             } catch(Exception e) {
-e.printStackTrace();
+                e.printStackTrace();
             }
             return false;
         }
@@ -1438,7 +1438,9 @@ e.printStackTrace();
         public void dropStay(SComponent source, SComponent target, int action, SMouseEvent event) {
             if(!(target instanceof STree))
                 return;
-
+            if (event == null || event.getPoint() == null || event.getPoint().getCoordinates() == null) {
+                return;
+            }
             String[] coords = event.getPoint().getCoordinates().split(":");
             int row = Integer.parseInt(coords[0]);
 
