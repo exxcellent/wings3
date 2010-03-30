@@ -60,7 +60,11 @@ public class UpdateResource extends DynamicResource {
             } else {
                 // update components
                 for (Iterator i = reloadManager.getUpdates().iterator(); i.hasNext();) {
-                    writeUpdate(out, (Update) i.next());
+                    Update update = (Update) i.next();
+                    if (update == null) {
+                        continue;
+                    }
+                    writeUpdate(out, update);
                 }
 
                 // update scripts
