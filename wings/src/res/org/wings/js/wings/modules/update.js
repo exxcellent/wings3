@@ -439,7 +439,7 @@ wingS.update.tableData = function(tableId, rowOffset, columnOffset, data, except
  * @param {String} html - the html code for the cell
  */
 wingS.update.tableCell = function(tableId, r, c, editing, html) {
-    var table = document.getElementById(tableId);x
+    var table = document.getElementById(tableId);
     var row = table.rows[r];
     var col = row.cells[c];
     col.innerHTML = html;

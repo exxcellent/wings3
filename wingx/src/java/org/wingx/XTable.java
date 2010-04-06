@@ -355,6 +355,7 @@ public class XTable extends STable
     }
 
     private boolean isClickListenerSet(int col) {
+        col = convertColumnIndexToModel(col);
         List l = (List) column2Listeners.get(Integer.valueOf(col));
         return (l != null && !l.isEmpty());
     }

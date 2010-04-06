@@ -48,4 +48,9 @@ public class XTableColumn
     public void setFilterable(boolean filterable) {
         this.filterable = filterable;
     }
+
+    @Override
+    public String toString() {
+        return (String)identifier;
+    }
 }

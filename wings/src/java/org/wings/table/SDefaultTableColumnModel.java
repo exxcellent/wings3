@@ -82,7 +82,7 @@ public class SDefaultTableColumnModel implements STableColumnModel, Serializable
         return columns.size();
     }
 
-    public Collection getColumns() {
+    public List getColumns() {
         return columns;
     }
 

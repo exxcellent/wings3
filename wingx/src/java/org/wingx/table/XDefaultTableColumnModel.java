@@ -1,6 +1,5 @@
 package org.wingx.table;
 
-import org.wings.table.STableColumn;
 import org.wings.table.SDefaultTableColumnModel;
 
 import java.util.*;
@@ -28,5 +27,14 @@ public class XDefaultTableColumnModel
             }
         }
         return column;
+    }
+
+    @Override
+    public List<XTableColumn> getColumns() {
+        return (List<XTableColumn>)super.getColumns();
+    }
+
+    public void setColumnHidden(String identifier, boolean hidden) {
+        setColumnHidden(getColumn(identifier), hidden);
     }
 }
