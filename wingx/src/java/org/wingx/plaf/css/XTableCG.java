@@ -153,13 +153,14 @@ public class XTableCG
     /**
      * write a specific cell to the device
      */
-    protected void renderCellContent(final Device device, final STable table, final SCellRendererPane rendererPane,
+    protected void renderCellContent(final Device device, final XTable table, final SCellRendererPane rendererPane,
                                      final int row, final int col)
         throws IOException
     {
         final boolean isEditingCell = table.isEditing() && row == table.getEditingRow() && col == table.getEditingColumn();
         final boolean editableCell = table.isCellEditable(row, col);
-        final boolean selectableCell = table.getSelectionMode() != SListSelectionModel.NO_SELECTION && !table.isEditable();
+        final boolean clickableCell = table.isClickListenerSet(table.convertColumnIndexToModel(col));
+        final boolean selectableCell = table.getSelectionMode() != SListSelectionModel.NO_SELECTION && !table.isEditable() && table.isSelectable();
 
         final SComponent component;
         if (isEditingCell) {
@@ -184,7 +185,7 @@ public class XTableCG
         Utils.optAttribute(device, "oversize", horizontalOversize);
 
         String parameter = null;
-        if (table.isEditable() && editableCell)
+        if ((table.isEditable() && editableCell) || clickableCell)
             parameter = table.getEditParameter(row, col);
         else if (selectableCell)
             parameter = table.getToggleSelectionParameter(row, col) + ";shiftKey='+event.shiftKey+';ctrlKey='+event.ctrlKey+'";
@@ -195,7 +196,7 @@ public class XTableCG
         if (style == null)
             style = "cell";
 
-        if (parameter != null && (selectableCell || editableCell) && !isClickable) {
+        if (parameter != null && (selectableCell || editableCell || clickableCell) && !isClickable) {
             printClickability(device, table, parameter, table.getShowAsFormComponent());
             device.print(isEditingCell || isEditableCellRenderer ? " editing=\"true\"" : " editing=\"false\"");
             device.print(isEditingCell || isEditableCellRenderer ? " class=\"" + style + "\"" : " class=\"" + style + " clickable\"");

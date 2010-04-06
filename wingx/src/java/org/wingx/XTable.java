@@ -302,8 +302,13 @@ public class XTable extends STable
         }
     }
 
+    /**
+     *
+     * @param index the model index
+     * @param listener
+     */
     public void addClickListener(int index, XTableClickListener listener) {
-        List l = (List) column2Listeners.get(Integer.valueOf(index));
+        List l = (List)column2Listeners.get(Integer.valueOf(index));
         if (l == null) {
             l = new ArrayList();
             column2Listeners.put(Integer.valueOf(index), l);
@@ -314,7 +319,8 @@ public class XTable extends STable
                 public void mouseClicked(SMouseEvent e) {
                     SPoint point = e.getPoint();
                     int col = XTable.this.columnAtPoint(point);
-                    List listeners = (List) column2Listeners.get(Integer.valueOf(col));
+                    col = convertColumnIndexToModel(col);
+                    List listeners = (List)column2Listeners.get(Integer.valueOf(col));
                     if (listeners == null) {
                         return;
                     }
@@ -326,13 +332,6 @@ public class XTable extends STable
             };
             addMouseListener(linkMouseListener);
         }
-    }
-
-    public boolean isCellEditable(int row, int col) {
-        if (isClickListenerSet(col)) {
-            return true;
-        }
-        return super.isCellEditable(row, col);
     }
 
     public boolean isColumnSortable(int col) {
@@ -354,15 +353,14 @@ public class XTable extends STable
         propertyChangeSupport.firePropertyChange("filterVisible", oldVal, this.filterVisible);
     }
 
-    private boolean isClickListenerSet(int col) {
-        col = convertColumnIndexToModel(col);
+    public boolean isClickListenerSet(int col) {
         List l = (List) column2Listeners.get(Integer.valueOf(col));
         return (l != null && !l.isEmpty());
     }
 
     public SComponent prepareRenderer(STableCellRenderer r, int row, int col) {
         SComponent component = super.prepareRenderer(r, row, col);
-        if (isClickListenerSet(col)) {
+        if (isClickListenerSet(convertColumnIndexToModel(col))) {
             if (!(component.getStyle().indexOf(" link ") > 0)) {
                 component.setStyle(component.getStyle() + " link ");
             }
@@ -373,7 +371,7 @@ public class XTable extends STable
     }
 
     public boolean editCellAt(int row, int column, EventObject eo) {
-        if (isClickListenerSet(column)) {
+        if (isClickListenerSet(convertColumnIndexToModel(column))) {
             return false;
         }
         return super.editCellAt(row, column, eo);
