@@ -39,27 +39,29 @@ wingS.request.reloadFrame = function(parameters) {
  * @param {Array} scriptCodeArray - the scripts to invoke before sending the request
  */
 wingS.request.sendEvent = function(event, submit, async, eventName, eventValue, scriptCodeArray) {
-    event = wingS.event.getEvent(event);
+    if (wingS.global.isInitialized) {
+        event = wingS.event.getEvent(event);
 
-    var target;
-    if (event != null)
-        target = wingS.event.getTarget(event);
-    else
-        target = document.forms[0];
+        var target;
+        if (event != null)
+            target = wingS.event.getTarget(event);
+        else
+            target = document.forms[0];
 
-    // Prepare the appropriate method call
-    var sendMethod;
-    if (submit && target != null) {
-        sendMethod = wingS.request.submitForm;
-    } else {
-        sendMethod = wingS.request.followLink;
+        // Prepare the appropriate method call
+        var sendMethod;
+        if (submit && target != null) {
+            sendMethod = wingS.request.submitForm;
+        } else {
+            sendMethod = wingS.request.followLink;
+        }
+        var sendMethodArgs = new Array(target, async, eventName, eventValue, scriptCodeArray);
+
+        // Enqueue asynchronous requests in case another one hasn't been processed yet
+        if (async && wingS.ajax.enqueueThisRequest(sendMethod, sendMethodArgs)) return;
+        // Otherwise instantly send the request by calling the appropriate send method
+        sendMethod(target, async, eventName, eventValue, scriptCodeArray);
     }
-    var sendMethodArgs = new Array(target, async, eventName, eventValue, scriptCodeArray);
-
-    // Enqueue asynchronous requests in case another one hasn't been processed yet
-    if (async && wingS.ajax.enqueueThisRequest(sendMethod, sendMethodArgs)) return;
-    // Otherwise instantly send the request by calling the appropriate send method
-    sendMethod(target, async, eventName, eventValue, scriptCodeArray);
 };
 
 /**

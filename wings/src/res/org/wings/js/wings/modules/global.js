@@ -9,6 +9,7 @@ wingS.namespace("global");
 /**
  * Global variables
  */
+wingS.global.isInitialized = false;    // This flag will be set to true when wingS.global.init() is called
 wingS.global.useAjaxDebugView = false; // This flag might be set in order to control debug outputs
 wingS.global.asyncHeaderCount = 0;     // Count of headers which are currently loaded asynchronously
 wingS.global.asyncHeaderQueue = [];    // Queue of functions each of which downloads an async header
@@ -109,6 +110,8 @@ wingS.global.init =  function(configObject) {
     if (wingS.global.cometEnabled) {
         wingS.comet.init();
     }
+
+    wingS.global.isInitialized = true;
 };
 
 /**
