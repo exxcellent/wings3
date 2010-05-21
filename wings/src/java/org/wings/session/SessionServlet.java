@@ -382,7 +382,7 @@ public final class SessionServlet
                 UpdateResource updateResource = (UpdateResource) extInfo.getObject();
                 updateResource.getFrame().getEventEpoch();
 
-                if (!eventEpoch.equals(updateResource.getFrame().getEventEpoch())) {
+                if (eventEpoch != null && !eventEpoch.equals(updateResource.getFrame().getEventEpoch())) {
                     reloadManager.setUpdateMode(false);
                 }
             } else {
