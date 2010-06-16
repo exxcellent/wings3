@@ -593,7 +593,7 @@ public class SScrollPane
                 }
                 newVp.width = newExtent;
                 updateViews(newVp);
-            } else if (curVp.height != newExtent) {
+            } else if (!horizontal && curVp.height != newExtent) {
                 // Keep extent in sync with scrollpane
                 if (verticalExtent != newExtent) {
                     verticalExtent = newExtent;
