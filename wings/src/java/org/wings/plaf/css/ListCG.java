@@ -12,6 +12,7 @@
  */
 package org.wings.plaf.css;
 
+import java.awt.Color;
 import org.wings.SCellRendererPane;
 import org.wings.SComponent;
 import org.wings.SDefaultListCellRenderer;
@@ -98,6 +99,9 @@ public final class ListCG extends AbstractComponentCG<SList> implements org.wing
             Utils.printNewline(device, list, 1);
             device.print("<option");
             Utils.optAttribute(device, "value", list.getSelectionParameter(i));
+            if (renderer != null) {
+                Utils.optAttribute(device, "title", renderer.getToolTipText());
+            }
             if (list.isSelectedIndex(i)) {
                 device.print(" selected");
                 //Utils.optAttribute(device, "class", "selected");
