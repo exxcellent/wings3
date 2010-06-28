@@ -80,8 +80,8 @@ public class SMenu extends SMenuItem {
         if (getParentFrame() == null && f != null) {
             reload();
         }
+        super.setParentFrame(f);
         if (f != null || (f == null && !getSession().getMenuManager().isMenuLinked(this))) {
-            super.setParentFrame(f);
             for (int i = 0; i < menuItems.size(); i++) {
                 ((SComponent) menuItems.get(i)).setParentFrame(f);
             }

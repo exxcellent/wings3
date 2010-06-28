@@ -185,7 +185,7 @@ public abstract class SRootContainer extends SContainer {
      * Removes the component from the content pane.
      */
     public void remove(SComponent c) {
-        contentPane.addComponent(c);
+        contentPane.remove(c);
     }
 
     // allow frame.setBackground(Color.yellow);
