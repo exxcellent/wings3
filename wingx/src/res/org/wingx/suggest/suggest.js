@@ -18,6 +18,12 @@ wingS.suggest.XSuggest = function(elInput, elContainer, oDataSource , oConfigs) 
     if (YAHOO.env.ua.ie && YAHOO.env.ua.ie < 7) {
         this.useIFrame = true;
     }
+
+    var hasChanged = function(e) {
+        var element = document.getElementById(elInput);
+        wingS.request.sendEvent(null, true, true);
+    };
+    this.textboxChangeEvent.subscribe(hasChanged);
 };
 
 YAHOO.extend(wingS.suggest.XSuggest, YAHOO.widget.AutoComplete, {
@@ -25,8 +31,8 @@ YAHOO.extend(wingS.suggest.XSuggest, YAHOO.widget.AutoComplete, {
     formatResult: function(oResultData, sQuery, sResultMatch) {
         return (oResultData[1]) ? oResultData[1] : "";
     }
-
 });
+
 
 /**
  * XSuggest uses this DataSource which either gets suggestions from its local

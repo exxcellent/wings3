@@ -37,8 +37,10 @@ public abstract class IconTextCompound {
             horizontalTextPosition = SConstants.RIGHT;
         int iconTextGap = getIconTextGap(component);
 
-        boolean renderTextFirst = verticalTextPosition == SConstants.TOP ||
-                (verticalTextPosition == SConstants.CENTER && horizontalTextPosition == SConstants.LEFT);
+        //boolean renderTextFirst = verticalTextPosition == SConstants.TOP ||
+        //        (verticalTextPosition == SConstants.CENTER && horizontalTextPosition == SConstants.LEFT);
+        boolean renderTextFirst = verticalTextPosition == SConstants.TOP  && horizontalTextPosition == SConstants.CENTER ||
+                horizontalTextPosition == SConstants.LEFT;
 
         device.print("<table");
         tableAttributes(device);
@@ -46,7 +48,7 @@ public abstract class IconTextCompound {
 
         // []
         //   []
-        if (verticalTextPosition == SConstants.TOP && horizontalTextPosition == SConstants.LEFT ||
+        /*if (verticalTextPosition == SConstants.TOP && horizontalTextPosition == SConstants.LEFT ||
                 verticalTextPosition == SConstants.BOTTOM && horizontalTextPosition == SConstants.RIGHT) {
             final Insets insets = new Insets(0, 0, iconTextGap, iconTextGap);
             device.print("<tr><td align=\"left\" valign=\"top\"");
@@ -83,7 +85,7 @@ public abstract class IconTextCompound {
         }
         // []
         // []
-        else if (verticalTextPosition == SConstants.TOP && horizontalTextPosition == SConstants.CENTER ||
+        else */if (verticalTextPosition == SConstants.TOP && horizontalTextPosition == SConstants.CENTER ||
                 verticalTextPosition == SConstants.BOTTOM && horizontalTextPosition == SConstants.CENTER) {
             final Insets insets = new Insets(0, 0, iconTextGap, 0);
             device.print("<tr><td align=\"center\" valign=\"top\"");
@@ -100,18 +102,31 @@ public abstract class IconTextCompound {
             device.print("</td></tr>");
         }
         // [][]
-        else if (verticalTextPosition == SConstants.CENTER && horizontalTextPosition == SConstants.LEFT ||
-                verticalTextPosition == SConstants.CENTER && horizontalTextPosition == SConstants.RIGHT) {
+        else if (verticalTextPosition == SConstants.TOP && horizontalTextPosition == SConstants.LEFT ||
+            verticalTextPosition == SConstants.BOTTOM && horizontalTextPosition == SConstants.RIGHT ||
+            verticalTextPosition == SConstants.TOP && horizontalTextPosition == SConstants.RIGHT ||
+            verticalTextPosition == SConstants.BOTTOM && horizontalTextPosition == SConstants.LEFT ||
+            verticalTextPosition == SConstants.CENTER && horizontalTextPosition == SConstants.LEFT ||
+            verticalTextPosition == SConstants.CENTER && horizontalTextPosition == SConstants.RIGHT)
+        {
+            String valign = null;
+            if (verticalTextPosition == SConstants.TOP)
+                valign = "top";
+            else if (verticalTextPosition == SConstants.BOTTOM)
+                valign = "bottom";
+
             final Insets insets = new Insets(0, 0, 0, iconTextGap);
             device.print("<tr><td align=\"left\"");
             doBorderPaddingsWorkaround(component, insets, true, true, false, true);
             Utils.optAttribute(device, "style", Utils.createInlineStylesForInsets(insets));
+            Utils.optAttribute(device, "valign", valign);
             device.print(">");
             first(device, renderTextFirst);
             device.print("</td><td align=\"right\"");
             insets.left = 0; insets.top = 0; insets.right = 0 ; insets.bottom = 0;
             doBorderPaddingsWorkaround(component, insets, true, false, true, true);
             Utils.optAttribute(device, "style", Utils.createInlineStylesForInsets(insets));
+            Utils.optAttribute(device, "valign", valign);
             device.print(">");
             last(device, renderTextFirst);
             device.print("</td></tr>");
