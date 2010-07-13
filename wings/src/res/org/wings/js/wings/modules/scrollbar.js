@@ -26,6 +26,7 @@ wingS.scrollbar.layout_vertical = function(id) {
     table.callbackObject = {
         _tOutId : 0,
         _adjust : function (target) {
+            table.focus();
             wingS.scrollbar.scroll_vertical(target);
             table.callbackObject._tOutId = 0;
         },
@@ -98,7 +99,7 @@ wingS.scrollbar.scroll_vertical = function(outer) {
 
     if (outer.getAttribute("position") != position) {
         outer.setAttribute("position", position);
-        wingS.request.sendEvent(null, false, true, table.id, position);
+        wingS.request.sendEvent(null, true, true, table.id, position);
     }
 };
 
@@ -122,6 +123,7 @@ wingS.scrollbar.layout_horizontal = function(id) {
     table.callbackObject = {
         _tOutId : 0,
         _adjust : function (target) {
+            table.focus();
             wingS.scrollbar.scroll_horizontal(target);
             table.callbackObject._tOutId = 0;
         },
@@ -162,9 +164,10 @@ wingS.scrollbar.scroll_horizontal = function(outer) {
 
     var position = Math.round(scrollLeft / innerWidth * size);
 
+    
     if (outer.getAttribute("position") != position) {
         outer.setAttribute("position", position);
-        wingS.request.sendEvent(null, false, true, table.id, position);
+        wingS.request.sendEvent(null, true, true, table.id, position);
     }
 };
 
