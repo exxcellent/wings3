@@ -110,10 +110,16 @@ public final class ListCG extends AbstractComponentCG<SList> implements org.wing
             if (renderer != null) {
                 Utils.optAttribute(device, "style", Utils.generateCSSComponentInlineStyle(renderer));
             }
+            String tooltipText = renderer.getToolTipText();
+            if (tooltipText != null) {
+                stringBuilderDevice.reset();
+                Utils.quote(stringBuilderDevice, tooltipText, false, false, true);
+                Utils.optAttribute(device, "title", stringBuilderDevice.toString());
+            }
+
             device.print(">");
 
             if (renderer != null) {
-                String tooltipText = renderer.getToolTipText();
                 renderer.setToolTipText(null);
 
                 // Hack: remove all tags, because in form selections, looks ugly.

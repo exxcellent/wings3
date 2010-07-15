@@ -1127,6 +1127,12 @@ public abstract class SComponent implements Cloneable, Serializable, Renderable 
                 fireComponentChangeEvent(new SComponentEvent(this, isRecursivelyVisible()
                     ? SComponentEvent.COMPONENT_SHOWN
                     : SComponentEvent.COMPONENT_HIDDEN));
+
+            if (popupMenu != null)
+                if (recursivelyVisible)
+                    getSession().getMenuManager().registerMenuLink(this.popupMenu, this);
+                else
+                    getSession().getMenuManager().deregisterMenuLink(this.popupMenu, this);
         }
     }
 
