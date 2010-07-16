@@ -12,14 +12,11 @@
  */
 package org.wings.session;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.*;
 import org.wings.comet.Comet;
 import org.wings.comet.CometWingServlet;
-import org.wings.sdnd.SDragAndDropManager;
-import org.wings.sdnd.SDragAndDropManager;
 import org.wings.sdnd.SDragAndDropManager;
 import org.wings.dnd.DragAndDropManager;
 import org.wings.event.*;
@@ -675,8 +672,9 @@ public class Session implements PropertyService, Serializable {
     }
 
     void determineLocale() {
-        if (supportedLocales == null)
+        if (supportedLocales == null) {
             setLocale(servletRequest.getLocale());
+        }
 
         Enumeration<Locale> requestedLocales = servletRequest.getLocales();
         if (supportedLocales != null) {
@@ -690,11 +688,22 @@ public class Session implements PropertyService, Serializable {
                     }
                 }
             }
-            log.warn("locale not supported " + locale);
+            log.warn(buildLocaleNotSupportedMessage(servletRequest));
             setLocale(supportedLocales[0]);
-        }
-        else
+        } else {
             setLocale(requestedLocales.nextElement());
+        }
+    }
+
+    private static String buildLocaleNotSupportedMessage(ServletRequest servletRequest) {
+        Enumeration<Locale> requestedLocales = servletRequest.getLocales();
+        StringBuilder sb = new StringBuilder();
+        sb.append("Locale(s) not supported:");
+        while (requestedLocales.hasMoreElements()) {
+            Locale locale = requestedLocales.nextElement();
+            sb.append(" ").append(locale);
+        }
+        return sb.toString();
     }
 
     /**
