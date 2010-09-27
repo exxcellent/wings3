@@ -114,7 +114,7 @@ public class SuggestCG extends TextFieldCG implements org.wingx.plaf.SuggestCG {
             for (Map.Entry<String, String> suggestion : suggestions) {
                 List<String> keyValuePair = new ArrayList<String>(2);
                 keyValuePair.add(suggestion.getKey());
-                keyValuePair.add(suggestion.getValue());
+            keyValuePair.add(suggestion.getValue());
                 keyValuePairs.add(Utils.listToJsArray(keyValuePair));
             }
             UpdateHandler handler = new UpdateHandler("suggest");

@@ -74,6 +74,9 @@ public class Meta implements Header, Serializable {
 
     public void write(Device d)
             throws IOException {
+        if (content == null)
+            return;
+        
         d.print("<meta");
         if (httpEquiv != null)
             d.print(" http-equiv=\"" + httpEquiv + "\"");

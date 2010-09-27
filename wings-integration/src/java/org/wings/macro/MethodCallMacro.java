@@ -50,15 +50,15 @@ public class MethodCallMacro extends AbstractMacro {
     }
 
     private boolean invokeMethodOnComponent(SComponent component, MacroContext ctx) {
-        Object[] parametersResolved = new Object[parameters.length];
-        for (int ix = 0; ix < parameters.length; ix++) {
-            parametersResolved[ix] = resolveValue(ctx, parameters[ix]);
-        }
-
         Method[] methods = component.getClass().getMethods();
         for (Method method : methods) {
             if (isTargetMethod(method)) {
                 try {
+                    Object[] parametersResolved = new Object[parameters.length];
+                    for (int ix = 0; ix < parameters.length; ix++) {
+                        parametersResolved[ix] = resolveValue(ctx, parameters[ix]);
+                    }
+
                     Object result = method.invoke(component, parametersResolved);
                     if (storeResultInContext) {
                         // store result in context
@@ -83,23 +83,27 @@ public class MethodCallMacro extends AbstractMacro {
 
     private boolean isTargetMethod(Method method) {
         MacroTag macroTag = method.getAnnotation(MacroTag.class);
-        if (macroTag != null && name.equals(macroTag.name())) {
-            return true;
+        if (macroTag != null) {
+            String declaredName = macroTag.name();
+            if ("#default".equals(declaredName.trim()))
+                declaredName = method.getName();
+            if (name.equals(declaredName))
+                return true;
         }
         return name.equals(method.getName()) && parameters.length == method.getParameterTypes().length;
     }
 
     private boolean invokeMethodOnCG(ComponentCG cg, MacroContext ctx) {
-        Object[] parametersResolved = new Object[parameters.length + 1];
-        parametersResolved[0] = ctx;
-        for (int ix = 0; ix < parameters.length; ix++) {
-            parametersResolved[ix + 1] = resolveValue(ctx, parameters[ix]);
-        }
-
         Method[] methods = cg.getClass().getMethods();
         for (Method method : methods) {
             if (isTargetMethod(method) || getWriteMethodName(name).equals(method.getName())) {
                 try {
+                    Object[] parametersResolved = new Object[parameters.length + 1];
+                    parametersResolved[0] = ctx;
+                    for (int ix = 0; ix < parameters.length; ix++) {
+                        parametersResolved[ix + 1] = resolveValue(ctx, parameters[ix]);
+                    }
+
                     method.invoke(cg, parametersResolved);
                     return true;
                 }

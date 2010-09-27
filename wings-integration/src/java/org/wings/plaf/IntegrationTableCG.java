@@ -21,6 +21,7 @@ import org.wings.SClickable;
 import org.wings.SComponent;
 import org.wings.SListSelectionModel;
 import org.wings.STable;
+import org.wingx.XTable;
 import org.wings.io.Device;
 import org.wings.macro.MacroContainer;
 import org.wings.macro.MacroContext;
@@ -163,21 +164,20 @@ public class IntegrationTableCG implements TableCG, IntegrationCG {
 
 		STable table = (STable) _c;
 
-		final boolean isEditingCell = table.isEditing() && row == table.getEditingRow()
-				&& col == table.getEditingColumn();
+		final boolean isEditingCell = table.isEditing() && row == table.getEditingRow() && col == table.getEditingColumn();
 		final boolean editableCell = table.isCellEditable(row, col);
-		final boolean selectableCell = table.getSelectionMode() != SListSelectionModel.NO_SELECTION
-				&& !table.isEditable() && table.isSelectable();
+        final boolean clickableCell = table instanceof XTable && ((XTable)table).isClickListenerSet(table.convertColumnIndexToModel(col));
+        final boolean selectableCell = table.getSelectionMode() != SListSelectionModel.NO_SELECTION && !table.isEditable() && table.isSelectable();
 
 		final boolean isClickable = _c instanceof SClickable;
 
 		String parameter = null;
-		if (table.isEditable() && !isEditingCell && editableCell)
-			parameter = table.getEditParameter(row, col);
-		else if (selectableCell)
-			parameter = table.getToggleSelectionParameter(row, col);
+        if ((table.isEditable() && editableCell) || clickableCell)
+            parameter = table.getEditParameter(row, col);
+        else if (selectableCell)
+            parameter = table.getToggleSelectionParameter(row, col) + ";shiftKey='+event.shiftKey+';ctrlKey='+event.ctrlKey+'";
 
-		if (parameter != null && !isEditingCell && (selectableCell || editableCell) && !isClickable) {
+        if (parameter != null && (selectableCell || editableCell || clickableCell) && !isClickable) {
 			Utils.printClickability(device, table, parameter, true, table.getShowAsFormComponent());
 		}
 	}
