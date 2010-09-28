@@ -23,6 +23,8 @@ import org.wings.io.Device;
 import org.wings.io.StringBuilderDevice;
 
 import java.io.IOException;
+import org.wings.session.BrowserType;
+import org.wings.session.SessionManager;
 
 public abstract class AbstractLabelCG extends AbstractComponentCG {
 
@@ -61,7 +63,14 @@ public abstract class AbstractLabelCG extends AbstractComponentCG {
 
     public void writeIcon(Device device, SIcon icon, boolean isMSIE) throws IOException {
         device.print("<img class=\"nopad\"");
-        if (isMSIE && icon.getURL().toString().endsWith(".png") && icon.getIconWidth() > 0 && icon.getIconHeight() > 0) {
+        boolean usePngIeAlphaHack = isMSIE && icon.getURL().toString().endsWith(".png") && icon.getIconWidth() > 0 && icon.getIconHeight() > 0;
+        if (usePngIeAlphaHack) {
+            int ieVersion = SessionManager.getSession().getUserAgent().getMajorVersion();
+            if (ieVersion >= 7) {
+                usePngIeAlphaHack = false;
+            }
+        }
+        if (usePngIeAlphaHack) {
             Utils.optAttribute(device, "style", "filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + icon.getURL() + "', sizingMethod='scale')");
             Utils.optAttribute(device, "src", TRANSPARENT_ICON.getURL());
         }
