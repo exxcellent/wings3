@@ -330,10 +330,11 @@ public abstract class AbstractExternalizeManager {
 
         if (identifier == null) {
             identifier = extInfo.getId();
-            if (identifier != null)
+            if (identifier != null && this == SystemExternalizeManager.getSharedInstance()) {
                 identifier = "-" + identifier;
-            else
+            } else {
                 identifier = createIdentifier();
+            }
 
             String extension = extInfo.getExtension();
             if (extension != null)
