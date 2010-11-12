@@ -330,8 +330,12 @@ public abstract class AbstractExternalizeManager {
 
         if (identifier == null) {
             identifier = extInfo.getId();
-            if (identifier != null && this == SystemExternalizeManager.getSharedInstance()) {
-                identifier = "-" + identifier;
+            if (identifier != null) {
+                if (this == SystemExternalizeManager.getSharedInstance()) {
+                    identifier = "-" + identifier;
+                } else {
+                    // do nothing
+                }
             } else {
                 identifier = createIdentifier();
             }
