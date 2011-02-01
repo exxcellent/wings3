@@ -49,17 +49,21 @@ public class TextFieldCG extends AbstractComponentCG implements
         onChangeSubmitListener(textField);
 
         SDimension preferredSize = component.getPreferredSize();
-        boolean tableWrapping = Utils.isMSIE(component) && preferredSize != null && "%".equals(preferredSize.getWidthUnit());
+        boolean ieTableWrapping = Utils.isMSIE(component) && preferredSize != null && "%".equals(preferredSize.getWidthUnit());
         String actualWidth = null;
-        if (tableWrapping) {
+        if (ieTableWrapping) {
             actualWidth = preferredSize.getWidth();
             Utils.setPreferredSize(component, "100%", preferredSize.getHeight());
-            device.print("<table style=\"table-layout: fixed; width: " + actualWidth + "\"><tr>");
+            if (component.getSession().getUserAgent().getMajorVersion() >= 7) {
+                device.print("<table style=\"width: " + actualWidth + "\"><tr>");
+            } else {
+                device.print("<table style=\"table-layout: fixed; width: " + actualWidth + "\"><tr>");
+            }
             device.print("<td style=\"padding-right: " + Utils.calculateHorizontalOversize(textField, true) + "px\">");
         }
 
         device.print("<input type=\"text\"");
-        if (tableWrapping)
+        if (ieTableWrapping)
             device.print(" wrapping=\"4\"");
 
         Utils.optAttribute(device, "tabindex", textField.getFocusTraversalIndex());
@@ -87,7 +91,7 @@ public class TextFieldCG extends AbstractComponentCG implements
 
         printPostInput(device, textField);
 
-        if (tableWrapping) {
+        if (ieTableWrapping) {
             Utils.setPreferredSize(component, actualWidth, preferredSize.getHeight());
             device.print("</td></tr></table>");
         }
