@@ -276,7 +276,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
      *
      * @return a list of externalized browser specific stylesheet headers
      */
-    private List<Header> getBrowserStylesheets() {
+    protected List<Header> getBrowserStylesheets() {
         Session session = SessionManager.getSession();
         final CGManager cgManager = session.getCGManager();
         final String browserName = session.getUserAgent().getBrowserType().getShortName();
