@@ -852,10 +852,7 @@ public class STable extends SComponent
                 update(((TableCG)getCG()).getEditCellUpdate(this, row, column));
                 return true;
             }
-            else {
-                setValueAt(editor.getCellEditorValue(), row, column);
-                removeEditor();
-            }
+            removeEditor();
         }
         return false;
     }
