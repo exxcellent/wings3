@@ -1416,7 +1416,7 @@ public class STable extends SComponent
 
         if (e == null || e.getFirstRow() == TableModelEvent.HEADER_ROW) {
             // The whole thing changed
-            clearSelection();
+            clearSelectionAndLeadAnchor();
             if (getAutoCreateColumnsFromModel())
                 createDefaultColumnsFromModel();
         } else {
@@ -1433,7 +1433,7 @@ public class STable extends SComponent
                case TableModelEvent.UPDATE:
                    /* event fire on javax.swing.table.AbstractTableModel.fireTableDataChanged() */
                    if (e.getLastRow() == Integer.MAX_VALUE)
-                       clearSelection();
+                       clearSelectionAndLeadAnchor();
                    break;
             }
         }
@@ -1467,6 +1467,17 @@ public class STable extends SComponent
         else {
             reload();
         }
+    }
+    
+    private void clearSelectionAndLeadAnchor() {
+        selectionModel.setValueIsAdjusting(true);
+
+        clearSelection();
+
+        selectionModel.setAnchorSelectionIndex(-1);
+        selectionModel.setLeadSelectionIndex(-1);
+
+        selectionModel.setValueIsAdjusting(false);
     }
 
     /**
