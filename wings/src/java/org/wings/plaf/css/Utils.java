@@ -540,17 +540,24 @@ public final class Utils {
         final char[] chars = htmlWrappedText.toCharArray();
         int pos = 0;
         int len = 0;
+        int openBraces = 0;
         for (int c = 0; c < chars.length; c++) {
             switch (chars[c]) {
                 case '\n':
                     chars[c] = ' ';
                     break;
-                case '<':
-                    len += (c - pos);
-                    device.print(chars, pos, c - pos);
+                case '<':                	
+                	if (openBraces == 0) {
+	                	len += (c - pos);
+	                    device.print(chars, pos, c - pos);
+                	}
+                	openBraces++;
                     break;
                 case '>':
-                    pos = c + 1;
+                	openBraces--;
+                	if (openBraces == 0) {
+                		pos = c + 1;
+                	}
             }
         }
         final int remain = chars.length - pos;
@@ -1693,7 +1700,7 @@ public final class Utils {
         if (toolTipText != null && toolTipText.length() > 0) {
             device.print(" onmouseover=\"Tip('");
             quote(device, toolTipText, true, false, true);
-            device.print("')\"");
+            device.print("', DURATION, 15000)\"");
         }
     }
 
@@ -1705,7 +1712,7 @@ public final class Utils {
         if (toolTipText != null && toolTipText.length() > 0) {
             device.print(" onmouseover=\"Tip('");
             quote(device, toolTipText, true, false, true);
-            device.print("')\"");
+            device.print("', DURATION, 15000)\"");
         }
     }
 
