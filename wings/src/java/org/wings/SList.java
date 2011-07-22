@@ -209,10 +209,14 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
                         if (visibleIndex < 0 || visibleIndex >= getViewportSize().height)
                             continue;
                     }
-                    if (isSelectedIndex(index)) {
-                        selectedIndices.add(new Integer(visibleIndex));
-                    } else {
-                        deselectedIndices.add(new Integer(visibleIndex));
+                    //LKoller - fboss [15.4.09]: Added index range check with model to prevent illegal or outdated indices,
+                    // that will result in an error message on the webpage.
+                    if (visibleIndex < getModel().getSize()) {
+	                    if (isSelectedIndex(index)) {
+	                        selectedIndices.add(new Integer(visibleIndex));
+	                    } else {
+	                        deselectedIndices.add(new Integer(visibleIndex));
+	                    }
                     }
                 }
                 update(((ListCG) getCG()).getSelectionUpdate(SList.this, deselectedIndices, selectedIndices));
