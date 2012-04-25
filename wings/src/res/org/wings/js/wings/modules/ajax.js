@@ -137,10 +137,17 @@ wingS.ajax.processRequestSuccess = function(request) {
     var updates = xmlRoot.getElementsByTagName("update");
     if (updates.length > 0) {
         for (var i = 0; i < updates.length; i++) {
+        	// WebKIt browser parses under some circumstances the response from
+        	// the server into multiple CDATASections
+        	var cdatasections = new Array();
+        	for (var child = 0; child < updates[i].childNodes.length; child++ ) {
+        		cdatasections.push(updates[i].childNodes[child].data);
+        	}
+
             try {
                 // Dispatch update to the corresponding
                 // handler function simply by evaluation
-                window.eval(updates[i].firstChild.data);
+                window.eval(cdatasections.join());
             } 
             catch (e) {
 				if (exception == null) exception = {message: e.message, detail: updates[i].firstChild.data};
