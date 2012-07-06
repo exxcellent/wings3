@@ -147,12 +147,13 @@ public class ServletPreferences
             
         }
         
-        return userName;
         
+        if (userName != null) {
+            userName = userName.replaceAll(":", "_").replaceAll(" ", "_").replaceAll("\\\\", "_");
+        }        
+        return userName;
     }
     
-    
-
     private static File setupUserRoot(String userName) {
         String baseDir = System.getProperty("java.util.prefs.userRoot",
                 System.getProperty("user.home"));
