@@ -16,6 +16,7 @@ package org.wings.plaf;
 import java.awt.Color;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -93,7 +94,7 @@ public class ResourceFactory
             return makeObject(property, type);
     }
 
-    private static Map instances = new HashMap();
+    private static Map instances = Collections.synchronizedMap(new HashMap());
 
     private static Object sharedInstance(String className) {
         Object cg = instances.get(className);
