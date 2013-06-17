@@ -10,7 +10,11 @@
 package wingset;
 
 import org.wings.*;
+import org.wings.plaf.css.CheckBoxCG;
 
+import wingset.CheckBoxExample.ButtonControls;
+
+import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.LinkedList;
 
@@ -29,8 +33,17 @@ import javax.swing.SpinnerNumberModel;
 public class SpinnerExample
     extends WingSetPane
 {
+	
+	private SSpinner listSpinner;
+	private SSpinner dateSpinner;
+	private SSpinner numberSpinner;
+	private SSpinner calendarSpinner;
+	
+    private SpinnerControls controls;
+
     protected SComponent createControls() {
-        return null;
+        controls = new SpinnerControls();
+        return controls;
     }
 
     public SComponent createExample() {
@@ -52,8 +65,8 @@ public class SpinnerExample
         calendar.add(Calendar.YEAR, 100);
         Date latestDate = calendar.getTime();
 
-        SSpinner spinner = new SSpinner( new SpinnerDateModel( initDate, earliestDate, latestDate, Calendar.MONTH) );
-        panel.add( spinner );
+        calendarSpinner = new SSpinner( new SpinnerDateModel( initDate, earliestDate, latestDate, Calendar.MONTH) );
+        panel.add( calendarSpinner );
 
         return panel;
 
@@ -68,7 +81,7 @@ public class SpinnerExample
         fruits.add( "Litchi");
         fruits.add( "Pineapple" );
 
-        SSpinner listSpinner = new SSpinner( new SpinnerListModel( fruits ) );
+        listSpinner = new SSpinner( new SpinnerListModel( fruits ) );
         listSpinner.setHorizontalAlignment( SConstants.RIGHT_ALIGN );
 
         getTextField( listSpinner ).setColumns( 10 );
@@ -87,7 +100,7 @@ public class SpinnerExample
         calendar.add(Calendar.YEAR, 100);
         Date latestDate = calendar.getTime();
 
-        SSpinner dateSpinner = new SSpinner( new SpinnerDateModel(initDate, earliestDate, latestDate, Calendar.MONTH) );
+        dateSpinner = new SSpinner( new SpinnerDateModel(initDate, earliestDate, latestDate, Calendar.MONTH) );
         dateSpinner.setHorizontalAlignment( SConstants.RIGHT_ALIGN );
         dateSpinner.setEditor(new SSpinner.DateEditor(dateSpinner, "MM/yyyy"));
 
@@ -99,7 +112,7 @@ public class SpinnerExample
 
     private SSpinner getNumberSpinner () {
 
-        SSpinner numberSpinner = new SSpinner();
+        numberSpinner = new SSpinner();
         SpinnerNumberModel numberSpinnerModel = new SpinnerNumberModel( 50, 0,100,5 );
 
         numberSpinner.setModel( numberSpinnerModel );
@@ -154,5 +167,19 @@ public class SpinnerExample
     }
     */
 
-
+    class SpinnerControls extends ComponentControls {
+        public SpinnerControls() {
+            formComponentCheckBox.setSelected(true);
+            final SCheckBox enabledDisbale = new SCheckBox("disabled");
+            enabledDisbale.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                	listSpinner.setEnabled(!enabledDisbale.isSelected());
+                	dateSpinner.setEnabled(!enabledDisbale.isSelected());
+                	numberSpinner.setEnabled(!enabledDisbale.isSelected());
+                	calendarSpinner.setEnabled(!enabledDisbale.isSelected());
+                }
+            });
+            addControl(enabledDisbale);
+        }
+    }
 }
