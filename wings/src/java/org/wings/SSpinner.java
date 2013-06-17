@@ -143,23 +143,34 @@ public class SSpinner extends SComponent implements LowLevelEventListener {
      * @param editor the editor for this Component
      */
     public void setEditor(DefaultEditor editor) {
-	if (editor != null && !editor.equals(this.editor) ) {
-        DefaultEditor oldVal = this.editor;
-            this.editor.dismiss( this );
-        if (this.editor != null)
-            this.editor.setRecursivelyVisible(false);
-	    this.editor = editor;
-        if (this.editor != null)
-            this.editor.setRecursivelyVisible(isRecursivelyVisible());
-
-        propertyChangeSupport.firePropertyChange("editor", oldVal, this.editor);
-    }
+		if (editor != null && !editor.equals(this.editor) ) {
+	        DefaultEditor oldVal = this.editor;
+	        if (this.editor != null) {
+		        this.editor.dismiss( this );
+	            this.editor.setRecursivelyVisible(false);
+	        }
+		    this.editor = editor;
+	        if (this.editor != null) {
+	            this.editor.setRecursivelyVisible(isRecursivelyVisible());
+	            this.editor.setEnabled(isEnabled());
+	        }
+	
+	        propertyChangeSupport.firePropertyChange("editor", oldVal, this.editor);
+	    }
     }
 
     @Override
     protected void setRecursivelyVisible(boolean recursivelyVisible) {
+        super.setRecursivelyVisible(recursivelyVisible);
         if (editor != null)
             editor.setRecursivelyVisible(recursivelyVisible);
+    }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+    	super.setEnabled(enabled);
+        if (editor != null)
+            editor.setEnabled(enabled);
     }
 
     public void addChangeListener( ChangeListener changeListener ) {
@@ -250,8 +261,8 @@ public class SSpinner extends SComponent implements LowLevelEventListener {
          * @return the SFormattedTextField of this editor
          */
         public SFormattedTextField getTextField() {
-	    return ftf;
-	}
+		    return ftf;
+		}
         
         /**
          * Returns the Spinner of this editor.
@@ -261,6 +272,12 @@ public class SSpinner extends SComponent implements LowLevelEventListener {
             return this.spinner;
         }
         
+        @Override
+        public void setEnabled(boolean enabled) {
+        	super.setEnabled(enabled);
+            ftf.setEnabled(enabled);
+        }
+
         public void stateChanged(ChangeEvent event) {
             Object source = event.getSource();
             if ( source instanceof SSpinner ) {
