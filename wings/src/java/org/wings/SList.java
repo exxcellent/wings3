@@ -1236,11 +1236,13 @@ public class SList extends SComponent implements Scrollable, LowLevelEventListen
 
     public void intervalAdded(javax.swing.event.ListDataEvent e) {
         fireViewportChanged(false);
+        clearSelection();
         reload();
     }
 
     public void intervalRemoved(javax.swing.event.ListDataEvent e) {
         fireViewportChanged(false);
+        clearSelection();
         reload();
     }
 

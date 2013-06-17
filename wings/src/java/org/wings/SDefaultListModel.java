@@ -12,68 +12,33 @@
  */
 package org.wings;
 
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.Collection;
+
+import javax.swing.DefaultListModel;
+import javax.swing.ListModel;
 
 /**
  * Default implementation of a {@link ListModel}.
  *
  * @author <a href="mailto:haaf@mercatis.de">Armin Haaf</a>
  */
-public class SDefaultListModel
-        extends AbstractListModel {
-    protected final ArrayList data = new ArrayList(2);
+public class SDefaultListModel<E>
+        extends DefaultListModel<E> {
 
-
-    public SDefaultListModel(List d) {
-        data.clear();
-        if (d != null) {
-            for (int i = 0; i < d.size(); i++)
-                data.add(d.get(i));
-        }
+    public SDefaultListModel(Collection<E> collection) {
+    	for( E element : collection )
+    		addElement(element);
     }
 
 
-    public SDefaultListModel(Object[] d) {
-        data.clear();
-        if (d != null) {
-            for (int i = 0; i < d.length; i++)
-                data.add(d[i]);
-        }
+    public SDefaultListModel(E[] elements) {
+    	for( E element : elements )
+    		addElement(element);
     }
 
 
     public SDefaultListModel() {
         // default constructor
-    }
-
-
-    public int getSize() {
-        return data.size();
-    }
-
-
-    public Object getElementAt(int i) {
-        return data.get(i);
-    }
-
-    public int indexOf(Object element) {
-        return data.indexOf(element);
-    }
-
-    public Enumeration elements() {
-        return Collections.enumeration(data);
-    }
-
-    public void clear() {
-        data.clear();
-    }
-
-    public void addElement(Object element) {
-        data.add(element);
     }
 }
 

@@ -39,7 +39,7 @@ import java.awt.event.ItemListener;
  */
 public abstract class SAbstractIconTextCompound
         extends SComponent
-        implements ItemSelectable {
+        implements ItemSelectable,ChangeListener {
     public static final int ICON_COUNT = 7;
     public static final int DISABLED_ICON = 0;
     public static final int DISABLED_SELECTED_ICON = 1;
@@ -120,11 +120,26 @@ public abstract class SAbstractIconTextCompound
         if (model == null)
             throw new IllegalArgumentException("null not allowed");
         SButtonModel oldVal = this.model;
-        reloadIfChange(this.model, model);
         this.model = model;
+        if (oldVal != null)
+        	oldVal.addChangeListener(this);
+        model.addChangeListener(this);
+        reloadIfChange(this.model, model);
         propertyChangeSupport.firePropertyChange("model", oldVal, this.model);
     }
 
+    /**
+     * Gets called by the {@link SButtonModel} whenever the state change
+     * <br>
+     * {@inheritDoc}
+     */
+    public void stateChanged(ChangeEvent e) {
+    	if(isUpdatePossible()) {
+    		if(!SButton.class.isAssignableFrom(getClass()))
+    			reload();
+    	}
+    }
+    
     /**
      * Returns the selected items or null if no items are selected.
      */

@@ -498,8 +498,7 @@ public class SComboBox
                 delayedEvent = false;
             }
 
-            if (e.getIndex0() != -1 && e.getIndex1() != -1)
-                reload();
+            reload();
         }
     }
 

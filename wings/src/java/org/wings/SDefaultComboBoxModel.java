@@ -12,65 +12,34 @@
  */
 package org.wings;
 
-import javax.swing.*;
-import java.util.List;
+import java.util.Collection;
+import java.util.Vector;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.MutableComboBoxModel;
 
 /**
  * Default implementation of a model for {@link SComboBox} components.
  *
  * @author <a href="mailto:haaf@mercatis.de">Armin Haaf</a>
  */
-public class SDefaultComboBoxModel
-        extends SDefaultListModel
-        implements MutableComboBoxModel {
+public class SDefaultComboBoxModel<E>
+        extends DefaultComboBoxModel<E>
+        implements MutableComboBoxModel<E> {
     protected Object selectedItem = null;
 
 
-    public SDefaultComboBoxModel(List d) {
-        super(d);
+    public SDefaultComboBoxModel() {}
+
+    public SDefaultComboBoxModel(E items[]) {
+        super(items);
     }
 
-    public SDefaultComboBoxModel(Object[] d) {
-        super(d);
+    public SDefaultComboBoxModel(Vector<E> vector) {
+        super( vector );
     }
 
-
-    public SDefaultComboBoxModel() {
-    }
-
-
-    public void setSelectedItem(Object anItem) {
-        selectedItem = anItem;
-    }
-
-
-    public Object getSelectedItem() {
-        return selectedItem;
-    }
-
-
-    public void addElement(Object obj) {
-        data.add(obj);
-        fireIntervalAdded(this, getSize() - 1, getSize() - 1);
-    }
-
-
-    public void removeElement(Object obj) {
-        int index = data.indexOf(obj);
-        removeElementAt(index);
-    }
-
-    public void insertElementAt(Object obj, int index) {
-        data.add(index, obj);
-        fireIntervalAdded(this, Math.min(index, getSize() - 1),
-                Math.min(index, getSize() - 1));
-    }
-
-
-    public void removeElementAt(int index) {
-        if (index >= 0 && index < getSize()) {
-            data.remove(index);
-            fireIntervalRemoved(this, index, index);
-        }
+    public SDefaultComboBoxModel(Collection<E> collection) {
+        super( new Vector<E>( collection ) );
     }
 }
