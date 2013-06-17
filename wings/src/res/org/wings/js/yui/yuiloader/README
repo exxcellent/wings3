@@ -1,5 +1,24 @@
 yuiloader - Release Notes
 
+2.9.0
+ * Fixed iterative skin requirement leak.
+
+2.8.1
+ * No change.
+
+2.8.0
+ * Fixed uploader -min file resolution.
+ * added datemath module, updated calendar metadata accordingly.
+ * added event-simulate module, which was extracted from yuitest.
+ * connection split into connectioncore and connection rollup.
+ * progressbar, swf, swfdetect, swfstore metadata.
+
+2.7.0
+ * Combo filtering fixed.
+ * Took selector, element, and profilerviewer out of beta.
+ * json is an optional dependency for treeview.
+ * Added stylesheet
+
 2.6.0
  * Autocomplete requires datasource.
  * Config always used if provided to insert().
@@ -24,7 +43,7 @@ yuiloader - Release Notes
    * Added the get utility's support for 'insertBefore'.
    * Added the get utility's support for 'charset'.
    * Fixed profilerviewer's dependency list.
-   * Increased rollup threshold for reset-fonts-grids so reset-fonts will be 
+   * Increased rollup threshold for reset-fonts-grids so reset-fonts will be
      selected when appropriate.
    * yuiloader supersedes yahoo and get.
    * Modules now can have an 'after' property that can be used to specify
@@ -34,7 +53,7 @@ yuiloader - Release Notes
      will be included after all of the above.
    * Added a new rollup: yuiloader-dom-event (yuiloader includes yahoo and get as well).
    * utilities.js now includes yuiloader and get.
-   * loaded modules which supersede other modules but don't allow automatic 
+   * loaded modules which supersede other modules but don't allow automatic
      rollup work correctly (the superseded modules won't load).
    * Addessed a source order issue when logger is included after a component
      which tries to instantiate it at load time.
@@ -79,5 +98,5 @@ yuiloader - Release Notes
 
      yahoo.js
      get.js
-     
+
 

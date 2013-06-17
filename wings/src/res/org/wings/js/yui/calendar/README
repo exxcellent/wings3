@@ -1,5 +1,113 @@
 Calendar Release Notes
 
+*** 2.9.0 ***
+
++ Fixed renderStack application when multiple renderers applied to
+  the same date.
+
++ Removed Opera Width Fix. No longer required. Opera handles floats 
+  correclty
+
++ Allow calendar to be rendered into a (iframe) document, different
+  from the instance. 
+
++ Added OOM selection support, driven by the "oom_select" config 
+  property. When oom_select is enabled, OOM dates will also accept
+  custom renderers.
+
+  Based on patches provided by Joshua Flynn (flynnjandm) and 
+  Pranav (unohoo) in tickets #1755642, #2528933
+
++ APIDocs updated to identify string parameters and 
+  properties, which get added to the DOM as HTML.
+
+  These string values should be escaped by the implementor, 
+  if they come from an untrusted external source.
+
+*** version 2.8.2 ***
+
++ No changes
+
+*** version 2.8.1 ***
+
++ No changes
+
+*** version 2.8.0 ***
+
++ DateMath extracted to standalone module. However, it continues to
+  be included in the calendar module, so no change is required to
+  existing pages which use calendar.
+
++ Made default configuration property values (DEFAULT_CONFIG) public.
+
++ Made default class names (STYLES) used for CSS classes, public.
+
++ Changed the few remaining hardcoded CSS class names to use default
+  STYLES configuration.
+
++ The cells property is now populated by searching for tds by class 
+  name ("calcell") under the calendar's table element, as opposed to 
+  blindly picking up all td elements under the div container.
+
+  This fixes incorrect selection state related bugs in custom calendars,
+  where the customization introduces additional tables to the default 
+  calendar markup.
+
++ Added prevDate and newDate arguments to the changePage event. These
+  are accessible through the arguments array (as with all custom events
+  created using the default LIST signature):
+
+  e.g:
+
+  changePageEvent.subscribe(function(type, args) {
+
+    var prevDate = args[0];
+    var newDate = args[1];
+
+    if (YAHOO.widget.DateMath.before(newDate, prevDate) {
+       // Moving back in time 
+    } else {
+       // Moving forward in time
+    }
+
+  });
+
++ Added "year_offset" configuration property.
+
+  This can be used for locales which follow the Gregorian calendar, 
+  but have the year offset by a fixed amount. For example the Thai 
+  (th_TH) calendar, for which the year is a positive 543 year offset 
+  from the Gregorian calendar. 
+  
+  The offset is applied to any output year strings, such as the year 
+  label, or the year CSS marker class and to any input strings, such as
+  date selection strings or the pageDate value string.  
+
+  NOTE: Any JavaScript Date objects which Calendar accepts as input, 
+  should reflect the Gregorian calendar state (that is, the year should be 
+  set to the Gregorian year), in order to maintain consistent state for other 
+  fields such as weekday, month and date. Similarly, any JavaScript Date 
+  objects returned by the Calendar, will be set to the Gregorian year.
+  
++ Added "today" configuration property, allowing the user to configure the 
+  date which represents "today" in the Calendar.
+
+*** version 2.7.0 ***
+
++ Fixed CalendarGroup page construction, so that the intial pagedate for 
+  each Calendar page instance is set in it's constructor, as opposed to
+  setting it in 2 passes, as was done before (setting all the pages to the
+  same pagedate during construction, and then incrementing them to the 
+  correct pagedate for page). This fixes a bug in reset(), where all the 
+  Calendar pages were being reset to the same month.
+  
++ Fixed the argument for the delectEvent fired from deselectCell 
+  to be an array of date fields arrays (e.g. [[2009, 1, 21]]) as opposed to
+  just a date field array (e.g. [2009, 1, 21]), so that the argument 
+  structure is consistent for both select and deselect events, regardless
+  of where they are fired from, and whether they have one or more date 
+  field arrays.
+  
 *** version 2.6.0 ***
 
 + Fixed incorrect cell index parsing from cell id attribute, when
@@ -52,7 +160,8 @@ Calendar Release Notes
     day of the week. Default is 0 (Sunday).
 
     janDate is the date in the first week of January, which
-    identifies the first week of the year. 
+    identifies the first week of the year.
+ 
     Default is YAHOO.widget.DateMath.WEEK_ONE_JAN_DATE (1)
 
   NOTE: Calendar instances themselves do not currently expose a 

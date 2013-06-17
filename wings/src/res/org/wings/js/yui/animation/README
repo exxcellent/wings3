@@ -1,5 +1,18 @@
 Animation Release Notes
 
+*** version 2.9.0 ***
+* add "afterTween" event which fires after element has been updated
+* fixed #2529183 AnimMgr.unRegister race condition
+
+*** version 2.8.1 ***
+* no change
+
+*** version 2.8.0 ***
+* Re-enabled multiple animations (when starting from the same value)
+
+*** version 2.7.0 ***
+* Updated set/getAttribute to fall back to element.attribute
+
 *** version 2.6.0 ***
 * ColorAnim updated to use getAncestorBy 
 

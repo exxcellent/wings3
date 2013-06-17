@@ -1,5 +1,46 @@
 AutoComplete Release Notes
 
+*** version 2.9.0 ***
+
+* Better support for forceSelection when typeAhead is enabled.
+* Add formatEscapedResult() for implementers who need to escape potentially
+untrustworthy result data for insertion into DOM.
+
+
+
+*** version 2.8.2 ***
+* No changes.
+
+
+
+*** version 2.8.1 ***
+
+* No changes.
+
+
+
+*** version 2.8.0 ***
+
+* Refactored the "isFocused" model to more simply and accurately describe if
+the widget instance is active or inactive.
+* Added expandContainer() and clearList() to support 'always show footer when
+widget is active' feature.
+* Added the property autoSnapContainer for better out-of-the-box support for inline
+elements, such as labels and submit buttons. By default, autoSnapContainer is
+true, but implementers can disable this feature if they do not use inline
+elements and they want to eliminate the overhead of positioning the container
+element before each time it expands.
+* Added enableIntervalDetection().
+
+
+
+*** version 2.7.0 ***
+
+* Better support for dealing with Arrays, including pure Arrays sent by remote
+DataSources, and empty Array result sets.
+
+
+
 *** version 2.6.0 ***
 
 * AutoComplete has a new required dependency on YAHOO.util.DataSource,
@@ -22,7 +63,7 @@ response, whether container opens or not due to instance losing focus.
 
 * Added textboxChangeEvent and containerPopulateEvent Custom Events.
 
-* As a convenience, the formatResult() method now receives a third parameter which
+* As a convenience, the formatResult() method now recieves a third parameter which
 is the query matching string for the result.
 
 * In order to eliminate certain race conditions with the typeAhead feature, added
