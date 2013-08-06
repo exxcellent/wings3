@@ -17,6 +17,8 @@
     <property name="glassfish.version" value="appserv-rt.jar"/>
 	<property name="jbossweb.version" value="jbossweb.jar"/>
     <property name="junit.version" value="junit-4.4.jar"/>
+    <property name="uadetector.version" value="uadetector-core-0.9.5.jar"/>
+	<property name="uadetector-resource.version" value="uadetector-resources-2013.05.jar"/>
     <property name="test.log.dir" value="/tmp/" />
 
     <path id="build.classpath">
@@ -30,6 +32,8 @@
             <include name="${xalan.version}"/>
             <include name="${catalina.version}"/>
             <include name="${jetty.version}"/>
+        	<include name="${uadetector.version}"/>
+        	<include name="${uadetector-resource.version}"/>
             <include name="${glassfish.version}"/>
         	<include name="${jbossweb.version}"/>
             <include name="${junit.version}"/>
