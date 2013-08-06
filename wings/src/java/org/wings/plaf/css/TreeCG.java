@@ -13,11 +13,14 @@
 package org.wings.plaf.css;
 
 
+import net.sf.uadetector.OperatingSystemFamily;
+
 import org.wings.*;
 import org.wings.io.Device;
 import org.wings.plaf.CGManager;
 import org.wings.plaf.Update;
 import org.wings.resource.ResourceManager;
+import org.wings.session.SessionManager;
 import org.wings.tree.SDefaultTreeSelectionModel;
 import org.wings.tree.STreeCellRenderer;
 
@@ -162,7 +165,7 @@ public final class TreeCG extends AbstractComponentCG implements org.wings.plaf.
             Utils.optAttribute(device, "class", "norm");
         }
         if (isSelectable) {
-            final String selectionParameter = component.getSelectionParameter(row, false) + ";shiftKey='+event.shiftKey+';ctrlKey='+event.ctrlKey+'";
+        	final String selectionParameter = component.getSelectionParameter(row, false) + ( Utils.isMac() ? ";shiftKey='+event.shiftKey+';ctrlKey='+event.altKey+'" : ";shiftKey='+event.shiftKey+';ctrlKey='+event.ctrlKey+'" );
             Utils.printClickability(device, component, selectionParameter, true, component.getShowAsFormComponent());
             Utils.optAttribute(device, "tabindex", component.getFocusTraversalIndex());
         }
