@@ -56,6 +56,7 @@ public class BorderLayoutCG extends AbstractLayoutCG {
             cellStyle.defaultLayoutCellHAlignment = SConstants.LEFT;
             cellStyle.defaultLayoutCellVAlignment = SConstants.TOP;
             cellStyle.width = null;
+            cellStyle.height = null;
             cellStyle.colspan = cols;
             cellStyle.rowspan = -1;
 
@@ -98,6 +99,7 @@ public class BorderLayoutCG extends AbstractLayoutCG {
             cellStyle.defaultLayoutCellHAlignment = SConstants.LEFT;
             cellStyle.defaultLayoutCellVAlignment = SConstants.CENTER;
             cellStyle.width = "0%";
+            cellStyle.height = "100%";            
             cellStyle.colspan = -1;
             cellStyle.rowspan = -1;
 
@@ -121,6 +123,7 @@ public class BorderLayoutCG extends AbstractLayoutCG {
             cellStyle.defaultLayoutCellHAlignment = SConstants.LEFT;
             cellStyle.defaultLayoutCellVAlignment = SConstants.CENTER;
             cellStyle.width = "100%";
+            cellStyle.height = "100%";
             cellStyle.colspan = -1;
             cellStyle.rowspan = -1;
 
@@ -139,13 +142,14 @@ public class BorderLayoutCG extends AbstractLayoutCG {
             center.write(d);
             closeLayouterCell(d, center, false);
         } else {
-            d.print("<td width=\"100%\"></td>");
+            d.print("<td width=\"100%\" height=\"100%\"></td>");
         }
 
         if (east != null) {
             cellStyle.defaultLayoutCellHAlignment = SConstants.RIGHT;
             cellStyle.defaultLayoutCellVAlignment = SConstants.CENTER;
             cellStyle.width = "0%";
+            cellStyle.height = "100%";
             cellStyle.colspan = -1;
             cellStyle.rowspan = -1;
 
@@ -172,6 +176,7 @@ public class BorderLayoutCG extends AbstractLayoutCG {
             cellStyle.defaultLayoutCellHAlignment = SConstants.LEFT;
             cellStyle.defaultLayoutCellVAlignment = SConstants.BOTTOM;
             cellStyle.width = "0%";
+            cellStyle.height = null;
             cellStyle.colspan = cols;
             cellStyle.rowspan = -1;
 

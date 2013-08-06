@@ -52,6 +52,22 @@ Request Count:
 <object name="RequestCount"></object>
 </td>
 </tr>
+<tr>
+<td>
+Browser:
+</td>
+<td>
+<object name="Browser"></object>
+</td>
+</tr>
+<tr>
+<td>
+Client Locale:
+</td>
+<td>
+<object name="Locale"></object>
+</td>
+</tr>
 </table>
 
 

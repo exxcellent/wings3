@@ -58,8 +58,8 @@ public class FrameCG implements org.wings.plaf.FrameCG {
      * See i.e. http://www.ericmeyeroncss.com/bonus/render-mode.html
      */
     public final static String STRICT_DOCTYPE = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" " +
-        "\"http://www.w3.org/TR/2002/REC-xhtml1-20020801/DTD/xhtml1-strict.dtd\">";
-
+    		"\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">";
+    
     /**
      * The HTML DOCTYPE setting all browsers to Quirks mode. We need this to force IE to use the correct box
      * rendering model. It's the only browser you cannot reconfigure via a CSS tag.
@@ -279,7 +279,7 @@ public class FrameCG implements org.wings.plaf.FrameCG {
     protected List<Header> getBrowserStylesheets() {
         Session session = SessionManager.getSession();
         final CGManager cgManager = session.getCGManager();
-        final String browserName = session.getUserAgent().getBrowserType().getShortName();
+        final String browserName = session.getUserAgent().getBrowserType().getName().toLowerCase();
 
         String cssClassPaths = (String) cgManager.getObject(PROPERTY_STYLESHEET + browserName, String.class);
         if (cssClassPaths == null)
@@ -351,9 +351,6 @@ public class FrameCG implements org.wings.plaf.FrameCG {
             Utils.write(device, title);
             device.print("</title>\n");
         }
-
-        if (Utils.isMSIE(frame))
-            device.print(IE_COMPATIBILITY_MODE);
 
         // Character set encoding, the default is typically utf-8.
         device.print("<meta http-equiv=\"Content-type\" content=\"text/html; charset=");

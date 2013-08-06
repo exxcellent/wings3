@@ -26,7 +26,10 @@ public class ScrollPaneLayoutCG extends AbstractLayoutCG {
 
     protected void writeNonePaging(Device d, SScrollPaneLayout layout) throws IOException {
         openLayouterBody(d, layout);
-        d.print("<tr><td valign=\"top\"><div style=\"overflow: auto; display: none\">");
+        if( Utils.isMSIEVersion( 8 ) )
+        	d.print("<tr><td valign=\"top\"><div style=\"overflow: auto; \">");
+        else
+        	d.print("<tr><td valign=\"top\"><div style=\"overflow: auto; display: none; \">");
 
         Map components = layout.getComponents();
         SComponent center = (SComponent) components.get(SScrollPaneLayout.VIEWPORT);

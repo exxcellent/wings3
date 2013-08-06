@@ -12,11 +12,12 @@
  */
 package org.wings.plaf.css;
 
+import net.sf.uadetector.UserAgentFamily;
+
 import org.wings.*;
 import org.wings.io.Device;
 import org.wings.plaf.css.script.LayoutFillScript;
 import org.wings.session.Browser;
-import org.wings.session.BrowserType;
 import org.wings.session.ScriptManager;
 
 import javax.swing.*;
@@ -181,7 +182,7 @@ public class TabbedPaneCG extends AbstractComponentCG {
     protected void writeTabs(Device device, STabbedPane tabbedPane) throws IOException {
         final Browser browser = tabbedPane.getSession().getUserAgent();
         // substitute whitespaces for konqueror and ie5.0x
-        final boolean nbspWorkaround = browser.getBrowserType().equals(BrowserType.KONQUEROR);
+        final boolean nbspWorkaround = browser.getBrowserType().equals(UserAgentFamily.KONQUEROR);
 
         String selectedTabStyle = tabbedPane.getStyle(STabbedPane.SELECTOR_SELECTED_TAB);
         String unselectedTabStyle = tabbedPane.getStyle(STabbedPane.SELECTOR_UNSELECTED_TAB);

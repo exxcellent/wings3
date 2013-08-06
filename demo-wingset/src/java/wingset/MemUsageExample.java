@@ -12,13 +12,20 @@
  */
 package wingset;
 
-import org.wings.*;
-import org.wings.event.SRenderEvent;
-import org.wings.event.SRenderListener;
-import org.wings.session.WingsStatistics;
-
 import java.awt.event.ActionEvent;
 import java.text.DecimalFormat;
+
+import org.wings.SButton;
+import org.wings.SComponent;
+import org.wings.SDimension;
+import org.wings.SLabel;
+import org.wings.SPanel;
+import org.wings.SProgressBar;
+import org.wings.STemplateLayout;
+import org.wings.event.SRenderEvent;
+import org.wings.event.SRenderListener;
+import org.wings.session.SessionManager;
+import org.wings.session.WingsStatistics;
 
 /**
  * @author <a href="mailto:haaf@mercatis.de">Armin Haaf</a>
@@ -43,6 +50,8 @@ public class MemUsageExample extends WingSetPane {
         final SLabel activeSessions = new SLabel();
         final SLabel uptime = new SLabel();
         final SLabel requestCount = new SLabel();
+        final SLabel browser = new SLabel();
+        final SLabel locale = new SLabel();
         final SPanel panel = new SPanel();
 
         // Action listener for GC button trigger
@@ -82,6 +91,8 @@ public class MemUsageExample extends WingSetPane {
                 activeSessions.setText(Integer.toString(WingsStatistics.getStatistics().getActiveSessionCount()));
                 requestCount.setText(Integer.toString(WingsStatistics.getStatistics().getRequestCount()));
                 uptime.setText(getUptimeString(WingsStatistics.getStatistics().getUptime()));
+                browser.setText(SessionManager.getSession().getUserAgent().toString());
+                locale.setText(SessionManager.getSession().getLocale().toString() + "/From Header: " + SessionManager.getSession().getLocaleFromHeader() );
             }
 
             public void doneRendering(SRenderEvent e) {}
@@ -114,6 +125,8 @@ public class MemUsageExample extends WingSetPane {
         panel.add(overallSessions, "OverallSessions");
         panel.add(requestCount, "RequestCount");
         panel.add(uptime, "Uptime");
+        panel.add(browser, "Browser");
+        panel.add(locale, "Locale");
 
         return panel;
     }

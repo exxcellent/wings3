@@ -430,10 +430,10 @@ public class Session implements PropertyService, Serializable {
     public void setUserAgentFromRequest(HttpServletRequest request) {
         try {
             final String userAgentString = request.getHeader("User-Agent");
-            browser = new Browser(userAgentString);
+            browser = new Browser(userAgentString,request.getLocale());
             log.debug("Browser is detected as " + browser+". User-Agent was: "+userAgentString);
-            log.debug("major version = "+browser.getMajorVersion()+", id = "+browser.getBrowserType().getId());
-            log.debug("short name = "+browser.getBrowserType().getShortName());
+            log.debug("major version = "+browser.getMajorVersion()+", id = "+browser.getBrowserType().ordinal());
+            log.debug("short name = "+browser.getBrowserType().getName());
         } catch (Exception ex) {
             log.warn("Cannot get User-Agent from request", ex);
         }

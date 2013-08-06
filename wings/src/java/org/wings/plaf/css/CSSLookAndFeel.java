@@ -36,7 +36,7 @@ public class CSSLookAndFeel  extends org.wings.plaf.LookAndFeel {
 
         // check for browser dependent properties under org/wings/plaf/css/default_msie.properties
         final Browser userAgent = SessionManager.getSession().getUserAgent();
-        final String browserType = userAgent.getBrowserType().getShortName();
+        final String browserType = userAgent.getBrowserType().getName().toLowerCase();
         propertyFile.setLength(0);
         propertyFile.append(PROPERTIES_DEFAULTFILE_PREFIX).append("_").append(browserType).append(".properties");
         properties.putAll(PropertyDiscovery.loadOptionalProperties(propertyFile.toString()));

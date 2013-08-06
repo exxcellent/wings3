@@ -16,10 +16,8 @@ import org.wings.STree;
 import org.wings.border.SLineBorder;
 import org.wings.header.StyleSheetHeader;
 import org.wings.plaf.WingSetExample;
-import org.wings.plaf.css.Utils;
 import org.wings.resource.ReloadResource;
 import org.wings.session.*;
-import org.wings.style.CSSProperty;
 import org.wings.tree.SDefaultTreeCellRenderer;
 
 import javax.swing.event.TreeSelectionEvent;
@@ -70,8 +68,8 @@ public class WingSet {
      */
     public WingSet() {
         Session session = SessionManager.getSession();
-        session.setLocaleFromHeader(false);
         session.setLocale(Locale.ENGLISH);
+        session.setLocaleFromHeader(true);
         wingsImage = new WingsImage();
 
         WingSetTreeModel treeModel = new WingSetTreeModel();
@@ -107,15 +105,16 @@ public class WingSet {
                 return super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
             }
         });
+        tree.setPreferredSize(new SDimension(220,950));
         expandAllTreeNodes(tree);
 
-        SScrollPane scrollPane = new SScrollPane(tree);
-        scrollPane.setMode(SScrollPane.MODE_COMPLETE);
-        scrollPane.setPreferredSize(new SDimension("220px", "100%"));
-        scrollPane.setVerticalAlignment(SConstants.TOP_ALIGN);
+        SScrollPane scrollPaneTree = new SScrollPane(tree);
+        scrollPaneTree.setMode(SScrollPane.MODE_COMPLETE);
+        scrollPaneTree.setPreferredSize(new SDimension("220px", "100%"));
+        scrollPaneTree.setVerticalAlignment(SConstants.TOP_ALIGN);
         SLineBorder border = new SLineBorder(new Color(190, 190, 190), 0);
         border.setThickness(1, SConstants.RIGHT);
-        scrollPane.setBorder(border);
+        scrollPaneTree.setBorder(border);
 
         header = createHeader();
 
@@ -123,11 +122,16 @@ public class WingSet {
         content.setPreferredSize(SDimension.FULLAREA);
         content.add(wingsImage);
 
+        SScrollPane scrollPaneContent = new SScrollPane(content);
+        scrollPaneContent.setMode(SScrollPane.MODE_COMPLETE);
+        scrollPaneContent.setPreferredSize(SDimension.FULLAREA);
+        scrollPaneContent.setVerticalAlignment(SConstants.TOP_ALIGN);
+
         panel = new SPanel(new SBorderLayout());
         panel.setPreferredSize(SDimension.FULLAREA);
         panel.add(header, SBorderLayout.NORTH);
-        panel.add(scrollPane, SBorderLayout.WEST);
-        panel.add(content, SBorderLayout.CENTER);
+        panel.add(scrollPaneTree, SBorderLayout.WEST);
+        panel.add(scrollPaneContent, SBorderLayout.CENTER);
 
         frame.getContentPane().add(panel, SBorderLayout.CENTER);
         frame.setFullScreen(true);

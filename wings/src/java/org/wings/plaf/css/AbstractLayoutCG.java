@@ -19,8 +19,6 @@ import org.wings.SLayoutManager;
 import org.wings.io.Device;
 import org.wings.plaf.LayoutCG;
 import org.wings.plaf.css.PaddingVoodoo;
-import org.wings.session.BrowserType;
-import org.wings.session.SessionManager;
 import org.wings.style.CSSProperty;
 
 import java.awt.*;
@@ -194,6 +192,7 @@ public abstract class AbstractLayoutCG implements LayoutCG {
         Utils.optAttribute(d, "colspan", cellStyle.colspan);
         Utils.optAttribute(d, "rowspan", cellStyle.rowspan);
         Utils.optAttribute(d, "width", cellStyle.width);
+        Utils.optAttribute(d, "height", cellStyle.height);
         Utils.optAttribute(d, "class", cellStyle.optionalStyleClass);
         // render optional style attribute
         if (cellStyle.hasAdditionalCellStyles() || cellStyle.hasInsets()) {

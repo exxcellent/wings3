@@ -41,6 +41,11 @@ public final class TableCellStyle implements Serializable, Cloneable {
     public String width = null;
 
     /**
+     * Optional <code>TD</code>  cell width
+     */
+    public String height = null;
+
+    /**
      * colspan attribute for this <code>TD</code> or <code>TH</code> cell
      */
     public int colspan = -1;

@@ -6,9 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wings.session.Browser;
-import org.wings.session.BrowserType;
-import org.wings.session.SessionManager;
+import org.wings.plaf.css.Utils;
 
 /**
  * Manages open HangingGet requests and limits their number per browser.
@@ -115,13 +113,9 @@ public abstract class CometConnectionManager {
     }
     
 	private int determineMaxHangingGetCount() {
-		Browser browser = SessionManager.getSession().getUserAgent();
-		BrowserType type = browser.getBrowserType();
-		int version = browser.getMajorVersion();
-
-		if (type.equals(BrowserType.IE) && version >= 8)
+		if (Utils.isMSIE(8))
 			return 4;
-		if (type.equals(BrowserType.GECKO) && version >= 3)
+		if (Utils.isGECKO(3))
 			return 4;
 		// TODO: Increase and Test for other Browsers
 		return 1;

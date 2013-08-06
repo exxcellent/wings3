@@ -52,6 +52,7 @@ abstract public class WingSetPane
     private String group;
 
     public WingSetPane() {
+    	setVerticalAlignment(SConstants.TOP_ALIGN);
         setLayout(new SBorderLayout());
         setPreferredSize(SDimension.FULLAREA);
 

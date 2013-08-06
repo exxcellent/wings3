@@ -12,6 +12,9 @@
  */
 package org.wings.plaf.css;
 
+import net.sf.uadetector.OperatingSystemFamily;
+import net.sf.uadetector.UserAgentFamily;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wings.*;
@@ -30,7 +33,7 @@ import org.wings.script.JavaScriptDOMListener;
 import org.wings.script.JavaScriptEvent;
 import org.wings.script.JavaScriptListener;
 import org.wings.script.ScriptListener;
-import org.wings.session.BrowserType;
+import org.wings.session.Browser;
 import org.wings.session.Session;
 import org.wings.session.SessionManager;
 import org.wings.style.Style;
@@ -1151,19 +1154,47 @@ public final class Utils {
             return null;
         }
     }
-
-    /**
-     * @return true if current browser is microsoft exploder
-     */
-    public static boolean isMSIE(SComponent component) {
-        return component.getSession().getUserAgent().getBrowserType() == BrowserType.IE;
+    
+    public static boolean isMac() {
+    	final OperatingSystemFamily os = SessionManager.getSession().getUserAgent().getOsType();
+    	return OperatingSystemFamily.MAC_OS == os || OperatingSystemFamily.OS_X == os;
     }
 
     /**
      * @return true if current browser is microsoft exploder
      */
-    public static boolean isMSIE() {
-        return SessionManager.getSession().getUserAgent().getBrowserType() == BrowserType.IE;
+    public static boolean isMSIE(SComponent component) {
+        return component.getSession().getUserAgent().getBrowserType() == UserAgentFamily.IE;
+    }
+
+    /**
+     * @return true if current browser is microsoft exploder and is greater
+     * equals the specified version
+     * 
+     */
+    public static boolean isMSIE( int version ) {
+    	final Browser ua = SessionManager.getSession().getUserAgent();
+        return ua.getBrowserType() == UserAgentFamily.IE && ua.getMajorVersion() >= version;
+    }
+
+    /**
+     * @return true if current browser is microsoft exploder and is greater
+     * equals the specified version
+     * 
+     */
+    public static boolean isMSIEVersion( int version ) {
+    	final Browser ua = SessionManager.getSession().getUserAgent();
+        return ua.getBrowserType() == UserAgentFamily.IE && ua.getMajorVersion() == version;
+    }
+
+    /**
+     * @return true if current browser is gecko browser (Netscape/Firefox) and is greater
+     * equals the specified version
+     * 
+     */
+    public static boolean isGECKO( int version ) {
+    	final Browser ua = SessionManager.getSession().getUserAgent();
+        return (ua.getBrowserType() == UserAgentFamily.NETSCAPE_NAVIGATOR || ua.getBrowserType() == UserAgentFamily.FIREFOX ) && ua.getMajorVersion() >= version;
     }
 
     /**

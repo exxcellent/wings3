@@ -23,7 +23,6 @@ import org.wings.io.Device;
 import org.wings.io.StringBuilderDevice;
 
 import java.io.IOException;
-import org.wings.session.BrowserType;
 import org.wings.session.SessionManager;
 
 public abstract class AbstractLabelCG extends AbstractComponentCG {

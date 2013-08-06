@@ -70,7 +70,7 @@ public abstract class LookAndFeelFactory {
         public LookAndFeel create() throws IOException {
             Session session = SessionManager.getSession();
             Browser userAgent = session.getUserAgent();
-            final String lookupKey = userAgent.getBrowserType().getShortName() + Integer.toString(userAgent.getMajorVersion());
+            final String lookupKey = userAgent.getBrowserType().getName().toLowerCase() + Integer.toString(userAgent.getMajorVersion());
             
             LookAndFeel laf = lafs.get(lookupKey );
             if (laf == null) {
