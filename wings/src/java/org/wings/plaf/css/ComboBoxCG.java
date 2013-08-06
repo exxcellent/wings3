@@ -39,20 +39,12 @@ public final class ComboBoxCG extends AbstractComponentCG implements org.wings.p
 
     protected void writeFormComboBox(Device device, SComboBox component) throws IOException {
     	Object clientProperty = component.getClientProperty("onChangeSubmitListener");
-    	// If the application developer attached any ActionListeners or ItemListeners to
-        // this SComboBox, the surrounding form gets submitted as soon as the state / the
-    	// selection of this SComboBox changed.
-        if (component.getActionListeners().length > 0 || component.getItemListeners().length > 0) {
-            if (clientProperty == null) {
-            	String event = JavaScriptEvent.ON_CHANGE;
-            	String code = "wingS.request.sendEvent(event, true, " + !component.isReloadForced() + ");";
-                JavaScriptListener javaScriptListener = new JavaScriptListener(event, code);
-                component.addScriptListener(javaScriptListener);
-                component.putClientProperty("onChangeSubmitListener", javaScriptListener);
-            }
-        } else if (clientProperty != null && clientProperty instanceof JavaScriptListener) {
-        	component.removeScriptListener((JavaScriptListener) clientProperty);
-        	component.putClientProperty("onChangeSubmitListener", null);
+        if (clientProperty == null) {
+        	String event = JavaScriptEvent.ON_CHANGE;
+        	String code = "wingS.request.sendEvent(event, true, " + !component.isReloadForced() + ");";
+            JavaScriptListener javaScriptListener = new JavaScriptListener(event, code);
+            component.addScriptListener(javaScriptListener);
+            component.putClientProperty("onChangeSubmitListener", javaScriptListener);
         }
 
         device.print("<span><select size=\"1\" wrapping=\"1\"");

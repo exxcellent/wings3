@@ -45,20 +45,12 @@ public final class ListCG extends AbstractComponentCG<SList> implements org.wing
 
     protected void writeFormList(final Device device, final SList list) throws IOException {
         Object clientProperty = list.getClientProperty("onChangeSubmitListener");
-        // If the application developer attached any ListSelectionListeners to this
-        // SList, the surrounding form gets submitted as soon as the state / the
-        // selection of this SList changed.
-        if (list.getListSelectionListeners().length > 0) {
-            if (clientProperty == null) {
-                String event = JavaScriptEvent.ON_CHANGE;
-            	String code = "wingS.request.sendEvent(event, true, " + !list.isReloadForced() + ");";
-                JavaScriptListener javaScriptListener = new JavaScriptListener(event, code);
-                list.addScriptListener(javaScriptListener);
-                list.putClientProperty("onChangeSubmitListener", javaScriptListener);
-            }
-        } else if (clientProperty != null && clientProperty instanceof JavaScriptListener) {
-            list.removeScriptListener((JavaScriptListener) clientProperty);
-            list.putClientProperty("onChangeSubmitListener", null);
+        if (clientProperty == null) {
+            String event = JavaScriptEvent.ON_CHANGE;
+        	String code = "wingS.request.sendEvent(event, true, " + !list.isReloadForced() + ");";
+            JavaScriptListener javaScriptListener = new JavaScriptListener(event, code);
+            list.addScriptListener(javaScriptListener);
+            list.putClientProperty("onChangeSubmitListener", javaScriptListener);
         }
 
         device.print("<span");
